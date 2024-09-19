@@ -40,7 +40,7 @@ importers:
         version: link:../../packages/tsconfig
       '@bleu/ui':
         specifier: git+ssh://git@github.com:bleu/bleu-ui.git#main
-        version: https://codeload.github.com/bleu/bleu-ui/tar.gz/a62f7430692a0a80e9b79c7fa7494ea9fee59b22(@types/react-dom@18.3.0)(@types/react@18.3.7)(mapbox-gl@1.13.3)(react-dom@18.3.1(react@18.3.1))(react-hook-form@7.43.9(react@18.3.1))(react-router-dom@6.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.94.0)
+        version: git+https://git@github.com:bleu/bleu-ui.git#a62f7430692a0a80e9b79c7fa7494ea9fee59b22(@types/react-dom@18.3.0)(@types/react@18.3.7)(mapbox-gl@1.13.3)(react-dom@18.3.1(react@18.3.1))(react-hook-form@7.43.9(react@18.3.1))(react-router-dom@6.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.94.0)
       '@radix-ui/colors':
         specifier: ^3.0.0
         version: 3.0.0
@@ -51,8 +51,8 @@ importers:
         specifier: ^2.1.0
         version: 2.1.1
       date-fns:
-        specifier: ^3.3.1
-        version: 3.6.0
+        specifier: ^4.1.0
+        version: 4.1.0
       downshift:
         specifier: ^8.4.0
         version: 8.5.0(react@18.3.1)
@@ -398,8 +398,8 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@bleu/ui@https://codeload.github.com/bleu/bleu-ui/tar.gz/a62f7430692a0a80e9b79c7fa7494ea9fee59b22':
-    resolution: {tarball: https://codeload.github.com/bleu/bleu-ui/tar.gz/a62f7430692a0a80e9b79c7fa7494ea9fee59b22}
+  '@bleu/ui@git+https://git@github.com:bleu/bleu-ui.git#a62f7430692a0a80e9b79c7fa7494ea9fee59b22':
+    resolution: {commit: a62f7430692a0a80e9b79c7fa7494ea9fee59b22, repo: git@github.com:bleu/bleu-ui.git, type: git}
     version: 0.1.131
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -2504,6 +2504,9 @@ packages:
 
   date-fns@3.6.0:
     resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
+
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
 
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -5879,7 +5882,7 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@bleu/ui@https://codeload.github.com/bleu/bleu-ui/tar.gz/a62f7430692a0a80e9b79c7fa7494ea9fee59b22(@types/react-dom@18.3.0)(@types/react@18.3.7)(mapbox-gl@1.13.3)(react-dom@18.3.1(react@18.3.1))(react-hook-form@7.43.9(react@18.3.1))(react-router-dom@6.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.94.0)':
+  '@bleu/ui@git+https://git@github.com:bleu/bleu-ui.git#a62f7430692a0a80e9b79c7fa7494ea9fee59b22(@types/react-dom@18.3.0)(@types/react@18.3.7)(mapbox-gl@1.13.3)(react-dom@18.3.1(react@18.3.1))(react-hook-form@7.43.9(react@18.3.1))(react-router-dom@6.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.94.0)':
     dependencies:
       '@radix-ui/react-accordion': 1.2.0(@types/react-dom@18.3.0)(@types/react@18.3.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-alert-dialog': 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -8454,6 +8457,8 @@ snapshots:
       '@babel/runtime': 7.25.6
 
   date-fns@3.6.0: {}
+
+  date-fns@4.1.0: {}
 
   debug@2.6.9:
     dependencies:
