@@ -22,7 +22,7 @@
     "eslint-plugin-simple-import-sort": "latest",
     "eslint-plugin-tailwindcss": "^3.13.1",
     "prettier": "^3.1.1",
-    "prettier-plugin-tailwindcss": "^0.5.10",
+    "prettier-plugin-tailwindcss": "^0.6.6",
     "typescript": "^5.4.5"
   }
 }

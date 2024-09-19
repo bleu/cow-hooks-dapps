@@ -40,7 +40,7 @@ importers:
         version: link:../../packages/tsconfig
       '@bleu/ui':
         specifier: git+ssh://git@github.com:bleu/bleu-ui.git#main
-        version: https://codeload.github.com/bleu/bleu-ui/tar.gz/a62f7430692a0a80e9b79c7fa7494ea9fee59b22(@types/react-dom@18.3.0)(@types/react@18.3.7)(mapbox-gl@1.13.3)(react-dom@18.3.1(react@18.3.1))(react-hook-form@7.43.9(react@18.3.1))(react-router-dom@6.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.94.0)
+        version: git+https://git@github.com:bleu/bleu-ui.git#a62f7430692a0a80e9b79c7fa7494ea9fee59b22(@types/react-dom@18.3.0)(@types/react@18.3.7)(mapbox-gl@1.13.3)(react-dom@18.3.1(react@18.3.1))(react-hook-form@7.43.9(react@18.3.1))(react-router-dom@6.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.94.0)
       '@radix-ui/colors':
         specifier: ^3.0.0
         version: 3.0.0
@@ -181,8 +181,8 @@ importers:
         specifier: ^3.1.1
         version: 3.3.3
       prettier-plugin-tailwindcss:
-        specifier: ^0.5.10
-        version: 0.5.14(prettier@3.3.3)
+        specifier: ^0.6.6
+        version: 0.6.6(prettier@3.3.3)
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -398,8 +398,8 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@bleu/ui@https://codeload.github.com/bleu/bleu-ui/tar.gz/a62f7430692a0a80e9b79c7fa7494ea9fee59b22':
-    resolution: {tarball: https://codeload.github.com/bleu/bleu-ui/tar.gz/a62f7430692a0a80e9b79c7fa7494ea9fee59b22}
+  '@bleu/ui@git+https://git@github.com:bleu/bleu-ui.git#a62f7430692a0a80e9b79c7fa7494ea9fee59b22':
+    resolution: {commit: a62f7430692a0a80e9b79c7fa7494ea9fee59b22, repo: git@github.com:bleu/bleu-ui.git, type: git}
     version: 0.1.131
     engines: {node: '>=18.0.0'}
     peerDependencies:
@@ -4484,8 +4484,8 @@ packages:
     resolution: {integrity: sha512-GbK2cP9nraSSUF9N2XwUwqfzlAFlMNYYl+ShE/V+H8a9uNl/oUqB1w2EL54Jh0OlyRSd8RfWYJ3coVS4TROP2w==}
     engines: {node: '>=6.0.0'}
 
-  prettier-plugin-tailwindcss@0.5.14:
-    resolution: {integrity: sha512-Puaz+wPUAhFp8Lo9HuciYKM2Y2XExESjeT+9NQoVFXZsPPnc9VYss2SpxdQ6vbatmt8/4+SN0oe0I1cPDABg9Q==}
+  prettier-plugin-tailwindcss@0.6.6:
+    resolution: {integrity: sha512-OPva5S7WAsPLEsOuOWXATi13QrCKACCiIonFgIR6V4lYv4QLp++UXVhZSzRbZxXGimkQtQT86CC6fQqTOybGng==}
     engines: {node: '>=14.21.3'}
     peerDependencies:
       '@ianvs/prettier-plugin-sort-imports': '*'
@@ -4499,6 +4499,7 @@ packages:
       prettier-plugin-import-sort: '*'
       prettier-plugin-jsdoc: '*'
       prettier-plugin-marko: '*'
+      prettier-plugin-multiline-arrays: '*'
       prettier-plugin-organize-attributes: '*'
       prettier-plugin-organize-imports: '*'
       prettier-plugin-sort-imports: '*'
@@ -4524,6 +4525,8 @@ packages:
       prettier-plugin-jsdoc:
         optional: true
       prettier-plugin-marko:
+        optional: true
+      prettier-plugin-multiline-arrays:
         optional: true
       prettier-plugin-organize-attributes:
         optional: true
@@ -5879,7 +5882,7 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@bleu/ui@https://codeload.github.com/bleu/bleu-ui/tar.gz/a62f7430692a0a80e9b79c7fa7494ea9fee59b22(@types/react-dom@18.3.0)(@types/react@18.3.7)(mapbox-gl@1.13.3)(react-dom@18.3.1(react@18.3.1))(react-hook-form@7.43.9(react@18.3.1))(react-router-dom@6.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.94.0)':
+  '@bleu/ui@git+https://git@github.com:bleu/bleu-ui.git#a62f7430692a0a80e9b79c7fa7494ea9fee59b22(@types/react-dom@18.3.0)(@types/react@18.3.7)(mapbox-gl@1.13.3)(react-dom@18.3.1(react@18.3.1))(react-hook-form@7.43.9(react@18.3.1))(react-router-dom@6.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.94.0)':
     dependencies:
       '@radix-ui/react-accordion': 1.2.0(@types/react-dom@18.3.0)(@types/react@18.3.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-alert-dialog': 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -10991,7 +10994,7 @@ snapshots:
     dependencies:
       fast-diff: 1.3.0
 
-  prettier-plugin-tailwindcss@0.5.14(prettier@3.3.3):
+  prettier-plugin-tailwindcss@0.6.6(prettier@3.3.3):
     dependencies:
       prettier: 3.3.3
 
