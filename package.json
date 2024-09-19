@@ -1,0 +1,52 @@
+{
+  "name": "@bleu/cow-hooks-dapps",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "pnpm --stream -r dev",
+    "test:jest": "pnpm --stream --parallel -r test:jest",
+    "format:check": "prettier --check .",
+    "lint-all": "pnpm --stream --parallel --if-present -r --include-workspace-root lint",
+    "lint-fix-all": "pnpm --stream --parallel --if-present -r --include-workspace-root lint:fix",
+    "format": "prettier --write .",
+    "graphql:update-types": "pnpm --stream --parallel --if-present -r graphql:update-types",
+    "ci": "concurrently -c \"auto\" -p \"name\" -n \"format,lint\" \"pnpm format:check\" \"pnpm lint-all\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bleu/cow-hooks-dapps.git"
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "pnpx lint-staged --relative"
+    }
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=7"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bleu/cow-hooks-dapps/issues"
+  },
+  "homepage": "https://github.com/bleu/cow-hooks-dapps#readme",
+  "devDependencies": {
+    "@bleu/eslint-config": "workspace:*",
+    "@types/node": "^20.12.7",
+    "concurrently": "^8.2.2",
+    "ghooks": "^2.0.4",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  },
+  "pnpm": {
+    "overrides": {
+      "ipfs-http-client": "^60"
+    }
+  }
+}

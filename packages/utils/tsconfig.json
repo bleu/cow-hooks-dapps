@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["*"]
+    }
+  },
+  "exclude": ["node_modules"],
+  "extends": "@bleu/tsconfig/base.json",
+  "include": ["**/*.ts"],
+  "references": []
+}

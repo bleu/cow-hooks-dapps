@@ -1,0 +1,15 @@
+**/node_modules**
+
+pnpm-lock.yaml
+
+**/.next/**
+**/.vercel/**
+**/.vscode/**
+**/.cache/**
+
+**/__generated__/**
+generated**
+
+**/out/**
+
+manifest.template.yaml

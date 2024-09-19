@@ -1,0 +1,44 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-lint
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/workflows/setup-pnpm
+        with:
+          npm_token: ${{ secrets.NPM_TOKEN }}
+
+      - name: Check formatting and linting
+        run: pnpm run ci
+
+  run-tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-test
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/workflows/setup-pnpm
+        with:
+          npm_token: ${{ secrets.NPM_TOKEN }}
+
+      - name: Run tests
+        run: pnpm test:jest
