@@ -78,17 +78,17 @@ describe("parseFixed", () => {
   test("should throw for decimals out of range", () => {
     expect(() => parseFixed("1", 300)).toThrow();
     expect(() => parseFixed("1", -1)).toThrow();
-    expect(() => parseFixed("1", NaN)).toThrow();
+    expect(() => parseFixed("1", Number.NaN)).toThrow();
   });
 
   test("should handle large numbers", () => {
-    const largeNumber = "1" + "0".repeat(100);
+    const largeNumber = `1${"0".repeat(100)}`;
     expect(parseFixed(largeNumber, 0).toString()).toEqual(largeNumber);
 
-    const largeDecimalNumber = "1." + "0".repeat(100);
+    const largeDecimalNumber = `1.${"0".repeat(100)}`;
     expect(parseFixed(largeDecimalNumber, 100).toString()).toEqual(largeNumber);
 
-    const negativeLargeNumber = "-" + largeNumber;
+    const negativeLargeNumber = `-${largeNumber}`;
     expect(parseFixed(negativeLargeNumber, 0).toString()).toEqual(
       negativeLargeNumber,
     );

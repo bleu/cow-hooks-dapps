@@ -2,15 +2,15 @@
 // @link https://nextjs.org/docs/advanced-features/customizing-postcss-config
 // @link https://tailwindcss.com/docs/using-with-preprocessors
 
-const isProd = process.env.NODE_ENV === 'production';
-import type { Config } from 'tailwindcss';
+const isProd = process.env.NODE_ENV === "production";
+import type { Config } from "tailwindcss";
 
 const tailwindConfig: Config = {
   plugins: {
     tailwindcss: {},
     ...(isProd
       ? {
-          'postcss-preset-env': {
+          "postcss-preset-env": {
             // https://github.com/csstools/postcss-plugins/tree/main/plugin-packs/postcss-preset-env#stability-and-portability
             stage: 3,
             autoprefixer: { grid: true },
@@ -19,6 +19,5 @@ const tailwindConfig: Config = {
       : {}),
   },
 };
-
 
 export default tailwindConfig;

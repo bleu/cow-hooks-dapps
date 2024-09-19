@@ -1,7 +1,8 @@
 function getMultiplier(decimals: string | number) {
   if (typeof decimals !== "number") {
     try {
-      decimals = parseInt(decimals);
+      // biome-ignore lint:
+      decimals = Number.parseInt(decimals);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(`Invalid decimal size: ${decimals}`);
@@ -14,31 +15,32 @@ function getMultiplier(decimals: string | number) {
     decimals <= 256 &&
     !(decimals % 1)
   ) {
-    return "1" + "0".repeat(decimals);
+    return `1${"0".repeat(decimals)}`;
   }
 
-  throw new Error("Invalid decimal size: " + decimals);
+  throw new Error(`Invalid decimal size: ${decimals}`);
 }
 
 export default function parseFixed(value: string, decimals = 0) {
   const multiplier = getMultiplier(decimals);
 
   if (typeof value !== "string" || !/^-?[0-9.]+$/.test(value)) {
-    throw new Error("Invalid decimal value: " + value);
+    throw new Error(`Invalid decimal value: ${value}`);
   }
 
   const negative = value[0] === "-";
   if (negative) {
+    // biome-ignore lint:
     value = value.substring(1);
   }
 
   if (value === ".") {
-    throw new Error("Missing value: " + value);
+    throw new Error(`Missing value: ${value}`);
   }
 
   const comps = value.split(".");
   if (comps.length > 2) {
-    throw new Error("Too many decimal points: " + value);
+    throw new Error(`Too many decimal points: ${value}`);
   }
 
   const whole = comps[0] || "0";

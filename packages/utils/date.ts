@@ -32,9 +32,9 @@ export function parseMMDDYYYYToDate(
   if (!dateStr) return null;
   const [month, day, year] = dateStr.split("-").map(Number);
   if (
-    !isNaN(month) &&
-    !isNaN(day) &&
-    !isNaN(year) &&
+    !Number.isNaN(month) &&
+    !Number.isNaN(day) &&
+    !Number.isNaN(year) &&
     month >= 1 &&
     month <= 12 &&
     day >= 1 &&

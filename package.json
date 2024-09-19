@@ -3,9 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "description": "",
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
     "dev": "pnpm --stream -r dev",
     "test:jest": "pnpm --stream --parallel -r test:jest",
@@ -25,6 +22,7 @@
       "pre-commit": "pnpx lint-staged --relative"
     }
   },
+  "workspaces": ["apps/*", "packages/*"],
   "engines": {
     "node": ">=22"
   },
@@ -35,13 +33,15 @@
   },
   "homepage": "https://github.com/bleu/cow-hooks-dapps#readme",
   "devDependencies": {
+    "@biomejs/biome": "1.9.2",
+    "@commitlint/cli": "19.5.0",
+    "@commitlint/config-conventional": "19.5.0",
     "@types/node": "^22.5.5",
     "concurrently": "^9.0.1",
     "ghooks": "^2.0.4",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
-    "typescript": "^5.6.2",
-    "@commitlint/cli": "19.5.0",
-    "@commitlint/config-conventional": "19.5.0"
-  }
+    "typescript": "^5.6.2"
+  },
+  "packageManager": "yarn@4.5.0"
 }
