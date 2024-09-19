@@ -26,8 +26,7 @@
     }
   },
   "engines": {
-    "node": ">=18",
-    "pnpm": ">=7"
+    "node": ">=22"
   },
   "author": "",
   "license": "ISC",
@@ -36,7 +35,6 @@
   },
   "homepage": "https://github.com/bleu/cow-hooks-dapps#readme",
   "devDependencies": {
-    "@bleu/eslint-config": "workspace:*",
     "@types/node": "^22.5.5",
     "concurrently": "^9.0.1",
     "ghooks": "^2.0.4",
@@ -45,10 +43,5 @@
     "typescript": "^5.6.2",
     "@commitlint/cli": "19.5.0",
     "@commitlint/config-conventional": "19.5.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "ipfs-http-client": "^60"
-    }
   }
 }
