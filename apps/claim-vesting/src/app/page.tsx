@@ -1,5 +1,5 @@
-"use strict";
+import { Joana } from "@bleu/cow-hooks-ui";
 
 export default function Page() {
-  return <p>Hello</p>;
+  return <Joana myProp="123" />;
 }

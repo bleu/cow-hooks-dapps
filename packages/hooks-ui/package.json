@@ -1,22 +1,9 @@
 {
-  "name": "@bleu/claim-vesting",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "build": "next build",
-    "build:prepare:gql": "cd ../../ && pnpm run -C=packages/gql graphql:update-types",
-    "build:prepare": "pnpm npm-run-all -l --parallel 'build:prepare:gql'",
-    "dev": "pnpm npm-run-all -l --parallel dev:**",
-    "dev:next": "next dev",
-    "start": "next start",
-    "lint": "eslint '**/*.{ts,tsx}'",
-    "lint:fix": "eslint '**/*.{ts,tsx}' --fix"
-  },
+  "name": "@bleu/cow-hooks-ui",
   "dependencies": {
     "@bleu/tsconfig": "workspace:*",
     "@bleu/ui": "git+ssh://git@github.com:bleu/bleu-ui.git#main",
     "@bleu/cow-hooks-ui": "workspace:*",
-    "next": "^14.2.12",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

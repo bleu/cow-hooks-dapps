@@ -1,12 +1,17 @@
 {
   "extends": "@bleu/tsconfig/nextjs.json",
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "#/*": ["./src/*"]
-    }
+      "#/*": ["./*"],
+      "@bleu/cow-hooks-ui": ["../../../packages/hooks-ui/src"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "content": ["./src/**/*.{js,ts,jsx,tsx}"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"],
   "types": ["node", "jest", "@testing-library/jest-dom"]
