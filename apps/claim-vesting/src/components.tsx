@@ -1,5 +1,6 @@
 import React from "react";
 import type { ReactNode } from "react";
+import clsx from "clsx";
 
 // import ICON_CHECKMARK from "@cowprotocol/assets/cow-swap/checkmark.svg";
 // import ICON_ARROW_DOWN from "@cowprotocol/assets/images/carret-down.svg";
@@ -36,9 +37,13 @@ export const ContentWrapper = ({
   </div>
 );
 
-export const Input = ({ ...props }) => (
+export const Input = ({ theme, ...props }: { theme: string }) => (
   <input
-    className="w-full mt-0 p-2.5 rounded-xl outline-none text-color-text-paper border border-color-border bg-color-paper-darker focus:border-primary"
+    className={clsx(
+      "w-full mt-0 p-2.5 rounded-xl outline-none text-color-text-paper border-2 border-color-border focus:border-primary",
+      { "bg-color-paper-darker": theme === "dark" },
+      { "bg-color-paper": theme === "light" }
+    )}
     {...props}
   />
 );

@@ -21,7 +21,7 @@ export function ClaimVestingApp() {
       <ContentWrapper>
         <Row>
           <LabelContainer label="Place vesting contract address" />
-          <Input placeholder="0xabc..." />
+          <Input theme={theme} placeholder="0xabc..." />
         </Row>
         <Row>
           <ClaimableAmountContainer>
