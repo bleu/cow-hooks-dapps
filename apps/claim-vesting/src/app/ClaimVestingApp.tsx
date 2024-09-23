@@ -1,14 +1,13 @@
 import { useTheme } from "./ThemeContext";
 
+import { ClaimableAmountContainer, Row } from "../components";
+
 import {
-  ClaimableAmountContainer,
-  ContentWrapper,
-  LabelContainer,
-  Row,
   Wrapper,
+  ContentWrapper,
+  AddressInput,
   ButtonPrimary,
-  Input,
-} from "../components";
+} from "@bleu/cow-hooks-ui";
 
 export function ClaimVestingApp() {
   const { theme, toggleTheme } = useTheme();
@@ -19,10 +18,7 @@ export function ClaimVestingApp() {
         Switch to {theme === "light" ? "Dark" : "Light"} Theme
       </button>
       <ContentWrapper>
-        <Row>
-          <LabelContainer label="Place vesting contract address" />
-          <Input theme={theme} placeholder="0xabc..." />
-        </Row>
+        <AddressInput theme={theme} label="Place vesting contract address" />
         <Row>
           <ClaimableAmountContainer>
             <span>Total Available to claim</span>
