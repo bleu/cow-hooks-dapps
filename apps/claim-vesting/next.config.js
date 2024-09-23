@@ -7,6 +7,19 @@ const moduleExports = {
     reactCompiler: true,
   },
   transpilePackages: ["@bleu/cow-hooks-ui"],
+  async headers() {
+    return [
+      {
+        source: '/manifest.json',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = moduleExports;
