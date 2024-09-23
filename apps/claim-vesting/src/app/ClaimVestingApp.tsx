@@ -20,8 +20,8 @@ export function ClaimVestingApp() {
       </button>
       <ContentWrapper>
         <Row>
-          <LabelContainer label="Type vesting contract" />
-          <Input />
+          <LabelContainer label="Place vesting contract address" />
+          <Input placeholder="0xabc..." />
         </Row>
         <Row>
           <ClaimableAmountContainer>
@@ -31,7 +31,7 @@ export function ClaimVestingApp() {
         </Row>
       </ContentWrapper>
       <ButtonPrimary>
-        <span>Add airdrop</span>
+        <span>Add hook</span>
       </ButtonPrimary>
     </Wrapper>
   );
