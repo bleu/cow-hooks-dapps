@@ -8,4 +8,8 @@ module.exports = {
     "./node_modules/@bleu/ui/dist/**/*",
     "../../packages/cow-hooks-ui/src/**/*.{js,ts,jsx,tsx}",
   ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
 };
