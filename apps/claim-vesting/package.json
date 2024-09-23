@@ -11,7 +11,7 @@
   "dependencies": {
     "@bleu/cow-hooks-ui": "workspace:*",
     "@bleu/tsconfig": "workspace:*",
-    "@bleu/ui": "git+ssh://git@github.com:bleu/bleu-ui.git#main",
+    "@bleu/ui": "0.1.131",
     "babel-plugin-react-compiler": "0.0.0-experimental-6067d4e-20240923",
     "next": "15.0.0-rc.0",
     "react": "19.0.0-rc-e4953922-20240919",

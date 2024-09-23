@@ -540,7 +540,7 @@ __metadata:
     "@biomejs/biome": "npm:1.9.2"
     "@bleu/cow-hooks-ui": "workspace:*"
     "@bleu/tsconfig": "workspace:*"
-    "@bleu/ui": "git+ssh://git@github.com:bleu/bleu-ui.git#main"
+    "@bleu/ui": "npm:0.1.131"
     "@testing-library/jest-dom": "npm:6.5.0"
     "@testing-library/react": "npm:^16.0.1"
     "@testing-library/user-event": "npm:14.5.2"
@@ -583,7 +583,7 @@ __metadata:
   dependencies:
     "@biomejs/biome": "npm:1.9.2"
     "@bleu/tsconfig": "workspace:*"
-    "@bleu/ui": "git+ssh://git@github.com:bleu/bleu-ui.git#main"
+    "@bleu/ui": "npm:0.1.131"
     "@testing-library/jest-dom": "npm:6.5.0"
     "@testing-library/react": "npm:^16.0.1"
     "@testing-library/user-event": "npm:14.5.2"
@@ -609,9 +609,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@bleu/ui@git+ssh://git@github.com:bleu/bleu-ui.git#main":
+"@bleu/ui@npm:0.1.131":
   version: 0.1.131
-  resolution: "@bleu/ui@git+ssh://git@github.com:bleu/bleu-ui.git#commit=a62f7430692a0a80e9b79c7fa7494ea9fee59b22"
+  resolution: "@bleu/ui@npm:0.1.131::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40bleu%2Fui%2F0.1.131%2F5f6721fa77e44f84fa271344c9aa27d708c9832c"
   dependencies:
     "@radix-ui/react-accordion": "npm:^1.2.0"
     "@radix-ui/react-alert-dialog": "npm:^1.1.1"
@@ -667,7 +667,7 @@ __metadata:
     react-dom: ">=18"
     react-hook-form: ^7.50.1
     react-router-dom: ^6.21.0
-  checksum: 10c0/081db5b5192322bc897a1324fbf958d2044e6379ac3c067e1acf6cdd1c030ccc15e19c26a7dac347dabcd224cd926dff01d37bb9d5900d406c65ea7faa178524
+  checksum: 10c0/c17cbe167b5a6716b8bf2f9909eced384c8ffd1d6928e4af625a9b41b49dcb6b2b7656847aa5515bbb8300f92f8865d9adba3670f53512da4bc44521971d1bd2
   languageName: node
   linkType: hard
 
@@ -3532,17 +3532,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*":
-  version: 18.3.7
-  resolution: "@types/react@npm:18.3.7"
-  dependencies:
-    "@types/prop-types": "npm:*"
-    csstype: "npm:^3.0.2"
-  checksum: 10c0/460f40eadf1fd035344b2ff9061d5c2314db9403f76d05fff7724c78543737c95829e1628567c63d27b542647867eca5b6f284dfd38f1d3b70754f32c4cbecb7
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:^18.3.8":
+"@types/react@npm:*, @types/react@npm:^18.3.8":
   version: 18.3.8
   resolution: "@types/react@npm:18.3.8"
   dependencies:
