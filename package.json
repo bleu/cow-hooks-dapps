@@ -4,14 +4,14 @@
   "private": true,
   "description": "",
   "scripts": {
-    "dev": "pnpm --stream -r dev",
-    "test:jest": "pnpm --stream --parallel -r test:jest",
+    "dev": "yarn next dev",
+    "test:jest": "yarn --stream --parallel -r test:jest",
     "format:check": "prettier --check .",
-    "lint-all": "pnpm --stream --parallel --if-present -r --include-workspace-root lint",
-    "lint-fix-all": "pnpm --stream --parallel --if-present -r --include-workspace-root lint:fix",
+    "lint-all": "yarn --stream --parallel --if-present -r --include-workspace-root lint",
+    "lint-fix-all": "yarn --stream --parallel --if-present -r --include-workspace-root lint:fix",
     "format": "prettier --write .",
-    "graphql:update-types": "pnpm --stream --parallel --if-present -r graphql:update-types",
-    "ci": "concurrently -c \"auto\" -p \"name\" -n \"format,lint\" \"pnpm format:check\" \"pnpm lint-all\" "
+    "graphql:update-types": "yarn --stream --parallel --if-present -r graphql:update-types",
+    "ci": "concurrently -c \"auto\" -p \"name\" -n \"format,lint\" \"yarn format:check\" \"yarn lint-all\" "
   },
   "repository": {
     "type": "git",

@@ -1,9 +1,7 @@
 {
   "name": "@bleu/cow-hooks-ui",
   "dependencies": {
-    "@bleu/cow-hooks-ui": "workspace:*",
     "@bleu/tsconfig": "workspace:*",
-    "@bleu/ui": "git+ssh://git@github.com:bleu/bleu-ui.git#main",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
