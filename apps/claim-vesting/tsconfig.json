@@ -4,7 +4,7 @@
     "baseUrl": "./src",
     "paths": {
       "#/*": ["./*"],
-      "@bleu/cow-hooks-ui": ["../../../packages/hooks-ui/src"]
+      "@bleu/cow-hooks-ui": ["../../../packages/cow-hooks-ui/src"]
     },
     "plugins": [
       {
