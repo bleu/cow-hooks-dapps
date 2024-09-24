@@ -4,14 +4,8 @@
   "private": true,
   "description": "",
   "scripts": {
-    "dev": "pnpm --stream -r dev",
-    "test:jest": "pnpm --stream --parallel -r test:jest",
-    "format:check": "prettier --check .",
-    "lint-all": "pnpm --stream --parallel --if-present -r --include-workspace-root lint",
-    "lint-fix-all": "pnpm --stream --parallel --if-present -r --include-workspace-root lint:fix",
-    "format": "prettier --write .",
-    "graphql:update-types": "pnpm --stream --parallel --if-present -r graphql:update-types",
-    "ci": "concurrently -c \"auto\" -p \"name\" -n \"format,lint\" \"pnpm format:check\" \"pnpm lint-all\" "
+    "dev": "turbo dev",
+    "build": "turbo build"
   },
   "repository": {
     "type": "git",
@@ -19,10 +13,13 @@
   },
   "config": {
     "ghooks": {
-      "pre-commit": "pnpx lint-staged --relative"
+      "pre-commit": "yarn lint-staged --relative"
     }
   },
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "engines": {
     "node": ">=22"
   },
@@ -36,11 +33,12 @@
     "@biomejs/biome": "1.9.2",
     "@commitlint/cli": "19.5.0",
     "@commitlint/config-conventional": "19.5.0",
-    "@types/node": "^22.5.5",
+    "@types/node": "^22.6.1",
     "concurrently": "^9.0.1",
     "ghooks": "^2.0.4",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
+    "turbo": "2.1.2",
     "typescript": "^5.6.2"
   },
   "packageManager": "yarn@4.5.0"

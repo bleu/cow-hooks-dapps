@@ -72,3 +72,5 @@ yarn-error.log*
 # Deployment platforms
 
 .vercel
+
+.turbo
