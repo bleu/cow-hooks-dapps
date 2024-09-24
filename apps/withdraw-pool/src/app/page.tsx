@@ -1,6 +1,5 @@
 "use client";
 
-import { Input } from "@bleu/cow-hooks-ui";
 import { Button, Form } from "@bleu/ui";
 import {
   type HookDappContext,
@@ -12,10 +11,10 @@ import { useForm, useWatch } from "react-hook-form";
 import { PoolBalancesPreview } from "#/components/PoolBalancePreview";
 import { PoolsDropdownMenu } from "#/components/PoolsDropdownMenu";
 import { WithdrawPctSlider } from "#/components/WithdrawPctSlider";
-import { usePoolUserBalance } from "#/hooks/usePoolUserBalance";
 import type { IMinimalPool } from "#/types";
-import { multiplyValueByPct } from "#/utils";
+import { multiplyValueByPct } from "#/utils/math";
 import { withdrawSchema } from "#/utils/schema";
+import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
 
 export default function Page() {
   const [context, setContext] = useState<HookDappContext | null>(null);
@@ -32,13 +31,19 @@ export default function Page() {
 
   const { withdrawPct, poolId } = useWatch({ control });
 
-  const poolBalances = usePoolUserBalance(poolId);
+  const { data: poolBalances } = useUserPoolBalance({
+    user: context?.account,
+    chainId: context?.chainId,
+    poolId,
+  });
+
   const poolBalancesAfterWithdraw = useMemo(() => {
     if (!poolBalances || !withdrawPct) return [];
+    console.log({ poolBalances });
     return poolBalances.map((poolBalance) => ({
       ...poolBalance,
-      balance: multiplyValueByPct(poolBalance.balance, withdrawPct),
-      fiatAmount: multiplyValueByPct(poolBalance.fiatAmount, withdrawPct),
+      balance: poolBalance.balance.mul(withdrawPct).div(100),
+      fiatAmount: (poolBalance.fiatAmount * withdrawPct) / 100,
     }));
   }, [poolBalances, withdrawPct]);
 
@@ -52,19 +57,18 @@ export default function Page() {
     initCoWHookDapp({ onContext: setContext });
   }, []);
 
+  if (!context) return <div className="w-full text-center p-2">Loading...</div>;
+
   return (
     <Form {...form} className="w-full flex flex-col gap-2 py-2 px-4">
       <PoolsDropdownMenu
         account={context?.account}
+        chainId={context?.chainId}
         onSelect={(pool: IMinimalPool) => setValue("poolId", pool.id)}
         selectedPoolId={poolId}
       />
       {poolId && (
         <div className="size-full flex flex-col gap-2">
-          {/* <PoolBalancesPreview
-            label="Current balance"
-            poolBalance={poolBalances}
-          /> */}
           <WithdrawPctSlider />
           <PoolBalancesPreview
             label="Withdraw balance"

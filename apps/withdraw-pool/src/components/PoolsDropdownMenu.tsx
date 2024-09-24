@@ -7,7 +7,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  Label,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -17,23 +16,26 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
 import { useUserPools } from "#/hooks/useUserPools";
 import type { IMinimalPool } from "#/types";
+import { SupportedChainId } from "@cowprotocol/cow-sdk";
 
 export function PoolsDropdownMenu({
+  chainId,
   account,
   onSelect,
   selectedPoolId,
 }: {
+  chainId: SupportedChainId;
   account?: string;
   onSelect: (pool: IMinimalPool) => void;
   selectedPoolId?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const pools = useUserPools(account);
+  const { data: pools } = useUserPools(chainId, account);
   const [search, setSearch] = useState("");
 
   const selectedPool = useMemo(
-    () => pools.find((pool) => pool.id === selectedPoolId),
-    [pools, selectedPoolId],
+    () => pools?.find((pool) => pool.id === selectedPoolId),
+    [pools, selectedPoolId]
   );
 
   return (
@@ -45,7 +47,7 @@ export function PoolsDropdownMenu({
               "flex p-2 justify-between rounded-md space-x-1",
               selectedPoolId
                 ? "bg-muted text-white hover:text-primary"
-                : "bg-primary text-primary-foreground",
+                : "bg-primary text-primary-foreground"
             )}
             onClick={() => setOpen(true)}
             type="button"
@@ -67,10 +69,10 @@ export function PoolsDropdownMenu({
           }}
           value={search}
         >
-          <CommandInput className="text-black" />
+          <CommandInput className="text-black pb-2" />
           <CommandList className="w-full">
             <CommandEmpty className="w-full">No results found</CommandEmpty>
-            {pools.map((pool) => (
+            {pools?.map((pool) => (
               <CommandItem
                 key={pool.id}
                 value={

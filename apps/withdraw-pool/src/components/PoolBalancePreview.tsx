@@ -3,6 +3,7 @@
 import { TokenAmount, TokenInfo, TokenLogo } from "@bleu/cow-hooks-ui";
 import { Label, cn } from "@bleu/ui";
 import type { IPoolBalance } from "../types";
+import { formatUnits } from "ethers/lib/utils";
 
 export function PoolBalancesPreview({
   label,
@@ -13,6 +14,7 @@ export function PoolBalancesPreview({
   poolBalance: IPoolBalance[];
   className?: string;
 }) {
+  console.log({ poolBalance });
   return (
     <div className={cn("p-2", className)}>
       <div>
@@ -40,8 +42,10 @@ export function PoolBalancePreview({
       <TokenInfo token={poolBalance.token} showExplorerLink={true} />
       <TokenAmount
         token={poolBalance.token}
-        balance={Number(poolBalance.balance)}
-        fiatValue={Number(poolBalance.fiatAmount)}
+        balance={Number(
+          formatUnits(poolBalance.balance, poolBalance.token.decimals)
+        )}
+        fiatValue={poolBalance.fiatAmount}
       />
     </div>
   );

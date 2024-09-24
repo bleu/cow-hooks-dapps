@@ -566,6 +566,7 @@ __metadata:
     "@biomejs/biome": "npm:1.9.2"
     "@commitlint/cli": "npm:19.5.0"
     "@commitlint/config-conventional": "npm:19.5.0"
+    "@cowprotocol/cow-sdk": "npm:5.5.1"
     "@types/node": "npm:^22.6.1"
     concurrently: "npm:^9.0.1"
     ghooks: "npm:^2.0.4"
@@ -960,7 +961,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cowprotocol/cow-sdk@npm:^5.4.1":
+"@cowprotocol/cow-sdk@npm:5.5.1, @cowprotocol/cow-sdk@npm:^5.4.1":
   version: 5.5.1
   resolution: "@cowprotocol/cow-sdk@npm:5.5.1"
   dependencies:
