@@ -23,6 +23,8 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: build
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Test the app
         uses: borales/actions-yarn@v4
