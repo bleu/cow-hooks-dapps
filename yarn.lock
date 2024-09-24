@@ -582,9 +582,9 @@ __metadata:
   dependencies:
     "@biomejs/biome": "npm:1.9.2"
     "@bleu/tsconfig": "workspace:*"
+    "@bleu/ui": "npm:0.1.131"
     "@bleu/utils": "workspace:*"
     "@cowprotocol/cow-sdk": "npm:5.4.1"
-    "@bleu/ui": "npm:0.1.131"
     "@testing-library/jest-dom": "npm:6.5.0"
     "@testing-library/react": "npm:^16.0.1"
     "@testing-library/user-event": "npm:14.5.2"
@@ -942,7 +942,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cowprotocol/cow-sdk@npm:5.4.1, @cowprotocol/cow-sdk@npm:^5.4.1":
+"@cowprotocol/cow-sdk@npm:5.4.1":
   version: 5.4.1
   resolution: "@cowprotocol/cow-sdk@npm:5.4.1"
   dependencies:
@@ -957,6 +957,24 @@ __metadata:
   peerDependencies:
     ethers: ^5.7.2
   checksum: 10c0/912df8efa59344f7a1928debf6dc19edbf4235cedb8d70d7db9f8757a47030412a0a2a6d4cb8d4d25b5b8f30d8b3731e009b2f9c0a342fc99e1eb29689421a3e
+  languageName: node
+  linkType: hard
+
+"@cowprotocol/cow-sdk@npm:^5.4.1":
+  version: 5.5.1
+  resolution: "@cowprotocol/cow-sdk@npm:5.5.1"
+  dependencies:
+    "@cowprotocol/contracts": "npm:^1.6.0"
+    "@ethersproject/abstract-signer": "npm:^5.7.0"
+    "@openzeppelin/merkle-tree": "npm:^1.0.5"
+    cross-fetch: "npm:^3.1.5"
+    exponential-backoff: "npm:^3.1.1"
+    graphql: "npm:^16.3.0"
+    graphql-request: "npm:^4.3.0"
+    limiter: "npm:^2.1.0"
+  peerDependencies:
+    ethers: ^5.7.2
+  checksum: 10c0/0d2cc729db9b82032eefe71dad9d33ab0e5831929d864ceb4345f7aca485c4851b4302df4b97eff886a7e6c71bd597691a92bb01474217ca4769b94ee7e1f94e
   languageName: node
   linkType: hard
 
@@ -4110,16 +4128,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
-  version: 22.5.5
-  resolution: "@types/node@npm:22.5.5"
-  dependencies:
-    undici-types: "npm:~6.19.2"
-  checksum: 10c0/ead9495cfc6b1da5e7025856dcce2591e9bae635357410c0d2dd619fce797d2a1d402887580ca4b336cb78168b195224869967de370a23f61663cf1e4836121c
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^22.6.1":
+"@types/node@npm:*, @types/node@npm:^22.5.5, @types/node@npm:^22.6.1":
   version: 22.6.1
   resolution: "@types/node@npm:22.6.1"
   dependencies:
@@ -4152,24 +4161,24 @@ __metadata:
   linkType: hard
 
 "@types/react-redux@npm:^7.1.20":
-  version: 7.1.33
-  resolution: "@types/react-redux@npm:7.1.33"
+  version: 7.1.34
+  resolution: "@types/react-redux@npm:7.1.34"
   dependencies:
     "@types/hoist-non-react-statics": "npm:^3.3.0"
     "@types/react": "npm:*"
     hoist-non-react-statics: "npm:^3.3.0"
     redux: "npm:^4.0.0"
-  checksum: 10c0/e17a2fea00c6ab5f22868e927b4da7b7cf8dc7c85102638fa0f87e12ae0ec13335d9b3bf75098b3316dd8d2a18c99fe08bed22daa989a13f3710c4530f7b979e
+  checksum: 10c0/6750964ec656eb6973b0e4fda787549aee5dbc266a0f0e78fc9efb417b4965c0b060d10b99a7b7fa0c8812b8a0a07d97a1ef46d094bf64fee07144e8bbad781a
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.3.8":
-  version: 18.3.8
-  resolution: "@types/react@npm:18.3.8"
+"@types/react@npm:*, @types/react@npm:^18.3.7, @types/react@npm:^18.3.8":
+  version: 18.3.9
+  resolution: "@types/react@npm:18.3.9"
   dependencies:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10c0/367312c9fe276639ecb142265e090a4dd04bb39f8d718cbab546de3f1ddcfddeff415e1147d0fc40f734badaa7420b7b109d511bd4304b2c4c9c36164612fdf8
+  checksum: 10c0/a92b8e061d0c833e096254782c56a802316593f4a907fb834b557cabe848a0829b9eb6056404ea239eb4d5ec5ac7b7724309761516c0a7a277916fa04dd4f805
   languageName: node
   linkType: hard
 
@@ -6100,9 +6109,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.4":
-  version: 1.5.27
-  resolution: "electron-to-chromium@npm:1.5.27"
-  checksum: 10c0/4a057f469a01829884f2a51f3fc60af7e6a718b15009e4875df122fcdf13babea475ba029af1652a6875b4acfca730c48b13caac5d477d648e622699d3b662bf
+  version: 1.5.28
+  resolution: "electron-to-chromium@npm:1.5.28"
+  checksum: 10c0/6e2f4150ba03ce53ca128955c7d2da071d3774362a10c68848a85b71c29857915e2256cb53cd2de17fdbf0f56bf76ec174d24965abef7430d8c414ec733030b2
   languageName: node
   linkType: hard
 
@@ -12052,7 +12061,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:^3.4.12":
+"tailwindcss@npm:^3.4.12, tailwindcss@npm:^3.4.13":
   version: 3.4.13
   resolution: "tailwindcss@npm:3.4.13"
   dependencies:

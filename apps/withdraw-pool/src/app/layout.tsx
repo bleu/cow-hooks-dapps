@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Head>
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <body className={"flex h-full flex-col font-sans font-normal"}>
+      <body className="flex h-full flex-col font-sans font-normal">
         {children}
       </body>
     </html>

@@ -16,7 +16,7 @@
     "ts-jest": "^29.2.5"
   },
   "dependencies": {
-    "@cowprotocol/cow-sdk": "5.4.1"
+    "@cowprotocol/cow-sdk": "5.4.1",
     "typescript": "5.6.2"
   }
 }
