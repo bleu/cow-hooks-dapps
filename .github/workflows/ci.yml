@@ -1,44 +1,30 @@
-name: ci
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+name: CI
+on: [push]
 
 jobs:
-  run-linters:
-    name: Run linters
+  build:
+    name: Test
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-lint
-      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v3
 
-      - uses: ./.github/workflows/setup-pnpm
+      - uses: actions/setup-node@v3
         with:
-          npm_token: ${{ secrets.NPM_TOKEN }}
+          node-version: 20
 
-      - name: Check formatting and linting
-        run: pnpm run ci
-
-  run-tests:
-    name: Run tests
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-test
-      cancel-in-progress: true
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: ./.github/workflows/setup-pnpm
+      - name: Run install
+        uses: borales/actions-yarn@v4
         with:
-          npm_token: ${{ secrets.NPM_TOKEN }}
+          cmd: install
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Run tests
-        run: pnpm test:jest
+      - name: Build production bundle
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build
+
+      - name: Test the app
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: test
