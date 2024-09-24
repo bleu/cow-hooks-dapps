@@ -1,10 +1,14 @@
 {
   "name": "@bleu/cow-hooks-ui",
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
   "dependencies": {
     "@bleu/tsconfig": "workspace:*",
     "@bleu/utils": "workspace:*",
     "@cowprotocol/cow-sdk": "5.4.1",
     "@uniswap/sdk-core": "5.4.0",
+    "@bleu/ui": "0.1.131",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -14,12 +18,12 @@
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "14.5.2",
     "@types/jest": "^29.5.13",
-    "@types/node": "^22.5.5",
-    "@types/react": "^18.3.7",
+    "@types/node": "^22.6.1",
+    "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.12",
+    "tailwindcss": "^3.4.13",
     "typescript": "5.6.2"
   }
 }
