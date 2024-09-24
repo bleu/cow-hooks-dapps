@@ -2,9 +2,9 @@
 import { formatNumber } from "@bleu/ui";
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
 
-import { TokenLogo } from "./TokenLogo";
+import type { Token } from "@uniswap/sdk-core";
 import { BlockExplorerLink } from "./ExplorerLink";
-import { Token } from "@uniswap/sdk-core";
+import { TokenLogo } from "./TokenLogo";
 
 export function TokenInfo({
   token,

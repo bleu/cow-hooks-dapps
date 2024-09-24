@@ -1,3 +1,61 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+div[data-rk] {
+  flex: 1;
+}
+
+@layer base {
+  :root {
+    --background: 238 53% 12%;
+    --foreground: 0 0% 100%;
+    --border: 238 53% 12%;
+    --input: 201 100% 67%;
+    --primary: 201 100% 67%;
+    --primary-foreground: 198 42% 6%;
+    --secondary: 266 83% 57%;
+    --secondary-foreground: 238 42% 16%;
+    --destructive: 348 86% 61%;
+    --destructive-foreground: 10 22% 11%;
+    --muted: 238 42% 16%;
+    --muted-foreground: 203 13% 88%;
+    --accent: 201 100% 67%;
+    --accent-foreground: 198 42% 6%;
+    --popover: 238 42% 16%;
+    --popover-foreground: 0 0% 100%;
+    --card: 238 42% 16%;
+    --card-foreground: 0 0% 100%;
+    --radius: 20px;
+    --highlight: 42 100% 71%;
+    --info: 203 13% 88%;
+    --success: 162 99% 40%;
+    --warning: 42 100% 71%;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    @apply bg-background text-foreground;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+}

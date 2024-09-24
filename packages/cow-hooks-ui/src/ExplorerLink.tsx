@@ -2,15 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { ReactElement } from "react";
+import type React from "react";
+import type { ReactElement } from "react";
 
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import {
-  truncateAddress,
-  BlockExplorerLinkType,
-  getBlockExplorerUrl,
+  type BlockExplorerLinkType,
   CHAIN_INFO,
+  getBlockExplorerUrl,
+  truncateAddress,
 } from "@bleu/utils";
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 
 export interface Props {
   /**
@@ -28,7 +29,7 @@ export interface Props {
   /**
    * label to replace textContent generated from identifier
    */
-  label?: string | ReactElement | void;
+  label?: string | ReactElement | undefined;
 
   /**
    * Use the URL as a label

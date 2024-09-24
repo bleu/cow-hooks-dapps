@@ -9440,7 +9440,7 @@ export const cowTokenList = [
     index ===
     self.findIndex(
       (t) =>
-        t.address.toLowerCase() == token.address.toLowerCase() &&
-        t.chainId == token.chainId
-    )
+        t.address.toLowerCase() === token.address.toLowerCase() &&
+        t.chainId === token.chainId,
+    ),
 );

@@ -1,11 +1,11 @@
 "use client";
 
-import { StrictMode, useEffect, useState } from "react";
+import { TokenLogo } from "@bleu/cow-hooks-ui";
 import {
-  initCoWHookDapp,
   type HookDappContext,
+  initCoWHookDapp,
 } from "@cowprotocol/hook-dapp-lib";
-import { Dialog } from "@bleu/ui";
+import { StrictMode, useEffect, useState } from "react";
 
 export default function Page() {
   const [context, setContext] = useState<HookDappContext | null>(null);
@@ -16,7 +16,6 @@ export default function Page() {
 
   return (
     <StrictMode>
-      <Dialog />
       <p>This is a test</p>
     </StrictMode>
   );

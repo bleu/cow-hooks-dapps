@@ -1,6 +1,6 @@
 // from https://github.com/cowprotocol/cowswap/blob/ebab592e50a8a5246e4014f2ea44bd4342846894/libs/common-utils/src/legacyAddressUtils.ts#L10
 
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { CHAIN_INFO } from "./chainInfo";
 import { getExplorerOrderLink } from "./cowExplorer";
 
@@ -20,9 +20,8 @@ export type BlockExplorerLinkType =
 function getEtherscanUrl(
   chainId: SupportedChainId,
   data: string,
-  type: BlockExplorerLinkType
+  type: BlockExplorerLinkType,
 ): string {
-  console.log(chainId);
   const basePath = CHAIN_INFO[chainId].explorer;
 
   switch (type) {
@@ -38,7 +37,6 @@ function getEtherscanUrl(
       return `${basePath}/tx/${data}#eventlog`;
     case "contract":
       return `${basePath}/address/${data}#code`;
-    case "address":
     default:
       return `${basePath}/address/${data}`;
   }
@@ -48,7 +46,7 @@ function getEtherscanUrl(
 export function getBlockExplorerUrl(
   chainId: SupportedChainId,
   type: BlockExplorerLinkType,
-  data: string
+  data: string,
 ): string {
   return getEtherscanUrl(chainId, data, type);
 }
@@ -62,21 +60,20 @@ export function isCowOrder(type: BlockExplorerLinkType, data?: string) {
 export function getEtherscanLink(
   chainId: SupportedChainId,
   type: BlockExplorerLinkType,
-  data: string
+  data: string,
 ): string {
   if (isCowOrder(type, data)) {
     // Explorer for CoW orders:
     //    If a transaction has the size of the CoW orderId, then it's a meta-tx
     return getExplorerOrderLink(chainId, data);
-  } else {
-    return getEtherscanUrl(chainId, data, type);
   }
+  return getEtherscanUrl(chainId, data, type);
 }
 
 export function getExplorerLabel(
   chainId: SupportedChainId,
   type: BlockExplorerLinkType,
-  data?: string
+  data?: string,
 ): string {
   if (isCowOrder(type, data)) {
     return "View on Explorer";
@@ -90,7 +87,7 @@ export function getExplorerLabel(
 export function shortenOrderId(
   orderId: string,
   start = 0,
-  chars = ORDER_ID_SHORT_LENGTH
+  chars = ORDER_ID_SHORT_LENGTH,
 ): string {
   return orderId.substring(start, chars + start);
 }

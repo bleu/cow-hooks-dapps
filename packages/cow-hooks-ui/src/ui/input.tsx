@@ -1,6 +1,10 @@
-import { cn, Input as InputPrimitive, Label } from "@bleu/ui";
-import React, { HTMLProps } from "react";
-import { FieldError, RegisterOptions, useFormContext } from "react-hook-form";
+import { Input as InputPrimitive, Label, cn } from "@bleu/ui";
+import React, { type HTMLProps } from "react";
+import {
+  type FieldError,
+  type RegisterOptions,
+  useFormContext,
+} from "react-hook-form";
 
 import { InfoTooltip } from "./tooltip";
 
@@ -36,7 +40,7 @@ export const Input = React.forwardRef<HTMLInputElement, IInput>(
     const errorMessage = error?.message;
 
     return (
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         {label && (
           <div className="flex flex-row gap-x-2 items-center mb-2">
             <Label className="block text-sm">{label}</Label>
@@ -51,7 +55,7 @@ export const Input = React.forwardRef<HTMLInputElement, IInput>(
           {...register(name, validation)}
           className={cn(
             "w-full shadow-none rounded-md placeholder:opacity-50 border border-border",
-            className
+            className,
           )}
         />
 
@@ -60,5 +64,5 @@ export const Input = React.forwardRef<HTMLInputElement, IInput>(
         )}
       </div>
     );
-  }
+  },
 );

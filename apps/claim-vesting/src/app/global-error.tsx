@@ -1,20 +1,13 @@
 "use client";
 
-export default function GlobalError({
-  error,
-  reset,
-}: {
-  error: Error;
-  reset: () => void;
-}) {
+export default function GlobalError({ error }: { error: Error }) {
   /* eslint-disable-next-line no-console */
   console.error(error);
 
   return (
-    <html>
+    <html lang="en">
       <body>
         <h2>Something went wrong!</h2>
-        <button onClick={() => reset()}>Try again</button>
       </body>
     </html>
   );

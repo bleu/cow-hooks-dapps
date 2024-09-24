@@ -30,30 +30,28 @@ export function getExplorerBaseUrl(chainId: SupportedChainId): string {
 
   if (!baseUrl) {
     throw new Error(
-      "Unsupported Network. The operator API is not deployed in the Network " +
-        chainId
+      `Unsupported Network. The operator API is not deployed in the Network ${chainId}`,
     );
-  } else {
-    return baseUrl;
   }
+  return baseUrl;
 }
 
 export function getExplorerOrderLink(
   chainId: SupportedChainId,
-  orderId: UID
+  orderId: UID,
 ): string {
   const baseUrl = getExplorerBaseUrl(chainId);
 
-  return baseUrl + `/orders/${orderId}`;
+  return `${baseUrl}/orders/${orderId}`;
 }
 
 export function getExplorerAddressLink(
   chainId: SupportedChainId,
-  address: string
+  address: string,
 ): string {
   const baseUrl = getExplorerBaseUrl(chainId);
 
-  return baseUrl + `/address/${address}`;
+  return `${baseUrl}/address/${address}`;
 }
 
 enum Explorers {
@@ -67,13 +65,15 @@ enum Explorers {
 export function detectExplorer(href: string) {
   if (href.includes("explorer")) {
     return Explorers.Explorer;
-  } else if (href.includes("blockscout")) {
-    return Explorers.Blockscout;
-  } else if (href.includes("etherscan")) {
-    return Explorers.Etherscan;
-  } else if (href.includes("arbiscan")) {
-    return Explorers.Arbiscan;
-  } else {
-    return undefined;
   }
+  if (href.includes("blockscout")) {
+    return Explorers.Blockscout;
+  }
+  if (href.includes("etherscan")) {
+    return Explorers.Etherscan;
+  }
+  if (href.includes("arbiscan")) {
+    return Explorers.Arbiscan;
+  }
+  return undefined;
 }

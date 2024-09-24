@@ -1,11 +1,11 @@
 "use client";
 
+import { cowTokenList } from "@bleu/utils";
 import Image from "next/image";
 import { useState } from "react";
-import { cowTokenList } from "@bleu/utils";
 
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { Token } from "@uniswap/sdk-core";
+import type { Token } from "@uniswap/sdk-core";
 
 type ImageAttributes = React.DetailedHTMLProps<
   React.ImgHTMLAttributes<HTMLImageElement>,
@@ -22,17 +22,17 @@ const tokenUrlRoot =
 
 export const cowprotocolTokenLogoUrl = (
   address?: string,
-  chainId?: SupportedChainId
+  chainId?: SupportedChainId,
 ) => `${tokenUrlRoot}/${chainId}/${address}/logo.png`;
 
 export const cowTokenListLogoUrl = (
   address?: string,
-  chainId?: SupportedChainId
+  chainId?: SupportedChainId,
 ) => {
   return cowTokenList.find(
     (token) =>
       token.chainId === chainId &&
-      token.address.toLowerCase() === address?.toLowerCase()
+      token.address.toLowerCase() === address?.toLowerCase(),
   )?.logoURI;
 };
 
@@ -45,7 +45,7 @@ const chainIdToName: Record<SupportedChainId, string> = {
 
 export function trustTokenLogoUrl(
   address?: string,
-  chainId?: SupportedChainId
+  chainId?: SupportedChainId,
 ): string {
   return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainIdToName[chainId || 1]}/assets/${address}/logo.png`;
 }
