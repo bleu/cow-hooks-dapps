@@ -1,3 +1,8 @@
+export * from "./cowTokenList";
+export * from "./addressUtils";
+export * from "./chainInfo";
+export * from "./cowExplorer";
+
 export { default as parseFixed } from "./parseFixed";
 
 export type Address = `0x${string}`;
@@ -171,8 +176,8 @@ const networksNamesOnBalancer = [
 
 export const networksOnBalancer = Object.fromEntries(
   Object.entries(networkIdEnumMap).filter(([key]) =>
-    networksNamesOnBalancer.includes(key),
-  ),
+    networksNamesOnBalancer.includes(key)
+  )
 );
 
 export function networkFor(key?: string | number) {
@@ -192,7 +197,7 @@ export function networkIdFor(name?: string) {
 
 export function unsafeNetworkIdFor(name: string) {
   return Object.keys(networkIdEnumMap).find(
-    (key) => networkIdEnumMap[key as keyof typeof networkIdEnumMap] === name,
+    (key) => networkIdEnumMap[key as keyof typeof networkIdEnumMap] === name
   );
 }
 
@@ -215,4 +220,13 @@ export function formatDate(date: Date): string {
     year: "numeric",
     timeZone: "UTC",
   });
+}
+
+export function truncateAddress(address?: string | null) {
+  if (!address) return address;
+
+  const match = address.match(/^([a-zA-Z0-9]{6})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/);
+  if (!match) return address;
+
+  return `${match[1]}…${match[2]}`;
 }
