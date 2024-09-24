@@ -16,6 +16,8 @@
     "@bleu/cow-hooks-ui": "workspace:*",
     "@bleu/tsconfig": "workspace:*",
     "@bleu/ui": "git+ssh://git@github.com:bleu/bleu-ui.git#main",
+    "@cowprotocol/hook-dapp-lib": "1.0.0-RC0",
+    "@ethersproject/providers": "5.7.2",
     "babel-plugin-react-compiler": "0.0.0-experimental-6067d4e-20240919",
     "next": "15.0.0-rc.0",
     "react": "19.0.0-rc-e4953922-20240919",
