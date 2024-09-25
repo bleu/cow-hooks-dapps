@@ -13,8 +13,11 @@ const { concatFilesForPrettier } = require("../../lint-staged.common.js");
  * @type {Record<string, (filenames: string[]) => string | string[] | Promise<string | string[]>>}
  */
 const rules = {
-  "**/*.{json,md,mdx,css,html,yml,yaml,scss}": (filenames) => {
+  "**/*.{css,scss,ts,js,tsx,jsx,mjs}": (filenames) => {
     return [`yarn biome check --write ${concatFilesForPrettier(filenames)}`];
+  },
+  "**/*.{json,md,mdx,html,yml,yaml}": (filenames) => {
+    return [`prettier --write ${concatFilesForPrettier(filenames)}`];
   },
 };
 

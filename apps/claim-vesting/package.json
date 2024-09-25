@@ -4,17 +4,14 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "build:prepare:gql": "cd ../../ && pnpm run -C=packages/gql graphql:update-types",
-    "build:prepare": "pnpm npm-run-all -l --parallel 'build:prepare:gql'",
-    "dev": "pnpm npm-run-all -l --parallel dev:**",
-    "dev:next": "next dev",
-    "start": "next start",
-    "lint": "eslint '**/*.{ts,tsx}'",
-    "lint:fix": "eslint '**/*.{ts,tsx}' --fix"
+    "dev": "next dev",
+    "check-types": "tsc --noEmit",
+    "start": "next start"
   },
   "dependencies": {
     "@bleu/cow-hooks-ui": "workspace:*",
     "@bleu/tsconfig": "workspace:*",
+    "@bleu/ui": "0.1.131",
     "@cowprotocol/hook-dapp-lib": "1.0.0-RC0",
     "@ethersproject/providers": "5.7.2",
     "babel-plugin-react-compiler": "0.0.0-experimental-6067d4e-20240923",
@@ -38,7 +35,7 @@
     "autoprefixer": "^10.4.20",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.12",
+    "tailwindcss": "^3.4.13",
     "typescript": "5.6.2"
   }
 }

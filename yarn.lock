@@ -547,6 +547,7 @@ __metadata:
     "@biomejs/biome": "npm:1.9.2"
     "@bleu/cow-hooks-ui": "workspace:*"
     "@bleu/tsconfig": "workspace:*"
+    "@bleu/ui": "npm:0.1.131"
     "@cowprotocol/hook-dapp-lib": "npm:1.0.0-RC0"
     "@ethersproject/providers": "npm:5.7.2"
     "@testing-library/jest-dom": "npm:6.5.0"
@@ -566,7 +567,7 @@ __metadata:
     react: "npm:19.0.0-rc-e4953922-20240919"
     react-dom: "npm:19.0.0-rc-e4953922-20240919"
     swr: "npm:2.2.5"
-    tailwindcss: "npm:^3.4.12"
+    tailwindcss: "npm:^3.4.13"
     typescript: "npm:5.6.2"
     viem: "npm:2.21.14"
   languageName: unknown
@@ -579,11 +580,12 @@ __metadata:
     "@biomejs/biome": "npm:1.9.2"
     "@commitlint/cli": "npm:19.5.0"
     "@commitlint/config-conventional": "npm:19.5.0"
-    "@types/node": "npm:^22.5.5"
+    "@types/node": "npm:^22.6.1"
     concurrently: "npm:^9.0.1"
     ghooks: "npm:^2.0.4"
     lint-staged: "npm:^15.2.10"
     prettier: "npm:^3.3.3"
+    turbo: "npm:2.1.2"
     typescript: "npm:^5.6.2"
   languageName: unknown
   linkType: soft
@@ -593,21 +595,20 @@ __metadata:
   resolution: "@bleu/cow-hooks-ui@workspace:packages/cow-hooks-ui"
   dependencies:
     "@biomejs/biome": "npm:1.9.2"
-    "@bleu/cow-hooks-ui": "workspace:*"
     "@bleu/tsconfig": "workspace:*"
-    "@bleu/ui": "git+ssh://git@github.com:bleu/bleu-ui.git#main"
+    "@bleu/ui": "npm:0.1.131"
     "@testing-library/jest-dom": "npm:6.5.0"
     "@testing-library/react": "npm:^16.0.1"
     "@testing-library/user-event": "npm:14.5.2"
     "@types/jest": "npm:^29.5.13"
-    "@types/node": "npm:^22.5.5"
-    "@types/react": "npm:^18.3.7"
+    "@types/node": "npm:^22.6.1"
+    "@types/react": "npm:^18.3.8"
     "@types/react-dom": "npm:^18.3.0"
     autoprefixer: "npm:^10.4.20"
     postcss: "npm:^8.4.47"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    tailwindcss: "npm:^3.4.12"
+    tailwindcss: "npm:^3.4.13"
     typescript: "npm:5.6.2"
   languageName: unknown
   linkType: soft
@@ -621,9 +622,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@bleu/ui@git+ssh://git@github.com:bleu/bleu-ui.git#main":
+"@bleu/ui@npm:0.1.131":
   version: 0.1.131
-  resolution: "@bleu/ui@git+ssh://git@github.com:bleu/bleu-ui.git#commit=a62f7430692a0a80e9b79c7fa7494ea9fee59b22"
+  resolution: "@bleu/ui@npm:0.1.131::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40bleu%2Fui%2F0.1.131%2F5f6721fa77e44f84fa271344c9aa27d708c9832c"
   dependencies:
     "@radix-ui/react-accordion": "npm:^1.2.0"
     "@radix-ui/react-alert-dialog": "npm:^1.1.1"
@@ -679,7 +680,7 @@ __metadata:
     react-dom: ">=18"
     react-hook-form: ^7.50.1
     react-router-dom: ^6.21.0
-  checksum: 10c0/081db5b5192322bc897a1324fbf958d2044e6379ac3c067e1acf6cdd1c030ccc15e19c26a7dac347dabcd224cd926dff01d37bb9d5900d406c65ea7faa178524
+  checksum: 10c0/c17cbe167b5a6716b8bf2f9909eced384c8ffd1d6928e4af625a9b41b49dcb6b2b7656847aa5515bbb8300f92f8865d9adba3670f53512da4bc44521971d1bd2
   languageName: node
   linkType: hard
 
@@ -692,6 +693,7 @@ __metadata:
     "@jest/globals": "npm:^29.7.0"
     jest: "npm:^29.7.0"
     ts-jest: "npm:^29.2.5"
+    typescript: "npm:5.6.2"
   languageName: unknown
   linkType: soft
 
@@ -3903,7 +3905,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^22.5.5":
+"@types/node@npm:*":
   version: 22.5.5
   resolution: "@types/node@npm:22.5.5"
   dependencies:
@@ -3913,11 +3915,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:^22.6.1":
-  version: 22.7.1
-  resolution: "@types/node@npm:22.7.1"
+  version: 22.6.1
+  resolution: "@types/node@npm:22.6.1"
   dependencies:
     undici-types: "npm:~6.19.2"
-  checksum: 10c0/5647181455d543992f5e93165e7ad2ca0e97402e748a1209c07135320b6f220ffb5b2531b0412d6d33bb3173b5bcd9418899d9fa6f04596a5ec9f338b2f37992
+  checksum: 10c0/79fdb14f268070eb21d25f3e81811b73c10dfcc65a638a6546fd97aa3e7dfe473f31a547fd21c43b8559a435b6ab26057066a47b5453bd1b1cdffe14430ac399
   languageName: node
   linkType: hard
 
@@ -3956,23 +3958,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.3.7":
-  version: 18.3.7
-  resolution: "@types/react@npm:18.3.7"
+"@types/react@npm:*, @types/react@npm:^18.3.8":
+  version: 18.3.8
+  resolution: "@types/react@npm:18.3.8"
   dependencies:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10c0/460f40eadf1fd035344b2ff9061d5c2314db9403f76d05fff7724c78543737c95829e1628567c63d27b542647867eca5b6f284dfd38f1d3b70754f32c4cbecb7
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:^18.3.8":
-  version: 18.3.9
-  resolution: "@types/react@npm:18.3.9"
-  dependencies:
-    "@types/prop-types": "npm:*"
-    csstype: "npm:^3.0.2"
-  checksum: 10c0/a92b8e061d0c833e096254782c56a802316593f4a907fb834b557cabe848a0829b9eb6056404ea239eb4d5ec5ac7b7724309761516c0a7a277916fa04dd4f805
+  checksum: 10c0/367312c9fe276639ecb142265e090a4dd04bb39f8d718cbab546de3f1ddcfddeff415e1147d0fc40f734badaa7420b7b109d511bd4304b2c4c9c36164612fdf8
   languageName: node
   linkType: hard
 
@@ -11616,9 +11608,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:^3.4.12":
-  version: 3.4.12
-  resolution: "tailwindcss@npm:3.4.12"
+"tailwindcss@npm:^3.4.13":
+  version: 3.4.13
+  resolution: "tailwindcss@npm:3.4.13"
   dependencies:
     "@alloc/quick-lru": "npm:^5.2.0"
     arg: "npm:^5.0.2"
@@ -11645,7 +11637,7 @@ __metadata:
   bin:
     tailwind: lib/cli.js
     tailwindcss: lib/cli.js
-  checksum: 10c0/9ed1449d3b98ce54c6c3a6c3354121a14b39d8dba28815ea1b0fc5a0b32422a744545ba357690468912a1a781593bc7da3d4e56367abed284a300ae1fb0ab42b
+  checksum: 10c0/c6525be3dd26febc4ec5e45e80596bff8b48ade7de258c1ec8704297bf47c1ec7b2b186b13662ebaa6ab4795ad8879fb64064f796756bfc8b46558b542b01a6c
   languageName: node
   linkType: hard
 
@@ -11900,6 +11892,77 @@ __metadata:
   version: 2.7.0
   resolution: "tslib@npm:2.7.0"
   checksum: 10c0/469e1d5bf1af585742128827000711efa61010b699cb040ab1800bcd3ccdd37f63ec30642c9e07c4439c1db6e46345582614275daca3e0f4abae29b0083f04a6
+  languageName: node
+  linkType: hard
+
+"turbo-darwin-64@npm:2.1.2":
+  version: 2.1.2
+  resolution: "turbo-darwin-64@npm:2.1.2"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"turbo-darwin-arm64@npm:2.1.2":
+  version: 2.1.2
+  resolution: "turbo-darwin-arm64@npm:2.1.2"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"turbo-linux-64@npm:2.1.2":
+  version: 2.1.2
+  resolution: "turbo-linux-64@npm:2.1.2"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"turbo-linux-arm64@npm:2.1.2":
+  version: 2.1.2
+  resolution: "turbo-linux-arm64@npm:2.1.2"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"turbo-windows-64@npm:2.1.2":
+  version: 2.1.2
+  resolution: "turbo-windows-64@npm:2.1.2"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"turbo-windows-arm64@npm:2.1.2":
+  version: 2.1.2
+  resolution: "turbo-windows-arm64@npm:2.1.2"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"turbo@npm:2.1.2":
+  version: 2.1.2
+  resolution: "turbo@npm:2.1.2"
+  dependencies:
+    turbo-darwin-64: "npm:2.1.2"
+    turbo-darwin-arm64: "npm:2.1.2"
+    turbo-linux-64: "npm:2.1.2"
+    turbo-linux-arm64: "npm:2.1.2"
+    turbo-windows-64: "npm:2.1.2"
+    turbo-windows-arm64: "npm:2.1.2"
+  dependenciesMeta:
+    turbo-darwin-64:
+      optional: true
+    turbo-darwin-arm64:
+      optional: true
+    turbo-linux-64:
+      optional: true
+    turbo-linux-arm64:
+      optional: true
+    turbo-windows-64:
+      optional: true
+    turbo-windows-arm64:
+      optional: true
+  bin:
+    turbo: bin/turbo
+  checksum: 10c0/826b1a43d9d22a4fe2263cd52ee9e4f04356cf7ae939e50e237b2ad726cc2080b1c2284d39aeee3ae9930063af0f641a98edb42ee101930910f17eb1906c7a4b
   languageName: node
   linkType: hard
 
