@@ -20,7 +20,6 @@ import {
 import { useEffect, useState } from "react";
 
 import { useClaimVestingData } from "../hooks/useClaimVestingData";
-import { VestingEscrowAbi } from "#/abis/VestingEscrowAbi";
 
 export default function Page() {
   const { theme, toggleTheme } = useTheme();
@@ -52,9 +51,6 @@ export default function Page() {
 
   const handleAddHook = () => {
     if (!actions || !account || !callData || !gasLimit) return;
-    console.log("calldata", callData);
-    console.log("gasLimit", gasLimit);
-    console.log("debouncedAddress", debouncedAddress);
     actions.addHook({
       hook: {
         target: debouncedAddress,

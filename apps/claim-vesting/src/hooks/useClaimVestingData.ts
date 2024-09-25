@@ -114,7 +114,6 @@ export const useClaimVestingData = ({
       refreshInterval: 0,
     }
   );
-  console.log("amount", claimableAmountWei);
   const stringGasLimit = gasLimit ? String(gasLimit) : undefined;
 
   return {
