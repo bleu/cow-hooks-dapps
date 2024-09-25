@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "#/*": ["./src/*"]
+      "#/*": ["./src/*"],
+      "@bleu/utils": ["../utils/src/*"]
     }
   },
   "content": ["./src/**/*.{js,ts,jsx,tsx}"],

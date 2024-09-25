@@ -6,6 +6,9 @@
   "dependencies": {
     "@bleu/tsconfig": "workspace:*",
     "@bleu/ui": "0.1.131",
+    "@bleu/utils": "workspace:*",
+    "@cowprotocol/cow-sdk": "5.4.1",
+    "@uniswap/sdk-core": "5.4.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
