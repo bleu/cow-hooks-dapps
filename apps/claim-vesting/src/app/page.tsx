@@ -2,22 +2,20 @@
 
 import { useTheme } from "./ThemeContext";
 
-import { useDebounceValue } from "../hooks/useDebounceValue";
+import { useDebounceValue } from "@bleu/ui";
 
 import {
-  CoWHookDappActions,
-  HookDappContext,
+  type CoWHookDappActions,
+  type HookDappContext,
   initCoWHookDapp,
 } from "@cowprotocol/hook-dapp-lib";
-import { Web3Provider } from "@ethersproject/providers";
-import type { Signer } from "@ethersproject/abstract-signer";
 
 import {
-  ClaimableAmountContainer,
-  Wrapper,
-  ContentWrapper,
   AddressInput,
   ButtonPrimary,
+  ClaimableAmountContainer,
+  ContentWrapper,
+  Wrapper,
 } from "@bleu/cow-hooks-ui";
 import { useEffect, useState } from "react";
 
@@ -47,7 +45,11 @@ export default function Page() {
 
   return (
     <Wrapper>
-      <button onClick={toggleTheme} className="p-2 text-yellow-700">
+      <button
+        type="button"
+        onClick={toggleTheme}
+        className="p-2 text-yellow-700"
+      >
         Switch to {theme === "light" ? "Dark" : "Light"} Theme
       </button>
       <ContentWrapper>
