@@ -1,6 +1,12 @@
-import type { ReactNode } from "react";
+import type { ReactNode, ButtonHTMLAttributes } from "react";
 import clsx from "clsx";
-export const ButtonPrimary = ({
+
+interface ButtonPrimaryProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children?: ReactNode;
+  disabled?: boolean;
+}
+
+export const ButtonPrimary: React.FC<ButtonPrimaryProps> = ({
   children,
   disabled = false,
   ...props

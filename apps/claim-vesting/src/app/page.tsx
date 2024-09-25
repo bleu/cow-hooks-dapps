@@ -20,6 +20,7 @@ import {
 import { useEffect, useState } from "react";
 
 import { useClaimVestingData } from "../hooks/useClaimVestingData";
+import { VestingEscrowAbi } from "#/abis/VestingEscrowAbi";
 
 export default function Page() {
   const { theme, toggleTheme } = useTheme();
@@ -40,8 +41,28 @@ export default function Page() {
     setActions(actions);
   }, []);
 
-  const { errorMessage, formattedClaimableAmount, tokenSymbol, loading } =
-    useClaimVestingData({ chainId, account, debouncedAddress });
+  const {
+    errorMessage,
+    formattedClaimableAmount,
+    tokenSymbol,
+    loading,
+    callData,
+    gasLimit,
+  } = useClaimVestingData({ chainId, account, debouncedAddress });
+
+  const handleAddHook = () => {
+    if (!actions || !account || !callData || !gasLimit) return;
+    console.log("calldata", callData);
+    console.log("gasLimit", gasLimit);
+    console.log("debouncedAddress", debouncedAddress);
+    actions.addHook({
+      hook: {
+        target: debouncedAddress,
+        callData: callData,
+        gasLimit: gasLimit,
+      },
+    });
+  };
 
   return (
     <Wrapper>
@@ -67,14 +88,17 @@ export default function Page() {
           </ClaimableAmountContainer>
         </div>
       </ContentWrapper>
-      {errorMessage && (
-        <span className="text-center my-6 text-red-500">{errorMessage}</span>
-      )}
-      {!errorMessage && loading && (
-        <span className="text-center my-6">Loading...</span>
-      )}
-      {!errorMessage && !loading && (
-        <ButtonPrimary disabled={debouncedAddress === ""}>
+      {errorMessage ? (
+        <span className="text-center my-[25px] text-red-500">
+          {errorMessage}
+        </span>
+      ) : loading ? (
+        <span className="text-center my-[25px]">Loading...</span>
+      ) : (
+        <ButtonPrimary
+          onClick={handleAddHook}
+          disabled={debouncedAddress === ""}
+        >
           <span>Add hook</span>
         </ButtonPrimary>
       )}

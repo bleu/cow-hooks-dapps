@@ -1,9 +1,12 @@
-import { formatUnits, isAddress } from "viem";
-
-import type { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { useMemo } from "react";
-import { http, createPublicClient } from "viem";
-import { arbitrum, gnosis, mainnet, sepolia } from "viem/chains";
+import useSWR from "swr";
+import { formatUnits, isAddress, type Address } from "viem";
+import { VestingEscrowAbi } from "../abis/VestingEscrowAbi";
+import { erc20Abi } from "../abis/erc20Abi";
+import { encodeFunctionData } from "viem";
+import { mainnet, gnosis, sepolia, arbitrum } from "viem/chains";
+import { createPublicClient, http } from "viem";
+import { SupportedChainId } from "@cowprotocol/cow-sdk";
+import { useCallback, useMemo } from "react";
 import { useReadToken } from "./useReadToken";
 import { useReadVesting } from "./useReadVesting";
 
@@ -29,6 +32,8 @@ export const useClaimVestingData = ({
   formattedClaimableAmount: string;
   tokenSymbol: string;
   loading: boolean;
+  callData: string | undefined;
+  gasLimit: string | undefined;
 } => {
   const publicClient = useMemo(
     () =>
@@ -37,7 +42,7 @@ export const useClaimVestingData = ({
         chain: chainMapping[chainId],
         transport: http(),
       }),
-    [chainId],
+    [chainId]
   );
 
   const {
@@ -65,7 +70,61 @@ export const useClaimVestingData = ({
       ? formatUnits(claimableAmountWei, Number(decimals))
       : "0.0";
   const loading = isLoadingToken || isLoadingVesting;
-  return { errorMessage, formattedClaimableAmount, tokenSymbol, loading };
+
+  const callData =
+    recipient && claimableAmountWei
+      ? encodeFunctionData({
+          abi: VestingEscrowAbi,
+          functionName: "claim",
+          args: [recipient, claimableAmountWei],
+        })
+      : undefined;
+
+  const estimateGasLimit = async ({
+    recipient,
+    claimableAmountWei,
+  }: {
+    recipient: Address;
+    claimableAmountWei: bigint;
+  }) => {
+    const result = publicClient
+      ? await publicClient.estimateContractGas({
+          address: debouncedAddress as Address,
+          abi: VestingEscrowAbi,
+          functionName: "claim",
+          args: [recipient, claimableAmountWei],
+        })
+      : undefined;
+
+    return result;
+  };
+
+  const {
+    data: gasLimit,
+    isLoading: isLoadingGasLimit,
+    error: errorGasLimit,
+  } = useSWR(
+    recipient && claimableAmountWei ? { recipient, claimableAmountWei } : null,
+    estimateGasLimit,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      refreshWhenOffline: false,
+      refreshWhenHidden: false,
+      refreshInterval: 0,
+    }
+  );
+  console.log("amount", claimableAmountWei);
+  const stringGasLimit = gasLimit ? String(gasLimit) : undefined;
+
+  return {
+    errorMessage,
+    formattedClaimableAmount,
+    tokenSymbol,
+    loading,
+    callData,
+    gasLimit: stringGasLimit,
+  };
 };
 
 function getErrorMessage({
