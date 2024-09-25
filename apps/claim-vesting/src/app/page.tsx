@@ -27,9 +27,8 @@ export default function Page() {
   const { theme, toggleTheme } = useTheme();
   const [actions, setActions] = useState<CoWHookDappActions | null>(null);
   const [context, setContext] = useState<HookDappContext | null>(null);
-  const [signer, setSigner] = useState<Signer | null>(null);
 
-  const { account, orderParams, chainId } = context || {};
+  const { account, chainId } = context || {};
 
   const [typedAddress, setTypedAddress] = useState("");
 
@@ -38,12 +37,9 @@ export default function Page() {
   });
 
   useEffect(() => {
-    const { actions, provider } = initCoWHookDapp({ onContext: setContext });
-    const web3Provider = new Web3Provider(provider);
-    const signer = web3Provider.getSigner();
+    const { actions } = initCoWHookDapp({ onContext: setContext });
 
     setActions(actions);
-    setSigner(signer);
   }, []);
 
   const { errorMessage, formattedClaimableAmount, tokenSymbol, loading } =
@@ -69,11 +65,13 @@ export default function Page() {
           </ClaimableAmountContainer>
         </div>
       </ContentWrapper>
-      {errorMessage ? (
-        <span className="text-center my-[25px]">{errorMessage}</span>
-      ) : loading ? (
-        <span className="text-center my-[25px]">Loading...</span>
-      ) : (
+      {errorMessage && (
+        <span className="text-center my-6 text-red-500">{errorMessage}</span>
+      )}
+      {!errorMessage && loading && (
+        <span className="text-center my-6">Loading...</span>
+      )}
+      {!errorMessage && !loading && (
         <ButtonPrimary disabled={debouncedAddress === ""}>
           <span>Add hook</span>
         </ButtonPrimary>
