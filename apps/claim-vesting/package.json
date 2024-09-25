@@ -9,6 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@bleu/cow-hooks-ui": "workspace:*",
     "@bleu/tsconfig": "workspace:*",
     "@bleu/ui": "0.1.131",
     "babel-plugin-react-compiler": "0.0.0-experimental-6067d4e-20240923",
