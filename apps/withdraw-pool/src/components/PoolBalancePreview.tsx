@@ -14,7 +14,7 @@ export function PoolBalancesPreview({
   className?: string;
 }) {
   return (
-    <div className={cn("p-2", className)}>
+    <div className={cn("p-2 rounded-md", className)}>
       <Label>{label}</Label>
       <div className={"flex flex-col gap-2 p-2"}>
         {poolBalance.map((poolBalance) => (

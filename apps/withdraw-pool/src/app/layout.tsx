@@ -1,3 +1,4 @@
+import { ThemeProvider } from "#/context/theme";
 import "#/global.css";
 import Head from "next/head";
 
@@ -9,8 +10,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Head>
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <body className="flex h-full flex-col font-sans font-normal">
-        {children}
+      <body className="flex h-full flex-col font-sans font-normal text-foreground">
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

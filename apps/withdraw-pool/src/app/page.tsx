@@ -15,6 +15,7 @@ import { usePoolUserBalance } from "#/hooks/usePoolUserBalance";
 import type { IMinimalPool } from "#/types";
 import { multiplyValueByPct } from "#/utils";
 import { withdrawSchema } from "#/utils/schema";
+import { useTheme } from "#/context/theme";
 
 export default function Page() {
   const [context, setContext] = useState<HookDappContext | null>(null);
@@ -51,8 +52,17 @@ export default function Page() {
     initCoWHookDapp({ onContext: setContext });
   }, []);
 
+  const { theme, toggleTheme } = useTheme();
+
   return (
-    <Form {...form} className="w-full flex flex-col gap-2 py-2 px-4">
+    <Form {...form} className="w-full flex flex-col gap-1 py-1 px-4">
+      {/* <button
+        onClick={toggleTheme}
+        className="p-2 text-yellow-700"
+        type="button"
+      >
+        Switch to {theme === "light" ? "Dark" : "Light"} Theme
+      </button> */}
       <PoolsDropdownMenu
         account={context?.account}
         onSelect={(pool: IMinimalPool) => setValue("poolId", pool.id)}
@@ -68,7 +78,7 @@ export default function Page() {
           />
           <Button
             type="submit"
-            className="mt-2"
+            className="bg-primary text-primary-foreground mt-2"
             disabled={buttonProps.disabled}
           >
             {buttonProps.message}
