@@ -9,11 +9,13 @@ const Label = ({ label }: { label: string }) => (
 export const AddressInput = ({
   theme,
   label,
+  errorMessage,
   onChange,
   ...props
 }: {
   theme: string;
   label: string;
+  errorMessage?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => (
   <div className="flex flex-col w-full">
@@ -29,5 +31,8 @@ export const AddressInput = ({
       )}
       {...props}
     />
+    <span className="text-red-700 text-sm text-start ml-2.5 mt-1">
+      {errorMessage}
+    </span>
   </div>
 );

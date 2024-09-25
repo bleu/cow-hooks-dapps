@@ -41,45 +41,59 @@ export const useClaimVestingData = ({
     [chainId]
   );
 
-  /// ---------------- VESTING DATA ----------------
+  /// ---------------- VESTING DATA ---------------- ///
 
   const readVesting = useCallback(
     async (address: Address) => {
-      const claimableAmountWei =
+      const vestingContract = {
+        address: address,
+        abi: VestingEscrowAbi,
+      } as const;
+
+      const vestingResults =
         publicClient &&
-        (await publicClient.readContract({
-          address: address,
-          abi: VestingEscrowAbi,
-          functionName: "unclaimed",
+        (await publicClient.multicall({
+          contracts: [
+            {
+              ...vestingContract,
+              functionName: "unclaimed",
+            },
+            {
+              ...vestingContract,
+              functionName: "recipient",
+            },
+            {
+              ...vestingContract,
+              functionName: "token",
+            },
+          ],
         }));
 
-      const recipient =
-        publicClient &&
-        (await publicClient.readContract({
-          address: address,
-          abi: VestingEscrowAbi,
-          functionName: "recipient",
-        }));
-      const tokenAddress =
-        publicClient &&
-        (await publicClient.readContract({
-          address: address,
-          abi: VestingEscrowAbi,
-          functionName: "token",
-        }));
+      vestingResults?.forEach((result) => {
+        const status = result?.status;
+        const error = result?.error;
+
+        // When the address is not a vesting contract
+        if (
+          status === "failure" &&
+          error?.name === "ContractFunctionExecutionError"
+        )
+          throw new Error("Address is not a valid vesting contract");
+
+        // Other unexpected errors
+        if (status === "failure") throw new Error("Unexpected error");
+      });
 
       return {
-        claimableAmountWei,
-        recipient,
-        tokenAddress,
+        claimableAmountWei: vestingResults && vestingResults[0],
+        recipient: vestingResults && vestingResults[1],
+        tokenAddress: vestingResults && vestingResults[2],
       };
     },
     [publicClient]
   );
 
   const shouldFetchVesting = isAddress(debouncedAddress);
-
-  console.log("debouncedAddress", debouncedAddress);
 
   const {
     data: vestingData,
@@ -93,41 +107,42 @@ export const useClaimVestingData = ({
     refreshInterval: 0,
   });
 
-  const claimableAmountWei = vestingData?.claimableAmountWei;
-  const recipient = vestingData?.recipient;
-  const tokenAddress = vestingData?.tokenAddress;
+  const claimableAmountWei = vestingData?.claimableAmountWei?.result;
+  const recipient = vestingData?.recipient?.result;
+  const tokenAddress = vestingData?.tokenAddress?.result;
 
-  useEffect(() => {
-    console.log("vestingData", vestingData);
-  }, [vestingData]);
-
-  useEffect(() => {
-    console.log("vesting Error", errorVesting);
-  }, [errorVesting]);
-
-  /// ---------------- TOKEN DATA ----------------
+  /// ---------------- TOKEN DATA ---------------- ///
 
   const readToken = useCallback(
     async (address: Address) => {
-      const symbol =
+      const tokenContract = {
+        address: address,
+        abi: erc20Abi,
+      } as const;
+
+      const tokenResults =
         publicClient &&
-        (await publicClient.readContract({
-          address: address,
-          abi: erc20Abi,
-          functionName: "symbol",
+        (await publicClient.multicall({
+          contracts: [
+            {
+              ...tokenContract,
+              functionName: "symbol",
+            },
+            {
+              ...tokenContract,
+              functionName: "decimals",
+            },
+          ],
         }));
 
-      const decimals =
-        publicClient &&
-        (await publicClient.readContract({
-          address: address,
-          abi: erc20Abi,
-          functionName: "decimals",
-        }));
+      tokenResults?.forEach((result) => {
+        // Unexpected errors with token
+        if (result.status === "failure") throw new Error("Unexpected error");
+      });
 
       return {
-        symbol: symbol,
-        decimals: decimals,
+        symbol: tokenResults && tokenResults[0],
+        decimals: tokenResults && tokenResults[1],
       };
     },
     [publicClient]
@@ -145,19 +160,20 @@ export const useClaimVestingData = ({
     refreshInterval: 0,
   });
 
-  const tokenSymbol = tokenData?.symbol ? String(tokenData?.symbol) : "";
-  const decimals = tokenData?.decimals; //TODO: treat decimals
+  const tokenSymbol = tokenData?.symbol?.result
+    ? String(tokenData.symbol.result)
+    : "";
+  const decimals = tokenData?.decimals?.result;
 
-  /// --------------------------------------------
-  useEffect(() => {
-    console.log("tokenData", tokenData);
-  }, [tokenData]);
+  /// -------------------------------------------- ///
 
-  useEffect(() => {
-    console.log("tokenData Error", errorToken);
-  }, [errorToken]);
-
-  const errorMessage = getErrorMessage({ account, recipient });
+  const errorMessage = getErrorMessage({
+    debouncedAddress,
+    account,
+    recipient,
+    errorVesting,
+    errorToken,
+  });
   const formattedClaimableAmount =
     claimableAmountWei && decimals
       ? formatUnits(claimableAmountWei, Number(decimals))
@@ -169,16 +185,27 @@ export const useClaimVestingData = ({
 function getErrorMessage({
   account,
   recipient,
+  errorVesting,
+  debouncedAddress,
+  errorToken,
 }: {
   account: string | undefined;
   recipient: string | undefined;
+  debouncedAddress: string;
+  errorVesting: Error;
+  errorToken: Error;
 }) {
-  console.log(account);
-  console.log(recipient);
+  if (!(isAddress(debouncedAddress) || debouncedAddress === ""))
+    return "Insert a valid Ethereum address";
 
   if (!account) return "Please connect your wallet first";
 
-  if (account !== recipient) return "You are not the contract recipient";
+  if (recipient && account !== recipient)
+    return "You are not the contract recipient";
+
+  if (errorVesting) return errorVesting.message;
+
+  if (errorToken) return errorToken.message;
 
   return undefined;
 }

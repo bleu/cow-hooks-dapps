@@ -39,7 +39,6 @@ export function ClaimVestingApp() {
     const { actions, provider } = initCoWHookDapp({ onContext: setContext });
     const web3Provider = new Web3Provider(provider);
     const signer = web3Provider.getSigner();
-    console.log(provider);
 
     setActions(actions);
     setSigner(signer);
@@ -47,10 +46,6 @@ export function ClaimVestingApp() {
 
   const { errorMessage, formattedClaimableAmount, tokenSymbol, loading } =
     useClaimVestingData({ chainId, account, debouncedAddress });
-
-  useEffect(() => {
-    console.log("errorMessage", errorMessage);
-  }, [errorMessage]);
 
   return (
     <Wrapper>
@@ -73,11 +68,11 @@ export function ClaimVestingApp() {
         </Row>
       </ContentWrapper>
       {errorMessage ? (
-        <span className="text-center mb-6">{errorMessage}</span>
+        <span className="text-center my-[25px]">{errorMessage}</span>
       ) : loading ? (
-        <span>Loading...</span>
+        <span className="text-center my-[25px]">Loading...</span>
       ) : (
-        <ButtonPrimary>
+        <ButtonPrimary disabled={debouncedAddress === ""}>
           <span>Add hook</span>
         </ButtonPrimary>
       )}
