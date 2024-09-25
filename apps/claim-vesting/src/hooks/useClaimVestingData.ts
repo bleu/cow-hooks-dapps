@@ -1,12 +1,11 @@
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
+import { useMemo } from "react";
 import useSWR from "swr";
-import { formatUnits, isAddress, type Address } from "viem";
-import { VestingEscrowAbi } from "../abis/VestingEscrowAbi";
-import { erc20Abi } from "../abis/erc20Abi";
+import { type Address, formatUnits, isAddress } from "viem";
 import { encodeFunctionData } from "viem";
-import { mainnet, gnosis, sepolia, arbitrum } from "viem/chains";
-import { createPublicClient, http } from "viem";
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { useCallback, useMemo } from "react";
+import { http, createPublicClient } from "viem";
+import { arbitrum, gnosis, mainnet, sepolia } from "viem/chains";
+import { VestingEscrowAbi } from "../abis/VestingEscrowAbi";
 import { useReadToken } from "./useReadToken";
 import { useReadVesting } from "./useReadVesting";
 
@@ -42,7 +41,7 @@ export const useClaimVestingData = ({
         chain: chainMapping[chainId],
         transport: http(),
       }),
-    [chainId]
+    [chainId],
   );
 
   const {
@@ -112,7 +111,7 @@ export const useClaimVestingData = ({
       refreshWhenOffline: false,
       refreshWhenHidden: false,
       refreshInterval: 0,
-    }
+    },
   );
   const stringGasLimit = gasLimit ? String(gasLimit) : undefined;
 
