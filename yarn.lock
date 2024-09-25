@@ -547,7 +547,6 @@ __metadata:
     "@biomejs/biome": "npm:1.9.2"
     "@bleu/cow-hooks-ui": "workspace:*"
     "@bleu/tsconfig": "workspace:*"
-    "@bleu/ui": "git+ssh://git@github.com:bleu/bleu-ui.git#main"
     "@cowprotocol/hook-dapp-lib": "npm:1.0.0-RC0"
     "@ethersproject/providers": "npm:5.7.2"
     "@testing-library/jest-dom": "npm:6.5.0"
@@ -555,11 +554,11 @@ __metadata:
     "@testing-library/user-event": "npm:14.5.2"
     "@types/jest": "npm:^29.5.13"
     "@types/lodash.debounce": "npm:^4"
-    "@types/node": "npm:^22.5.5"
-    "@types/react": "npm:^18.3.7"
+    "@types/node": "npm:^22.6.1"
+    "@types/react": "npm:^18.3.8"
     "@types/react-dom": "npm:^18.3.0"
     autoprefixer: "npm:^10.4.20"
-    babel-plugin-react-compiler: "npm:0.0.0-experimental-6067d4e-20240919"
+    babel-plugin-react-compiler: "npm:0.0.0-experimental-6067d4e-20240923"
     lodash.debounce: "npm:4.0.8"
     next: "npm:15.0.0-rc.0"
     npm-run-all: "npm:^4.1.5"
@@ -3913,6 +3912,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^22.6.1":
+  version: 22.7.1
+  resolution: "@types/node@npm:22.7.1"
+  dependencies:
+    undici-types: "npm:~6.19.2"
+  checksum: 10c0/5647181455d543992f5e93165e7ad2ca0e97402e748a1209c07135320b6f220ffb5b2531b0412d6d33bb3173b5bcd9418899d9fa6f04596a5ec9f338b2f37992
+  languageName: node
+  linkType: hard
+
 "@types/pbf@npm:*, @types/pbf@npm:^3.0.5":
   version: 3.0.5
   resolution: "@types/pbf@npm:3.0.5"
@@ -3955,6 +3963,16 @@ __metadata:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
   checksum: 10c0/460f40eadf1fd035344b2ff9061d5c2314db9403f76d05fff7724c78543737c95829e1628567c63d27b542647867eca5b6f284dfd38f1d3b70754f32c4cbecb7
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:^18.3.8":
+  version: 18.3.9
+  resolution: "@types/react@npm:18.3.9"
+  dependencies:
+    "@types/prop-types": "npm:*"
+    csstype: "npm:^3.0.2"
+  checksum: 10c0/a92b8e061d0c833e096254782c56a802316593f4a907fb834b557cabe848a0829b9eb6056404ea239eb4d5ec5ac7b7724309761516c0a7a277916fa04dd4f805
   languageName: node
   linkType: hard
 
@@ -4388,9 +4406,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-plugin-react-compiler@npm:0.0.0-experimental-6067d4e-20240919":
-  version: 0.0.0-experimental-6067d4e-20240919
-  resolution: "babel-plugin-react-compiler@npm:0.0.0-experimental-6067d4e-20240919"
+"babel-plugin-react-compiler@npm:0.0.0-experimental-6067d4e-20240923":
+  version: 0.0.0-experimental-6067d4e-20240923
+  resolution: "babel-plugin-react-compiler@npm:0.0.0-experimental-6067d4e-20240923"
   dependencies:
     "@babel/generator": "npm:7.2.0"
     "@babel/types": "npm:^7.19.0"
@@ -4399,7 +4417,7 @@ __metadata:
     pretty-format: "npm:^24"
     zod: "npm:^3.22.4"
     zod-validation-error: "npm:^2.1.0"
-  checksum: 10c0/9196a4741dd31115c6f69360c948bf90a52908df14ab007e22ebffe4e607944f42c1e1ac32c5f36c762131e99b5e647e2443ec9dd52a5cda17a9366df6ee0dd1
+  checksum: 10c0/f3914d9e60ed9b7001a107c486b4cc69f0abba5f8452855ab690894f325389aa55c309911e299e8aa81996cc0322c9a19c3489006b160c10448c98cd9582d2fd
   languageName: node
   linkType: hard
 
