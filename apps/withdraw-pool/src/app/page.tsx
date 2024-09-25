@@ -1,6 +1,5 @@
 "use client";
 
-import { Input } from "@bleu/cow-hooks-ui";
 import { Button, Form } from "@bleu/ui";
 import {
   type HookDappContext,
@@ -61,10 +60,6 @@ export default function Page() {
       />
       {poolId && (
         <div className="size-full flex flex-col gap-2">
-          {/* <PoolBalancesPreview
-            label="Current balance"
-            poolBalance={poolBalances}
-          /> */}
           <WithdrawPctSlider />
           <PoolBalancesPreview
             label="Withdraw balance"
