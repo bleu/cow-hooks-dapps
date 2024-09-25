@@ -19,21 +19,7 @@ import {
 } from "@bleu/cow-hooks-ui";
 import { useEffect, useState } from "react";
 
-import { publicClient } from "../client";
-import { VestingEscrowAbi } from "../abis/VestingEscrowAbi";
-import { type Address, isAddress } from "viem";
-
-import useSWR from "swr";
-
-async function readData(address: Address) {
-  const data = await publicClient.readContract({
-    address: address,
-    abi: VestingEscrowAbi,
-    functionName: "unclaimed",
-  });
-
-  return data;
-}
+import { useClaimVestingData } from "../hooks/useClaimVestingData";
 
 export function ClaimVestingApp() {
   const { theme, toggleTheme } = useTheme();
@@ -49,27 +35,7 @@ export function ClaimVestingApp() {
     leading: true,
   });
 
-  const shouldFetch = isAddress(debouncedAddress);
-  console.log("shouldFetch", shouldFetch);
-
-  const {
-    data: claimableAmountWei,
-    isLoading,
-    error,
-  } = useSWR(shouldFetch ? debouncedAddress : null, readData, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    refreshWhenOffline: false,
-    refreshWhenHidden: false,
-    refreshInterval: 0,
-  });
-
   useEffect(() => {
-    console.log(debouncedAddress);
-  }, [debouncedAddress]);
-
-  useEffect(() => {
-    // TODO: test change address -> update signer
     const { actions, provider } = initCoWHookDapp({ onContext: setContext });
     const web3Provider = new Web3Provider(provider);
     const signer = web3Provider.getSigner();
@@ -79,12 +45,12 @@ export function ClaimVestingApp() {
     setSigner(signer);
   }, []);
 
-  if (claimableAmountWei) {
-    console.log("claimableAmount", claimableAmountWei);
-  }
-  if (error) {
-    console.log("error", error);
-  }
+  const { errorMessage, formattedClaimableAmount, tokenSymbol, loading } =
+    useClaimVestingData({ chainId, account, debouncedAddress });
+
+  useEffect(() => {
+    console.log("errorMessage", errorMessage);
+  }, [errorMessage]);
 
   return (
     <Wrapper>
@@ -100,13 +66,21 @@ export function ClaimVestingApp() {
         <Row>
           <ClaimableAmountContainer>
             <span>Total Available to claim</span>
-            <span>0,0</span>
+            <span>
+              {formattedClaimableAmount} {tokenSymbol && tokenSymbol}
+            </span>
           </ClaimableAmountContainer>
         </Row>
       </ContentWrapper>
-      <ButtonPrimary>
-        <span>Add hook</span>
-      </ButtonPrimary>
+      {errorMessage ? (
+        <span className="text-center mb-6">{errorMessage}</span>
+      ) : loading ? (
+        <span>Loading...</span>
+      ) : (
+        <ButtonPrimary>
+          <span>Add hook</span>
+        </ButtonPrimary>
+      )}
     </Wrapper>
   );
 }
