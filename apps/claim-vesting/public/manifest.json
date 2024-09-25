@@ -1,8 +1,8 @@
 {
   "background_color": "#ffffff",
   "display": "standalone",
-  "homepage_url": "https://swap.cow.fi",
-  "description": "CoW hook dapp: Omnibridge",
+  "homepage_url": "https://github.com/bleu/cow-hooks-dapps",
+  "description": "CoW hook dapp: Claim Vesting",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -18,19 +18,20 @@
     }
   ],
   "orientation": "portrait",
-  "name": "Omnibridge hook",
-  "short_name": "Omnibridge hook",
+  "name": "Claim Vesting Hook",
+  "short_name": "Claim Vesting",
   "start_url": ".",
   "theme_color": "#ffffff",
   "cow_hook_dapp": {
-    "name": "Omnibridge",
-    "descriptionShort": "Bridge from Gnosis Chain to Mainnet",
-    "description": "The Omnibridge can be used to bridge ERC-20 tokens between Ethereum and Gnosis. The first time a token is bridged, a new ERC677 token contract is deployed on GC with an additional suffix to differentiate the token. It will say \"token name on xDai\", as this was the original chain name prior to re-branding. If a token has been bridged previously, the previously deployed contract is used. The requested token amount is minted and sent to the account initiating the transfer (or an alternative receiver account specified by the sender).",
+    "name": "Claim Vesting",
+    "descriptionShort": "Claim vesting short description",
+    "description": "Claim vesting detailed description",
     "version": "0.0.1",
-    "website": "https://omni.legacy.gnosischain.com",
-    "image": "http://localhost:3000/hook-dapp-omnibridge/apple-touch-icon.png",
+    "website": "https://github.com/bleu/cow-hooks-dapps",
+    "image": "https://www.freeiconspng.com/uploads/money-symbol-png-icon-17.png",
+    "walletCompatibility": ["EOA", "Smart contract"],
     "conditions": {
-      "position": "post",
+      "position": "pre",
       "smartContractWalletSupported": false
     }
   }
