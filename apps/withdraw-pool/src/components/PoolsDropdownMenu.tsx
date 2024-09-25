@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Button,
   Command,
   CommandEmpty,
   CommandInput,
@@ -10,7 +9,6 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-  cn,
 } from "@bleu/ui";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
@@ -42,19 +40,13 @@ export function PoolsDropdownMenu({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger className="w-full">
         <div className="flex flex-col">
-          <Button
-            className={cn(
-              "flex p-2 justify-between rounded-md space-x-1",
-              selectedPoolId
-                ? "bg-muted text-white hover:text-primary"
-                : "bg-primary text-primary-foreground"
-            )}
+          <div
+            className="flex p-2 justify-between rounded-md space-x-1 bg-muted text-foreground items-center text-sm"
             onClick={() => setOpen(true)}
-            type="button"
           >
             {selectedPool ? selectedPool.symbol : "Select token"}
             <ChevronDownIcon className="size-4 shrink-0" />
-          </Button>
+          </div>
         </div>
       </PopoverTrigger>
       {/* for some reason w-full wasn't working here, so I hardcoded the pixel size */}

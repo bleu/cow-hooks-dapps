@@ -12,9 +12,9 @@ import { PoolBalancesPreview } from "#/components/PoolBalancePreview";
 import { PoolsDropdownMenu } from "#/components/PoolsDropdownMenu";
 import { WithdrawPctSlider } from "#/components/WithdrawPctSlider";
 import type { IMinimalPool } from "#/types";
-import { multiplyValueByPct } from "#/utils/math";
 import { withdrawSchema } from "#/utils/schema";
 import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
+import { useTheme } from "#/context/theme";
 
 export default function Page() {
   const [context, setContext] = useState<HookDappContext | null>(null);
@@ -57,10 +57,19 @@ export default function Page() {
     initCoWHookDapp({ onContext: setContext });
   }, []);
 
+  const { theme, toggleTheme } = useTheme();
+
   if (!context) return <div className="w-full text-center p-2">Loading...</div>;
 
   return (
-    <Form {...form} className="w-full flex flex-col gap-2 py-2 px-4">
+    <Form {...form} className="w-full flex flex-col gap-1 py-1 px-4">
+      {/* <button
+        onClick={toggleTheme}
+        className="p-2 text-yellow-700"
+        type="button"
+      >
+        Switch to {theme === "light" ? "Dark" : "Light"} Theme
+      </button> */}
       <PoolsDropdownMenu
         account={context?.account}
         chainId={context?.chainId}
@@ -77,7 +86,7 @@ export default function Page() {
           />
           <Button
             type="submit"
-            className="mt-2"
+            className="bg-primary text-primary-foreground mt-2"
             disabled={buttonProps.disabled}
           >
             {buttonProps.message}

@@ -538,6 +538,7 @@ __metadata:
   resolution: "@bleu/claim-vesting@workspace:apps/claim-vesting"
   dependencies:
     "@biomejs/biome": "npm:1.9.2"
+    "@bleu/cow-hooks-ui": "workspace:*"
     "@bleu/tsconfig": "workspace:*"
     "@bleu/ui": "npm:0.1.131"
     "@testing-library/jest-dom": "npm:6.5.0"
