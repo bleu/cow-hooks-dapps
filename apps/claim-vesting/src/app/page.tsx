@@ -1,7 +1,5 @@
 "use client";
 
-import { useTheme } from "./ThemeContext";
-
 import { useDebounceValue } from "@bleu/ui";
 
 import {
@@ -22,7 +20,6 @@ import { useEffect, useState } from "react";
 import { useClaimVestingData } from "../hooks/useClaimVestingData";
 
 export default function Page() {
-  const { theme, toggleTheme } = useTheme();
   const [actions, setActions] = useState<CoWHookDappActions | null>(null);
   const [context, setContext] = useState<HookDappContext | null>(null);
 
@@ -41,10 +38,13 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    if (context?.isDarkMode !== (theme === "dark")) {
-      toggleTheme();
-    }
-  }, [context?.isDarkMode, toggleTheme, theme]);
+    setTypedAddress(context?.hookToEdit?.hook.target ?? "");
+  }, [context?.hookToEdit?.hook.target]);
+
+  useEffect(() => {
+    const newTheme = context?.isDarkMode ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", newTheme);
+  }, [context?.isDarkMode]);
 
   const {
     errorMessage,
@@ -73,7 +73,7 @@ export default function Page() {
           <ContentWrapper>
             <AddressInput
               onChange={(e) => setTypedAddress(e.target.value)}
-              theme={theme}
+              theme={context?.isDarkMode ? "dark" : "light"}
               label="Place vesting contract address"
             />
             <div className="flex flex-col w-full">
