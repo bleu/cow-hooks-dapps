@@ -1,5 +1,8 @@
-import { BigNumber } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 
-export function multiplyValueByPct(value: string, pct: number): string {
-  return BigNumber.from(value).mul(pct).div(100).toString();
+export function multiplyValueByPct(
+  value: BigNumberish,
+  pct: number
+): BigNumber {
+  return BigNumber.from(value).mul(pct).div(100);
 }

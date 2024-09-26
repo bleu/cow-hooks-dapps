@@ -14,7 +14,6 @@ export function PoolBalancesPreview({
   poolBalance: IPoolBalance[];
   className?: string;
 }) {
-  console.log({ poolBalance });
   return (
     <div className={cn("p-2 rounded-md", className)}>
       <Label>{label}</Label>

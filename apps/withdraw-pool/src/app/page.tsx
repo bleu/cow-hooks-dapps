@@ -14,7 +14,7 @@ import { WithdrawPctSlider } from "#/components/WithdrawPctSlider";
 import type { IMinimalPool } from "#/types";
 import { withdrawSchema } from "#/utils/schema";
 import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
-import { useTheme } from "#/context/theme";
+import { multiplyValueByPct } from "#/utils/math";
 
 export default function Page() {
   const [context, setContext] = useState<HookDappContext | null>(null);
@@ -39,10 +39,9 @@ export default function Page() {
 
   const poolBalancesAfterWithdraw = useMemo(() => {
     if (!poolBalances || !withdrawPct) return [];
-    console.log({ poolBalances });
     return poolBalances.map((poolBalance) => ({
       ...poolBalance,
-      balance: poolBalance.balance.mul(withdrawPct).div(100),
+      balance: multiplyValueByPct(poolBalance.balance, withdrawPct).toString(),
       fiatAmount: (poolBalance.fiatAmount * withdrawPct) / 100,
     }));
   }, [poolBalances, withdrawPct]);
@@ -53,23 +52,11 @@ export default function Page() {
     return { disabled: false, message: "Add pre-hook" };
   }, [withdrawPct]);
 
-  useEffect(() => {
-    initCoWHookDapp({ onContext: setContext });
-  }, []);
-
-  const { theme, toggleTheme } = useTheme();
-
   if (!context) return <div className="w-full text-center p-2">Loading...</div>;
 
   return (
+    // TODO: Console.log all transactions on hook form submit
     <Form {...form} className="w-full flex flex-col gap-1 py-1 px-4">
-      {/* <button
-        onClick={toggleTheme}
-        className="p-2 text-yellow-700"
-        type="button"
-      >
-        Switch to {theme === "light" ? "Dark" : "Light"} Theme
-      </button> */}
       <PoolsDropdownMenu
         account={context?.account}
         chainId={context?.chainId}

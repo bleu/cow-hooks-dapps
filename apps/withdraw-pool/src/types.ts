@@ -1,26 +1,41 @@
+import { HookDappContext } from "@cowprotocol/hook-dapp-lib";
 import type { Token } from "@uniswap/sdk-core";
-import { BigNumber } from "ethers";
+import { BigNumberish } from "ethers";
+import { Address } from "viem";
 
+export interface HookDappContextAdjusted extends HookDappContext {
+  account?: Address;
+}
 export interface IMinimalPool {
-  id: string;
+  id: `0x${string}`;
   chain: string;
+  decimals: number;
   symbol: string;
+  address: Address;
+  type: string;
+  protocolVersion: 1 | 2 | 3;
   dynamicData: {
     totalLiquidity: string;
     volume24h: string;
+    totalShares: BigNumberish;
   };
   allTokens: {
-    address: string;
+    address: Address;
     symbol: string;
     decimals: number;
   }[];
   userBalance: {
-    totalBalance: string;
+    totalBalance: BigNumberish;
+    walletBalance: BigNumberish;
+    stakedBalance: {
+      balance: BigNumberish;
+      stakingId: string;
+    }[];
   };
 }
 
 export interface IPoolBalance {
   token: Token;
-  balance: BigNumber;
+  balance: BigNumberish;
   fiatAmount: number;
 }
