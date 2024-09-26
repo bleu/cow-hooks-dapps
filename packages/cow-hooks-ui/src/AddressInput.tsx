@@ -1,12 +1,13 @@
 import clsx from "clsx";
+import type { InputHTMLAttributes } from "react";
 
-const Label = ({ label }: { label: string }) => (
-  <div className="w-fit ml-2 my-2.5">
-    <label className="text-sm">{label}</label>
-  </div>
-);
+interface AddressInputProps extends InputHTMLAttributes<HTMLInputElement> {
+  theme: string;
+  label: string;
+  errorMessage?: string;
+}
 
-export const AddressInput = ({
+export const AddressInput: React.FC<AddressInputProps> = ({
   theme,
   label,
   errorMessage,
@@ -19,15 +20,18 @@ export const AddressInput = ({
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => (
   <div className="flex flex-col w-full">
-    <Label label={label} />
+    <label htmlFor="addressInput" className="text-start text-sm ml-2 my-2.5">
+      {label}
+    </label>
     <input
+      id="addressInput"
       type="text"
       placeholder="0xabc..."
       onChange={onChange}
       className={clsx(
         "w-full mt-0 p-2.5 rounded-xl outline-none text-color-text-paper border-2 border-color-border focus:border-primary",
         { "bg-color-paper-darker": theme === "dark" },
-        { "bg-color-paper": theme === "light" }
+        { "bg-color-paper": theme === "light" },
       )}
       {...props}
     />

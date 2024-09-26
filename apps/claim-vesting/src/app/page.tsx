@@ -25,7 +25,9 @@ export default function Page() {
 
   const { account, chainId } = context || {};
 
-  const [typedAddress, setTypedAddress] = useState("");
+  const [typedAddress, setTypedAddress] = useState<string>(
+    context?.hookToEdit?.hook.target || "",
+  );
 
   const [debouncedAddress] = useDebounceValue(typedAddress, 300, {
     leading: true,
@@ -33,7 +35,6 @@ export default function Page() {
 
   useEffect(() => {
     const { actions } = initCoWHookDapp({ onContext: setContext });
-
     setActions(actions);
   }, []);
 
@@ -57,13 +58,17 @@ export default function Page() {
 
   const handleAddHook = () => {
     if (!actions || !account || !callData || !gasLimit) return;
-    actions.addHook({
-      hook: {
-        target: debouncedAddress,
-        callData: callData,
-        gasLimit: gasLimit,
-      },
-    });
+    const hook = {
+      target: debouncedAddress,
+      callData: callData,
+      gasLimit: gasLimit,
+    };
+
+    if (context?.hookToEdit) {
+      actions.editHook({ hook, uuid: context.hookToEdit.uuid });
+    } else {
+      actions.addHook({ hook });
+    }
   };
 
   return (
@@ -72,6 +77,7 @@ export default function Page() {
         <Wrapper>
           <ContentWrapper>
             <AddressInput
+              value={typedAddress}
               onChange={(e) => setTypedAddress(e.target.value)}
               theme={context?.isDarkMode ? "dark" : "light"}
               label="Place vesting contract address"
@@ -96,7 +102,7 @@ export default function Page() {
               onClick={handleAddHook}
               disabled={debouncedAddress === ""}
             >
-              <span>Add hook</span>
+              <span>{context?.hookToEdit ? "Edit Hook" : "Add hook"}</span>
             </ButtonPrimary>
           )}
         </Wrapper>
