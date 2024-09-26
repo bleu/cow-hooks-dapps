@@ -28,7 +28,7 @@
     "description": "The Claim Vesting Hook is a powerful and user-friendly feature designed to streamline the process of claiming funds from vesting contracts. This tool empowers users to easily access and manage their vested tokens or cryptocurrency, ensuring a smooth and efficient experience in handling time-locked assets.",
     "version": "0.0.1",
     "website": "https://github.com/bleu/cow-hooks-dapps",
-    "image": "http://localhost:3001/LlamaPayIcon.png",
+    "image": "https://cow-hooks-dapps-claim-vesting.vercel.app/LlamaPayIcon.png",
     "walletCompatibility": ["EOA", "Smart contract"],
     "conditions": {
       "position": "pre",
