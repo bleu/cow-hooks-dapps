@@ -40,6 +40,12 @@ export default function Page() {
     setActions(actions);
   }, []);
 
+  useEffect(() => {
+    if (context?.isDarkMode !== (theme === "dark")) {
+      toggleTheme();
+    }
+  }, [context?.isDarkMode, toggleTheme, theme]);
+
   const {
     errorMessage,
     formattedClaimableAmount,
@@ -61,43 +67,40 @@ export default function Page() {
   };
 
   return (
-    <Wrapper>
-      <button
-        type="button"
-        onClick={toggleTheme}
-        className="p-2 text-yellow-700"
-      >
-        Switch to {theme === "light" ? "Dark" : "Light"} Theme
-      </button>
-      <ContentWrapper>
-        <AddressInput
-          onChange={(e) => setTypedAddress(e.target.value)}
-          theme={theme}
-          label="Place vesting contract address"
-        />
-        <div className="flex flex-col w-full">
-          <ClaimableAmountContainer>
-            <span>Total Available to claim</span>
-            <span>
-              {formattedClaimableAmount} {tokenSymbol && tokenSymbol}
+    <>
+      {context && (
+        <Wrapper>
+          <ContentWrapper>
+            <AddressInput
+              onChange={(e) => setTypedAddress(e.target.value)}
+              theme={theme}
+              label="Place vesting contract address"
+            />
+            <div className="flex flex-col w-full">
+              <ClaimableAmountContainer>
+                <span>Total Available to claim</span>
+                <span>
+                  {formattedClaimableAmount} {tokenSymbol && tokenSymbol}
+                </span>
+              </ClaimableAmountContainer>
+            </div>
+          </ContentWrapper>
+          {errorMessage ? (
+            <span className="text-center my-[25px] text-red-500">
+              {errorMessage}
             </span>
-          </ClaimableAmountContainer>
-        </div>
-      </ContentWrapper>
-      {errorMessage ? (
-        <span className="text-center my-[25px] text-red-500">
-          {errorMessage}
-        </span>
-      ) : loading ? (
-        <span className="text-center my-[25px]">Loading...</span>
-      ) : (
-        <ButtonPrimary
-          onClick={handleAddHook}
-          disabled={debouncedAddress === ""}
-        >
-          <span>Add hook</span>
-        </ButtonPrimary>
+          ) : loading ? (
+            <span className="text-center my-[25px]">Loading...</span>
+          ) : (
+            <ButtonPrimary
+              onClick={handleAddHook}
+              disabled={debouncedAddress === ""}
+            >
+              <span>Add hook</span>
+            </ButtonPrimary>
+          )}
+        </Wrapper>
       )}
-    </Wrapper>
+    </>
   );
 }
