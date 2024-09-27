@@ -21,7 +21,6 @@ import { useUserPools } from "#/hooks/useUserPools";
 type IFrameContextType = {
   context?: HookDappContextAdjusted;
   setContext: (context: HookDappContextAdjusted) => void;
-  toggleTheme: () => void;
   publicClient?: PublicClientType;
   cowShedProxy?: Address;
   userPoolSwr: ReturnType<typeof useUserPools>;
@@ -31,8 +30,6 @@ export const IFrameContext = createContext({} as IFrameContextType);
 
 export function IFrameContextProvider({ children }: PropsWithChildren) {
   const [context, setContext] = useState<HookDappContextAdjusted>();
-  const { theme, setTheme } = useTheme();
-
   useEffect(() => {
     initCoWHookDapp({
       onContext: setContext as (args: HookDappContext) => void,
@@ -49,18 +46,15 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
     return cowShed.proxyOf(context.account);
   }, [context?.account, cowShed]) as Address | undefined;
 
-  const toggleTheme = useCallback(() => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  }, [theme]);
-
   const publicClient = useMemo(() => {
     if (!context) return;
     return publicClientMapping[context.chainId];
   }, [context?.chainId]);
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
+    const newTheme = context?.isDarkMode ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", newTheme);
+  }, [context?.isDarkMode]);
 
   const userPoolSwr = useUserPools(context?.chainId, context?.account);
 
@@ -69,7 +63,6 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
       value={{
         context,
         setContext,
-        toggleTheme,
         publicClient,
         cowShedProxy,
         userPoolSwr,

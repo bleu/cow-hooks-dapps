@@ -1,3 +1,4 @@
+import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { HookDappContext } from "@cowprotocol/hook-dapp-lib";
 import type { Token } from "@uniswap/sdk-core";
 import { BigNumberish } from "ethers";
@@ -5,6 +6,7 @@ import { Address } from "viem";
 
 export interface HookDappContextAdjusted extends HookDappContext {
   account?: Address;
+  chainId: SupportedChainId;
 }
 export interface IMinimalPool {
   id: `0x${string}`;
