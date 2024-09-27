@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cow-color-primary: #004293;
+  --cow-color-primary-lighter: hsla(213, 100%, 49%, 1);
+  --cow-color-primary-darker: hsla(213, 100%, 19%, 1);
+  --cow-color-primary-darkest: hsla(213, 100%, 19%, 1);
+  --cow-color-primary-paper: #004293;
+  --cow-color-secondary: #004293;
+  --cow-color-background: #ecf1f8;
+  --cow-color-paper: #ffffff;
+  --cow-color-paper-darker: hsla(0, 0%, 95%, 1);
+  --cow-color-paper-darkest: hsla(0, 0%, 85%, 1);
+  --cow-color-border: var(--cow-color-paper-darker);
+  --cow-box-shadow: 0 12px 12px rgba(0, 66, 147, 0.06);
+  --cow-box-shadow-2: 0px 4px 8px rgba(0, 66, 147, 0.06);
+  --cow-color-text: #00234e;
+  --cow-color-text-paper: #00234e;
+  --cow-color-disabled-text: #506b93;
+  --cow-color-secondary-text: rgba(0, 35, 78, 0.5);
+  --cow-color-dark-image-paper: #ffffff;
+  --cow-color-dark-image-paper-text: #00234e;
+  --cow-color-button-text: #65d9ff;
+  --cow-color-button-text-disabled: #00234e;
+  --cow-color-success: #007b28;
+  --cow-color-success-bg: rgba(0, 123, 40, 0.15);
+  --cow-color-success-text: hsla(140, 100%, 14%, 1);
+  --cow-color-info: #0d5ed9;
+  --cow-color-info-bg: rgba(13, 94, 217, 0.15);
+  --cow-color-info-text: hsla(216, 89%, 41%, 1);
+  --cow-color-alert: #db971e;
+  --cow-color-alert-bg: rgba(219, 151, 30, 0.15);
+  --cow-color-alert-text: hsla(38, 76%, 34%, 1);
+  --cow-color-alert-text-darker: hsla(38, 76%, 14%, 1);
+  --cow-color-warning: #d94719;
+  --cow-color-warning-bg: rgba(217, 71, 25, 0.15);
+  --cow-color-warning-text: hsla(14, 79%, 43%, 1);
+  --cow-color-danger: #d41300;
+  --cow-color-danger-bg: rgba(212, 19, 0, 0.15);
+  --cow-color-danger-text: hsla(5, 100%, 38%, 1);
+  --cow-color-badge-yellow-bg: #f8d06b;
+  --cow-color-badge-yellow-text: hsla(43, 91%, 10%, 1);
+  --cow-color-white: #ffffff;
+  --cow-color-blue: #004293;
+  --cow-color-yellow-light: #f8d06b;
+  --cow-color-green: #007b28;
+  --cow-color-red: #d41300;
+  --cow-container-bg-02: --cow-color-paper;
+  --cow-modal-backdrop: var(--cow-color-text);
+  --cow-border-radius-normal: 24px;
+  --cow-padding-normal: 24px;
+  --cow-icon-color-normal: #00234e;
+  --cow-color-text2: rgba(0, 35, 78, 0.7);
+  --cow-color-link: var(--cow-color-primary);
+  --cow-animation-duration: 0.1s;
+  --cow-animation-duration-slow: 0.2s;
+}
+
+[data-theme="dark"] {
+  --cow-color-primary: #65d9ff;
+  --cow-color-primary-lighter: hsla(195, 100%, 80%, 1);
+  --cow-color-primary-darker: hsla(195, 100%, 50%, 1);
+  --cow-color-primary-darkest: hsla(195, 100%, 30%, 1);
+  --cow-color-primary-paper: #65d9ff;
+  --cow-color-secondary: #65d9ff;
+  --cow-color-background: #07162d;
+  --cow-color-paper: #18193b;
+  --cow-color-paper-darker: hsla(238, 42%, 9%, 1);
+  --cow-color-paper-darkest: hsla(238, 42%, 6%, 1);
+  --cow-color-border: var(--cow-color-paper-darker);
+  --cow-box-shadow: 0 12px 12px rgba(101, 217, 255, 0.06);
+  --cow-box-shadow-2: 0px 4px 8px rgba(101, 217, 255, 0.06);
+  --cow-color-text: #dee3e6;
+  --cow-color-text-paper: #dee3e6;
+  --cow-color-disabled-text: #86b2dc;
+  --cow-color-secondary-text: rgba(222, 227, 230, 0.4);
+  --cow-color-dark-image-paper: #ffffff;
+  --cow-color-dark-image-paper-text: #000000;
+  --cow-color-button-text: #000000;
+  --cow-color-button-text-disabled: #dee3e6;
+  --cow-color-success: #00d897;
+  --cow-color-success-bg: rgba(0, 216, 151, 0.15);
+  --cow-color-success-text: hsla(162, 100%, 46%, 1);
+  --cow-color-info: #428dff;
+  --cow-color-info-bg: rgba(66, 141, 255, 0.15);
+  --cow-color-info-text: hsla(216, 100%, 67%, 1);
+  --cow-color-alert: #ffca4a;
+  --cow-color-alert-bg: rgba(255, 202, 74, 0.15);
+  --cow-color-alert-text: hsla(42, 100%, 71%, 1);
+  --cow-color-alert-text-darker: hsla(42, 100%, 10%, 1);
+  --cow-color-warning: #ed6237;
+  --cow-color-warning-bg: rgba(237, 98, 55, 0.15);
+  --cow-color-warning-text: hsla(14, 83%, 61%, 1);
+  --cow-color-danger: #f44336;
+  --cow-color-danger-bg: rgba(244, 67, 54, 0.15);
+  --cow-color-danger-text: hsla(4, 90%, 62%, 1);
+  --cow-color-badge-yellow-bg: #f8d06b;
+  --cow-color-badge-yellow-text: hsla(43, 91%, 10%, 1);
+  --cow-color-white: #cae9ff;
+  --cow-color-blue: #004293;
+  --cow-color-yellow-light: #f8d06b;
+  --cow-color-green: #00d897;
+  --cow-color-red: #f44336;
+  --cow-container-bg-02: --cow-color-paper;
+  --cow-modal-backdrop: var(--cow-color-text);
+  --cow-border-radius-normal: 24px;
+  --cow-padding-normal: 24px;
+  --cow-icon-color-normal: #dee3e6;
+  --cow-color-text2: rgba(222, 227, 230, 0.7);
+  --cow-color-link: var(--cow-color-primary);
+  --cow-animation-duration: 0.1s;
+  --cow-animation-duration-slow: 0.2s;
+}
+
+body {
+  @apply text-color-text-paper;
+}
+
+p,
+label,
+span,
+input {
+  @apply text-inherit;
+}
+
+label {
+  @apply font-semibold;
+}

@@ -1,0 +1,38 @@
+{
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "homepage_url": "https://github.com/bleu/cow-hooks-dapps",
+  "description": "CoW hook dapp: Claim Vesting",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "orientation": "portrait",
+  "name": "Create Vesting",
+  "short_name": "Create Vesting",
+  "start_url": ".",
+  "theme_color": "#ffffff",
+  "cow_hook_dapp": {
+    "name": "Create Vesting",
+    "descriptionShort": "Short description",
+    "description": "Long description",
+    "version": "0.0.1",
+    "website": "https://github.com/bleu/cow-hooks-dapps",
+    "image": "https://cdn-icons-png.flaticon.com/512/169/169508.png",
+    "walletCompatibility": ["EOA", "Smart contract"],
+    "conditions": {
+      "position": "post",
+      "smartContractWalletSupported": false
+    }
+  }
+}
