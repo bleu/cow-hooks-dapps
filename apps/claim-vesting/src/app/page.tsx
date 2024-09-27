@@ -23,6 +23,9 @@ export default function Page() {
   const [actions, setActions] = useState<CoWHookDappActions | null>(null);
   const [context, setContext] = useState<HookDappContext | null>(null);
 
+  // @ts-ignore
+  const isDarkMode = context?.isDarkMode;
+
   const { account, chainId } = context || {};
 
   const [typedAddress, setTypedAddress] = useState<string>(
@@ -43,9 +46,9 @@ export default function Page() {
   }, [context?.hookToEdit?.hook.target]);
 
   useEffect(() => {
-    const newTheme = context?.isDarkMode ? "dark" : "light";
+    const newTheme = isDarkMode ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", newTheme);
-  }, [context?.isDarkMode]);
+  }, [isDarkMode]);
 
   const {
     errorMessage,
@@ -79,7 +82,7 @@ export default function Page() {
             <AddressInput
               value={typedAddress}
               onChange={(e) => setTypedAddress(e.target.value)}
-              theme={context?.isDarkMode ? "dark" : "light"}
+              theme={isDarkMode ? "dark" : "light"}
               label="Place vesting contract address"
             />
             <div className="flex flex-col w-full">
