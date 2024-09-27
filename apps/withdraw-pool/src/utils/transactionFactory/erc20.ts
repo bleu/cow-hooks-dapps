@@ -9,7 +9,7 @@ import {
 
 export interface ERC20TransferFromArgs extends BaseArgs {
   type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM;
-  token: TokenArgs;
+  token: Address;
   from: Address;
   to: Address;
   amount: bigint;
@@ -25,7 +25,7 @@ export class ERC20TransferFromFactory
     amount,
   }: ERC20TransferFromArgs): BaseTransaction {
     return {
-      to: token.address,
+      to: token,
       value: BigInt(0),
       callData: encodeFunctionData({
         abi: erc20Abi,
