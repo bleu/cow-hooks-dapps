@@ -1,13 +1,9 @@
-import type { ReactNode } from "react";
 import clsx from "clsx";
-export const ButtonPrimary = ({
-  children,
-  disabled = false,
-  ...props
-}: {
-  children?: ReactNode;
-  disabled?: boolean;
-}) => (
+import type { ButtonHTMLAttributes, ReactNode } from "react";
+
+export const ButtonPrimary: React.FC<
+  ButtonHTMLAttributes<HTMLButtonElement>
+> = ({ children, disabled = false, ...props }) => (
   <button
     className={clsx(
       "flex flex-row flex-wrap items-center justify-center text-lg font-semibold border-none shadow-none rounded-2xl relative min-h-[58px] mt-2 mb-2",
@@ -18,7 +14,7 @@ export const ButtonPrimary = ({
       {
         "border-transparent outline-none cursor-auto shadow-none opacity-80 bg-color-primary text-color-button-text text-opacity-80":
           disabled,
-      }
+      },
     )}
     disabled={disabled}
     {...props}

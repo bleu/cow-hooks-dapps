@@ -1,10 +1,8 @@
 "use client";
 
 import "#/global.css";
-import type * as React from "react";
 import Head from "next/head";
-
-import { ThemeProvider } from "./ThemeContext";
+import type * as React from "react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <link rel="manifest" href="/manifest.json" />
       </Head>
       <body className="flex flex-col h-full font-sans font-normal">
-        <ThemeProvider>{children}</ThemeProvider>
+        {children}
       </body>
     </html>
   );
