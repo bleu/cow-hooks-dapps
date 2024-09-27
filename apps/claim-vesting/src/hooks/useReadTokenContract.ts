@@ -3,14 +3,14 @@ import useSWR from "swr";
 import type { Address, PublicClient } from "viem";
 import { erc20Abi } from "#/abis/erc20Abi";
 
-export const useReadToken = ({
+export const useReadTokenContract = ({
   publicClient,
   tokenAddress,
 }: {
   publicClient: PublicClient | undefined;
   tokenAddress: Address | undefined;
 }) => {
-  const readToken = useCallback(
+  const readTokenContract = useCallback(
     async (address: Address) => {
       const tokenContract = {
         address: address,
@@ -49,7 +49,7 @@ export const useReadToken = ({
     data: tokenData,
     isLoading: isLoadingToken,
     error: errorToken,
-  } = useSWR(tokenAddress ? tokenAddress : null, readToken, {
+  } = useSWR(tokenAddress ? tokenAddress : null, readTokenContract, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     refreshWhenOffline: false,

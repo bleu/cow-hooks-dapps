@@ -6,7 +6,7 @@ import { http, createPublicClient } from "viem";
 import { arbitrum, gnosis, mainnet, sepolia } from "viem/chains";
 import { VestingEscrowAbi } from "../abis/VestingEscrowAbi";
 import { useEstimateGasLimit } from "./useEstimateGasLimit";
-import { useReadToken } from "./useReadToken";
+import { useReadTokenContract } from "./useReadTokenContract";
 import { useReadVesting } from "./useReadVesting";
 
 interface useClaimVestingDataParams {
@@ -52,10 +52,11 @@ export const useClaimVestingData = ({
     errorVesting,
   } = useReadVesting({ publicClient, debouncedAddress });
 
-  const { tokenSymbol, decimals, isLoadingToken, errorToken } = useReadToken({
-    publicClient,
-    tokenAddress,
-  });
+  const { tokenSymbol, decimals, isLoadingToken, errorToken } =
+    useReadTokenContract({
+      publicClient,
+      tokenAddress,
+    });
 
   const estimateGasParams =
     recipient && claimableAmountWei
