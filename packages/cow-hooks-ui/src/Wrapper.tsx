@@ -15,7 +15,7 @@ export const ContentWrapper = ({
 );
 
 export const Wrapper = ({ children, ...props }: { children?: ReactNode }) => (
-  <div className="flex flex-col flex-wrap w-full flex-grow" {...props}>
+  <div className="flex flex-col flex-wrap w-full flex-grow px-3" {...props}>
     {children}
   </div>
 );
