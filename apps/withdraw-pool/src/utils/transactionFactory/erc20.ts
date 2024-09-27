@@ -3,7 +3,6 @@ import {
   BaseArgs,
   BaseTransaction,
   ITransaction,
-  TokenArgs,
   TRANSACTION_TYPES,
 } from "./types";
 
@@ -15,15 +14,15 @@ export interface ERC20TransferFromArgs extends BaseArgs {
   amount: bigint;
 }
 
-export class ERC20TransferFromFactory
+export class ERC20TransferFromCreator
   implements ITransaction<ERC20TransferFromArgs>
 {
-  createRawTx({
+  async createRawTx({
     token,
     from,
     to,
     amount,
-  }: ERC20TransferFromArgs): BaseTransaction {
+  }: ERC20TransferFromArgs): Promise<BaseTransaction> {
     return {
       to: token,
       value: BigInt(0),

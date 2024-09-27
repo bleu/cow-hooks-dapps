@@ -29,7 +29,7 @@ interface IQuery {
     userBalance: {
       totalBalance: string;
       walletBalance: string;
-      stakedBalance: {
+      stakedBalances: {
         balance: string;
         stakingId: string;
       }[];
@@ -74,7 +74,7 @@ const USER_POOLS_QUERY = gql`
       userBalance {
         totalBalance
         walletBalance
-        stakedBalance {
+        stakedBalances {
           balance
           stakingId
         }
@@ -83,7 +83,7 @@ const USER_POOLS_QUERY = gql`
   }
 `;
 
-export function useUserPools(chainId: SupportedChainId, user?: string) {
+export function useUserPools(chainId?: SupportedChainId, user?: string) {
   return useSWR(
     [chainId, user],
     async ([chainId, user]): Promise<IMinimalPool[]> => {
@@ -107,7 +107,7 @@ export function useUserPools(chainId: SupportedChainId, user?: string) {
               pool.userBalance.totalBalance,
               pool.decimals
             ),
-            stakedBalance: pool.userBalance.stakedBalance.map((staked) => ({
+            stakedBalances: pool.userBalance.stakedBalances.map((staked) => ({
               balance: parseUnits(staked.balance, pool.decimals),
               stakingId: staked.stakingId,
             })),

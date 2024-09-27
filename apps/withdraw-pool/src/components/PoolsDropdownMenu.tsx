@@ -11,30 +11,22 @@ import {
   PopoverTrigger,
 } from "@bleu/ui";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { useMemo, useState } from "react";
-import { useUserPools } from "#/hooks/useUserPools";
+import { useState } from "react";
 import type { IMinimalPool } from "#/types";
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
+import { useIFrameContext } from "#/context/iframe";
 
 export function PoolsDropdownMenu({
-  chainId,
-  account,
   onSelect,
-  selectedPoolId,
+  selectedPool,
 }: {
-  chainId: SupportedChainId;
-  account?: string;
   onSelect: (pool: IMinimalPool) => void;
-  selectedPoolId?: string;
+  selectedPool?: IMinimalPool;
 }) {
   const [open, setOpen] = useState(false);
-  const { data: pools } = useUserPools(chainId, account);
   const [search, setSearch] = useState("");
-
-  const selectedPool = useMemo(
-    () => pools?.find((pool) => pool.id === selectedPoolId),
-    [pools, selectedPoolId]
-  );
+  const {
+    userPoolSwr: { data: pools },
+  } = useIFrameContext();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

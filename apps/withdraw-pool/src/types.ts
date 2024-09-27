@@ -27,7 +27,7 @@ export interface IMinimalPool {
   userBalance: {
     totalBalance: BigNumberish;
     walletBalance: BigNumberish;
-    stakedBalance: {
+    stakedBalances: {
       balance: BigNumberish;
       stakingId: string;
     }[];

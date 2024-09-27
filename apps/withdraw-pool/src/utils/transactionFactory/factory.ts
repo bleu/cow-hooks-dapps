@@ -1,10 +1,11 @@
 import {
   GaugeClaimRewardsArgs,
-  GaugeClaimRewardsFactory,
+  GaugeClaimRewardsCreator,
   GaugeWithdrawArgs,
-  GaugeWithdrawFactory,
+  GaugeWithdrawCreator,
 } from "./balancerGauge";
-import { ERC20TransferFromArgs, ERC20TransferFromFactory } from "./erc20";
+import { BalancerWithdrawArgs, BalancerWithdrawCreator } from "./balancerPool";
+import { ERC20TransferFromArgs, ERC20TransferFromCreator } from "./erc20";
 import { BaseTransaction, ITransaction, TRANSACTION_TYPES } from "./types";
 
 export type AllTransactionArgs = TransactionBindings[keyof TransactionBindings];
@@ -13,6 +14,7 @@ export interface TransactionBindings {
   [TRANSACTION_TYPES.ERC20_TRANSFER_FROM]: ERC20TransferFromArgs;
   [TRANSACTION_TYPES.GAUGE_CLAIM_REWARDS]: GaugeClaimRewardsArgs;
   [TRANSACTION_TYPES.GAUGE_WITHDRAW]: GaugeWithdrawArgs;
+  [TRANSACTION_TYPES.BALANCER_WITHDRAW]: BalancerWithdrawArgs;
 }
 
 const TRANSACTION_CREATORS: {
@@ -20,9 +22,10 @@ const TRANSACTION_CREATORS: {
     TransactionBindings[key]
   >;
 } = {
-  [TRANSACTION_TYPES.ERC20_TRANSFER_FROM]: ERC20TransferFromFactory,
-  [TRANSACTION_TYPES.GAUGE_CLAIM_REWARDS]: GaugeClaimRewardsFactory,
-  [TRANSACTION_TYPES.GAUGE_WITHDRAW]: GaugeWithdrawFactory,
+  [TRANSACTION_TYPES.ERC20_TRANSFER_FROM]: ERC20TransferFromCreator,
+  [TRANSACTION_TYPES.GAUGE_CLAIM_REWARDS]: GaugeClaimRewardsCreator,
+  [TRANSACTION_TYPES.GAUGE_WITHDRAW]: GaugeWithdrawCreator,
+  [TRANSACTION_TYPES.BALANCER_WITHDRAW]: BalancerWithdrawCreator,
 };
 
 export class TransactionFactory {

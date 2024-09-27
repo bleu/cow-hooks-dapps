@@ -21,10 +21,10 @@ export interface GaugeWithdrawArgs extends BaseArgs {
   claimRewards: boolean;
 }
 
-export class GaugeClaimRewardsFactory
+export class GaugeClaimRewardsCreator
   implements ITransaction<GaugeClaimRewardsArgs>
 {
-  createRawTx(args: GaugeClaimRewardsArgs): BaseTransaction {
+  async createRawTx(args: GaugeClaimRewardsArgs): Promise<BaseTransaction> {
     return {
       to: args.gaugeAddress,
       value: BigInt(0),
@@ -37,8 +37,8 @@ export class GaugeClaimRewardsFactory
   }
 }
 
-export class GaugeWithdrawFactory implements ITransaction<GaugeWithdrawArgs> {
-  createRawTx(args: GaugeWithdrawArgs): BaseTransaction {
+export class GaugeWithdrawCreator implements ITransaction<GaugeWithdrawArgs> {
+  async createRawTx(args: GaugeWithdrawArgs): Promise<BaseTransaction> {
     return {
       to: args.gaugeAddress,
       value: BigInt(0),

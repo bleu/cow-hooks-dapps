@@ -16,6 +16,7 @@ import { publicClientMapping, PublicClientType } from "#/utils/clients";
 import { CowShedHooks } from "@cowprotocol/cow-sdk";
 import { Address } from "viem";
 import { HookDappContextAdjusted } from "#/types";
+import { useUserPools } from "#/hooks/useUserPools";
 
 type IFrameContextType = {
   context?: HookDappContextAdjusted;
@@ -23,6 +24,7 @@ type IFrameContextType = {
   toggleTheme: () => void;
   publicClient?: PublicClientType;
   cowShedProxy?: Address;
+  userPoolSwr: ReturnType<typeof useUserPools>;
 };
 
 export const IFrameContext = createContext({} as IFrameContextType);
@@ -60,9 +62,18 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
+  const userPoolSwr = useUserPools(context?.chainId, context?.account);
+
   return (
     <IFrameContext.Provider
-      value={{ context, setContext, toggleTheme, publicClient, cowShedProxy }}
+      value={{
+        context,
+        setContext,
+        toggleTheme,
+        publicClient,
+        cowShedProxy,
+        userPoolSwr,
+      }}
     >
       {children}
     </IFrameContext.Provider>

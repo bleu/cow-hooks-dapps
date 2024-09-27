@@ -6,10 +6,10 @@ export interface BaseTransaction {
 
 export enum TRANSACTION_TYPES {
   // TODO: ERC20 Permit
-  // Update Balancer Withdraw for this pattern
   ERC20_TRANSFER_FROM = "TRANSFER_FROM",
   GAUGE_CLAIM_REWARDS = "GAUGE_CLAIM_REWARDS",
   GAUGE_WITHDRAW = "GAUGE_WITHDRAW",
+  BALANCER_WITHDRAW = "BALANCER_WITHDRAW",
 }
 
 export interface BaseArgs {
@@ -22,5 +22,5 @@ export interface TokenArgs {
 }
 
 export interface ITransaction<T> {
-  createRawTx(args: T): BaseTransaction;
+  createRawTx(args: T): Promise<BaseTransaction>;
 }
