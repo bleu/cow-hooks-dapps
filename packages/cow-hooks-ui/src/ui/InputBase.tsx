@@ -6,7 +6,7 @@ import {
   useFormContext,
 } from "react-hook-form";
 
-import { InfoTooltip } from "./Tooltip";
+import { InfoTooltip } from "./TooltipBase";
 
 interface IInput extends Omit<HTMLProps<HTMLInputElement>, "name"> {
   name: string;
