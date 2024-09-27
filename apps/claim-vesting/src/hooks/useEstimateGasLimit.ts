@@ -1,12 +1,15 @@
+import type { SWRConfiguration } from "swr";
 import useSWR from "swr";
 import type { EstimateContractGasParameters, PublicClient } from "viem";
 
 export const useEstimateGasLimit = ({
   publicClient,
   estimateGasParams,
+  useSWRConfig,
 }: {
   publicClient: PublicClient | undefined;
   estimateGasParams: EstimateContractGasParameters | undefined;
+  useSWRConfig?: SWRConfiguration;
 }) => {
   const estimateGasLimit = async (
     estimateGasParams: EstimateContractGasParameters,
@@ -22,13 +25,7 @@ export const useEstimateGasLimit = ({
     data: gasLimit,
     isLoading: isLoadingGasLimit,
     error: errorGasLimit,
-  } = useSWR(estimateGasParams ?? null, estimateGasLimit, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    refreshWhenOffline: false,
-    refreshWhenHidden: false,
-    refreshInterval: 0,
-  });
+  } = useSWR(estimateGasParams ?? null, estimateGasLimit, useSWRConfig);
   const stringGasLimit = gasLimit ? String(gasLimit) : undefined;
 
   return { gasLimit: stringGasLimit, isLoadingGasLimit, errorGasLimit };
