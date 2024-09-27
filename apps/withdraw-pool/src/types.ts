@@ -1,4 +1,5 @@
 import type { Token } from "@uniswap/sdk-core";
+import { BigNumber } from "ethers";
 
 export interface IMinimalPool {
   id: string;
@@ -20,6 +21,6 @@ export interface IMinimalPool {
 
 export interface IPoolBalance {
   token: Token;
-  balance: string;
-  fiatAmount: string;
+  balance: BigNumber;
+  fiatAmount: number;
 }

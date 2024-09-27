@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Button,
   Command,
   CommandEmpty,
   CommandInput,
@@ -15,22 +14,25 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
 import { useUserPools } from "#/hooks/useUserPools";
 import type { IMinimalPool } from "#/types";
+import { SupportedChainId } from "@cowprotocol/cow-sdk";
 
 export function PoolsDropdownMenu({
+  chainId,
   account,
   onSelect,
   selectedPoolId,
 }: {
+  chainId: SupportedChainId;
   account?: string;
   onSelect: (pool: IMinimalPool) => void;
   selectedPoolId?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const pools = useUserPools(account);
+  const { data: pools } = useUserPools(chainId, account);
   const [search, setSearch] = useState("");
 
   const selectedPool = useMemo(
-    () => pools.find((pool) => pool.id === selectedPoolId),
+    () => pools?.find((pool) => pool.id === selectedPoolId),
     [pools, selectedPoolId]
   );
 
@@ -59,10 +61,10 @@ export function PoolsDropdownMenu({
           }}
           value={search}
         >
-          <CommandInput className="text-black" />
+          <CommandInput className="text-black pb-2" />
           <CommandList className="w-full">
             <CommandEmpty className="w-full">No results found</CommandEmpty>
-            {pools.map((pool) => (
+            {pools?.map((pool) => (
               <CommandItem
                 key={pool.id}
                 value={
