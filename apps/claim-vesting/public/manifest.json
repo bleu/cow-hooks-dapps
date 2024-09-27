@@ -32,7 +32,7 @@
     "walletCompatibility": ["EOA", "Smart contract"],
     "conditions": {
       "position": "pre",
-      "smartContractWalletSupported": false
+      "smartContractWalletSupported": true
     }
   }
 }
