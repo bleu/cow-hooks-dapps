@@ -12,10 +12,16 @@
     "@bleu/cow-hooks-ui": "workspace:*",
     "@bleu/tsconfig": "workspace:*",
     "@bleu/ui": "0.1.131",
+    "@cowprotocol/hook-dapp-lib": "1.0.0-RC0",
+    "@ethersproject/providers": "5.7.2",
     "babel-plugin-react-compiler": "0.0.0-experimental-6067d4e-20240923",
+    "lodash.debounce": "4.0.8",
     "next": "15.0.0-rc.0",
     "react": "19.0.0-rc-e4953922-20240919",
-    "react-dom": "19.0.0-rc-e4953922-20240919"
+    "react-dom": "19.0.0-rc-e4953922-20240919",
+    "react-hook-form": "7.53.0",
+    "swr": "2.2.5",
+    "viem": "2.21.14"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.2",
@@ -23,6 +29,7 @@
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "14.5.2",
     "@types/jest": "^29.5.13",
+    "@types/lodash.debounce": "^4",
     "@types/node": "^22.6.1",
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
