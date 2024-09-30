@@ -13,13 +13,15 @@
     "@bleu/tsconfig": "workspace:*",
     "@bleu/ui": "0.1.131",
     "@cowprotocol/hook-dapp-lib": "1.0.0-RC1",
+    "@hookform/resolvers": "3.9.0",
     "babel-plugin-react-compiler": "0.0.0-experimental-6067d4e-20240923",
     "next": "15.0.0-rc.0",
     "react": "19.0.0-rc-e4953922-20240919",
     "react-dom": "19.0.0-rc-e4953922-20240919",
     "react-hook-form": "7.53.0",
     "swr": "2.2.5",
-    "viem": "2.21.14"
+    "viem": "2.21.14",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.2",

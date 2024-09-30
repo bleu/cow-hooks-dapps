@@ -28,6 +28,7 @@ export function AddressInput<TFieldValues extends FieldValues>({
       <Input
         id={name}
         name={name}
+        label="recipient"
         type="text"
         placeholder="0xabc..."
         autoComplete="off"

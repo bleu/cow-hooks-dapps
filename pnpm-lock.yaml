@@ -141,6 +141,9 @@ importers:
       "@cowprotocol/hook-dapp-lib":
         specifier: 1.0.0-RC1
         version: 1.0.0-RC1
+      "@hookform/resolvers":
+        specifier: 3.9.0
+        version: 3.9.0(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))
       babel-plugin-react-compiler:
         specifier: 0.0.0-experimental-6067d4e-20240923
         version: 0.0.0-experimental-6067d4e-20240923
@@ -162,6 +165,9 @@ importers:
       viem:
         specifier: 2.21.14
         version: 2.21.14(typescript@5.6.2)(zod@3.23.8)
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       "@biomejs/biome":
         specifier: 1.9.2
@@ -10305,6 +10311,10 @@ snapshots:
   "@hookform/resolvers@3.9.0(react-hook-form@7.53.0(react@18.3.1))":
     dependencies:
       react-hook-form: 7.53.0(react@18.3.1)
+
+  "@hookform/resolvers@3.9.0(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))":
+    dependencies:
+      react-hook-form: 7.53.0(react@19.0.0-rc-e4953922-20240919)
 
   "@img/sharp-darwin-arm64@0.33.5":
     optionalDependencies:

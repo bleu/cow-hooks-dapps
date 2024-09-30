@@ -18,13 +18,11 @@ import { isAddress } from "viem";
 import { z } from "zod";
 
 export const createVestingSchema = z.object({
-  recipient: z
-    .string()
-    .min(1, "Address is required")
-    .refine((value: string) => {
-      console.log("refining", value);
-      return value === "" || isAddress(value);
-    }, "Insert a valid Ethereum address"),
+  recipient: z.string().min(10, "Address is required"),
+  // .refine((value: string) => {
+  //   console.log("refining", value);
+  //   return value === "" || isAddress(value);
+  // }, "Insert a valid Ethereum address"),
 });
 
 export default function Page() {
@@ -42,7 +40,7 @@ export default function Page() {
     },
   });
 
-  const { setValue, control, register, formState, handleSubmit } = form;
+  const { control, formState, handleSubmit } = form;
   const { recipient } = useWatch({ control });
   const { errors, isValid } = formState;
 
@@ -76,9 +74,15 @@ export default function Page() {
     // }
   };
 
-  function onSubmit() {
+  function onSubmit(data: typeof createVestingSchema._type) {
     // if (!context) return;
+    console.log("data", data);
     addHook();
+  }
+
+  if (!isValid) {
+    console.log("is not valid");
+    console.log(errors);
   }
 
   return (
@@ -89,7 +93,7 @@ export default function Page() {
           <ContentWrapper>
             <Input
               name="recipient"
-              type="text"
+              label="Recipient"
               placeholder="0xabc..."
               autoComplete="off"
               className="w-full mt-0 p-2.5 rounded-xl outline-none text-color-text-paper border-2 border-color-border bg-color-paper-darker"
@@ -97,6 +101,7 @@ export default function Page() {
           </ContentWrapper>
           <ButtonPrimary type="submit" onClick={handleSubmit(onSubmit)}>
             {/* <span>{context?.hookToEdit ? "Edit Hook" : "Add hook"}</span> */}
+            Add Hook
           </ButtonPrimary>
         </Wrapper>
       </Form>
