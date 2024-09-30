@@ -8,10 +8,7 @@
     "@bleu/ui": "0.1.131",
     "@bleu/utils": "workspace:*",
     "@cowprotocol/cow-sdk": "5.4.1",
-    "@uniswap/sdk-core": "5.4.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-hook-form": "^7.52.1"
+    "@uniswap/sdk-core": "5.4.0"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.2",
@@ -26,5 +23,10 @@
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
     "typescript": "5.6.2"
+  },
+  "peerDependencies": {
+    "react": "19.0.0-rc-e4953922-20240919",
+    "react-dom": "19.0.0-rc-e4953922-20240919",
+    "react-hook-form": "^7.52.1"
   }
 }
