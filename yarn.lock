@@ -548,7 +548,7 @@ __metadata:
     "@bleu/cow-hooks-ui": "workspace:*"
     "@bleu/tsconfig": "workspace:*"
     "@bleu/ui": "npm:0.1.131"
-    "@cowprotocol/hook-dapp-lib": "npm:1.0.0-RC0"
+    "@cowprotocol/hook-dapp-lib": "npm:1.0.0-RC1"
     "@ethersproject/providers": "npm:5.7.2"
     "@testing-library/jest-dom": "npm:6.5.0"
     "@testing-library/react": "npm:^16.0.1"
@@ -1001,6 +1001,15 @@ __metadata:
     "@cowprotocol/cow-sdk": "npm:^5.4.1"
     "@cowprotocol/iframe-transport": "npm:^1.0.0"
   checksum: 10c0/b45dcccc291a03ff9b53a40ada2eecd5484637eb1f43b515c8d7a5cd225a0f0f6b26ec940c2fb2675329e4e25f98766b122397631afb2a4fdfcf097f60440fc7
+  languageName: node
+  linkType: hard
+
+"@cowprotocol/hook-dapp-lib@npm:1.0.0-RC1":
+  version: 1.0.0-RC1
+  resolution: "@cowprotocol/hook-dapp-lib@npm:1.0.0-RC1"
+  dependencies:
+    "@cowprotocol/iframe-transport": "npm:^1.0.0"
+  checksum: 10c0/f6732fe6d22a4880e58d39b479e9df66e86509467825fa4ea6909a6ff86f9f4f6582dd8ebb97769060649a645e01ef69cdad25c9b0ff5ae22c63b2ddd6b439d4
   languageName: node
   linkType: hard
 

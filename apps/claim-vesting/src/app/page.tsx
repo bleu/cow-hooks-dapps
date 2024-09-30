@@ -23,7 +23,6 @@ export default function Page() {
   const [actions, setActions] = useState<CoWHookDappActions | null>(null);
   const [context, setContext] = useState<HookDappContext | null>(null);
 
-  // @ts-ignore
   const isDarkMode = context?.isDarkMode;
 
   const { account, chainId } = context || {};
