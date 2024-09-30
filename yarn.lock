@@ -600,7 +600,7 @@ __metadata:
     "@bleu/tsconfig": "workspace:*"
     "@bleu/ui": "npm:0.1.131"
     "@bleu/utils": "workspace:*"
-    "@cowprotocol/cow-sdk": "npm:5.4.1"
+    "@cowprotocol/cow-sdk": "npm:5.5.1"
     "@testing-library/jest-dom": "npm:6.5.0"
     "@testing-library/react": "npm:^16.0.1"
     "@testing-library/user-event": "npm:14.5.2"
@@ -695,7 +695,7 @@ __metadata:
   dependencies:
     "@biomejs/biome": "npm:1.9.2"
     "@bleu/tsconfig": "workspace:^"
-    "@cowprotocol/cow-sdk": "npm:5.4.1"
+    "@cowprotocol/cow-sdk": "npm:5.5.1"
     "@jest/globals": "npm:^29.7.0"
     jest: "npm:^29.7.0"
     ts-jest: "npm:^29.2.5"
@@ -955,24 +955,6 @@ __metadata:
   peerDependencies:
     ethers: ^5.4.0
   checksum: 10c0/e8a266a9dd250bbd8aca33d92448da5bd21caa284a9bb0625fda38188694c7a994c2c603bb1b08c2a86a26f0ab5647849a1db0e99b55a0280046cc8b37bdc1b6
-  languageName: node
-  linkType: hard
-
-"@cowprotocol/cow-sdk@npm:5.4.1":
-  version: 5.4.1
-  resolution: "@cowprotocol/cow-sdk@npm:5.4.1"
-  dependencies:
-    "@cowprotocol/contracts": "npm:^1.6.0"
-    "@ethersproject/abstract-signer": "npm:^5.7.0"
-    "@openzeppelin/merkle-tree": "npm:^1.0.5"
-    cross-fetch: "npm:^3.1.5"
-    exponential-backoff: "npm:^3.1.1"
-    graphql: "npm:^16.3.0"
-    graphql-request: "npm:^4.3.0"
-    limiter: "npm:^2.1.0"
-  peerDependencies:
-    ethers: ^5.7.2
-  checksum: 10c0/912df8efa59344f7a1928debf6dc19edbf4235cedb8d70d7db9f8757a47030412a0a2a6d4cb8d4d25b5b8f30d8b3731e009b2f9c0a342fc99e1eb29689421a3e
   languageName: node
   linkType: hard
 
