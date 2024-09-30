@@ -17,7 +17,7 @@ const {
  */
 const rules = {
   "**/*.{json,md,mdx,css,html,yml,yaml,scss}": (filenames) => {
-    return [`yarn biome check --write ${concatFilesForPrettier(filenames)}`];
+    return [`pnpm biome check --write ${concatFilesForPrettier(filenames)}`];
   },
 };
 
