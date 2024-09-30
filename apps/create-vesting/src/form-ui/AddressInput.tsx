@@ -1,3 +1,4 @@
+import { Input } from "@bleu/cow-hooks-ui";
 import clsx from "clsx";
 import { type InputHTMLAttributes, ReactNode } from "react";
 import type { FieldValues, Path, UseFormRegister } from "react-hook-form";
@@ -8,7 +9,7 @@ interface AddressInputProps<TFieldValues extends FieldValues>
   isDarkMode: boolean | undefined;
   label: string;
   errorMessage?: string;
-  register: UseFormRegister<TFieldValues>;
+  //register: UseFormRegister<TFieldValues>;
 }
 
 export function AddressInput<TFieldValues extends FieldValues>({
@@ -16,7 +17,7 @@ export function AddressInput<TFieldValues extends FieldValues>({
   isDarkMode,
   label,
   errorMessage,
-  register,
+  //register,
   ...props
 }: AddressInputProps<TFieldValues>) {
   return (
@@ -24,8 +25,9 @@ export function AddressInput<TFieldValues extends FieldValues>({
       <label htmlFor={name} className="text-start text-sm ml-2 my-2.5">
         Place recipient address
       </label>
-      <input
+      <Input
         id={name}
+        name={name}
         type="text"
         placeholder="0xabc..."
         autoComplete="off"
@@ -34,8 +36,8 @@ export function AddressInput<TFieldValues extends FieldValues>({
           { "bg-color-paper-darker": isDarkMode },
           { "bg-color-paper": !isDarkMode },
         )}
-        {...register(name)}
-        {...props}
+        //{...register(name)}
+        //{...props}
       />
       <span
         className={clsx("text-red-700 text-sm text-start ml-2.5 mt-1", {

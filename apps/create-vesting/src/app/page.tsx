@@ -10,7 +10,8 @@ import { ButtonPrimary, ContentWrapper, Wrapper } from "@bleu/cow-hooks-ui";
 import { AddressInput } from "form-ui/AddressInput";
 import { useEffect, useState } from "react";
 
-import { Button, Form, Input } from "@bleu/ui";
+import { Input } from "@bleu/cow-hooks-ui";
+import { Button, Form } from "@bleu/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { isAddress } from "viem";
@@ -27,12 +28,12 @@ export const createVestingSchema = z.object({
 });
 
 export default function Page() {
-  const [actions, setActions] = useState<CoWHookDappActions | null>(null);
-  const [context, setContext] = useState<HookDappContext | null>(null);
+  // const [actions, setActions] = useState<CoWHookDappActions | null>(null);
+  // const [context, setContext] = useState<HookDappContext | null>(null);
 
   // @ts-ignore
-  const isDarkMode = context?.isDarkMode;
-  const { account, chainId } = context || {};
+  // const isDarkMode = context?.isDarkMode;
+  // const { account, chainId } = context || {};
 
   const form = useForm<typeof createVestingSchema._type>({
     resolver: zodResolver(createVestingSchema),
@@ -45,22 +46,22 @@ export default function Page() {
   const { recipient } = useWatch({ control });
   const { errors, isValid } = formState;
 
-  useEffect(() => {
-    const { actions } = initCoWHookDapp({ onContext: setContext });
-    setActions(actions);
-  }, []);
+  // useEffect(() => {
+  //   const { actions } = initCoWHookDapp({ onContext: setContext });
+  //   setActions(actions);
+  // }, []);
 
-  useEffect(() => {
-    const newTheme = isDarkMode ? "dark" : "light";
-    document.documentElement.setAttribute("data-theme", newTheme);
-  }, [isDarkMode]);
+  // useEffect(() => {
+  //   const newTheme = isDarkMode ? "dark" : "light";
+  //   document.documentElement.setAttribute("data-theme", newTheme);
+  // }, [isDarkMode]);
 
-  useEffect(() => {
-    console.log("errors", errors);
-  }, [errors]);
+  // useEffect(() => {
+  //   console.log("errors", errors);
+  // }, [errors]);
 
   const addHook = () => {
-    if (!actions) return;
+    // if (!actions) return;
 
     const hook = {
       target: "",
@@ -76,30 +77,30 @@ export default function Page() {
   };
 
   function onSubmit() {
-    if (!context) return;
+    // if (!context) return;
     addHook();
   }
 
   return (
     <>
-      {context && (
-        <Form {...form} className="contents">
-          <Wrapper>
-            <ContentWrapper>
-              <AddressInput
-                name="recipient"
-                label="Place recipient address"
-                errorMessage={errors.recipient?.message}
-                register={register}
-                isDarkMode={isDarkMode}
-              />
-            </ContentWrapper>
-            <ButtonPrimary type="submit" onClick={handleSubmit(onSubmit)}>
-              <span>{context?.hookToEdit ? "Edit Hook" : "Add hook"}</span>
-            </ButtonPrimary>
-          </Wrapper>
-        </Form>
-      )}
+      {/* {context && ( */}
+      <Form {...form} className="contents">
+        <Wrapper>
+          <ContentWrapper>
+            <Input
+              name="recipient"
+              type="text"
+              placeholder="0xabc..."
+              autoComplete="off"
+              className="w-full mt-0 p-2.5 rounded-xl outline-none text-color-text-paper border-2 border-color-border bg-color-paper-darker"
+            />
+          </ContentWrapper>
+          <ButtonPrimary type="submit" onClick={handleSubmit(onSubmit)}>
+            {/* <span>{context?.hookToEdit ? "Edit Hook" : "Add hook"}</span> */}
+          </ButtonPrimary>
+        </Wrapper>
+      </Form>
+      {/* )} */}
     </>
   );
 }
