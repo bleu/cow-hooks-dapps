@@ -1,5 +1,5 @@
 import { Input } from "@bleu/cow-hooks-ui";
-import clsx from "clsx";
+import { cn } from "@bleu/ui";
 import { type InputHTMLAttributes, ReactNode } from "react";
 import type { FieldValues, Path, UseFormRegister } from "react-hook-form";
 
@@ -32,7 +32,7 @@ export function AddressInput<TFieldValues extends FieldValues>({
         type="text"
         placeholder="0xabc..."
         autoComplete="off"
-        className={clsx(
+        className={cn(
           "w-full mt-0 p-2.5 rounded-xl outline-none text-color-text-paper border-2 border-color-border",
           { "bg-color-paper-darker": isDarkMode },
           { "bg-color-paper": !isDarkMode },
@@ -41,7 +41,7 @@ export function AddressInput<TFieldValues extends FieldValues>({
         //{...props}
       />
       <span
-        className={clsx("text-red-700 text-sm text-start ml-2.5 mt-1", {
+        className={cn("text-red-700 text-sm text-start ml-2.5 mt-1", {
           "text-transparent": !errorMessage,
         })}
       >
