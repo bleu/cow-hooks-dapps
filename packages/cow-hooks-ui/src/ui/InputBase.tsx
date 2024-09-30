@@ -4,6 +4,7 @@ import {
   type FieldError,
   type RegisterOptions,
   useFormContext,
+  useFormState,
 } from "react-hook-form";
 
 import { InfoTooltip } from "./TooltipBase";
@@ -27,10 +28,9 @@ export const Input = React.forwardRef<HTMLInputElement, IInput>(
     className,
     ...props
   }: IInput) => {
-    const {
-      register,
-      formState: { errors },
-    } = useFormContext();
+    const { register, control } = useFormContext();
+
+    const { errors } = useFormState({ control });
 
     if (!name) {
       throw new Error("Input component requires a name prop");
@@ -39,11 +39,13 @@ export const Input = React.forwardRef<HTMLInputElement, IInput>(
     const error = errors[name] as FieldError | undefined;
     const errorMessage = error?.message;
 
+    console.log("errors", errors);
+
     return (
       <div className="flex flex-col w-full">
         {label && (
           <div className="flex flex-row gap-x-2 items-center mb-2">
-            <Label className="block text-sm">{label}</Label>
+            <Label className="ml-2 block text-sm">{label}</Label>
             {tooltipText && (
               <InfoTooltip text={tooltipText} link={tooltipLink} />
             )}
@@ -55,14 +57,16 @@ export const Input = React.forwardRef<HTMLInputElement, IInput>(
           {...register(name, validation)}
           className={cn(
             "w-full shadow-none rounded-md placeholder:opacity-50 border border-border",
-            className,
+            className
           )}
         />
 
         {errorMessage && (
-          <div className="mt-1 text-sm text-destructive">{errorMessage}</div>
+          <div className="mt-1 ml-2 text-start text-sm text-destructive">
+            {errorMessage}
+          </div>
         )}
       </div>
     );
-  },
+  }
 );
