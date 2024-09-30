@@ -7,7 +7,24 @@ import {
 } from "@cowprotocol/hook-dapp-lib";
 
 import { ButtonPrimary, ContentWrapper, Wrapper } from "@bleu/cow-hooks-ui";
+import { AddressInput } from "form-ui/AddressInput";
 import { useEffect, useState } from "react";
+
+import { Button, Form, Input } from "@bleu/ui";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, useWatch } from "react-hook-form";
+import { isAddress } from "viem";
+import { z } from "zod";
+
+export const createVestingSchema = z.object({
+  recipient: z
+    .string()
+    .min(1, "Address is required")
+    .refine((value: string) => {
+      console.log("refining", value);
+      return value === "" || isAddress(value);
+    }, "Insert a valid Ethereum address"),
+});
 
 export default function Page() {
   const [actions, setActions] = useState<CoWHookDappActions | null>(null);
@@ -16,6 +33,17 @@ export default function Page() {
   // @ts-ignore
   const isDarkMode = context?.isDarkMode;
   const { account, chainId } = context || {};
+
+  const form = useForm<typeof createVestingSchema._type>({
+    resolver: zodResolver(createVestingSchema),
+    defaultValues: {
+      recipient: "",
+    },
+  });
+
+  const { setValue, control, register, formState, handleSubmit } = form;
+  const { recipient } = useWatch({ control });
+  const { errors, isValid } = formState;
 
   useEffect(() => {
     const { actions } = initCoWHookDapp({ onContext: setContext });
@@ -27,7 +55,11 @@ export default function Page() {
     document.documentElement.setAttribute("data-theme", newTheme);
   }, [isDarkMode]);
 
-  const handleAddHook = () => {
+  useEffect(() => {
+    console.log("errors", errors);
+  }, [errors]);
+
+  const addHook = () => {
     if (!actions) return;
 
     const hook = {
@@ -36,24 +68,37 @@ export default function Page() {
       gasLimit: "",
     };
 
-    if (context?.hookToEdit) {
-      actions.editHook({ hook, uuid: context.hookToEdit.uuid });
-    } else {
-      actions.addHook({ hook });
-    }
+    // if (context?.hookToEdit) {
+    //   actions.editHook({ hook, uuid: context.hookToEdit.uuid });
+    // } else {
+    //   actions.addHook({ hook });
+    // }
   };
+
+  function onSubmit() {
+    if (!context) return;
+    addHook();
+  }
 
   return (
     <>
       {context && (
-        <Wrapper>
-          <ContentWrapper>
-            <div className="flex flex-col w-full">asdnkmcnsd</div>
-          </ContentWrapper>
-          <ButtonPrimary onClick={handleAddHook}>
-            <span>{context?.hookToEdit ? "Edit Hook" : "Add hook"}</span>
-          </ButtonPrimary>
-        </Wrapper>
+        <Form {...form} className="contents">
+          <Wrapper>
+            <ContentWrapper>
+              <AddressInput
+                name="recipient"
+                label="Place recipient address"
+                errorMessage={errors.recipient?.message}
+                register={register}
+                isDarkMode={isDarkMode}
+              />
+            </ContentWrapper>
+            <ButtonPrimary type="submit" onClick={handleSubmit(onSubmit)}>
+              <span>{context?.hookToEdit ? "Edit Hook" : "Add hook"}</span>
+            </ButtonPrimary>
+          </Wrapper>
+        </Form>
       )}
     </>
   );
