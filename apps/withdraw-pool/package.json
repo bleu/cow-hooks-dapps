@@ -14,7 +14,7 @@
   "dependencies": {
     "@bleu/cow-hooks-ui": "workspace:*",
     "@bleu/tsconfig": "workspace:*",
-    "@bleu/ui": "^0.1.131",
+    "@bleu/ui": "0.1.131",
     "@bleu/utils": "workspace:*",
     "@cowprotocol/hook-dapp-lib": "1.0.0-RC0",
     "@hookform/resolvers": "3.9.0",

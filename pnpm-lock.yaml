@@ -215,7 +215,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/tsconfig
       "@bleu/ui":
-        specifier: ^0.1.131
+        specifier: 0.1.131
         version: 0.1.131(@types/react-dom@18.3.0)(@types/react@18.3.10)(mapbox-gl@1.13.3)(react-dom@18.3.1(react@18.3.1))(react-hook-form@7.53.0(react@18.3.1))(react-router-dom@6.26.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.95.0)
       "@bleu/utils":
         specifier: workspace:*
@@ -13369,7 +13369,7 @@ snapshots:
 
   d3-geo-projection@2.9.0:
     dependencies:
-      commander: 2.9.0
+      commander: 2.20.3
       d3-array: 1.2.4
       d3-geo: 1.12.1
       resolve: 1.22.8
@@ -16421,7 +16421,7 @@ snapshots:
 
   topojson-client@3.1.0:
     dependencies:
-      commander: 2.9.0
+      commander: 2.20.3
 
   tr46@0.0.3: {}
 
