@@ -8,7 +8,8 @@
     "@bleu/ui": "0.1.131",
     "@bleu/utils": "workspace:*",
     "@cowprotocol/cow-sdk": "5.4.1",
-    "@uniswap/sdk-core": "5.4.0"
+    "@uniswap/sdk-core": "5.4.0",
+    "@radix-ui/react-icons": "1.3.0"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.2",
