@@ -7,7 +7,7 @@ import {
 } from "@cowprotocol/hook-dapp-lib";
 
 import { ButtonPrimary, ContentWrapper, Wrapper } from "@bleu/cow-hooks-ui";
-import { PeriodWithScaleInput } from "form-ui/PeriodWithScaleInput";
+import { PeriodWithScaleInput } from "@bleu/cow-hooks-ui";
 import { useEffect, useState } from "react";
 
 import { Input } from "@bleu/cow-hooks-ui";
