@@ -6,39 +6,39 @@ import { BaseTransaction } from "#/utils/transactionFactory/types";
 import { getCowShedNonce } from "#/utils/cowShed/getCowShedNonce";
 import { SigningScheme } from "@cowprotocol/contracts";
 
-export function useCowShedSignature(txs: BaseTransaction[]) {
+export function useCowShedSignature() {
   const { cowShed, signer, context } = useIFrameContext();
-
-  const cowShedCalls: ICoWShedCall[] = useMemo(() => {
-    return txs.map((tx) => {
-      return {
-        target: tx.to,
-        value: BigInt(tx.value),
-        callData: tx.callData,
-        allowFailure: false,
-        isDelegateCall: false,
-      };
-    });
-  }, [txs]);
 
   const hookDeadline = useHookDeadline();
 
-  return useCallback(async () => {
-    if (!cowShed || !signer || !context?.account) return;
-    const nonce = getCowShedNonce();
-    const signature = await cowShed.signCalls(
-      cowShedCalls,
-      nonce,
-      hookDeadline,
-      signer,
-      SigningScheme.EIP712
-    );
-    return cowShed.encodeExecuteHooksForFactory(
-      cowShedCalls,
-      nonce,
-      hookDeadline,
-      context.account,
-      signature
-    );
-  }, [cowShedCalls, hookDeadline, cowShed, signer, context]);
+  return useCallback(
+    async (txs: BaseTransaction[]) => {
+      if (!cowShed || !signer || !context?.account) return;
+      const cowShedCalls: ICoWShedCall[] = txs.map((tx) => {
+        return {
+          target: tx.to,
+          value: BigInt(tx.value),
+          callData: tx.callData,
+          allowFailure: false,
+          isDelegateCall: false,
+        };
+      });
+      const nonce = getCowShedNonce();
+      const signature = await cowShed.signCalls(
+        cowShedCalls,
+        nonce,
+        hookDeadline,
+        signer,
+        SigningScheme.EIP712
+      );
+      return cowShed.encodeExecuteHooksForFactory(
+        cowShedCalls,
+        nonce,
+        hookDeadline,
+        context.account,
+        signature
+      );
+    },
+    [hookDeadline, cowShed, signer, context]
+  );
 }

@@ -12,6 +12,7 @@ export interface ERC20TransferFromArgs extends BaseArgs {
   from: Address;
   to: Address;
   amount: bigint;
+  symbol: string;
 }
 
 export class ERC20TransferFromCreator

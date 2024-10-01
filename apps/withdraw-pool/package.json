@@ -12,6 +12,7 @@
     "lint:fix": "eslint '**/*.{ts,tsx}' --fix"
   },
   "dependencies": {
+    "@1inch/permit-signed-approvals-utils": "1.5.2",
     "@balancer-labs/sdk": "1.1.6",
     "@balancer/sdk": "0.26.1",
     "@bleu/cow-hooks-ui": "workspace:*",
@@ -20,6 +21,7 @@
     "@bleu/utils": "workspace:*",
     "@cowprotocol/contracts": "1.6.0",
     "@cowprotocol/hook-dapp-lib": "1.0.0-RC1",
+    "@cowprotocol/permit-utils": "0.2.0",
     "@ethersproject/providers": "5.7.2",
     "@hookform/resolvers": "3.9.0",
     "@radix-ui/colors": "^3.0.0",

@@ -1,12 +1,11 @@
 import { SignatureStepsProps } from "#/types";
 import { CheckIcon } from "@radix-ui/react-icons";
-import { Spinner } from "./Spinner";
 
 export function SignatureSteps({
   steps,
   currentIndex,
 }: {
-  steps: SignatureStepsProps[];
+  steps: { id: string; label: string }[];
   currentIndex: number;
 }) {
   return (
@@ -31,7 +30,7 @@ function SignatureStep({
   currentIndex,
   stepIndex,
 }: {
-  step: SignatureStepsProps;
+  step: { id: string; label: string };
   currentIndex: number;
   stepIndex: number;
 }) {

@@ -10,7 +10,7 @@ import { PoolsDropdownMenu } from "#/components/PoolsDropdownMenu";
 import { WithdrawPctSlider } from "#/components/WithdrawPctSlider";
 import type { IMinimalPool } from "#/types";
 import { withdrawSchema } from "#/utils/schema";
-import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
+import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 import { useIFrameContext } from "#/context/iframe";
 import { useRouter } from "next/navigation";
 import { Spinner } from "#/components/Spinner";
@@ -19,7 +19,7 @@ export default function Page() {
   const {
     context,
     userPoolSwr: { data: pools },
-    setCowShedTransactions,
+    setHookInfo,
   } = useIFrameContext();
   const form = useForm<typeof withdrawSchema._type>({
     resolver: zodResolver(withdrawSchema),
@@ -34,7 +34,7 @@ export default function Page() {
   const {
     setValue,
     control,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
   } = form;
 
   const { withdrawPct, poolId } = useWatch({ control });
@@ -44,7 +44,7 @@ export default function Page() {
     [pools, poolId]
   );
 
-  const getHooksTransactions = useGetHooksTransactions(selectedPool);
+  const getHooksTransactions = useGetHookInfo(selectedPool);
 
   const buttonProps = useMemo(() => {
     if (!withdrawPct || withdrawPct === 0)
@@ -64,9 +64,9 @@ export default function Page() {
       {...form}
       onSubmit={form.handleSubmit(async (data) => {
         if (!selectedPool || !context.account) return;
-        const transactions = await getHooksTransactions(data.withdrawPct);
-        if (!transactions) return;
-        setCowShedTransactions(transactions);
+        const hookInfo = await getHooksTransactions(data.withdrawPct);
+        if (!hookInfo) return;
+        setHookInfo(hookInfo);
         router.push("/signing");
       })}
       className="w-full flex flex-col gap-1 py-1 px-4"
@@ -83,8 +83,10 @@ export default function Page() {
             type="submit"
             className="mt-2"
             disabled={buttonProps.disabled}
+            loading={isSubmitting}
+            loadingText="Creating hook..."
           >
-            {isSubmitting ? "Creating hook..." : buttonProps.message}
+            {buttonProps.message}
           </Button>
         </div>
       )}

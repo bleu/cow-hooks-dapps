@@ -17,10 +17,10 @@ import {
 import { publicClientMapping, PublicClientType } from "#/utils/clients";
 import { CowShedHooks } from "@cowprotocol/cow-sdk";
 import { Address } from "viem";
-import { HookDappContextAdjusted } from "#/types";
+import { HookDappContextAdjusted, IHooksInfo } from "#/types";
 import { useUserPools } from "#/hooks/useUserPools";
 import { Signer } from "ethers";
-import { Web3Provider } from "@ethersproject/providers";
+import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { BaseTransaction } from "#/utils/transactionFactory/types";
 
 type IFrameContextType = {
@@ -32,8 +32,9 @@ type IFrameContextType = {
   userPoolSwr: ReturnType<typeof useUserPools>;
   actions?: CoWHookDappActions;
   signer?: Signer;
-  cowShedTransactions: BaseTransaction[];
-  setCowShedTransactions: (txs: BaseTransaction[]) => void;
+  hookInfo?: IHooksInfo;
+  setHookInfo: (info: IHooksInfo) => void;
+  web3Provider?: JsonRpcProvider;
 };
 
 export const IFrameContext = createContext({} as IFrameContextType);
@@ -41,10 +42,9 @@ export const IFrameContext = createContext({} as IFrameContextType);
 export function IFrameContextProvider({ children }: PropsWithChildren) {
   const [context, setContext] = useState<HookDappContextAdjusted>();
   const [actions, setActions] = useState<CoWHookDappActions>();
+  const [web3Provider, setWeb3Provider] = useState<JsonRpcProvider>();
   const [signer, setSigner] = useState<Signer>();
-  const [cowShedTransactions, setCowShedTransactions] = useState<
-    BaseTransaction[]
-  >([]);
+  const [hookInfo, setHookInfo] = useState<IHooksInfo>();
 
   useEffect(() => {
     const { actions, provider } = initCoWHookDapp({
@@ -55,6 +55,9 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
 
     // TODO: refactor to use viem
     const web3Provider = new Web3Provider(provider);
+
+    // @ts-ignore
+    setWeb3Provider(provider as JsonRpcProvider);
     setSigner(web3Provider.getSigner());
   }, []);
 
@@ -89,10 +92,11 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
         cowShedProxy,
         userPoolSwr,
         cowShed,
-        cowShedTransactions,
-        setCowShedTransactions,
+        hookInfo,
+        setHookInfo,
         signer,
         actions,
+        web3Provider,
       }}
     >
       {children}

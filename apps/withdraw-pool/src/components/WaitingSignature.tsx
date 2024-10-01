@@ -8,7 +8,6 @@ import { useEffect } from "react";
 
 export function WaitingSignature({
   callback,
-  onSuccess,
   description,
   id,
 }: SignatureStepsProps) {
@@ -19,7 +18,6 @@ export function WaitingSignature({
     revalidateOnMount: false,
     revalidateOnReconnect: false,
     shouldRetryOnError: false,
-    onSuccess,
   });
 
   useEffect(() => {
@@ -37,7 +35,7 @@ export function WaitingSignature({
           className="bg-destructive/15 hover:bg-destructive/50"
           onClick={() => mutate()}
         >
-          Error on signature. Try again
+          Error on signature, try again
         </Button>
       )}
     </div>
