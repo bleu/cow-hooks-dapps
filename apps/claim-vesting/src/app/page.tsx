@@ -73,11 +73,6 @@ export default function Page() {
     }
   };
 
-  function containsInvalidHexChars(input: string): boolean {
-    const validPattern = /^[0-9a-fx]*$/i;
-    return !validPattern.test(input);
-  }
-
   return (
     <>
       {context && account ? (
@@ -85,10 +80,7 @@ export default function Page() {
           <ContentWrapper>
             <AddressInput
               value={typedAddress}
-              onChange={(e) =>
-                !containsInvalidHexChars(e.target.value) &&
-                setTypedAddress(e.target.value)
-              }
+              onChange={(e) => setTypedAddress(e.target.value.trim())}
               theme={isDarkMode ? "dark" : "light"}
               label="Place vesting contract address"
             />
