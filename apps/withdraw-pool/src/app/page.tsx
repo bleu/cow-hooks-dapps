@@ -3,7 +3,7 @@
 import { Button, Form } from "@bleu/ui";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { PoolBalancesPreview } from "#/components/PoolBalancePreview";
 import { PoolsDropdownMenu } from "#/components/PoolsDropdownMenu";
@@ -59,16 +59,25 @@ export default function Page() {
       </div>
     );
 
+  const onSubmitCallback = useCallback(
+    async (data: typeof withdrawSchema._type) => {
+      if (!selectedPool || !context.account) return;
+      const hookInfo = await getHooksTransactions(data.withdrawPct);
+      if (!hookInfo) return;
+      setHookInfo(hookInfo);
+      router.push("/signing");
+    },
+    [selectedPool, context.account, getHooksTransactions, setHookInfo, router]
+  );
+
+  const onSubmit = useMemo(
+    () => form.handleSubmit(onSubmitCallback),
+    [form, onSubmitCallback]
+  );
   return (
     <Form
       {...form}
-      onSubmit={form.handleSubmit(async (data) => {
-        if (!selectedPool || !context.account) return;
-        const hookInfo = await getHooksTransactions(data.withdrawPct);
-        if (!hookInfo) return;
-        setHookInfo(hookInfo);
-        router.push("/signing");
-      })}
+      onSubmit={onSubmit}
       className="w-full flex flex-col gap-1 py-1 px-4"
     >
       <PoolsDropdownMenu

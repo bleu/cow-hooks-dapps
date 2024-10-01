@@ -21,7 +21,6 @@ import { HookDappContextAdjusted, IHooksInfo } from "#/types";
 import { useUserPools } from "#/hooks/useUserPools";
 import { Signer } from "ethers";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
-import { BaseTransaction } from "#/utils/transactionFactory/types";
 import { RPC_URL_MAPPING } from "#/utils/rpcs";
 
 type IFrameContextType = {
