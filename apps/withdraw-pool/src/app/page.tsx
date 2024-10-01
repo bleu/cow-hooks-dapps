@@ -1,12 +1,9 @@
 "use client";
 
 import { Button, Form } from "@bleu/ui";
-import {
-  type HookDappContext,
-  initCoWHookDapp,
-} from "@cowprotocol/hook-dapp-lib";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { PoolBalancesPreview } from "#/components/PoolBalancePreview";
 import { PoolsDropdownMenu } from "#/components/PoolsDropdownMenu";
@@ -14,11 +11,15 @@ import { WithdrawPctSlider } from "#/components/WithdrawPctSlider";
 import type { IMinimalPool } from "#/types";
 import { withdrawSchema } from "#/utils/schema";
 import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
-import { useTheme } from "#/context/theme";
+import { multiplyValueByPct } from "#/utils/math";
+import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
+import { useIFrameContext } from "#/context/iframe";
 
 export default function Page() {
-  const [context, setContext] = useState<HookDappContext | null>(null);
-
+  const {
+    context,
+    userPoolSwr: { data: pools },
+  } = useIFrameContext();
   const form = useForm<typeof withdrawSchema._type>({
     resolver: zodResolver(withdrawSchema),
     defaultValues: {
@@ -37,12 +38,18 @@ export default function Page() {
     poolId,
   });
 
+  const selectedPool = useMemo(
+    () => pools?.find((pool) => pool.id === poolId),
+    [pools, poolId]
+  );
+
+  const getHooksTransactions = useGetHooksTransactions(selectedPool);
+
   const poolBalancesAfterWithdraw = useMemo(() => {
     if (!poolBalances || !withdrawPct) return [];
-    console.log({ poolBalances });
     return poolBalances.map((poolBalance) => ({
       ...poolBalance,
-      balance: poolBalance.balance.mul(withdrawPct).div(100),
+      balance: multiplyValueByPct(poolBalance.balance, withdrawPct).toString(),
       fiatAmount: (poolBalance.fiatAmount * withdrawPct) / 100,
     }));
   }, [poolBalances, withdrawPct]);
@@ -53,28 +60,21 @@ export default function Page() {
     return { disabled: false, message: "Add pre-hook" };
   }, [withdrawPct]);
 
-  useEffect(() => {
-    initCoWHookDapp({ onContext: setContext });
-  }, []);
-
-  const { theme, toggleTheme } = useTheme();
-
   if (!context) return <div className="w-full text-center p-2">Loading...</div>;
 
   return (
-    <Form {...form} className="w-full flex flex-col gap-1 py-1 px-4">
-      {/* <button
-        onClick={toggleTheme}
-        className="p-2 text-yellow-700"
-        type="button"
-      >
-        Switch to {theme === "light" ? "Dark" : "Light"} Theme
-      </button> */}
+    <Form
+      {...form}
+      onSubmit={form.handleSubmit(async (data) => {
+        if (!selectedPool || !context.account) return;
+        const transactions = await getHooksTransactions(data.withdrawPct);
+        console.log(transactions);
+      })}
+      className="w-full flex flex-col gap-1 py-1 px-4"
+    >
       <PoolsDropdownMenu
-        account={context?.account}
-        chainId={context?.chainId}
         onSelect={(pool: IMinimalPool) => setValue("poolId", pool.id)}
-        selectedPoolId={poolId}
+        selectedPool={selectedPool}
       />
       {poolId && (
         <div className="size-full flex flex-col gap-2">
