@@ -41,3 +41,11 @@ export interface IPoolBalance {
   balance: BigNumberish;
   fiatAmount: number;
 }
+
+export interface SignatureStepsProps {
+  callback: () => Promise<void>;
+  onSuccess: () => void;
+  label: string;
+  description: string;
+  id: string;
+}
