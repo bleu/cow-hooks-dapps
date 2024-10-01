@@ -19,11 +19,9 @@ import { useEffect, useState } from "react";
 
 import { Form } from "@bleu/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useWatch } from "react-hook-form";
-import { isAddress } from "viem";
-import { z } from "zod";
+import { useForm } from "react-hook-form";
 
-const periodScaleOptions = ["Day", "Week", "Month"];
+import { createVestingSchema, periodScaleOptions } from "#/utils/schema";
 
 //will be used
 const scaleToSecondsMapping = {
@@ -31,26 +29,6 @@ const scaleToSecondsMapping = {
   Week: 7 * 24 * 60 * 60,
   Month: 30 * 24 * 60 * 60,
 };
-
-const refinePeriodScale = (value: string) => {
-  return periodScaleOptions.includes(value);
-};
-
-export const createVestingSchema = z.object({
-  recipient: z
-    .string()
-    .min(1, "Address is required")
-    .refine(isAddress, "Insert a valid Ethereum address"),
-  period: z
-    .number({ message: "Invalid amount" })
-    .gt(0, "Period must be greater than 0"),
-  periodScale: z
-    .string()
-    .refine(refinePeriodScale, "Scale must be one of the options"),
-  amount: z
-    .number({ message: "Invalid amount" })
-    .gt(0, "Amount must be greater than 0"),
-});
 
 export default function Page() {
   const [actions, setActions] = useState<CoWHookDappActions | null>(null);
