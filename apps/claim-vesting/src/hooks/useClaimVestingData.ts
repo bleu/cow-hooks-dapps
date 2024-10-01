@@ -1,6 +1,7 @@
+import { formatNumber } from "@bleu/ui";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { useMemo } from "react";
-import { type Address, formatUnits, isAddress } from "viem";
+import { type Address, isAddress } from "viem";
 import { encodeFunctionData } from "viem";
 import { http, createPublicClient } from "viem";
 import { arbitrum, gnosis, mainnet, sepolia } from "viem/chains";
@@ -43,7 +44,6 @@ export const useClaimVestingData = ({
       }),
     [chainId],
   );
-
   const {
     claimableAmountWei,
     recipient,
@@ -89,7 +89,13 @@ export const useClaimVestingData = ({
   });
   const formattedClaimableAmount =
     claimableAmountWei && decimals
-      ? formatUnits(claimableAmountWei, Number(decimals))
+      ? formatNumber(
+          Number(claimableAmountWei) / 10 ** Number(decimals),
+          6,
+          "decimal",
+          "standard",
+          0.000001,
+        )
       : "0.0";
   const loading = isLoadingToken || isLoadingVesting || isLoadingGasLimit;
 
@@ -128,7 +134,7 @@ function getErrorMessage({
   errorGasLimit: Error;
 }) {
   if (!(isAddress(debouncedAddress) || debouncedAddress === ""))
-    return "Insert a valid Ethereum address";
+    return "Insert a valid address";
 
   if (!account) return "Please connect your wallet first";
 
