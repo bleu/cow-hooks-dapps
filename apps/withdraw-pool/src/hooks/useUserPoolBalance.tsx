@@ -71,7 +71,7 @@ async function fetchUserPoolBalance(
 ): Promise<IPoolBalance[]> {
   if (!user || !chainId || !poolId) return [];
   const chainName = BalancerChainName[chainId];
-  const result = await GQL_CLIENT.request<{
+  const result = await GQL_CLIENT[chainId].request<{
     pool: IQuery;
   }>(POOL_QUERY, {
     id: poolId,
