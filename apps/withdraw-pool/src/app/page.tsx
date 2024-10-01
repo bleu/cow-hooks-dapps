@@ -10,15 +10,16 @@ import { PoolsDropdownMenu } from "#/components/PoolsDropdownMenu";
 import { WithdrawPctSlider } from "#/components/WithdrawPctSlider";
 import type { IMinimalPool } from "#/types";
 import { withdrawSchema } from "#/utils/schema";
-import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
-import { multiplyValueByPct } from "#/utils/math";
 import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
 import { useIFrameContext } from "#/context/iframe";
+import { useRouter } from "next/navigation";
+import { Spinner } from "#/components/Spinner";
 
 export default function Page() {
   const {
     context,
     userPoolSwr: { data: pools },
+    setCowShedTransactions,
   } = useIFrameContext();
   const form = useForm<typeof withdrawSchema._type>({
     resolver: zodResolver(withdrawSchema),
@@ -28,15 +29,15 @@ export default function Page() {
     },
   });
 
-  const { setValue, control } = form;
+  const router = useRouter();
+
+  const {
+    setValue,
+    control,
+    formState: { isSubmitting, errors },
+  } = form;
 
   const { withdrawPct, poolId } = useWatch({ control });
-
-  const { data: poolBalances } = useUserPoolBalance({
-    user: context?.account,
-    chainId: context?.chainId,
-    poolId,
-  });
 
   const selectedPool = useMemo(
     () => pools?.find((pool) => pool.id === poolId),
@@ -45,22 +46,18 @@ export default function Page() {
 
   const getHooksTransactions = useGetHooksTransactions(selectedPool);
 
-  const poolBalancesAfterWithdraw = useMemo(() => {
-    if (!poolBalances || !withdrawPct) return [];
-    return poolBalances.map((poolBalance) => ({
-      ...poolBalance,
-      balance: multiplyValueByPct(poolBalance.balance, withdrawPct).toString(),
-      fiatAmount: (poolBalance.fiatAmount * withdrawPct) / 100,
-    }));
-  }, [poolBalances, withdrawPct]);
-
   const buttonProps = useMemo(() => {
     if (!withdrawPct || withdrawPct === 0)
       return { disabled: true, message: "Define percentage" };
     return { disabled: false, message: "Add pre-hook" };
   }, [withdrawPct]);
 
-  if (!context) return <div className="w-full text-center p-2">Loading...</div>;
+  if (!context)
+    return (
+      <div className="w-full text-center p-2">
+        <Spinner />
+      </div>
+    );
 
   return (
     <Form
@@ -68,7 +65,9 @@ export default function Page() {
       onSubmit={form.handleSubmit(async (data) => {
         if (!selectedPool || !context.account) return;
         const transactions = await getHooksTransactions(data.withdrawPct);
-        console.log(transactions);
+        if (!transactions) return;
+        setCowShedTransactions(transactions);
+        router.push("/signing");
       })}
       className="w-full flex flex-col gap-1 py-1 px-4"
     >
@@ -79,17 +78,13 @@ export default function Page() {
       {poolId && (
         <div className="size-full flex flex-col gap-2">
           <WithdrawPctSlider />
-          <PoolBalancesPreview
-            label="Withdraw balance"
-            poolBalance={poolBalancesAfterWithdraw}
-            className="bg-muted"
-          />
+          <PoolBalancesPreview label="Withdraw balance" className="bg-muted" />
           <Button
             type="submit"
             className="bg-primary text-primary-foreground mt-2"
             disabled={buttonProps.disabled}
           >
-            {buttonProps.message}
+            {isSubmitting ? "Creating hook..." : buttonProps.message}
           </Button>
         </div>
       )}

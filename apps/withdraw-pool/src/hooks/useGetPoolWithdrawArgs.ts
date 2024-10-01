@@ -49,6 +49,6 @@ export function useGetPoolWithdrawArgs(
         | BalancerWithdrawArgs
       )[];
     },
-    [context, cowShedProxy]
+    [context, cowShedProxy, pool]
   );
 }

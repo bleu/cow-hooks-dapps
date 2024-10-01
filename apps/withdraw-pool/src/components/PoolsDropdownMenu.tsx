@@ -30,7 +30,7 @@ export function PoolsDropdownMenu({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger className="w-full">
+      <PopoverTrigger className="w-full bg-background">
         <div className="flex flex-col">
           <div
             className="flex p-2 justify-between rounded-md space-x-1 bg-muted text-foreground items-center text-sm"
@@ -42,7 +42,7 @@ export function PoolsDropdownMenu({
         </div>
       </PopoverTrigger>
       {/* for some reason w-full wasn't working here, so I hardcoded the pixel size */}
-      <PopoverContent className="w-[410px] bg-background">
+      <PopoverContent className="w-[440px] bg-background">
         <Command
           className="w-full"
           filter={(value: string, search: string) => {
@@ -53,7 +53,7 @@ export function PoolsDropdownMenu({
           }}
           value={search}
         >
-          <CommandInput className="text-black pb-2" />
+          <CommandInput className="bg-background text-foreground pb-2" />
           <CommandList className="w-full">
             <CommandEmpty className="w-full">No results found</CommandEmpty>
             {pools?.map((pool) => (

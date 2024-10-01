@@ -9,11 +9,10 @@ export function useGetHooksTransactions(pool?: IMinimalPool) {
   const getPoolWithdrawArgs = useGetPoolWithdrawArgs(pool);
   const getBalancerGaugeArgs = useGetBalancerGaugeArgs(pool);
 
-  // return;
-
   return useCallback(
     async (withdrawPct: number) => {
       if (!pool) return;
+
       const bptAmount = multiplyValueByPct(
         pool.userBalance.totalBalance,
         withdrawPct

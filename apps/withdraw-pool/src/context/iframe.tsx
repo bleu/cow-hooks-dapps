@@ -3,37 +3,59 @@
 import {
   createContext,
   PropsWithChildren,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
 
-import { HookDappContext, initCoWHookDapp } from "@cowprotocol/hook-dapp-lib";
-import { useTheme } from "@bleu/ui";
+import {
+  CoWHookDappActions,
+  HookDappContext,
+  initCoWHookDapp,
+} from "@cowprotocol/hook-dapp-lib";
 import { publicClientMapping, PublicClientType } from "#/utils/clients";
 import { CowShedHooks } from "@cowprotocol/cow-sdk";
 import { Address } from "viem";
 import { HookDappContextAdjusted } from "#/types";
 import { useUserPools } from "#/hooks/useUserPools";
+import { Signer } from "ethers";
+import { Web3Provider } from "@ethersproject/providers";
+import { BaseTransaction } from "#/utils/transactionFactory/types";
 
 type IFrameContextType = {
   context?: HookDappContextAdjusted;
   setContext: (context: HookDappContextAdjusted) => void;
   publicClient?: PublicClientType;
   cowShedProxy?: Address;
+  cowShed?: CowShedHooks;
   userPoolSwr: ReturnType<typeof useUserPools>;
+  actions?: CoWHookDappActions;
+  signer?: Signer;
+  cowShedTransactions: BaseTransaction[];
+  setCowShedTransactions: (txs: BaseTransaction[]) => void;
 };
 
 export const IFrameContext = createContext({} as IFrameContextType);
 
 export function IFrameContextProvider({ children }: PropsWithChildren) {
   const [context, setContext] = useState<HookDappContextAdjusted>();
+  const [actions, setActions] = useState<CoWHookDappActions>();
+  const [signer, setSigner] = useState<Signer>();
+  const [cowShedTransactions, setCowShedTransactions] = useState<
+    BaseTransaction[]
+  >([]);
+
   useEffect(() => {
-    initCoWHookDapp({
+    const { actions, provider } = initCoWHookDapp({
       onContext: setContext as (args: HookDappContext) => void,
     });
+
+    setActions(actions);
+
+    // TODO: refactor to use viem
+    const web3Provider = new Web3Provider(provider);
+    setSigner(web3Provider.getSigner());
   }, []);
 
   const cowShed = useMemo(() => {
@@ -66,6 +88,11 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
         publicClient,
         cowShedProxy,
         userPoolSwr,
+        cowShed,
+        cowShedTransactions,
+        setCowShedTransactions,
+        signer,
+        actions,
       }}
     >
       {children}

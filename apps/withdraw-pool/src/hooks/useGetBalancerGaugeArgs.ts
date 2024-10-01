@@ -95,6 +95,6 @@ export function useGetBalancerGaugeArgs(
         .flat();
     },
 
-    [poolData]
+    [poolData, context, cowShedProxy]
   );
 }
