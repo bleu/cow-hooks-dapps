@@ -6,18 +6,18 @@ import {
   initCoWHookDapp,
 } from "@cowprotocol/hook-dapp-lib";
 
-import { ButtonPrimary, ContentWrapper, Wrapper } from "@bleu/cow-hooks-ui";
-import { PeriodWithScaleInput } from "@bleu/cow-hooks-ui";
+import {
+  Input,
+  PeriodWithScaleInput,
+  ButtonPrimary,
+  ContentWrapper,
+  TokenAmountInput,
+  Wrapper,
+} from "@bleu/cow-hooks-ui";
+
 import { useEffect, useState } from "react";
 
-import { Input } from "@bleu/cow-hooks-ui";
-import {
-  Button,
-  Form,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@bleu/ui";
+import { Form } from "@bleu/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { isAddress } from "viem";
@@ -25,6 +25,7 @@ import { z } from "zod";
 
 const periodScaleOptions = ["Day", "Week", "Month"];
 
+//will be used
 const scaleToSecondsMapping = {
   Day: 24 * 60 * 60,
   Week: 7 * 24 * 60 * 60,
@@ -40,10 +41,15 @@ export const createVestingSchema = z.object({
     .string()
     .min(1, "Address is required")
     .refine(isAddress, "Insert a valid Ethereum address"),
-  period: z.number().gt(0),
+  period: z
+    .number({ message: "Invalid amount" })
+    .gt(0, "Period must be greater than 0"),
   periodScale: z
     .string()
     .refine(refinePeriodScale, "Scale must be one of the options"),
+  amount: z
+    .number({ message: "Invalid amount" })
+    .gt(0, "Amount must be greater than 0"),
 });
 
 export default function Page() {
@@ -51,6 +57,7 @@ export default function Page() {
   const [context, setContext] = useState<HookDappContext | null>(null);
 
   const isDarkMode = context?.isDarkMode;
+  // will be used
   const { account, chainId } = context || {};
 
   const form = useForm<typeof createVestingSchema._type>({
@@ -61,9 +68,7 @@ export default function Page() {
     },
   });
 
-  const { control, formState, handleSubmit } = form;
-  const { recipient } = useWatch({ control });
-  const { errors, isValid } = formState;
+  const { handleSubmit } = form;
 
   useEffect(() => {
     const { actions } = initCoWHookDapp({ onContext: setContext });
@@ -75,19 +80,15 @@ export default function Page() {
     document.documentElement.setAttribute("data-theme", newTheme);
   }, [isDarkMode]);
 
-  // useEffect(() => {
-  //   console.log("errors", errors);
-  // }, [errors]);
-
   const addHook = () => {
-    // if (!actions) return;
+    if (!actions) return;
 
     const hook = {
       target: "",
       callData: "",
       gasLimit: "",
     };
-
+    // will be used
     // if (context?.hookToEdit) {
     //   actions.editHook({ hook, uuid: context.hookToEdit.uuid });
     // } else {
@@ -112,16 +113,32 @@ export default function Page() {
                 label="Recipient"
                 placeholder="0xabc..."
                 autoComplete="off"
-                className="w-full mt-0 p-2.5 rounded-xl outline-none text-color-text-paper border-2 border-color-border bg-color-paper-darker"
+                className="w-full h-12 mt-0 p-2.5 rounded-xl outline-none text-color-text-paper border-2 border-color-border bg-color-paper-darker placeholder:opacity-100"
               />
               <br />
-              <PeriodWithScaleInput
-                periodScaleOptions={periodScaleOptions}
-                namePeriodValue="period"
-                namePeriodScale="periodScale"
-                label="Period"
-                validation={{ valueAsNumber: true }}
-              />
+              <div className="flex gap-4 w-full">
+                <PeriodWithScaleInput
+                  periodScaleOptions={periodScaleOptions}
+                  namePeriodValue="period"
+                  namePeriodScale="periodScale"
+                  label="Period"
+                  validation={{ valueAsNumber: true, required: true }}
+                  onKeyDown={(e) =>
+                    ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
+                  }
+                />
+                <TokenAmountInput
+                  name="amount"
+                  label="Amount"
+                  placeholder="0.0"
+                  autoComplete="off"
+                  validation={{ valueAsNumber: true, required: true }}
+                  onKeyDown={(e) =>
+                    ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
+                  }
+                />
+              </div>
+              <br />
             </ContentWrapper>
             <ButtonPrimary type="submit" onClick={handleSubmit(onSubmit)}>
               <span>{context?.hookToEdit ? "Edit Hook" : "Add hook"}</span>
