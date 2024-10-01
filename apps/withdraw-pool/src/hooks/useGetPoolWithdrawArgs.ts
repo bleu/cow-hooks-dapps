@@ -23,7 +23,7 @@ export function useGetPoolWithdrawArgs(
         : bptAmount;
 
       const transferBptArg =
-        bptWalletAmount === "0"
+        bptWalletAmount === BigInt(0)
           ? undefined
           : {
               type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM,
@@ -32,7 +32,7 @@ export function useGetPoolWithdrawArgs(
               to: cowShedProxy,
               decimals: pool.decimals,
               amount: BigNumber.from(bptWalletAmount).toBigInt(),
-              symbol: pool.symbol,
+              symbol: "Pool Token",
             };
       return [
         transferBptArg,

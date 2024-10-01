@@ -15,14 +15,13 @@ export function WaitingSignature({
     revalidateIfStale: false,
     revalidateOnFocus: false,
     refreshWhenHidden: false,
-    revalidateOnMount: false,
+    revalidateOnMount: true,
     revalidateOnReconnect: false,
     shouldRetryOnError: false,
+    onError: (error) => {
+      console.error(error);
+    },
   });
-
-  useEffect(() => {
-    mutate();
-  }, [callback, id]);
 
   return (
     <div className="flex flex-col justify-center items-center">

@@ -33,7 +33,7 @@ export function WithdrawPctSlider() {
         <Input
           name="withdrawPct"
           type="range"
-          className="w-full range accent-primary bg-background"
+          className="w-full range accent-primary bg-background px-0"
           min={0}
           max={100}
           step={1}

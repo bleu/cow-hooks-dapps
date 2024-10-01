@@ -5,7 +5,12 @@ import {
   GaugeWithdrawCreator,
 } from "./balancerGauge";
 import { BalancerWithdrawArgs, BalancerWithdrawCreator } from "./balancerPool";
-import { ERC20TransferFromArgs, ERC20TransferFromCreator } from "./erc20";
+import {
+  ERC20ApproveArgs,
+  ERC20ApproveCreator,
+  ERC20TransferFromArgs,
+  ERC20TransferFromCreator,
+} from "./erc20";
 import { BaseTransaction, ITransaction, TRANSACTION_TYPES } from "./types";
 
 export type AllTransactionArgs = TransactionBindings[keyof TransactionBindings];
@@ -15,6 +20,7 @@ export interface TransactionBindings {
   [TRANSACTION_TYPES.GAUGE_CLAIM_REWARDS]: GaugeClaimRewardsArgs;
   [TRANSACTION_TYPES.GAUGE_WITHDRAW]: GaugeWithdrawArgs;
   [TRANSACTION_TYPES.BALANCER_WITHDRAW]: BalancerWithdrawArgs;
+  [TRANSACTION_TYPES.ERC20_APPROVE]: ERC20ApproveArgs;
 }
 
 const TRANSACTION_CREATORS: {
@@ -26,6 +32,7 @@ const TRANSACTION_CREATORS: {
   [TRANSACTION_TYPES.GAUGE_CLAIM_REWARDS]: GaugeClaimRewardsCreator,
   [TRANSACTION_TYPES.GAUGE_WITHDRAW]: GaugeWithdrawCreator,
   [TRANSACTION_TYPES.BALANCER_WITHDRAW]: BalancerWithdrawCreator,
+  [TRANSACTION_TYPES.ERC20_APPROVE]: ERC20ApproveCreator,
 };
 
 export class TransactionFactory {

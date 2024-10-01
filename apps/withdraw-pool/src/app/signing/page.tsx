@@ -4,7 +4,7 @@ import { SignatureSteps } from "#/components/SignaturesSteps";
 import { WaitingSignature } from "#/components/WaitingSignature";
 import { useIFrameContext } from "#/context/iframe";
 import { useCowShedSignature } from "#/hooks/useCowShedSignature";
-import { useGetPermitData } from "#/hooks/useGetPermitData";
+import { useHandleTokenAllowance } from "#/hooks/useHandleTokenAllowance";
 import { BaseTransaction } from "#/utils/transactionFactory/types";
 import { BigNumber, BigNumberish } from "ethers";
 import { useCallback, useMemo, useState } from "react";
@@ -13,9 +13,9 @@ import { Address } from "viem";
 export default function Page() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [permitTxs, setPermitTxs] = useState<BaseTransaction[]>([]);
-  const { hookInfo, cowShedProxy } = useIFrameContext();
+  const { hookInfo } = useIFrameContext();
   const cowShedSignature = useCowShedSignature();
-  const getPermitData = useGetPermitData();
+  const handleTokenAllowance = useHandleTokenAllowance();
 
   const cowShedCallback = useCallback(async () => {
     if (!cowShedSignature || !hookInfo) return;
@@ -31,11 +31,11 @@ export default function Page() {
       amount: BigNumberish;
       tokenSymbol: string;
     }) => {
-      const permitData = await getPermitData(
+      const permitData = await handleTokenAllowance(
         BigNumber.from(permit.amount),
-        permit.tokenAddress as Address,
-        cowShedProxy as Address
+        permit.tokenAddress as Address
       );
+
       if (permitData) {
         setPermitTxs((prev) => [
           ...prev,
@@ -48,7 +48,7 @@ export default function Page() {
       }
       setCurrentIndex((prev) => prev + 1);
     },
-    [getPermitData, cowShedProxy]
+    [handleTokenAllowance]
   );
 
   const steps = useMemo(() => {
@@ -72,7 +72,7 @@ export default function Page() {
         callback: cowShedCallback,
       },
     ];
-  }, [hookInfo, cowShedProxy]);
+  }, [hookInfo, permitCallback]);
 
   return (
     <div className="flex flex-col gap-2 p-2 text-center h-full justify-between items-center">

@@ -22,6 +22,7 @@ import { useUserPools } from "#/hooks/useUserPools";
 import { Signer } from "ethers";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { BaseTransaction } from "#/utils/transactionFactory/types";
+import { RPC_URL_MAPPING } from "#/utils/rpcs";
 
 type IFrameContextType = {
   context?: HookDappContextAdjusted;
@@ -34,7 +35,7 @@ type IFrameContextType = {
   signer?: Signer;
   hookInfo?: IHooksInfo;
   setHookInfo: (info: IHooksInfo) => void;
-  web3Provider?: JsonRpcProvider;
+  jsonRpcProvider?: JsonRpcProvider;
 };
 
 export const IFrameContext = createContext({} as IFrameContextType);
@@ -42,7 +43,6 @@ export const IFrameContext = createContext({} as IFrameContextType);
 export function IFrameContextProvider({ children }: PropsWithChildren) {
   const [context, setContext] = useState<HookDappContextAdjusted>();
   const [actions, setActions] = useState<CoWHookDappActions>();
-  const [web3Provider, setWeb3Provider] = useState<JsonRpcProvider>();
   const [signer, setSigner] = useState<Signer>();
   const [hookInfo, setHookInfo] = useState<IHooksInfo>();
 
@@ -55,11 +55,13 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
 
     // TODO: refactor to use viem
     const web3Provider = new Web3Provider(provider);
-
-    // @ts-ignore
-    setWeb3Provider(provider as JsonRpcProvider);
     setSigner(web3Provider.getSigner());
   }, []);
+
+  const jsonRpcProvider = useMemo(() => {
+    if (!context?.chainId) return;
+    return new JsonRpcProvider(RPC_URL_MAPPING[context.chainId]);
+  }, [context?.chainId]);
 
   const cowShed = useMemo(() => {
     if (!context) return;
@@ -96,7 +98,7 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
         setHookInfo,
         signer,
         actions,
-        web3Provider,
+        jsonRpcProvider,
       }}
     >
       {children}

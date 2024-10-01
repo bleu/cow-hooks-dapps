@@ -1,5 +1,4 @@
 import { Address, erc20Abi } from "viem";
-import { useTokenContract } from "./useTokenContract";
 import { useCallback } from "react";
 import { BigNumber } from "ethers";
 import {
@@ -10,13 +9,20 @@ import {
   PermitInfo,
 } from "@cowprotocol/permit-utils";
 import { useIFrameContext } from "#/context/iframe";
+import { useHandleTokenApprove } from "./useHandleTokenApprove";
 
-export function useGetPermitData() {
-  const { web3Provider, context, publicClient } = useIFrameContext();
+export function useHandleTokenAllowance() {
+  const { jsonRpcProvider, context, publicClient, cowShedProxy } =
+    useIFrameContext();
+
+  const handleTokenApprove = useHandleTokenApprove();
+
+  const spender = cowShedProxy as Address;
 
   return useCallback(
-    async (amount: BigNumber, tokenAddress: Address, spender: Address) => {
-      if (!publicClient || !web3Provider || !context?.account) return;
+    async (amount: BigNumber, tokenAddress: Address) => {
+      if (!publicClient || !jsonRpcProvider || !context?.account)
+        throw new Error("Missing context");
 
       const tokenContract = {
         address: tokenAddress,
@@ -37,12 +43,12 @@ export function useGetPermitData() {
             },
           ],
         });
-
-      if (!currentAllowance || !tokenName) {
-        return;
+      if (currentAllowance === undefined || !tokenName) {
+        throw new Error("Token allowance not available");
       }
 
       if (amount.lte(currentAllowance)) {
+        // amount is less than or equal to current allowance so no need to approve
         return;
       }
 
@@ -52,16 +58,17 @@ export function useGetPermitData() {
         spender,
         tokenAddress,
         chainId,
-        provider: web3Provider,
+        provider: jsonRpcProvider,
       });
 
       if (!permitInfo || !checkIsPermitInfo(permitInfo)) {
+        await handleTokenApprove(tokenAddress);
         return;
       }
 
       const eip2162Utils = getPermitUtilsInstance(
         chainId,
-        web3Provider,
+        jsonRpcProvider,
         account
       );
 
@@ -74,19 +81,19 @@ export function useGetPermitData() {
           name: tokenName,
         },
         spender,
-        provider: web3Provider,
+        provider: jsonRpcProvider,
         permitInfo,
         eip2162Utils: eip2162Utils,
         account,
         nonce,
       });
     },
-    [web3Provider, context, publicClient]
+    [jsonRpcProvider, context, publicClient, cowShedProxy]
   );
 }
 
 export function checkIsPermitInfo(
   permitInfo: GetTokenPermitIntoResult
 ): permitInfo is PermitInfo {
-  return "type" in permitInfo;
+  return "type" in permitInfo && permitInfo.type !== "unsupported";
 }

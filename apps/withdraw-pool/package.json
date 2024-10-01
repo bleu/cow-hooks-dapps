@@ -21,7 +21,7 @@
     "@bleu/utils": "workspace:*",
     "@cowprotocol/contracts": "1.6.0",
     "@cowprotocol/hook-dapp-lib": "1.0.0-RC1",
-    "@cowprotocol/permit-utils": "0.2.0",
+    "@cowprotocol/permit-utils": "0.3.1",
     "@ethersproject/providers": "5.7.2",
     "@hookform/resolvers": "3.9.0",
     "@radix-ui/colors": "^3.0.0",
