@@ -81,7 +81,7 @@ export default function Page() {
           <PoolBalancesPreview label="Withdraw balance" className="bg-muted" />
           <Button
             type="submit"
-            className="bg-primary text-primary-foreground mt-2"
+            className="mt-2"
             disabled={buttonProps.disabled}
           >
             {isSubmitting ? "Creating hook..." : buttonProps.message}

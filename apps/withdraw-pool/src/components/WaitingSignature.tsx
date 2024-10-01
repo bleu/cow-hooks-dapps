@@ -31,7 +31,12 @@ export function WaitingSignature({
       <span className="text-foreground text-lg mb-10">{description}</span>
       {isValidating && <Spinner />}
       {error && !isValidating && (
-        <Button type="button" variant="destructive" onClick={() => mutate()}>
+        <Button
+          type="button"
+          variant="destructive"
+          className="bg-destructive/15 hover:bg-destructive/50"
+          onClick={() => mutate()}
+        >
           Error on signature. Try again
         </Button>
       )}
