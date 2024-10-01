@@ -60,12 +60,12 @@ export function PeriodWithScaleInput({
           {extraLabelElement}
         </div>
       )}
-      <div className="flex w-48 gap-1">
+      <div className="flex items-center justify-center w-[200px] h-10 p-2.5 bg-color-paper-darker rounded-xl">
         <Input
           type="number"
           autoComplete="off"
           className={cn(
-            "outline-none text-right w-24 h-10 p-2.5 rounded-l-xl rounded-r-none text-base text-color-text-paper border-color-border bg-color-paper-darker [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
+            "outline-none text-right w-24 max-h-10 px-2.5 py-0 border-none rounded-l-xl text-base text-color-text-paper bg-inherit [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
             className
           )}
           {...register(namePeriodValue, validation)}
@@ -73,24 +73,22 @@ export function PeriodWithScaleInput({
         />
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger className="w-full">
-            <div className="flex flex-col">
-              <div
-                className="w-24 h-10 p-2.5 flex items-center justify-between rounded-r-xl text-color-text-paper bg-color-paper-darker"
-                onClick={() => setOpen(true)}
-              >
-                <span className="m-0 p-0 min-h-fit">
-                  {period > 1 ? `${periodScale}s` : periodScale}
-                </span>
-                <ChevronDownIcon className="ml-2 h-4 w-4" />
-              </div>
+            <div
+              className="w-24 h-8 p-2.5 flex items-center justify-between rounded-xl text-color-text-paper bg-color-paper-darkest"
+              onClick={() => setOpen(true)}
+            >
+              <span className="m-0 p-0 min-h-fit">
+                {period > 1 ? `${periodScale}s` : periodScale}
+              </span>
+              <ChevronDownIcon className="ml-2 h-4 w-4" />
             </div>
           </PopoverTrigger>
-          <PopoverContent className="flex flex-col w-[100px] bg-color-paper-darker px-0 py-2 border-none">
+          <PopoverContent className="flex flex-col relative top-[-40px] left-[4px] w-[100px] bg-color-paper-darker px-0 py-1 rounded-xl border-none">
             {periodScaleOptions.map((periodScale) => {
               return (
                 <button
                   key={periodScale}
-                  className="text-start p-2 hover:bg-color-paper-darkest"
+                  className="w-24 h-8 p-2.5 flex justify-center items-center rounded-xl hover:bg-color-paper-darkest"
                   onClick={() => {
                     setOpen(false);
                     setValue(namePeriodScale, periodScale);
