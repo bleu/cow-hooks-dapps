@@ -12,6 +12,7 @@
     "@bleu/cow-hooks-ui": "workspace:*",
     "@bleu/tsconfig": "workspace:*",
     "@bleu/ui": "0.1.131",
+    "@cowprotocol/cow-sdk": "^5.5.1",
     "@cowprotocol/hook-dapp-lib": "1.0.0-RC1",
     "@ethersproject/providers": "5.7.2",
     "babel-plugin-react-compiler": "0.0.0-experimental-6067d4e-20240923",
