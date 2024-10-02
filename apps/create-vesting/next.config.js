@@ -3,6 +3,9 @@
 
 /** @type {import('next').NextConfig} */
 const moduleExports = {
+  experimental: {
+    reactCompiler: true,
+  },
   transpilePackages: ["@bleu/cow-hooks-ui"],
   async headers() {
     return [

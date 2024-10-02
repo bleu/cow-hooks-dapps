@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "@bleu/ui";
 import type { InputHTMLAttributes } from "react";
 
 interface AddressInputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -28,10 +28,10 @@ export const AddressInput: React.FC<AddressInputProps> = ({
       type="text"
       placeholder="0xabc..."
       onChange={onChange}
-      className={clsx(
+      className={cn(
         "w-full mt-0 p-2.5 rounded-xl outline-none text-color-text-paper border-2 border-color-border focus:border-primary",
         { "bg-color-paper-darker": theme === "dark" },
-        { "bg-color-paper": theme === "light" },
+        { "bg-color-paper": theme === "light" }
       )}
       {...props}
     />
