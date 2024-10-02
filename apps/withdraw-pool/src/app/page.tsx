@@ -52,6 +52,22 @@ export default function Page() {
     return { disabled: false, message: "Add pre-hook" };
   }, [withdrawPct]);
 
+  const onSubmitCallback = useCallback(
+    async (data: typeof withdrawSchema._type) => {
+      if (!selectedPool || !context?.account) return;
+      const hookInfo = await getHooksTransactions(data.withdrawPct);
+      if (!hookInfo) return;
+      setHookInfo(hookInfo);
+      router.push("/signing");
+    },
+    [selectedPool, context?.account, getHooksTransactions, setHookInfo, router]
+  );
+
+  const onSubmit = useMemo(
+    () => form.handleSubmit(onSubmitCallback),
+    [form, onSubmitCallback]
+  );
+
   if (!context)
     return (
       <div className="w-full text-center p-2">
@@ -59,21 +75,6 @@ export default function Page() {
       </div>
     );
 
-  const onSubmitCallback = useCallback(
-    async (data: typeof withdrawSchema._type) => {
-      if (!selectedPool || !context.account) return;
-      const hookInfo = await getHooksTransactions(data.withdrawPct);
-      if (!hookInfo) return;
-      setHookInfo(hookInfo);
-      router.push("/signing");
-    },
-    [selectedPool, context.account, getHooksTransactions, setHookInfo, router]
-  );
-
-  const onSubmit = useMemo(
-    () => form.handleSubmit(onSubmitCallback),
-    [form, onSubmitCallback]
-  );
   return (
     <Form
       {...form}
