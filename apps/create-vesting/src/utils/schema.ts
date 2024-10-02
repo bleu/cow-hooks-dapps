@@ -15,9 +15,7 @@ export const createVestingSchema = z.object({
   period: z
     .number({ message: "Invalid amount" })
     .gt(0, "Period must be greater than 0"),
-  periodScale: z
-    .string()
-    .refine(refinePeriodScale, "Scale must be one of the options"),
+  periodScale: z.enum(["Day", "Week", "Month"]),
   amount: z
     .number({ message: "Invalid amount" })
     .gt(0, "Amount must be greater than 0"),

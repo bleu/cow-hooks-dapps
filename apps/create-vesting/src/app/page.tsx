@@ -24,11 +24,7 @@ import { useForm } from "react-hook-form";
 import { createVestingSchema, periodScaleOptions } from "#/utils/schema";
 
 //will be used
-const scaleToSecondsMapping = {
-  Day: 24 * 60 * 60,
-  Week: 7 * 24 * 60 * 60,
-  Month: 30 * 24 * 60 * 60,
-};
+import { scaleToSecondsMapping } from "#/utils/scaleToSecondsMapping";
 
 export default function Page() {
   const [actions, setActions] = useState<CoWHookDappActions | null>(null);
@@ -91,7 +87,7 @@ export default function Page() {
                 label="Recipient"
                 placeholder="0xabc..."
                 autoComplete="off"
-                className="w-full h-12 mt-0 p-2.5 rounded-xl outline-none text-color-text-paper border-2 border-color-border bg-color-paper-darker placeholder:opacity-100"
+                className="h-12 p-2.5 rounded-xl bg-color-paper-darker border-none placeholder:opacity-100"
               />
               <br />
               <div className="flex gap-4 w-full">
@@ -107,6 +103,7 @@ export default function Page() {
                 />
                 <TokenAmountInput
                   name="amount"
+                  tokenSymbol="ETH"
                   label="Amount"
                   placeholder="0.0"
                   autoComplete="off"

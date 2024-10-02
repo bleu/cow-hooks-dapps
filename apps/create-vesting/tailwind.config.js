@@ -6,6 +6,7 @@ module.exports = {
   content: [
     "./src/**/*.{js,ts,jsx,tsx}",
     "./node_modules/@bleu/ui/dist/**/*",
+    "../..//node_modules/@bleu/ui/dist/**/*",
     "../../packages/cow-hooks-ui/src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {

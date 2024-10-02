@@ -17,8 +17,7 @@ import {
   useWatch,
 } from "react-hook-form";
 
-interface IPeriodWithScaleInput
-  extends Omit<HTMLProps<HTMLInputElement>, "name"> {
+interface IPeriodWithScaleInput extends HTMLProps<HTMLInputElement> {
   periodScaleOptions: string[];
   namePeriodValue: string;
   namePeriodScale: string;
