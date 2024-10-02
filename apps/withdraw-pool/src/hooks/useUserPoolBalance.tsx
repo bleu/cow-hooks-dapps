@@ -7,9 +7,8 @@ import { IPoolBalance } from "../types";
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { BalancerChainName, GQL_CLIENT } from "../api/balancer";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
-import { BigNumber } from "ethers";
 
-interface PoolData {
+interface IQuery {
   id: `0x${string}`;
   address: `0x${string}`;
   decimals: number;
@@ -30,7 +29,7 @@ interface PoolData {
     name: string;
     decimals: number;
     symbol: string;
-    balance: BigNumber;
+    balance: string;
     balanceUSD: number;
   }[];
 }
@@ -73,7 +72,7 @@ async function fetchUserPoolBalance(
   if (!user || !chainId || !poolId) return [];
   const chainName = BalancerChainName[chainId];
   const result = await GQL_CLIENT.request<{
-    pool: PoolData;
+    pool: IQuery;
   }>(POOL_QUERY, {
     id: poolId,
     chain: chainName,

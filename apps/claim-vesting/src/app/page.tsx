@@ -23,7 +23,6 @@ export default function Page() {
   const [actions, setActions] = useState<CoWHookDappActions | null>(null);
   const [context, setContext] = useState<HookDappContext | null>(null);
 
-  // @ts-ignore
   const isDarkMode = context?.isDarkMode;
 
   const { account, chainId } = context || {};
@@ -76,40 +75,65 @@ export default function Page() {
 
   return (
     <>
-      {context && (
+      {context && account ? (
         <Wrapper>
           <ContentWrapper>
             <AddressInput
               value={typedAddress}
-              onChange={(e) => setTypedAddress(e.target.value)}
+              onChange={(e) => setTypedAddress(e.target.value.trim())}
               theme={isDarkMode ? "dark" : "light"}
               label="Place vesting contract address"
             />
-            <div className="flex flex-col w-full">
-              <ClaimableAmountContainer>
-                <span>Total Available to claim</span>
-                <span>
-                  {formattedClaimableAmount} {tokenSymbol && tokenSymbol}
-                </span>
-              </ClaimableAmountContainer>
-            </div>
+            {formattedClaimableAmount !== "0.0" && (
+              <div className="flex flex-col w-full">
+                <ClaimableAmountContainer>
+                  <span>Claimable amount</span>
+                  <span>
+                    {formattedClaimableAmount} {tokenSymbol && tokenSymbol}
+                  </span>
+                </ClaimableAmountContainer>
+              </div>
+            )}
           </ContentWrapper>
-          {errorMessage ? (
-            <span className="text-center my-[25px] text-red-500">
-              {errorMessage}
-            </span>
-          ) : loading ? (
-            <span className="text-center my-[25px]">Loading...</span>
-          ) : (
-            <ButtonPrimary
-              onClick={handleAddHook}
-              disabled={debouncedAddress === ""}
-            >
-              <span>{context?.hookToEdit ? "Edit Hook" : "Add hook"}</span>
-            </ButtonPrimary>
-          )}
+          <ButtonPrimary
+            onClick={handleAddHook}
+            disabled={debouncedAddress === "" || !!errorMessage || loading}
+          >
+            <ButtonText
+              context={context}
+              errorMessage={errorMessage}
+              loading={loading}
+            />
+          </ButtonPrimary>
         </Wrapper>
+      ) : (
+        context && (
+          <span className="mt-10 text-center">Connect your wallet</span>
+        )
       )}
     </>
   );
 }
+
+const ButtonText = ({
+  context,
+  errorMessage,
+  loading,
+}: {
+  context: HookDappContext;
+  errorMessage: string | undefined;
+  loading: boolean;
+}) => {
+  if (errorMessage) return <span>{errorMessage}</span>;
+
+  if (loading) return <span>Loading...</span>;
+
+  if (context?.hookToEdit && context?.isPreHook)
+    return <span>Update Pre-hook</span>;
+  if (context?.hookToEdit && !context?.isPreHook)
+    return <span>Update Post-hook</span>;
+  if (!context?.hookToEdit && context?.isPreHook)
+    return <span>Add Pre-hook</span>;
+  if (!context?.hookToEdit && !context?.isPreHook)
+    return <span>Add Post-hook</span>;
+};
