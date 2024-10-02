@@ -3,6 +3,7 @@ import { HookDappContext } from "@cowprotocol/hook-dapp-lib";
 import type { Token } from "@uniswap/sdk-core";
 import { BigNumberish } from "ethers";
 import { Address } from "viem";
+import { BaseTransaction } from "./utils/transactionFactory/types";
 
 export interface HookDappContextAdjusted extends HookDappContext {
   account?: Address;
@@ -40,4 +41,20 @@ export interface IPoolBalance {
   token: Token;
   balance: BigNumberish;
   fiatAmount: number;
+}
+
+export interface SignatureStepsProps {
+  callback: () => Promise<void>;
+  label: string;
+  description: string;
+  id: string;
+}
+
+export interface IHooksInfo {
+  txs: BaseTransaction[];
+  permitData: {
+    tokenAddress: string;
+    amount: BigNumberish;
+    tokenSymbol: string;
+  }[];
 }

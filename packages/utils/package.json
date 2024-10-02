@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@cowprotocol/cow-sdk": "5.4.1",
+    "ethers": "5.7.2",
     "typescript": "5.6.2"
   }
 }

@@ -3,38 +3,64 @@
 import {
   createContext,
   PropsWithChildren,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
 
-import { HookDappContext, initCoWHookDapp } from "@cowprotocol/hook-dapp-lib";
-import { useTheme } from "@bleu/ui";
+import {
+  CoWHookDappActions,
+  HookDappContext,
+  initCoWHookDapp,
+} from "@cowprotocol/hook-dapp-lib";
 import { publicClientMapping, PublicClientType } from "#/utils/clients";
 import { CowShedHooks } from "@cowprotocol/cow-sdk";
 import { Address } from "viem";
-import { HookDappContextAdjusted } from "#/types";
+import { HookDappContextAdjusted, IHooksInfo } from "#/types";
 import { useUserPools } from "#/hooks/useUserPools";
+import { Signer } from "ethers";
+import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
+import { RPC_URL_MAPPING } from "#/utils/rpcs";
 
 type IFrameContextType = {
   context?: HookDappContextAdjusted;
   setContext: (context: HookDappContextAdjusted) => void;
   publicClient?: PublicClientType;
   cowShedProxy?: Address;
+  cowShed?: CowShedHooks;
   userPoolSwr: ReturnType<typeof useUserPools>;
+  actions?: CoWHookDappActions;
+  signer?: Signer;
+  hookInfo?: IHooksInfo;
+  setHookInfo: (info: IHooksInfo) => void;
+  jsonRpcProvider?: JsonRpcProvider;
 };
 
 export const IFrameContext = createContext({} as IFrameContextType);
 
 export function IFrameContextProvider({ children }: PropsWithChildren) {
   const [context, setContext] = useState<HookDappContextAdjusted>();
+  const [actions, setActions] = useState<CoWHookDappActions>();
+  const [signer, setSigner] = useState<Signer>();
+  const [hookInfo, setHookInfo] = useState<IHooksInfo>();
+
   useEffect(() => {
-    initCoWHookDapp({
+    const { actions, provider } = initCoWHookDapp({
       onContext: setContext as (args: HookDappContext) => void,
     });
+
+    setActions(actions);
+
+    // TODO: refactor to use viem
+    const web3Provider = new Web3Provider(provider);
+    setSigner(web3Provider.getSigner());
   }, []);
+
+  const jsonRpcProvider = useMemo(() => {
+    if (!context?.chainId) return;
+    return new JsonRpcProvider(RPC_URL_MAPPING[context.chainId]);
+  }, [context?.chainId]);
 
   const cowShed = useMemo(() => {
     if (!context) return;
@@ -66,6 +92,12 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
         publicClient,
         cowShedProxy,
         userPoolSwr,
+        cowShed,
+        hookInfo,
+        setHookInfo,
+        signer,
+        actions,
+        jsonRpcProvider,
       }}
     >
       {children}

@@ -3,22 +3,23 @@
 import { Button, Form } from "@bleu/ui";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { PoolBalancesPreview } from "#/components/PoolBalancePreview";
 import { PoolsDropdownMenu } from "#/components/PoolsDropdownMenu";
 import { WithdrawPctSlider } from "#/components/WithdrawPctSlider";
 import type { IMinimalPool } from "#/types";
 import { withdrawSchema } from "#/utils/schema";
-import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
-import { multiplyValueByPct } from "#/utils/math";
-import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
+import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 import { useIFrameContext } from "#/context/iframe";
+import { useRouter } from "next/navigation";
+import { Spinner } from "#/components/Spinner";
 
 export default function Page() {
   const {
     context,
     userPoolSwr: { data: pools },
+    setHookInfo,
   } = useIFrameContext();
   const form = useForm<typeof withdrawSchema._type>({
     resolver: zodResolver(withdrawSchema),
@@ -28,31 +29,22 @@ export default function Page() {
     },
   });
 
-  const { setValue, control } = form;
+  const router = useRouter();
+
+  const {
+    setValue,
+    control,
+    formState: { isSubmitting },
+  } = form;
 
   const { withdrawPct, poolId } = useWatch({ control });
-
-  const { data: poolBalances } = useUserPoolBalance({
-    user: context?.account,
-    chainId: context?.chainId,
-    poolId,
-  });
 
   const selectedPool = useMemo(
     () => pools?.find((pool) => pool.id === poolId),
     [pools, poolId]
   );
 
-  const getHooksTransactions = useGetHooksTransactions(selectedPool);
-
-  const poolBalancesAfterWithdraw = useMemo(() => {
-    if (!poolBalances || !withdrawPct) return [];
-    return poolBalances.map((poolBalance) => ({
-      ...poolBalance,
-      balance: multiplyValueByPct(poolBalance.balance, withdrawPct).toString(),
-      fiatAmount: (poolBalance.fiatAmount * withdrawPct) / 100,
-    }));
-  }, [poolBalances, withdrawPct]);
+  const getHooksTransactions = useGetHookInfo(selectedPool);
 
   const buttonProps = useMemo(() => {
     if (!withdrawPct || withdrawPct === 0)
@@ -60,16 +52,33 @@ export default function Page() {
     return { disabled: false, message: "Add pre-hook" };
   }, [withdrawPct]);
 
-  if (!context) return <div className="w-full text-center p-2">Loading...</div>;
+  const onSubmitCallback = useCallback(
+    async (data: typeof withdrawSchema._type) => {
+      if (!selectedPool || !context?.account) return;
+      const hookInfo = await getHooksTransactions(data.withdrawPct);
+      if (!hookInfo) return;
+      setHookInfo(hookInfo);
+      router.push("/signing");
+    },
+    [selectedPool, context?.account, getHooksTransactions, setHookInfo, router]
+  );
+
+  const onSubmit = useMemo(
+    () => form.handleSubmit(onSubmitCallback),
+    [form, onSubmitCallback]
+  );
+
+  if (!context)
+    return (
+      <div className="w-full text-center p-2">
+        <Spinner />
+      </div>
+    );
 
   return (
     <Form
       {...form}
-      onSubmit={form.handleSubmit(async (data) => {
-        if (!selectedPool || !context.account) return;
-        const transactions = await getHooksTransactions(data.withdrawPct);
-        console.log(transactions);
-      })}
+      onSubmit={onSubmit}
       className="w-full flex flex-col gap-1 py-1 px-4"
     >
       <PoolsDropdownMenu
@@ -79,15 +88,13 @@ export default function Page() {
       {poolId && (
         <div className="size-full flex flex-col gap-2">
           <WithdrawPctSlider />
-          <PoolBalancesPreview
-            label="Withdraw balance"
-            poolBalance={poolBalancesAfterWithdraw}
-            className="bg-muted"
-          />
+          <PoolBalancesPreview label="Withdraw balance" className="bg-muted" />
           <Button
             type="submit"
-            className="bg-primary text-primary-foreground mt-2"
+            className="mt-2"
             disabled={buttonProps.disabled}
+            loading={isSubmitting}
+            loadingText="Creating hook..."
           >
             {buttonProps.message}
           </Button>

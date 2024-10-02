@@ -89,38 +89,40 @@ export function useUserPools(chainId?: SupportedChainId, user?: string) {
     async ([chainId, user]): Promise<IMinimalPool[]> => {
       if (!user || !chainId) return [];
       const chainName = BalancerChainName[chainId];
-      return await GQL_CLIENT.request<IQuery>(USER_POOLS_QUERY, {
-        where: {
-          userAddress: user,
-          chainIn: [chainName],
-          poolTypeIn: ["COW_AMM"],
-        },
-      }).then((result) => {
-        return result.pools.map((pool) => ({
-          ...pool,
-          userBalance: {
-            walletBalance: parseUnits(
-              pool.userBalance.walletBalance,
-              pool.decimals
-            ),
-            totalBalance: parseUnits(
-              pool.userBalance.totalBalance,
-              pool.decimals
-            ),
-            stakedBalances: pool.userBalance.stakedBalances.map((staked) => ({
-              balance: parseUnits(staked.balance, pool.decimals),
-              stakingId: staked.stakingId,
-            })),
+      return await GQL_CLIENT[chainId]
+        .request<IQuery>(USER_POOLS_QUERY, {
+          where: {
+            userAddress: user,
+            chainIn: [chainName],
+            poolTypeIn: ["COW_AMM"],
           },
-          dynamicData: {
-            ...pool.dynamicData,
-            totalShares: parseUnits(
-              pool.dynamicData.totalShares,
-              pool.decimals
-            ),
-          },
-        }));
-      });
+        })
+        .then((result) => {
+          return result.pools.map((pool) => ({
+            ...pool,
+            userBalance: {
+              walletBalance: parseUnits(
+                pool.userBalance.walletBalance,
+                pool.decimals
+              ),
+              totalBalance: parseUnits(
+                pool.userBalance.totalBalance,
+                pool.decimals
+              ),
+              stakedBalances: pool.userBalance.stakedBalances.map((staked) => ({
+                balance: parseUnits(staked.balance, pool.decimals),
+                stakingId: staked.stakingId,
+              })),
+            },
+            dynamicData: {
+              ...pool.dynamicData,
+              totalShares: parseUnits(
+                pool.dynamicData.totalShares,
+                pool.decimals
+              ),
+            },
+          }));
+        });
     }
   );
 }

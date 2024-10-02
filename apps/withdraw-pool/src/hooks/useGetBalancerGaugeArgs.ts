@@ -42,6 +42,7 @@ export function getSingleBalancerGaugeArgs({
       from: cowShedProxy,
       to: cowShedProxy,
       amount: amountToWithdraw.toBigInt(),
+      symbol: "Gauge Token", // TODO: get symbol from token
     },
     {
       gaugeAddress,
@@ -95,6 +96,6 @@ export function useGetBalancerGaugeArgs(
         .flat();
     },
 
-    [poolData]
+    [poolData, context, cowShedProxy]
   );
 }

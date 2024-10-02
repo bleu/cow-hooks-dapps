@@ -1,19 +1,45 @@
 "use client";
 
-import { TokenAmount, TokenInfo, TokenLogo } from "@bleu/cow-hooks-ui";
-import { Label, cn } from "@bleu/ui";
+import { TokenAmount, TokenInfo } from "@bleu/cow-hooks-ui";
+import { Label, Spinner, cn } from "@bleu/ui";
 import type { IPoolBalance } from "../types";
 import { formatUnits } from "ethers/lib/utils";
+import { useMemo } from "react";
+import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
+import { useIFrameContext } from "#/context/iframe";
+import { useFormContext, useWatch } from "react-hook-form";
+import { multiplyValueByPct } from "#/utils/math";
 
 export function PoolBalancesPreview({
   label,
-  poolBalance,
   className,
 }: {
   label: string;
-  poolBalance: IPoolBalance[];
   className?: string;
 }) {
+  const { control } = useFormContext();
+
+  const { withdrawPct, poolId } = useWatch({ control });
+
+  const { context } = useIFrameContext();
+
+  const { data: poolBalances, isValidating } = useUserPoolBalance({
+    user: context?.account,
+    chainId: context?.chainId,
+    poolId,
+  });
+
+  const poolBalance = useMemo(() => {
+    if (!poolBalances || !withdrawPct) return [];
+    return poolBalances.map((poolBalance) => ({
+      ...poolBalance,
+      balance: multiplyValueByPct(poolBalance.balance, withdrawPct).toString(),
+      fiatAmount: (poolBalance.fiatAmount * withdrawPct) / 100,
+    }));
+  }, [poolBalances, withdrawPct]);
+
+  if (isValidating) return <Spinner />;
+
   return (
     <div className={cn("p-2 rounded-md", className)}>
       <Label>{label}</Label>
