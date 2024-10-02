@@ -3,10 +3,10 @@ import { CheckIcon } from "@radix-ui/react-icons";
 
 export function SignatureSteps({
   steps,
-  currentIndex,
+  currentStepIndex,
 }: {
   steps: { id: string; label: string }[];
-  currentIndex: number;
+  currentStepIndex: number;
 }) {
   return (
     <div className="flex flex-col gap-2 items-center w-full h-1/2">
@@ -16,7 +16,7 @@ export function SignatureSteps({
           <SignatureStep
             key={step.id}
             step={step}
-            currentIndex={currentIndex}
+            currentStepIndex={currentStepIndex}
             stepIndex={index}
           />
         ))}
@@ -27,11 +27,11 @@ export function SignatureSteps({
 
 function SignatureStep({
   step,
-  currentIndex,
+  currentStepIndex,
   stepIndex,
 }: {
   step: { id: string; label: string };
-  currentIndex: number;
+  currentStepIndex: number;
   stepIndex: number;
 }) {
   return (
@@ -40,7 +40,7 @@ function SignatureStep({
         <span className="text-xs w-full text-center">{stepIndex}</span>
       </div>
       <span className="text-sm">{step.label}</span>
-      {stepIndex < currentIndex && (
+      {stepIndex < currentStepIndex && (
         <CheckIcon className="size-5 text-primary-foreground bg-primary rounded-full" />
       )}
     </div>

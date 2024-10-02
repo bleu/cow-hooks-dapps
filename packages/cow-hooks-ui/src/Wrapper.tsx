@@ -7,7 +7,7 @@ export const ContentWrapper = ({
   children?: ReactNode;
 }) => (
   <div
-    className="flex flex-col flex-grow pt-2 items-center justify-center text-center"
+    className="flex flex-col flex-grow pt-2 items-start justify-center text-center"
     {...props}
   >
     {children}

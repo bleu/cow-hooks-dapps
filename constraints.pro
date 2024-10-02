@@ -1,5 +1,5 @@
 % Yarn Constraints https://yarnpkg.com/features/constraints
-% check with "yarn constraints" (fix w/ "yarn constraints --fix")
+% check with "pnpm constraints" (fix w/ "pnpm constraints --fix")
 % reference for other constraints: https://github.com/babel/babel/blob/main/constraints.pro
 
 % Enforces the license in all public workspaces while removing it from private workspaces

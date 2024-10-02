@@ -12,7 +12,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Address } from "viem";
 
 export default function Page() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [permitTxs, setPermitTxs] = useState<BaseTransaction[]>([]);
   const { hookInfo, cowShed } = useIFrameContext();
   const submitHook = useSubmitHook();
@@ -53,7 +53,7 @@ export default function Page() {
           },
         ]);
       }
-      setCurrentIndex((prev) => prev + 1);
+      setCurrentStepIndex((prev) => prev + 1);
     },
     [handleTokenAllowance]
   );
@@ -83,8 +83,8 @@ export default function Page() {
 
   return (
     <div className="flex flex-col gap-2 p-2 text-center h-full justify-between items-center">
-      <WaitingSignature {...steps[currentIndex]} />
-      <SignatureSteps steps={steps} currentIndex={currentIndex} />
+      <WaitingSignature {...steps[currentStepIndex]} />
+      <SignatureSteps steps={steps} currentStepIndex={currentStepIndex} />
     </div>
   );
 }
