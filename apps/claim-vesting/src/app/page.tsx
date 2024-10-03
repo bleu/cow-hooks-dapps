@@ -28,7 +28,7 @@ export default function Page() {
   const { account, chainId } = context || {};
 
   const [typedAddress, setTypedAddress] = useState<string>(
-    context?.hookToEdit?.hook.target || "",
+    context?.hookToEdit?.hook.target || ""
   );
 
   const [debouncedAddress] = useDebounceValue(typedAddress, 300, {
@@ -83,6 +83,7 @@ export default function Page() {
               onChange={(e) => setTypedAddress(e.target.value.trim())}
               theme={isDarkMode ? "dark" : "light"}
               label="Place vesting contract address"
+              autoComplete="off"
             />
             {formattedClaimableAmount !== "0.0" && (
               <div className="flex flex-col w-full">

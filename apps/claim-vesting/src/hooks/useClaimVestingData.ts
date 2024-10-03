@@ -42,7 +42,7 @@ export const useClaimVestingData = ({
         chain: chainMapping[chainId],
         transport: http(),
       }),
-    [chainId],
+    [chainId]
   );
   const {
     claimableAmountWei,
@@ -88,13 +88,13 @@ export const useClaimVestingData = ({
     errorGasLimit,
   });
   const formattedClaimableAmount =
-    claimableAmountWei && decimals
+    recipient === account && claimableAmountWei && decimals
       ? formatNumber(
           Number(claimableAmountWei) / 10 ** Number(decimals),
           6,
           "decimal",
           "standard",
-          0.000001,
+          0.000001
         )
       : "0.0";
   const loading = isLoadingToken || isLoadingVesting || isLoadingGasLimit;
