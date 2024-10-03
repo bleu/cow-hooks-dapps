@@ -23,6 +23,7 @@
   "start_url": ".",
   "theme_color": "#ffffff",
   "cow_hook_dapp": {
+    "id": "177eda1e6d1d89f1777d60387f06e1fdcb2c11baad38c6f06c8a3404ebc7e03a",
     "name": "Claim Vesting",
     "descriptionShort": "Claim your vesting contract funds",
     "description": "The Claim Vesting Hook is a powerful and user-friendly feature designed to streamline the process of claiming funds from LlamaPay vesting contracts. This tool empowers users to easily access and manage their vested tokens, ensuring a smooth and efficient experience in handling time-locked assets.",
