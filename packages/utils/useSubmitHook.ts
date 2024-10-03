@@ -1,5 +1,5 @@
 import { CowHook, CoWHookDappActions } from "@cowprotocol/hook-dapp-lib";
-import { HookDappContextAdjusted } from "cowShed";
+import { HookDappContextAdjusted } from "./cowShed";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import { PublicClient } from "viem";
@@ -10,7 +10,7 @@ export function useSubmitHook({
   publicClient,
 }: {
   actions: CoWHookDappActions | undefined;
-  context: HookDappContextAdjusted;
+  context: HookDappContextAdjusted | undefined;
   publicClient: PublicClient | undefined;
 }) {
   return useCallback(
