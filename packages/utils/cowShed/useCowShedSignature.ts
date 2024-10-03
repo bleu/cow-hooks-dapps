@@ -1,15 +1,22 @@
-import { useIFrameContext } from "#/context/iframe";
 import { useCallback } from "react";
 import { useHookDeadline } from "./useHookDeadline";
-import { ICoWShedCall } from "@cowprotocol/cow-sdk";
-import { BaseTransaction } from "#/utils/transactionFactory/types";
-import { getCowShedNonce } from "#/utils/cowShed/getCowShedNonce";
+import { type CowShedHooks, type ICoWShedCall } from "@cowprotocol/cow-sdk";
+import { getCowShedNonce } from "./getCowShedNonce";
 import { SigningScheme } from "@cowprotocol/contracts";
+import type { Signer } from "ethers";
 
-export function useCowShedSignature() {
-  const { cowShed, signer, context } = useIFrameContext();
+import type { HookDappContextAdjusted, BaseTransaction } from "./types";
 
-  const hookDeadline = useHookDeadline();
+export function useCowShedSignature({
+  cowShed,
+  signer,
+  context,
+}: {
+  cowShed: CowShedHooks | undefined;
+  signer: Signer | undefined;
+  context: HookDappContextAdjusted | undefined;
+}) {
+  const hookDeadline = useHookDeadline({ context });
 
   return useCallback(
     async (txs: BaseTransaction[]) => {

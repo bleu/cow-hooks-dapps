@@ -3,7 +3,7 @@
 import { SignatureSteps } from "#/components/SignaturesSteps";
 import { WaitingSignature } from "#/components/WaitingSignature";
 import { useIFrameContext } from "#/context/iframe";
-import { useCowShedSignature } from "#/hooks/useCowShedSignature";
+import { useCowShedSignature } from "@bleu/utils";
 import { useHandleTokenAllowance } from "#/hooks/useHandleTokenAllowance";
 import { useSubmitHook } from "#/hooks/useSubmitHook";
 import { BaseTransaction } from "#/utils/transactionFactory/types";
@@ -14,9 +14,13 @@ import { Address } from "viem";
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [permitTxs, setPermitTxs] = useState<BaseTransaction[]>([]);
-  const { hookInfo, cowShed } = useIFrameContext();
+  const { hookInfo, cowShed, signer, context } = useIFrameContext();
   const submitHook = useSubmitHook();
-  const cowShedSignature = useCowShedSignature();
+  const cowShedSignature = useCowShedSignature({
+    cowShed,
+    signer,
+    context,
+  });
   const handleTokenAllowance = useHandleTokenAllowance();
 
   const cowShedCallback = useCallback(async () => {
