@@ -1,9 +1,5 @@
 import { useIFrameContext } from "#/context/iframe";
-import {
-  CowHook,
-  CowHookCreation,
-  CowHookDetails,
-} from "@cowprotocol/hook-dapp-lib";
+import { CowHook } from "@cowprotocol/hook-dapp-lib";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
 

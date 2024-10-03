@@ -14,7 +14,7 @@ import {
 } from "@balancer/sdk";
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { BigNumber } from "ethers";
-import { RPC_URL_MAPPING } from "../rpcs";
+import { RPC_URL_MAPPING } from "./rpcs";
 
 export interface BalancerWithdrawArgs extends BaseArgs {
   type: TRANSACTION_TYPES.BALANCER_WITHDRAW;

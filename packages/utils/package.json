@@ -17,12 +17,15 @@
     "ts-jest": "^29.2.5"
   },
   "dependencies": {
+    "@balancer/sdk": "0.26.1",
     "@cowprotocol/contracts": "1.6.0",
     "@cowprotocol/cow-sdk": "^5.5.1",
+    "@cowprotocol/hook-dapp-lib": "1.0.0-RC1",
+    "@cowprotocol/permit-utils": "0.3.1",
+    "@ethersproject/providers": "5.7.2",
     "ethers": "5.7.2",
     "typescript": "5.6.2",
     "react": "19.0.0-rc-e4953922-20240919",
-    "viem": "2.21.14",
-    "@cowprotocol/hook-dapp-lib": "1.0.0-RC1"
+    "viem": "2.21.14"
   }
 }

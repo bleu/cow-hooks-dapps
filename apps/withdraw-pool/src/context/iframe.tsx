@@ -14,19 +14,19 @@ import {
   HookDappContext,
   initCoWHookDapp,
 } from "@cowprotocol/hook-dapp-lib";
-import { publicClientMapping, PublicClientType } from "#/utils/clients";
+import { publicClientMapping } from "#/utils/clients";
 import { CowShedHooks } from "@cowprotocol/cow-sdk";
-import { Address } from "viem";
+import { Address, PublicClient } from "viem";
 import { HookDappContextAdjusted, IHooksInfo } from "#/types";
 import { useUserPools } from "#/hooks/useUserPools";
 import { Signer } from "ethers";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
-import { RPC_URL_MAPPING } from "#/utils/rpcs";
+import { RPC_URL_MAPPING } from "@bleu/utils/transactionFactory";
 
 type IFrameContextType = {
   context?: HookDappContextAdjusted;
   setContext: (context: HookDappContextAdjusted) => void;
-  publicClient?: PublicClientType;
+  publicClient?: PublicClient;
   cowShedProxy?: Address;
   cowShed?: CowShedHooks;
   userPoolSwr: ReturnType<typeof useUserPools>;

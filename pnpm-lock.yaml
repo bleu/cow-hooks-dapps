@@ -447,6 +447,9 @@ importers:
 
   packages/utils:
     dependencies:
+      '@balancer/sdk':
+        specifier: 0.26.1
+        version: 0.26.1(typescript@5.6.2)(zod@3.23.8)
       '@cowprotocol/contracts':
         specifier: 1.6.0
         version: 1.6.0(ethers@5.7.2)
@@ -456,6 +459,12 @@ importers:
       '@cowprotocol/hook-dapp-lib':
         specifier: 1.0.0-RC1
         version: 1.0.0-RC1
+      '@cowprotocol/permit-utils':
+        specifier: 0.3.1
+        version: 0.3.1(cross-fetch@3.1.8(encoding@0.1.13))(ipfs-only-hash@4.0.0(encoding@0.1.13))(multiformats@9.9.0)
+      '@ethersproject/providers':
+        specifier: 5.7.2
+        version: 5.7.2
       ethers:
         specifier: 5.7.2
         version: 5.7.2

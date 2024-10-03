@@ -1,6 +1,7 @@
-import { Address, erc20Abi } from "viem";
+import { Address, erc20Abi, PublicClient } from "viem";
 import { useCallback } from "react";
-import { BigNumber } from "ethers";
+import { BigNumber, Signer } from "ethers";
+import { JsonRpcProvider } from "@ethersproject/providers";
 import {
   generatePermitHook,
   getPermitUtilsInstance,
@@ -8,14 +9,23 @@ import {
   GetTokenPermitIntoResult,
   PermitInfo,
 } from "@cowprotocol/permit-utils";
-import { useIFrameContext } from "#/context/iframe";
 import { useHandleTokenApprove } from "./useHandleTokenApprove";
+import { HookDappContextAdjusted } from "../cowShed/types";
 
-export function useHandleTokenAllowance() {
-  const { jsonRpcProvider, context, publicClient, cowShedProxy } =
-    useIFrameContext();
-
-  const handleTokenApprove = useHandleTokenApprove();
+export function useHandleTokenAllowance({
+  signer,
+  jsonRpcProvider,
+  context,
+  publicClient,
+  cowShedProxy,
+}: {
+  signer: Signer | undefined;
+  jsonRpcProvider: JsonRpcProvider | undefined;
+  context: HookDappContextAdjusted | undefined;
+  publicClient: PublicClient | undefined;
+  cowShedProxy: Address | undefined;
+}) {
+  const handleTokenApprove = useHandleTokenApprove({ signer, cowShedProxy });
 
   const spender = cowShedProxy as Address;
 

@@ -3,8 +3,10 @@ import { useCallback } from "react";
 import { useGetBalancerGaugeArgs } from "./useGetBalancerGaugeArgs";
 import { useGetPoolWithdrawArgs } from "./useGetPoolWithdrawArgs";
 import { multiplyValueByPct } from "#/utils/math";
-import { TransactionFactory } from "#/utils/transactionFactory/factory";
-import { TRANSACTION_TYPES } from "#/utils/transactionFactory/types";
+import {
+  TRANSACTION_TYPES,
+  TransactionFactory,
+} from "@bleu/utils/transactionFactory";
 
 export function useGetHookInfo(pool?: IMinimalPool) {
   const getPoolWithdrawArgs = useGetPoolWithdrawArgs(pool);

@@ -3,10 +3,12 @@
 import { SignatureSteps } from "#/components/SignaturesSteps";
 import { WaitingSignature } from "#/components/WaitingSignature";
 import { useIFrameContext } from "#/context/iframe";
-import { useCowShedSignature } from "@bleu/utils";
-import { useHandleTokenAllowance } from "#/hooks/useHandleTokenAllowance";
+import {
+  BaseTransaction,
+  useCowShedSignature,
+  useHandleTokenAllowance,
+} from "@bleu/utils";
 import { useSubmitHook } from "#/hooks/useSubmitHook";
-import { BaseTransaction } from "#/utils/transactionFactory/types";
 import { BigNumber, BigNumberish } from "ethers";
 import { useCallback, useMemo, useState } from "react";
 import { Address } from "viem";
@@ -14,14 +16,28 @@ import { Address } from "viem";
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [permitTxs, setPermitTxs] = useState<BaseTransaction[]>([]);
-  const { hookInfo, cowShed, signer, context } = useIFrameContext();
+  const {
+    hookInfo,
+    cowShed,
+    signer,
+    context,
+    jsonRpcProvider,
+    publicClient,
+    cowShedProxy,
+  } = useIFrameContext();
   const submitHook = useSubmitHook();
   const cowShedSignature = useCowShedSignature({
     cowShed,
     signer,
     context,
   });
-  const handleTokenAllowance = useHandleTokenAllowance();
+  const handleTokenAllowance = useHandleTokenAllowance({
+    signer,
+    jsonRpcProvider,
+    context,
+    publicClient,
+    cowShedProxy,
+  });
 
   const cowShedCallback = useCallback(async () => {
     if (!cowShedSignature || !hookInfo || !cowShed) return;

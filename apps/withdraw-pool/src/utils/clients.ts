@@ -2,8 +2,6 @@ import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { createPublicClient, http } from "viem";
 import { arbitrum, gnosis, mainnet, sepolia } from "viem/chains";
 
-export type PublicClientType = ReturnType<typeof createPublicClient>;
-
 export const publicClientMapping = {
   [SupportedChainId.MAINNET]: createPublicClient({
     chain: mainnet,
