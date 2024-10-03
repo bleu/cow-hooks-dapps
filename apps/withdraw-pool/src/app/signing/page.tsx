@@ -8,7 +8,7 @@ import {
   useCowShedSignature,
   useHandleTokenAllowance,
 } from "@bleu/utils";
-import { useSubmitHook } from "#/hooks/useSubmitHook";
+import { useSubmitHook } from "@bleu/utils";
 import { BigNumber, BigNumberish } from "ethers";
 import { useCallback, useMemo, useState } from "react";
 import { Address } from "viem";
@@ -17,6 +17,7 @@ export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [permitTxs, setPermitTxs] = useState<BaseTransaction[]>([]);
   const {
+    actions,
     hookInfo,
     cowShed,
     signer,
@@ -25,7 +26,11 @@ export default function Page() {
     publicClient,
     cowShedProxy,
   } = useIFrameContext();
-  const submitHook = useSubmitHook();
+  const submitHook = useSubmitHook({
+    actions,
+    context,
+    publicClient,
+  });
   const cowShedSignature = useCowShedSignature({
     cowShed,
     signer,

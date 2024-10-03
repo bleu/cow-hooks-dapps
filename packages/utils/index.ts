@@ -4,6 +4,7 @@ export * from "./chainInfo";
 export * from "./cowExplorer";
 export * from "./cowShed";
 export * from "./tokenAllowance";
+export * from "./useSubmitHook";
 
 export { default as parseFixed } from "./parseFixed";
 
