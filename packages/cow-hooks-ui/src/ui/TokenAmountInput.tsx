@@ -47,7 +47,7 @@ export function TokenAmountInput({
         </div>
       )}
       <div className="flex items-center justify-between h-12 py-2.5 px-1.5 bg-color-paper-darker rounded-xl">
-        <div className="w-20 h-8 p-2.5 flex items-center justify-start gap-2 rounded-xl text-color-text-paper bg-color-paper">
+        <div className="w-min h-8 p-2.5 flex items-center justify-start gap-2 rounded-xl text-color-text-paper bg-color-paper">
           <span>@</span>
           <span className="m-0 p-0 min-h-fit">{tokenSymbol}</span>
         </div>

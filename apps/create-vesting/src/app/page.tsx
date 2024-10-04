@@ -16,7 +16,7 @@ import {
 } from "@bleu/cow-hooks-ui";
 
 import { useEffect, useState } from "react";
-
+import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { Form } from "@bleu/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -26,12 +26,13 @@ import { createVestingSchema, periodScaleOptions } from "#/utils/schema";
 //will be used
 import { scaleToSecondsMapping } from "#/utils/scaleToSecondsMapping";
 
+// TODO: fetch real token
+const tokenAddress = "0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d";
+
 export default function Page() {
-  const [actions, setActions] = useState<CoWHookDappActions | null>(null);
-  const [context, setContext] = useState<HookDappContext | null>(null);
+  const { actions, context } = useIFrameContext();
 
   const isDarkMode = context?.isDarkMode;
-  // will be used
   const { account, chainId } = context || {};
 
   const form = useForm<typeof createVestingSchema._type>({
@@ -43,11 +44,6 @@ export default function Page() {
   });
 
   const { handleSubmit } = form;
-
-  useEffect(() => {
-    const { actions } = initCoWHookDapp({ onContext: setContext });
-    setActions(actions);
-  }, []);
 
   useEffect(() => {
     const newTheme = isDarkMode ? "dark" : "light";
@@ -103,7 +99,7 @@ export default function Page() {
                 />
                 <TokenAmountInput
                   name="amount"
-                  tokenSymbol="ETH"
+                  tokenSymbol="WXDAI"
                   label="Amount"
                   placeholder="0.0"
                   autoComplete="off"
