@@ -7,8 +7,8 @@ import {
   BaseTransaction,
   useCowShedSignature,
   useHandleTokenAllowance,
-} from "@bleu/utils";
-import { useSubmitHook } from "@bleu/utils";
+  useSubmitHook,
+} from "@bleu/cow-hooks-ui";
 import { BigNumber, BigNumberish } from "ethers";
 import { useCallback, useMemo, useState } from "react";
 import { Address } from "viem";
