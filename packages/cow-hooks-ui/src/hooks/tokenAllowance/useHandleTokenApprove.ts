@@ -1,4 +1,7 @@
-import { TRANSACTION_TYPES, TransactionFactory } from "../transactionFactory";
+import {
+  TRANSACTION_TYPES,
+  TransactionFactory,
+} from "@bleu/utils/transactionFactory";
 import type { Signer } from "ethers";
 import { useCallback } from "react";
 import type { Address } from "viem";
