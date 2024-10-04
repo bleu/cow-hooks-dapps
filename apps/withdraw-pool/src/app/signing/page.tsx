@@ -41,7 +41,7 @@ export default function Page() {
     jsonRpcProvider,
     context,
     publicClient,
-    cowShedProxy,
+    spender: cowShedProxy,
   });
 
   const cowShedCallback = useCallback(async () => {

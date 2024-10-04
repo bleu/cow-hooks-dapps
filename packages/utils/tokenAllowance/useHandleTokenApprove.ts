@@ -6,21 +6,21 @@ import { MAX_UINT256 } from "@balancer/sdk";
 
 export function useHandleTokenApprove({
   signer,
-  cowShedProxy,
+  spender,
 }: {
   signer: Signer | undefined;
-  cowShedProxy: Address | undefined;
+  spender: Address | undefined;
 }) {
   return useCallback(
     async (tokenAddress: Address) => {
-      if (!signer || !cowShedProxy) {
+      if (!signer || !spender) {
         throw new Error("Missing context");
       }
 
       const approveArgs = {
         type: TRANSACTION_TYPES.ERC20_APPROVE,
         token: tokenAddress,
-        spender: cowShedProxy,
+        spender: spender,
         amount: MAX_UINT256,
       } as const;
       const txData = await TransactionFactory.createRawTx(
@@ -41,6 +41,6 @@ export function useHandleTokenApprove({
       console.log(receipt);
       return receipt;
     },
-    [signer, cowShedProxy]
+    [signer, spender]
   );
 }

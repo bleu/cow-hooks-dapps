@@ -17,21 +17,22 @@ export function useHandleTokenAllowance({
   jsonRpcProvider,
   context,
   publicClient,
-  cowShedProxy,
+  spender,
 }: {
   signer: Signer | undefined;
   jsonRpcProvider: JsonRpcProvider | undefined;
   context: HookDappContextAdjusted | undefined;
   publicClient: PublicClient | undefined;
-  cowShedProxy: Address | undefined;
+  spender: Address | undefined;
 }) {
-  const handleTokenApprove = useHandleTokenApprove({ signer, cowShedProxy });
-
-  const spender = cowShedProxy as Address;
+  const handleTokenApprove = useHandleTokenApprove({
+    signer,
+    spender,
+  });
 
   return useCallback(
     async (amount: BigNumber, tokenAddress: Address) => {
-      if (!publicClient || !jsonRpcProvider || !context?.account)
+      if (!publicClient || !jsonRpcProvider || !context?.account || !spender)
         throw new Error("Missing context");
 
       const tokenContract = {
@@ -90,7 +91,7 @@ export function useHandleTokenAllowance({
           address: tokenAddress,
           name: tokenName,
         },
-        spender,
+        spender: spender,
         provider: jsonRpcProvider,
         permitInfo,
         eip2162Utils: eip2162Utils,
@@ -98,7 +99,7 @@ export function useHandleTokenAllowance({
         nonce,
       });
     },
-    [jsonRpcProvider, context, publicClient, cowShedProxy]
+    [jsonRpcProvider, context, publicClient, spender]
   );
 }
 
