@@ -2,7 +2,7 @@
 
 import { SignatureSteps } from "#/components/SignaturesSteps";
 import { WaitingSignature } from "#/components/WaitingSignature";
-import { useIFrameContext } from "#/context/iframe";
+import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import {
   BaseTransaction,
   useCowShedSignature,

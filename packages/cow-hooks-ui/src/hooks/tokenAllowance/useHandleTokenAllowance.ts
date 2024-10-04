@@ -10,7 +10,7 @@ import {
   PermitInfo,
 } from "@cowprotocol/permit-utils";
 import { useHandleTokenApprove } from "./useHandleTokenApprove";
-import { HookDappContextAdjusted } from "../cowShed/types";
+import { HookDappContextAdjusted } from "../../types";
 
 export function useHandleTokenAllowance({
   signer,

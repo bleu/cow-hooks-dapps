@@ -1,5 +1,5 @@
 import { CowHook, CoWHookDappActions } from "@cowprotocol/hook-dapp-lib";
-import { HookDappContextAdjusted } from "./cowShed";
+import { HookDappContextAdjusted } from "../types";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import { PublicClient } from "viem";

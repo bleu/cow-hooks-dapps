@@ -14,11 +14,10 @@ import {
   HookDappContext,
   initCoWHookDapp,
 } from "@cowprotocol/hook-dapp-lib";
-import { publicClientMapping } from "#/utils/clients";
+import { publicClientMapping } from "../utils/clients";
 import { CowShedHooks } from "@cowprotocol/cow-sdk";
 import { Address, PublicClient } from "viem";
-import { HookDappContextAdjusted, IHooksInfo } from "#/types";
-import { useUserPools } from "#/hooks/useUserPools";
+import { HookDappContextAdjusted, IHooksInfo } from "../types";
 import { Signer } from "ethers";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { RPC_URL_MAPPING } from "@bleu/utils/transactionFactory";
@@ -29,7 +28,6 @@ type IFrameContextType = {
   publicClient?: PublicClient;
   cowShedProxy?: Address;
   cowShed?: CowShedHooks;
-  userPoolSwr: ReturnType<typeof useUserPools>;
   actions?: CoWHookDappActions;
   signer?: Signer;
   hookInfo?: IHooksInfo;
@@ -82,8 +80,6 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
     document.documentElement.setAttribute("data-theme", newTheme);
   }, [context?.isDarkMode]);
 
-  const userPoolSwr = useUserPools(context?.chainId, context?.account);
-
   return (
     <IFrameContext.Provider
       value={{
@@ -91,7 +87,6 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
         setContext,
         publicClient,
         cowShedProxy,
-        userPoolSwr,
         cowShed,
         hookInfo,
         setHookInfo,

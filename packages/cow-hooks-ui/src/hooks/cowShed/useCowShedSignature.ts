@@ -5,7 +5,7 @@ import { getCowShedNonce } from "./getCowShedNonce";
 import { SigningScheme } from "@cowprotocol/contracts";
 import type { Signer } from "ethers";
 
-import type { HookDappContextAdjusted, BaseTransaction } from "./types";
+import type { HookDappContextAdjusted, BaseTransaction } from "../../types";
 
 export function useCowShedSignature({
   cowShed,
