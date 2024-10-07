@@ -1,10 +1,9 @@
 "use client";
 
-import { SignatureStepsProps } from "#/types";
+import { SignatureStepsProps } from "../types";
 import { Button } from "@bleu/ui";
 import useSWR from "swr";
 import { Spinner } from "./Spinner";
-import { useEffect } from "react";
 
 export function WaitingSignature({
   callback,

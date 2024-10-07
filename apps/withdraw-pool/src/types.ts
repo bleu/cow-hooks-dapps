@@ -43,13 +43,6 @@ export interface IPoolBalance {
   fiatAmount: number;
 }
 
-export interface SignatureStepsProps {
-  callback: () => Promise<void>;
-  label: string;
-  description: string;
-  id: string;
-}
-
 export interface IHooksInfo {
   txs: BaseTransaction[];
   permitData: {

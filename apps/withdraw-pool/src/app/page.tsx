@@ -14,7 +14,7 @@ import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { useUserPoolContext } from "#/context/userPools";
 import { useRouter } from "next/navigation";
-import { Spinner } from "#/components/Spinner";
+import { Spinner } from "@bleu/cow-hooks-ui";
 
 export default function Page() {
   const { context, setHookInfo } = useIFrameContext();
