@@ -72,7 +72,7 @@ export default function Page() {
 
   if (!context)
     return (
-      <div className="w-full text-center p-2">
+      <div className="w-full text-center mt-10 p-2">
         <Spinner />
       </div>
     );
