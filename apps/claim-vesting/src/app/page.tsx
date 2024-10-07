@@ -52,6 +52,7 @@ export default function Page() {
   const {
     errorMessage,
     formattedClaimableAmount,
+    formattedClaimableAmountFullDecimals,
     tokenSymbol,
     loading,
     callData,
@@ -89,7 +90,7 @@ export default function Page() {
               <div className="flex flex-col w-full">
                 <ClaimableAmountContainer>
                   <span>Claimable amount</span>
-                  <span>
+                  <span title={formattedClaimableAmountFullDecimals}>
                     {formattedClaimableAmount} {tokenSymbol && tokenSymbol}
                   </span>
                 </ClaimableAmountContainer>

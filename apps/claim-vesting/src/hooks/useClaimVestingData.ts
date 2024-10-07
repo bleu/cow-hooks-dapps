@@ -30,6 +30,7 @@ export const useClaimVestingData = ({
 }: useClaimVestingDataParams): {
   errorMessage: string | undefined;
   formattedClaimableAmount: string;
+  formattedClaimableAmountFullDecimals: string;
   tokenSymbol: string;
   loading: boolean;
   callData: string | undefined;
@@ -97,6 +98,16 @@ export const useClaimVestingData = ({
           0.000001
         )
       : "0.0";
+  const formattedClaimableAmountFullDecimals =
+    recipient === account && claimableAmountWei && decimals
+      ? formatNumber(
+          Number(claimableAmountWei) / 10 ** Number(decimals),
+          Number(decimals),
+          "decimal",
+          "standard",
+          Number(`0.${"0".repeat(Number(decimals) - 1)}1`)
+        )
+      : "0.0";
   const loading = isLoadingToken || isLoadingVesting || isLoadingGasLimit;
 
   const callData =
@@ -111,6 +122,7 @@ export const useClaimVestingData = ({
   return {
     errorMessage,
     formattedClaimableAmount,
+    formattedClaimableAmountFullDecimals,
     tokenSymbol,
     loading,
     callData,
