@@ -1,7 +1,7 @@
 "use client";
 
 import { TokenAmount, TokenInfo } from "@bleu/cow-hooks-ui";
-import { Label, Spinner, cn } from "@bleu/ui";
+import { Label, cn } from "@bleu/ui";
 import type { IPoolBalance } from "../types";
 import { formatUnits } from "ethers/lib/utils";
 import { useMemo } from "react";
@@ -9,6 +9,7 @@ import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { useFormContext, useWatch } from "react-hook-form";
 import { multiplyValueByPct } from "#/utils/math";
+import { Spinner } from "./Spinner";
 
 export function PoolBalancesPreview({
   label,
