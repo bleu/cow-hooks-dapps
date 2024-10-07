@@ -138,6 +138,9 @@ importers:
       '@bleu/ui':
         specifier: 0.1.131
         version: 0.1.131(@types/react-dom@18.3.0)(@types/react@18.3.11)(mapbox-gl@1.13.3)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))(react-router-dom@6.26.2(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)(webpack@5.95.0)
+      '@bleu/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@cowprotocol/hook-dapp-lib':
         specifier: 1.0.0-RC1
         version: 1.0.0-RC1
@@ -150,6 +153,9 @@ importers:
       babel-plugin-react-compiler:
         specifier: 0.0.0-experimental-6067d4e-20240923
         version: 0.0.0-experimental-6067d4e-20240923
+      ethers:
+        specifier: ^5.7.2
+        version: 5.7.2
       next:
         specifier: 15.0.0-rc.0
         version: 15.0.0-rc.0(babel-plugin-react-compiler@0.0.0-experimental-6067d4e-20240923)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)
@@ -447,6 +453,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.4.47
+      swr:
+        specifier: 2.2.5
+        version: 2.2.5(react@19.0.0-rc-e4953922-20240919)
       tailwindcss:
         specifier: ^3.4.13
         version: 3.4.13

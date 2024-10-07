@@ -12,6 +12,10 @@ import {
   ERC20TransferFromCreator,
 } from "./erc20";
 import { BaseTransaction, ITransaction, TRANSACTION_TYPES } from "./types";
+import {
+  CreateVestingArgs,
+  CreateVestingCreator,
+} from "./vestingEscrowFactory";
 
 export type AllTransactionArgs = TransactionBindings[keyof TransactionBindings];
 
@@ -21,6 +25,7 @@ export interface TransactionBindings {
   [TRANSACTION_TYPES.GAUGE_WITHDRAW]: GaugeWithdrawArgs;
   [TRANSACTION_TYPES.BALANCER_WITHDRAW]: BalancerWithdrawArgs;
   [TRANSACTION_TYPES.ERC20_APPROVE]: ERC20ApproveArgs;
+  [TRANSACTION_TYPES.CREATE_VESTING]: CreateVestingArgs;
 }
 
 const TRANSACTION_CREATORS: {
@@ -33,6 +38,7 @@ const TRANSACTION_CREATORS: {
   [TRANSACTION_TYPES.GAUGE_WITHDRAW]: GaugeWithdrawCreator,
   [TRANSACTION_TYPES.BALANCER_WITHDRAW]: BalancerWithdrawCreator,
   [TRANSACTION_TYPES.ERC20_APPROVE]: ERC20ApproveCreator,
+  [TRANSACTION_TYPES.CREATE_VESTING]: CreateVestingCreator,
 };
 
 export class TransactionFactory {

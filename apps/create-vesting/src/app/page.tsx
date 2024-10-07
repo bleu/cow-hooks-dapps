@@ -1,12 +1,6 @@
 "use client";
 
 import {
-  type CoWHookDappActions,
-  type HookDappContext,
-  initCoWHookDapp,
-} from "@cowprotocol/hook-dapp-lib";
-
-import {
   Input,
   PeriodWithScaleInput,
   ButtonPrimary,
@@ -15,7 +9,7 @@ import {
   Wrapper,
 } from "@bleu/cow-hooks-ui";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { Form } from "@bleu/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,19 +17,23 @@ import { useForm } from "react-hook-form";
 
 import { createVestingSchema, periodScaleOptions } from "#/utils/schema";
 
-//will be used
-import { scaleToSecondsMapping } from "#/utils/scaleToSecondsMapping";
+import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
+import { useRouter } from "next/navigation";
 
 // TODO: fetch real token
 const tokenAddress = "0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d";
+const tokenSymbol = "WXDAI";
+const tokenDecimals = 18;
+const vestingEscrowFactoryAddress =
+  "0x62E13BE78af77C86D38a027ae432F67d9EcD4c10";
+
+type CreateVestingFormData = typeof createVestingSchema._type;
 
 export default function Page() {
-  const { actions, context } = useIFrameContext();
+  const { actions, context, setHookInfo } = useIFrameContext();
+  const router = useRouter();
 
-  const isDarkMode = context?.isDarkMode;
-  const { account, chainId } = context || {};
-
-  const form = useForm<typeof createVestingSchema._type>({
+  const form = useForm<CreateVestingFormData>({
     resolver: zodResolver(createVestingSchema),
     defaultValues: {
       period: 1,
@@ -43,39 +41,37 @@ export default function Page() {
     },
   });
 
-  const { handleSubmit } = form;
+  const getHooksTransactions = useGetHooksTransactions();
 
-  useEffect(() => {
-    const newTheme = isDarkMode ? "dark" : "light";
-    document.documentElement.setAttribute("data-theme", newTheme);
-  }, [isDarkMode]);
+  const onSubmitCallback = useCallback(
+    async (data: CreateVestingFormData) => {
+      if (!context) return;
+      console.log("data", data);
+      const hookInfo = await getHooksTransactions({
+        tokenAddress,
+        tokenSymbol,
+        tokenDecimals,
+        vestingEscrowFactoryAddress,
+        formData: data,
+      });
+      if (!hookInfo) return;
+      setHookInfo(hookInfo);
+      router.push("/signing");
+    },
+    [context?.account]
+  );
 
-  const addHook = () => {
-    if (!actions) return;
+  const onSubmit = useMemo(
+    () => form.handleSubmit(onSubmitCallback),
+    [form, onSubmitCallback]
+  );
 
-    const hook = {
-      target: "",
-      callData: "",
-      gasLimit: "",
-    };
-    // will be used
-    // if (context?.hookToEdit) {
-    //   actions.editHook({ hook, uuid: context.hookToEdit.uuid });
-    // } else {
-    //   actions.addHook({ hook });
-    // }
-  };
-
-  function onSubmit(data: typeof createVestingSchema._type) {
-    if (!context) return;
-    console.log("data", data);
-    addHook();
-  }
+  const inputStep = tokenDecimals;
 
   return (
     <>
       {context && (
-        <Form {...form} className="contents">
+        <Form {...form} onSubmit={onSubmit} className="contents">
           <Wrapper>
             <ContentWrapper>
               <Input
@@ -99,7 +95,9 @@ export default function Page() {
                 />
                 <TokenAmountInput
                   name="amount"
-                  tokenSymbol="WXDAI"
+                  type="number"
+                  step={`0.${"0".repeat(tokenDecimals - 1)}1`}
+                  tokenSymbol={tokenSymbol}
                   label="Amount"
                   placeholder="0.0"
                   autoComplete="off"
@@ -111,7 +109,7 @@ export default function Page() {
               </div>
               <br />
             </ContentWrapper>
-            <ButtonPrimary type="submit" onClick={handleSubmit(onSubmit)}>
+            <ButtonPrimary type="submit">
               <span>{context?.hookToEdit ? "Edit Hook" : "Add hook"}</span>
             </ButtonPrimary>
           </Wrapper>
