@@ -8,6 +8,7 @@ import {
   TokenAmountInput,
   Wrapper,
 } from "@bleu/cow-hooks-ui";
+import { Token } from "@uniswap/sdk-core";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
@@ -19,18 +20,15 @@ import { createVestingSchema, periodScaleOptions } from "#/utils/schema";
 
 import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
 import { useRouter } from "next/navigation";
+import { useReadTokenContract } from "#/hooks/useReadTokenContract";
 
-// TODO: fetch real token
-const tokenAddress = "0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d";
-const tokenSymbol = "WXDAI";
-const tokenDecimals = 18;
 const vestingEscrowFactoryAddress =
-  "0x62E13BE78af77C86D38a027ae432F67d9EcD4c10";
+  "0x62E13BE78af77C86D38a027ae432F67d9EcD4c10"; // Do a mapper
 
 type CreateVestingFormData = typeof createVestingSchema._type;
 
 export default function Page() {
-  const { actions, context, setHookInfo } = useIFrameContext();
+  const { context, setHookInfo } = useIFrameContext();
   const router = useRouter();
 
   const form = useForm<CreateVestingFormData>({
@@ -42,15 +40,23 @@ export default function Page() {
   });
 
   const getHooksTransactions = useGetHooksTransactions();
+  const tokenAddress = context?.orderParams?.buyTokenAddress as
+    | `0x${string}`
+    | undefined;
+
+  const { tokenSymbol, tokenDecimals } = useReadTokenContract({ tokenAddress });
+
+  const token =
+    context?.chainId && tokenAddress && tokenDecimals
+      ? new Token(context.chainId, tokenAddress, tokenDecimals, tokenSymbol)
+      : undefined;
 
   const onSubmitCallback = useCallback(
     async (data: CreateVestingFormData) => {
-      if (!context) return;
+      if (!context || !token) return;
       console.log("data", data);
       const hookInfo = await getHooksTransactions({
-        tokenAddress,
-        tokenSymbol,
-        tokenDecimals,
+        token,
         vestingEscrowFactoryAddress,
         formData: data,
       });
@@ -65,8 +71,6 @@ export default function Page() {
     () => form.handleSubmit(onSubmitCallback),
     [form, onSubmitCallback]
   );
-
-  const inputStep = tokenDecimals;
 
   return (
     <>
@@ -87,6 +91,8 @@ export default function Page() {
                   periodScaleOptions={periodScaleOptions}
                   namePeriodValue="period"
                   namePeriodScale="periodScale"
+                  type="number"
+                  step="0.0000001"
                   label="Period"
                   validation={{ valueAsNumber: true, required: true }}
                   onKeyDown={(e) =>
@@ -96,8 +102,8 @@ export default function Page() {
                 <TokenAmountInput
                   name="amount"
                   type="number"
-                  step={`0.${"0".repeat(tokenDecimals - 1)}1`}
-                  tokenSymbol={tokenSymbol}
+                  step={`0.${"0".repeat(tokenDecimals ? tokenDecimals - 1 : 8)}1`}
+                  token={token}
                   label="Amount"
                   placeholder="0.0"
                   autoComplete="off"

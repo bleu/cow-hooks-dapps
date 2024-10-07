@@ -7,11 +7,10 @@ import {
 import { Address, parseUnits } from "viem";
 import { scaleToSecondsMapping } from "#/utils/scaleToSecondsMapping";
 import { createVestingSchema } from "#/utils/schema";
+import { Token } from "@uniswap/sdk-core";
 
 interface GetHooksTransactionsParams {
-  tokenAddress: Address;
-  tokenSymbol: string;
-  tokenDecimals: number;
+  token: Token;
   vestingEscrowFactoryAddress: Address;
   formData: typeof createVestingSchema._type;
 }
@@ -24,9 +23,7 @@ export function useGetHooksTransactions() {
       params: GetHooksTransactionsParams
     ): Promise<IHooksInfo | undefined> => {
       const {
-        tokenAddress,
-        tokenSymbol,
-        tokenDecimals,
+        token,
         vestingEscrowFactoryAddress,
         formData: { period, periodScale, amount, recipient },
       } = params;
@@ -34,7 +31,9 @@ export function useGetHooksTransactions() {
       if (!context?.account || !cowShedProxy) return;
 
       const periodInSeconds = period * scaleToSecondsMapping[periodScale];
-      const amountWei = parseUnits(String(amount), tokenDecimals); // TODO: Implement logic
+      const amountWei = parseUnits(String(amount), token.decimals);
+      const tokenAddress = token.address as Address;
+      const tokenSymbol = token.symbol ?? "";
 
       const txs = await Promise.all([
         // Transfer to proxy
