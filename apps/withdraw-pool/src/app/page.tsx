@@ -15,6 +15,7 @@ import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { useUserPoolContext } from "#/context/userPools";
 import { useRouter } from "next/navigation";
 import { Spinner } from "#/components/Spinner";
+import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 
 export default function Page() {
   const { context, setHookInfo } = useIFrameContext();
@@ -35,7 +36,7 @@ export default function Page() {
   const {
     setValue,
     control,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isSubmitSuccessful },
   } = form;
 
   const { withdrawPct, poolId } = useWatch({ control });
@@ -48,10 +49,10 @@ export default function Page() {
   const getHooksTransactions = useGetHookInfo(selectedPool);
 
   const buttonProps = useMemo(() => {
-    if (!withdrawPct || withdrawPct === 0)
+    if (!withdrawPct || Number(withdrawPct) === 0)
       return { disabled: true, message: "Define percentage" };
     return { disabled: false, message: "Add pre-hook" };
-  }, [withdrawPct]);
+  }, [withdrawPct, poolId]);
 
   const onSubmitCallback = useCallback(
     async (data: typeof withdrawSchema._type) => {
@@ -71,10 +72,18 @@ export default function Page() {
 
   if (!context)
     return (
-      <div className="w-full text-center p-2">
+      <div className="w-full text-center mt-10 p-2">
         <Spinner />
       </div>
     );
+
+  if (!context.account) {
+    return <span className="mt-10 text-center">Connect your wallet</span>;
+  }
+
+  if (!ALL_SUPPORTED_CHAIN_IDS.includes(context.chainId)) {
+    return <span className="mt-10 text-center">Unsupported chain</span>;
+  }
 
   return (
     <Form
@@ -94,7 +103,7 @@ export default function Page() {
             type="submit"
             className="mt-2"
             disabled={buttonProps.disabled}
-            loading={isSubmitting}
+            loading={isSubmitting || isSubmitSuccessful}
             loadingText="Creating hook..."
           >
             {buttonProps.message}

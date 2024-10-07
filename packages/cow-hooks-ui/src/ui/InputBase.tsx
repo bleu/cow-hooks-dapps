@@ -39,8 +39,6 @@ export const Input = React.forwardRef<HTMLInputElement, IInput>(
     const error = errors[name] as FieldError | undefined;
     const errorMessage = error?.message;
 
-    console.log("errors", errors);
-
     return (
       <div className="flex flex-col w-full">
         {label && (

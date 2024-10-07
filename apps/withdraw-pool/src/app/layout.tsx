@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Head>
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <body className="flex h-full flex-col font-sans font-normal text-foreground">
+      <body className="flex h-full flex-col font-sans font-normal bg-background text-foreground">
         <IFrameContextProvider>
           <UserPoolContextProvider>{children}</UserPoolContextProvider>
         </IFrameContextProvider>
