@@ -141,6 +141,9 @@ importers:
       '@bleu/utils':
         specifier: workspace:*
         version: link:../../packages/utils
+      '@cowprotocol/cow-sdk':
+        specifier: ^5.5.1
+        version: 5.5.1(encoding@0.1.13)(ethers@5.7.2)
       '@cowprotocol/hook-dapp-lib':
         specifier: 1.0.0-RC1
         version: 1.0.0-RC1

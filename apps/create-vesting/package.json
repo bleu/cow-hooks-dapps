@@ -13,6 +13,7 @@
     "@bleu/tsconfig": "workspace:*",
     "@bleu/utils": "workspace:*",
     "@bleu/ui": "0.1.131",
+    "@cowprotocol/cow-sdk": "^5.5.1",
     "@cowprotocol/hook-dapp-lib": "1.0.0-RC1",
     "@hookform/resolvers": "3.9.0",
     "@radix-ui/react-icons": "1.3.0",

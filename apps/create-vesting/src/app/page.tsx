@@ -10,7 +10,7 @@ import {
 } from "@bleu/cow-hooks-ui";
 import { Token } from "@uniswap/sdk-core";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { Form } from "@bleu/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,9 +21,7 @@ import { createVestingSchema, periodScaleOptions } from "#/utils/schema";
 import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
 import { useRouter } from "next/navigation";
 import { useReadTokenContract } from "#/hooks/useReadTokenContract";
-
-const vestingEscrowFactoryAddress =
-  "0x62E13BE78af77C86D38a027ae432F67d9EcD4c10"; // Do a mapper
+import { vestingFactoriesMapping } from "#/utils/vestingFactoriesMapping";
 
 type CreateVestingFormData = typeof createVestingSchema._type;
 
@@ -46,14 +44,23 @@ export default function Page() {
 
   const { tokenSymbol, tokenDecimals } = useReadTokenContract({ tokenAddress });
 
-  const token =
-    context?.chainId && tokenAddress && tokenDecimals
-      ? new Token(context.chainId, tokenAddress, tokenDecimals, tokenSymbol)
+  const token = useMemo(
+    () =>
+      context?.chainId && tokenAddress && tokenDecimals
+        ? new Token(context.chainId, tokenAddress, tokenDecimals, tokenSymbol)
+        : undefined,
+    [context?.chainId, tokenAddress, tokenDecimals]
+  );
+
+  const vestingEscrowFactoryAddress = useMemo(() => {
+    return context?.chainId
+      ? vestingFactoriesMapping[context.chainId]
       : undefined;
+  }, [context?.chainId]);
 
   const onSubmitCallback = useCallback(
     async (data: CreateVestingFormData) => {
-      if (!context || !token) return;
+      if (!context || !token || !vestingEscrowFactoryAddress) return;
       console.log("data", data);
       const hookInfo = await getHooksTransactions({
         token,
@@ -64,7 +71,7 @@ export default function Page() {
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [context?.account]
+    [context?.account, token, vestingEscrowFactoryAddress]
   );
 
   const onSubmit = useMemo(
