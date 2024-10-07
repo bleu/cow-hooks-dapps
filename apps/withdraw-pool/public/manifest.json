@@ -19,7 +19,7 @@
     "image": "https://cow-hooks-dapps-withdraw-pool.vercel.app/icon.png",
     "conditions": {
       "position": "pre",
-      "smartContractWalletSupported": false
+      "walletCompatibility": ["EOA"]
     }
   }
 }
