@@ -1,23 +1,29 @@
-import { useIFrameContext } from "#/context/iframe";
-import { TransactionFactory } from "#/utils/transactionFactory/factory";
-import { TRANSACTION_TYPES } from "#/utils/transactionFactory/types";
-import { MAX_UINT256 } from "@balancer/sdk";
+import {
+  TRANSACTION_TYPES,
+  TransactionFactory,
+} from "@bleu/utils/transactionFactory";
+import type { Signer } from "ethers";
 import { useCallback } from "react";
-import { Address } from "viem";
+import type { Address } from "viem";
+import { MAX_UINT256 } from "@balancer/sdk";
 
-export function useHandleTokenApprove() {
-  const { signer, cowShedProxy } = useIFrameContext();
-
+export function useHandleTokenApprove({
+  signer,
+  spender,
+}: {
+  signer: Signer | undefined;
+  spender: Address | undefined;
+}) {
   return useCallback(
     async (tokenAddress: Address) => {
-      if (!signer || !cowShedProxy) {
+      if (!signer || !spender) {
         throw new Error("Missing context");
       }
 
       const approveArgs = {
         type: TRANSACTION_TYPES.ERC20_APPROVE,
         token: tokenAddress,
-        spender: cowShedProxy,
+        spender: spender,
         amount: MAX_UINT256,
       } as const;
       const txData = await TransactionFactory.createRawTx(
@@ -38,6 +44,6 @@ export function useHandleTokenApprove() {
       console.log(receipt);
       return receipt;
     },
-    [signer, cowShedProxy]
+    [signer, spender]
   );
 }

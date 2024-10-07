@@ -1,11 +1,13 @@
 import { IMinimalPool } from "#/types";
 import { useCallback } from "react";
-import { useIFrameContext } from "#/context/iframe";
+import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { minimalPoolToPoolState } from "#/utils/poolDataConverter";
-import { TRANSACTION_TYPES } from "#/utils/transactionFactory/types";
-import { BalancerWithdrawArgs } from "#/utils/transactionFactory/balancerPool";
 import { BigNumber } from "ethers";
-import { ERC20TransferFromArgs } from "#/utils/transactionFactory/erc20";
+import {
+  TRANSACTION_TYPES,
+  ERC20TransferFromArgs,
+  BalancerWithdrawArgs,
+} from "@bleu/utils/transactionFactory/";
 
 export function useGetPoolWithdrawArgs(
   pool?: IMinimalPool

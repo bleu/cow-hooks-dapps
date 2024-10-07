@@ -10,14 +10,18 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.2",
+    "@types/react": "^18.3.7",
     "@bleu/tsconfig": "workspace:^",
     "@jest/globals": "^29.7.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5"
   },
   "dependencies": {
-    "@cowprotocol/cow-sdk": "5.4.1",
+    "@balancer/sdk": "0.26.1",
+    "@cowprotocol/cow-sdk": "^5.5.1",
     "ethers": "5.7.2",
-    "typescript": "5.6.2"
+    "typescript": "5.6.2",
+    "react": "19.0.0-rc-e4953922-20240919",
+    "viem": "2.21.14"
   }
 }

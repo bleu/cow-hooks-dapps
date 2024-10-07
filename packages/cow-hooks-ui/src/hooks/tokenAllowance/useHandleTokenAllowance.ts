@@ -1,6 +1,7 @@
-import { Address, erc20Abi } from "viem";
+import { Address, erc20Abi, PublicClient } from "viem";
 import { useCallback } from "react";
-import { BigNumber } from "ethers";
+import { BigNumber, Signer } from "ethers";
+import { JsonRpcProvider } from "@ethersproject/providers";
 import {
   generatePermitHook,
   getPermitUtilsInstance,
@@ -8,20 +9,30 @@ import {
   GetTokenPermitIntoResult,
   PermitInfo,
 } from "@cowprotocol/permit-utils";
-import { useIFrameContext } from "#/context/iframe";
 import { useHandleTokenApprove } from "./useHandleTokenApprove";
+import { HookDappContextAdjusted } from "../../types";
 
-export function useHandleTokenAllowance() {
-  const { jsonRpcProvider, context, publicClient, cowShedProxy } =
-    useIFrameContext();
-
-  const handleTokenApprove = useHandleTokenApprove();
-
-  const spender = cowShedProxy as Address;
+export function useHandleTokenAllowance({
+  signer,
+  jsonRpcProvider,
+  context,
+  publicClient,
+  spender,
+}: {
+  signer: Signer | undefined;
+  jsonRpcProvider: JsonRpcProvider | undefined;
+  context: HookDappContextAdjusted | undefined;
+  publicClient: PublicClient | undefined;
+  spender: Address | undefined;
+}) {
+  const handleTokenApprove = useHandleTokenApprove({
+    signer,
+    spender,
+  });
 
   return useCallback(
     async (amount: BigNumber, tokenAddress: Address) => {
-      if (!publicClient || !jsonRpcProvider || !context?.account)
+      if (!publicClient || !jsonRpcProvider || !context?.account || !spender)
         throw new Error("Missing context");
 
       const tokenContract = {
@@ -80,7 +91,7 @@ export function useHandleTokenAllowance() {
           address: tokenAddress,
           name: tokenName,
         },
-        spender,
+        spender: spender,
         provider: jsonRpcProvider,
         permitInfo,
         eip2162Utils: eip2162Utils,
@@ -88,7 +99,7 @@ export function useHandleTokenAllowance() {
         nonce,
       });
     },
-    [jsonRpcProvider, context, publicClient, cowShedProxy]
+    [jsonRpcProvider, context, publicClient, spender]
   );
 }
 

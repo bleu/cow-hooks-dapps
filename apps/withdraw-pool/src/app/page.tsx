@@ -11,16 +11,17 @@ import { WithdrawPctSlider } from "#/components/WithdrawPctSlider";
 import type { IMinimalPool } from "#/types";
 import { withdrawSchema } from "#/utils/schema";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
-import { useIFrameContext } from "#/context/iframe";
+import { useIFrameContext } from "@bleu/cow-hooks-ui";
+import { useUserPoolContext } from "#/context/userPools";
 import { useRouter } from "next/navigation";
 import { Spinner } from "#/components/Spinner";
 
 export default function Page() {
+  const { context, setHookInfo } = useIFrameContext();
   const {
-    context,
     userPoolSwr: { data: pools },
-    setHookInfo,
-  } = useIFrameContext();
+  } = useUserPoolContext();
+
   const form = useForm<typeof withdrawSchema._type>({
     resolver: zodResolver(withdrawSchema),
     defaultValues: {

@@ -13,7 +13,7 @@ import {
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { IMinimalPool } from "#/types";
-import { useIFrameContext } from "#/context/iframe";
+import { useUserPoolContext } from "#/context/userPools";
 
 export function PoolsDropdownMenu({
   onSelect,
@@ -26,7 +26,7 @@ export function PoolsDropdownMenu({
   const [search, setSearch] = useState("");
   const {
     userPoolSwr: { data: pools },
-  } = useIFrameContext();
+  } = useUserPoolContext();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

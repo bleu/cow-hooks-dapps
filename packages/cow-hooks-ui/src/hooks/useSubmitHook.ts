@@ -1,15 +1,18 @@
-import { useIFrameContext } from "#/context/iframe";
-import {
-  CowHook,
-  CowHookCreation,
-  CowHookDetails,
-} from "@cowprotocol/hook-dapp-lib";
+import { CowHook, CoWHookDappActions } from "@cowprotocol/hook-dapp-lib";
+import { HookDappContextAdjusted } from "../types";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
+import { PublicClient } from "viem";
 
-export function useSubmitHook() {
-  const { actions, context, publicClient } = useIFrameContext();
-
+export function useSubmitHook({
+  actions,
+  context,
+  publicClient,
+}: {
+  actions: CoWHookDappActions | undefined;
+  context: HookDappContextAdjusted | undefined;
+  publicClient: PublicClient | undefined;
+}) {
   return useCallback(
     async (hook: Omit<CowHook, "gasLimit">) => {
       if (!context || !actions) return;

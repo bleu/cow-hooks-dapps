@@ -1,4 +1,7 @@
-import { IFrameContextProvider } from "#/context/iframe";
+"use client";
+
+import { IFrameContextProvider } from "@bleu/cow-hooks-ui";
+import { UserPoolContextProvider } from "#/context/userPools";
 import "#/global.css";
 import Head from "next/head";
 
@@ -11,7 +14,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <link rel="manifest" href="/manifest.json" />
       </Head>
       <body className="flex h-full flex-col font-sans font-normal text-foreground">
-        <IFrameContextProvider>{children}</IFrameContextProvider>
+        <IFrameContextProvider>
+          <UserPoolContextProvider>{children}</UserPoolContextProvider>
+        </IFrameContextProvider>
       </body>
     </html>
   );

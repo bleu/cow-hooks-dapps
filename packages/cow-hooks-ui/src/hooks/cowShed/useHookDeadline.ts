@@ -1,8 +1,11 @@
-import { useIFrameContext } from "#/context/iframe";
 import { useMemo } from "react";
+import type { HookDappContextAdjusted } from "../../types";
 
-export function useHookDeadline() {
-  const { context } = useIFrameContext();
+export function useHookDeadline({
+  context,
+}: {
+  context: HookDappContextAdjusted | undefined;
+}) {
   return useMemo(() => {
     return BigInt(
       context?.orderParams?.validTo || generateTimestampOnNextHour()

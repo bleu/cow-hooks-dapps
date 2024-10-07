@@ -1,11 +1,11 @@
-import { useIFrameContext } from "#/context/iframe";
+import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { IMinimalPool } from "#/types";
 import {
   GaugeClaimRewardsArgs,
   GaugeWithdrawArgs,
-} from "#/utils/transactionFactory/balancerGauge";
-import { ERC20TransferFromArgs } from "#/utils/transactionFactory/erc20";
-import { TRANSACTION_TYPES } from "#/utils/transactionFactory/types";
+  ERC20TransferFromArgs,
+  TRANSACTION_TYPES,
+} from "@bleu/utils/transactionFactory";
 import { HookDappContext } from "@cowprotocol/hook-dapp-lib";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
