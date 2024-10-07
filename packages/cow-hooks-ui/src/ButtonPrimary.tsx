@@ -12,7 +12,7 @@ export const ButtonPrimary: React.FC<
           !disabled,
       },
       {
-        "border-transparent outline-none cursor-auto shadow-none opacity-80 bg-color-primary text-color-button-text text-opacity-80":
+        "border-transparent outline-none cursor-auto shadow-none bg-color-primary text-color-button-text":
           disabled,
       }
     )}
