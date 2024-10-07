@@ -4,11 +4,12 @@ import { SignatureStepsProps } from "#/types";
 import { Button } from "@bleu/ui";
 import useSWR from "swr";
 import { Spinner } from "./Spinner";
-import { useEffect } from "react";
+import { InfoTooltip } from "@bleu/cow-hooks-ui";
 
 export function WaitingSignature({
   callback,
   description,
+  tooltipText,
   id,
 }: SignatureStepsProps) {
   const { error, mutate, isValidating } = useSWR([id], callback, {
@@ -25,7 +26,10 @@ export function WaitingSignature({
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <span className="text-foreground text-lg mb-10">{description}</span>
+      <div className="flex flex-row gap-2 items-center mb-10">
+        <span className="text-foreground text-md">{description}</span>
+        {tooltipText && <InfoTooltip text={tooltipText} />}
+      </div>
       {isValidating && <Spinner />}
       {error && !isValidating && (
         <Button

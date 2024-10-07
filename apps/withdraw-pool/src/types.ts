@@ -48,6 +48,7 @@ export interface SignatureStepsProps {
   label: string;
   description: string;
   id: string;
+  tooltipText?: string;
 }
 
 export interface IHooksInfo {
