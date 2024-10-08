@@ -22,7 +22,7 @@ import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 export default function Page() {
   const { context, setHookInfo } = useIFrameContext();
   const {
-    userPoolSwr: { data: pools },
+    userPoolSwr: { data: pools, isLoading },
   } = useUserPoolContext();
 
   const form = useForm<typeof withdrawSchema._type>({
@@ -97,6 +97,7 @@ export default function Page() {
         onSelect={(pool: IMinimalPool) => setValue("poolId", pool.id)}
         selectedPool={selectedPool}
         pools={pools || []}
+        loading={isLoading}
       />
       {poolId && (
         <div className="size-full flex flex-col gap-2">

@@ -44,20 +44,27 @@ export function PoolsDropdownMenu({
     return `${baseUrl}/${chainName}/cow/${selectedPool?.id.toLowerCase()}`;
   }, [selectedPool]);
 
+  const disabled = useMemo(() => {
+    return !pools || pools.length === 0;
+  }, [pools]);
+
+  const triggerMessage = useMemo(() => {
+    if (loading) return "Loading pools";
+    if (disabled) return "No pools available";
+    return selectedPool?.symbol || "Pool to withdraw";
+  }, [loading, disabled, selectedPool]);
+
   return (
     <div className="flex flex-col gap-1 py-2">
       <Label className="px-1 mb-1">Choose liquidity pool</Label>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger className="w-full bg-background">
-          <div className="flex flex-col">
-            <div
-              className="flex p-2 justify-between rounded-md space-x-1 bg-muted text-foreground items-center text-sm"
-              onClick={() => setOpen(true)}
-            >
-              {selectedPool?.symbol || "Pool to withdraw"}
-              <ChevronDownIcon className="size-4 shrink-0" />
-            </div>
-          </div>
+        <PopoverTrigger
+          className="w-full flex p-2 justify-between rounded-md space-x-1 items-center text-sm bg-background disabled:bg-foreground/10 bg-muted text-foreground rounded-md"
+          disabled={disabled}
+          onClick={() => setOpen(true)}
+        >
+          {triggerMessage}
+          <ChevronDownIcon className="size-4 shrink-0" />
         </PopoverTrigger>
         <PopoverContent className="w-[440px] bg-background">
           <Command
