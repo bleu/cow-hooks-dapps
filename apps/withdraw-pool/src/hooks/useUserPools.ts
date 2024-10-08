@@ -3,9 +3,9 @@ import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { gql } from "graphql-request";
 import useSWR from "swr";
 
-import { IMinimalPool } from "../types";
-import { BalancerChainName, GQL_CLIENT } from "#/api/balancer";
 import { Address, parseUnits } from "viem";
+import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
+import { IMinimalPool } from "@bleu/cow-hooks-ui";
 
 interface IQuery {
   pools: {

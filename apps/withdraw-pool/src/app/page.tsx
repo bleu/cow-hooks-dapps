@@ -6,15 +6,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { PoolBalancesPreview } from "#/components/PoolBalancePreview";
-import { PoolsDropdownMenu } from "#/components/PoolsDropdownMenu";
 import { WithdrawPctSlider } from "#/components/WithdrawPctSlider";
-import type { IMinimalPool } from "#/types";
 import { withdrawSchema } from "#/utils/schema";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
+import {
+  IMinimalPool,
+  PoolsDropdownMenu,
+  Spinner,
+  useIFrameContext,
+} from "@bleu/cow-hooks-ui";
 import { useUserPoolContext } from "#/context/userPools";
 import { useRouter } from "next/navigation";
-import { Spinner } from "#/components/Spinner";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 
 export default function Page() {
@@ -94,14 +96,15 @@ export default function Page() {
       <PoolsDropdownMenu
         onSelect={(pool: IMinimalPool) => setValue("poolId", pool.id)}
         selectedPool={selectedPool}
+        pools={pools || []}
       />
       {poolId && (
         <div className="size-full flex flex-col gap-2">
           <WithdrawPctSlider />
-          <PoolBalancesPreview label="Withdraw balance" className="bg-muted" />
+          <PoolBalancesPreview />
           <Button
             type="submit"
-            className="mt-2"
+            className="my-2"
             disabled={buttonProps.disabled}
             loading={isSubmitting || isSubmitSuccessful}
             loadingText="Creating hook..."

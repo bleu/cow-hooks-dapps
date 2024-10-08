@@ -1,6 +1,5 @@
-import { IMinimalPool } from "#/types";
 import { useCallback } from "react";
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
+import { IMinimalPool, useIFrameContext } from "@bleu/cow-hooks-ui";
 import { minimalPoolToPoolState } from "#/utils/poolDataConverter";
 import { BigNumber } from "ethers";
 import {

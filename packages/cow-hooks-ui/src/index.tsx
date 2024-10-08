@@ -15,3 +15,6 @@ export * from "./Wrapper";
 export * from "./AddressInput";
 export * from "./ButtonPrimary";
 export * from "./ClaimableAmountContainer";
+export * from "./PoolsDropdownMenu";
+export * from "./Spinner";
+export * from "./BalancesPreview";

@@ -12,7 +12,7 @@ export function WithdrawPctSlider() {
 
   const { withdrawPct } = useWatch({ control });
   return (
-    <div className="flex flex-col py-2">
+    <div className="flex flex-col p-1">
       <div className="flex flex-row gap-x-2 items-center justify-between">
         <Label className="block text-sm">Withdraw percentage</Label>
         <div className="flex gap-1">

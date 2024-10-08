@@ -1,5 +1,5 @@
-import { IMinimalPool } from "#/types";
 import { PoolState } from "@balancer/sdk";
+import { IMinimalPool } from "@bleu/cow-hooks-ui";
 
 export function minimalPoolToPoolState(pool: IMinimalPool): PoolState {
   return {

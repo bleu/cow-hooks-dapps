@@ -1,4 +1,3 @@
-import { SignatureStepsProps } from "#/types";
 import { CheckIcon } from "@radix-ui/react-icons";
 
 export function SignatureSteps({
