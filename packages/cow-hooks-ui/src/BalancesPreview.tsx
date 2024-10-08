@@ -26,17 +26,19 @@ export function BalancesPreview({
 }: {
   labels: string[];
   isLoading: boolean;
-  balancesList: IBalance[][];
+  balancesList?: IBalance[][];
 }) {
   if (isLoading) return <Spinner />;
 
   const tokenBalancesList = useMemo(
     () =>
       labels.map((label, index) =>
-        balancesList.map((balances) => balances[index])
+        balancesList?.map((balances) => balances[index])
       ),
     [balancesList, labels]
   );
+
+  if (!balancesList && isLoading) return <Spinner />;
 
   return (
     <div className="p-1 border-muted border-2 rounded-lg">
@@ -50,13 +52,16 @@ export function BalancesPreview({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {tokenBalancesList.map((balances) => (
-            <BalancePreview
-              key={`pool-balance-${balances[0].token.address}`}
-              balances={balances}
-              labels={labels}
-            />
-          ))}
+          {tokenBalancesList.map((balances) => {
+            if (!balances) return <></>;
+            return (
+              <BalancePreview
+                key={`pool-balance-${balances?.[0].token.address}`}
+                balances={balances}
+                labels={labels}
+              />
+            );
+          })}
         </TableBody>
       </Table>
     </div>

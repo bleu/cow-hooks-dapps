@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Form, Spinner } from "@bleu/ui";
+import { Button, Form } from "@bleu/ui";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useMemo } from "react";
@@ -10,6 +10,7 @@ import {
   BalancesPreview,
   IMinimalPool,
   PoolsDropdownMenu,
+  Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
@@ -86,16 +87,18 @@ export default function Page() {
         selectedPool={selectedPool}
         pools={pools || []}
       />
-      {poolId && poolBalances && (
+      {poolId && (
         <div className="size-full flex flex-col gap-2">
           <BalancesPreview
             labels={PREVIEW_LABELS}
-            balancesList={[poolBalances, poolBalances]}
+            balancesList={
+              poolBalances ? [poolBalances, poolBalances] : undefined
+            }
             isLoading={isLoading}
           />
           <Button
             type="submit"
-            className="mt-2"
+            className="my-2"
             loading={isSubmitting || isSubmitSuccessful}
             loadingText="Creating hook..."
           >
