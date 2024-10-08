@@ -54,7 +54,7 @@ export function PoolsDropdownMenu({
 
   const triggerMessage = useMemo(() => {
     if (loading) return "Loading...";
-    if (disabled) return "No pools available";
+    if (disabled) return "You don't have liquidity in a CoW AMM pool";
     return selectedPool?.symbol || "Liquidity pool";
   }, [loading, disabled, selectedPool]);
 
