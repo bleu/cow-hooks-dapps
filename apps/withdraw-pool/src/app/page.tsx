@@ -3,7 +3,7 @@
 import { Button, Form } from "@bleu/ui";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { PoolBalancesPreview } from "#/components/PoolBalancePreview";
 import { WithdrawPctSlider } from "#/components/WithdrawPctSlider";
@@ -18,6 +18,7 @@ import {
 import { useUserPoolContext } from "#/context/userPools";
 import { useRouter } from "next/navigation";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
+import { findPoolIdOnCallData } from "#/utils/decodeHookCalldata";
 
 export default function Page() {
   const { context, setHookInfo } = useIFrameContext();
@@ -42,6 +43,15 @@ export default function Page() {
   } = form;
 
   const { withdrawPct, poolId } = useWatch({ control });
+
+  useEffect(() => {
+    if (!context?.hookToEdit) return;
+    const recoveredPoolId = findPoolIdOnCallData(
+      context?.hookToEdit?.hook.callData as `0x${string}`
+    );
+    if (!recoveredPoolId) return;
+    setValue("poolId", recoveredPoolId);
+  }, [context?.hookToEdit]);
 
   const selectedPool = useMemo(
     () => pools?.find((pool) => pool.id === poolId),
