@@ -80,7 +80,7 @@ export default function Page() {
     );
 
   if (!context.account) {
-    return <span className="mt-10 text-center">Connect your wallet</span>;
+    return <span className="mt-10 text-center">Connect your wallet first</span>;
   }
 
   if (!ALL_SUPPORTED_CHAIN_IDS.includes(context.chainId)) {
@@ -105,7 +105,7 @@ export default function Page() {
           <PoolBalancesPreview />
           <Button
             type="submit"
-            className="my-2"
+            className="my-2 rounded-xl text-lg min-h-[58px]"
             disabled={buttonProps.disabled}
             loading={isSubmitting || isSubmitSuccessful}
             loadingText="Creating hook..."
