@@ -13,13 +13,9 @@ export function TokenAmount({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col items-end", className)}>
-      <span>
-        {formatNumber(balance, 4)} {token.symbol}
-      </span>
-      <i className="text-xs h-5">
-        ≈ ${fiatValue >= 0 ? formatNumber(fiatValue, 2) : "0"}
-      </i>
-    </div>
+    <span className="text-xs">
+      {formatNumber(balance, 4)} {token.symbol}{" "}
+      <i>(≈ ${fiatValue >= 0 ? formatNumber(fiatValue, 2) : "0"})</i>
+    </span>
   );
 }
