@@ -11,7 +11,7 @@ export const createVestingSchema = z.object({
   recipient: z
     .string()
     .min(1, "Address is required")
-    .refine(isAddress, "Insert a valid Ethereum address"),
+    .refine(isAddress, "Insert a valid address"),
   period: z
     .number({ message: "Invalid amount" })
     .gt(0, "Period must be greater than 0"),

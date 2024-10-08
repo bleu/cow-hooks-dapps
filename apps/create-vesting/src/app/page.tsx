@@ -7,11 +7,12 @@ import {
   ContentWrapper,
   TokenAmountInput,
   Wrapper,
+  HookDappContextAdjusted,
 } from "@bleu/cow-hooks-ui";
 import { Token } from "@uniswap/sdk-core";
 
 import { useCallback, useMemo } from "react";
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
+import { useIFrameContext, Spinner } from "@bleu/cow-hooks-ui";
 import { Form } from "@bleu/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -79,55 +80,78 @@ export default function Page() {
     [form, onSubmitCallback]
   );
 
+  if (!context)
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Spinner />
+      </div>
+    );
+
+  if (!context.account)
+    return <span className="mt-10 text-center">Connect your wallet</span>;
+
+  if (!context?.orderParams?.buyTokenAddress)
+    return (
+      <span className="mt-10 text-center">Provide a buy token in swap</span>
+    );
+
   return (
-    <>
-      {context && (
-        <Form {...form} onSubmit={onSubmit} className="contents">
-          <Wrapper>
-            <ContentWrapper>
-              <Input
-                name="recipient"
-                label="Recipient"
-                placeholder="0xabc..."
-                autoComplete="off"
-                className="h-12 p-2.5 rounded-xl bg-color-paper-darker border-none placeholder:opacity-100"
-              />
-              <br />
-              <div className="flex gap-4 w-full">
-                <PeriodWithScaleInput
-                  periodScaleOptions={periodScaleOptions}
-                  namePeriodValue="period"
-                  namePeriodScale="periodScale"
-                  type="number"
-                  step="0.0000001"
-                  label="Period"
-                  validation={{ valueAsNumber: true, required: true }}
-                  onKeyDown={(e) =>
-                    ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
-                  }
-                />
-                <TokenAmountInput
-                  name="amount"
-                  type="number"
-                  step={`0.${"0".repeat(tokenDecimals ? tokenDecimals - 1 : 8)}1`}
-                  token={token}
-                  label="Amount"
-                  placeholder="0.0"
-                  autoComplete="off"
-                  validation={{ valueAsNumber: true, required: true }}
-                  onKeyDown={(e) =>
-                    ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
-                  }
-                />
-              </div>
-              <br />
-            </ContentWrapper>
-            <ButtonPrimary type="submit">
-              <span>{context?.hookToEdit ? "Edit Hook" : "Add hook"}</span>
-            </ButtonPrimary>
-          </Wrapper>
-        </Form>
-      )}
-    </>
+    <Form {...form} onSubmit={onSubmit} className="contents">
+      <Wrapper>
+        <ContentWrapper>
+          <Input
+            name="recipient"
+            label="Recipient"
+            placeholder="0xabc..."
+            autoComplete="off"
+            className="h-12 p-2.5 rounded-xl bg-color-paper-darker border-none placeholder:opacity-100"
+          />
+          <br />
+          <div className="flex flex-col w-full xsm:gap-4 xsm:flex-row">
+            <PeriodWithScaleInput
+              periodScaleOptions={periodScaleOptions}
+              namePeriodValue="period"
+              namePeriodScale="periodScale"
+              type="number"
+              step="0.0000001"
+              label="Period"
+              validation={{ valueAsNumber: true, required: true }}
+              onKeyDown={(e) =>
+                ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
+              }
+            />
+            <br className="xsm:h-0 xsm:w-0" />
+            <TokenAmountInput
+              name="amount"
+              type="number"
+              step={`0.${"0".repeat(tokenDecimals ? tokenDecimals - 1 : 8)}1`}
+              token={token}
+              label="Amount"
+              placeholder="0.0"
+              autoComplete="off"
+              validation={{ valueAsNumber: true, required: true }}
+              onKeyDown={(e) =>
+                ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
+              }
+            />
+          </div>
+          <br />
+        </ContentWrapper>
+        <ButtonPrimary type="submit">
+          <ButtonText context={context} />
+        </ButtonPrimary>
+      </Wrapper>
+    </Form>
   );
 }
+
+const ButtonText = ({ context }: { context: HookDappContextAdjusted }) => {
+  if (context?.hookToEdit && context?.isPreHook)
+    return <span>Update Pre-hook</span>;
+  if (context?.hookToEdit && !context?.isPreHook)
+    return <span>Update Post-hook</span>;
+  if (!context?.hookToEdit && context?.isPreHook)
+    return <span>Add Pre-hook</span>;
+  if (!context?.hookToEdit && !context?.isPreHook)
+    return <span>Add Post-hook</span>;
+};

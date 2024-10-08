@@ -139,6 +139,9 @@ module.exports = {
           foreground: "var(--card-foreground)",
         },
       },
+      screens: {
+        xsm: "420px",
+      },
     },
   },
   plugins: [],

@@ -59,7 +59,7 @@ export function PeriodWithScaleInput({
           {extraLabelElement}
         </div>
       )}
-      <div className="flex items-center justify-center w-[160px] h-12 p-2.5 bg-color-paper-darker rounded-xl">
+      <div className="flex items-center justify-between w-full h-12 px-1 py-2.5 bg-color-paper-darker rounded-xl">
         <Input
           autoComplete="off"
           className={cn(
