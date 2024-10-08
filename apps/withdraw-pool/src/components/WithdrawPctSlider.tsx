@@ -15,7 +15,7 @@ export function WithdrawPctSlider() {
     <div className="flex flex-col p-1">
       <div className="flex flex-row gap-x-2 items-center justify-between">
         <Label className="block text-sm">Withdraw percentage</Label>
-        <div className="flex gap-1">
+        <div className="flex gap-1 flex-wrap">
           {[25, 50, 75, 100].map((pct) => (
             <Button
               type="button"
