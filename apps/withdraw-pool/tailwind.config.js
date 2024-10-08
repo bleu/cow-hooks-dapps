@@ -12,6 +12,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      borderWidth: {
+        1: "1px",
+      },
       colors: {
         success: "rgb(var(--success) / <alpha-value>)",
         info: "rgb(var(--info) / <alpha-value>)",
