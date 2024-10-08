@@ -53,7 +53,7 @@ export function PoolsDropdownMenu({
   }, [pools]);
 
   const triggerMessage = useMemo(() => {
-    if (loading) return "Loading pools";
+    if (loading) return "Loading...";
     if (disabled) return "No pools available";
     return selectedPool?.symbol || "Liquidity pool";
   }, [loading, disabled, selectedPool]);
