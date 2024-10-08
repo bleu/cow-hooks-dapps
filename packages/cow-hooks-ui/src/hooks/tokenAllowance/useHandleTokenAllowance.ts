@@ -3,12 +3,13 @@ import { useCallback } from "react";
 import { BigNumber, Signer } from "ethers";
 import { JsonRpcProvider } from "@ethersproject/providers";
 import {
-  generatePermitHook,
+  // generatePermitHook,
   getPermitUtilsInstance,
   getTokenPermitInfo,
   GetTokenPermitIntoResult,
   PermitInfo,
 } from "@cowprotocol/permit-utils";
+import { generatePermitHook } from "./useGeneratePermitHook";
 import { useHandleTokenApprove } from "./useHandleTokenApprove";
 import { HookDappContextAdjusted } from "../../types";
 
@@ -54,6 +55,8 @@ export function useHandleTokenAllowance({
             },
           ],
         });
+      console.log("currentAllowance", currentAllowance);
+      console.log("tokenName", tokenName);
       if (currentAllowance === undefined || !tokenName) {
         throw new Error("Token allowance not available");
       }
@@ -72,10 +75,15 @@ export function useHandleTokenAllowance({
         provider: jsonRpcProvider,
       });
 
+      console.log("permitInfo", permitInfo);
+
       if (!permitInfo || !checkIsPermitInfo(permitInfo)) {
+        console.log("calling handleTokenApprove");
         await handleTokenApprove(tokenAddress);
         return;
       }
+
+      console.log("starting dealing with permit");
 
       const eip2162Utils = getPermitUtilsInstance(
         chainId,
@@ -84,8 +92,7 @@ export function useHandleTokenAllowance({
       );
 
       const nonce = await eip2162Utils.getTokenNonce(tokenAddress, account);
-
-      return await generatePermitHook({
+      const hook = await generatePermitHook({
         chainId,
         inputToken: {
           address: tokenAddress,
@@ -97,7 +104,9 @@ export function useHandleTokenAllowance({
         eip2162Utils: eip2162Utils,
         account,
         nonce,
-      });
+      }).catch((e) => console.log("error", e));
+      console.log("hook", hook);
+      return hook;
     },
     [jsonRpcProvider, context, publicClient, spender]
   );
