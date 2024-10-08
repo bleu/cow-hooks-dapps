@@ -10,7 +10,7 @@ export function SignatureSteps({
   return (
     <div className="flex flex-col gap-2 items-center w-full h-1/2">
       <span className="text-center text-lg font-semibold">Signature Steps</span>
-      <div className="flex flex-col justify-between w-2/3 px-10 bg-muted rounded-md">
+      <div className="flex flex-col justify-between w-fit px-10 bg-muted rounded-md">
         {steps.map((step, index) => (
           <SignatureStep
             key={step.id}
@@ -36,7 +36,7 @@ function SignatureStep({
   return (
     <div key={step.id} className="flex flex-row items-center gap-2 py-2">
       <div className="inline-flex items-center justify-center w-6 h-6 border-2 border-primary rounded-full">
-        <span className="text-xs w-full text-center">{stepIndex}</span>
+        <span className="text-xs w-full text-center">{stepIndex + 1}</span>
       </div>
       <span className="text-sm">{step.label}</span>
       {stepIndex < currentStepIndex && (
