@@ -6,6 +6,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  formatNumber,
   Label,
   Popover,
   PopoverContent,
@@ -16,6 +17,9 @@ import { useMemo, useState } from "react";
 import { Spinner } from "./Spinner";
 import { IMinimalPool } from "./types";
 import { BalancerChainName } from "@bleu/utils";
+import { TokenLogo } from "./TokenLogo";
+import { Token } from "@uniswap/sdk-core";
+import { useIFrameContext } from "./context/iframe";
 
 export function PoolsDropdownMenu({
   onSelect,
@@ -44,20 +48,27 @@ export function PoolsDropdownMenu({
     return `${baseUrl}/${chainName}/cow/${selectedPool?.id.toLowerCase()}`;
   }, [selectedPool]);
 
+  const disabled = useMemo(() => {
+    return !pools || pools.length === 0;
+  }, [pools]);
+
+  const triggerMessage = useMemo(() => {
+    if (loading) return "Loading...";
+    if (disabled) return "You don't have liquidity in a CoW AMM pool";
+    return selectedPool?.symbol || "Liquidity pool";
+  }, [loading, disabled, selectedPool]);
+
   return (
     <div className="flex flex-col gap-1 py-2">
       <Label className="px-1 mb-1">Choose liquidity pool</Label>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger className="w-full bg-background">
-          <div className="flex flex-col">
-            <div
-              className="flex p-2 justify-between rounded-md space-x-1 bg-muted text-foreground items-center text-sm"
-              onClick={() => setOpen(true)}
-            >
-              {selectedPool?.symbol || "Pool to withdraw"}
-              <ChevronDownIcon className="size-4 shrink-0" />
-            </div>
-          </div>
+        <PopoverTrigger
+          className="w-full flex p-2 justify-between rounded-md space-x-1 items-center text-sm bg-background disabled:bg-foreground/10 bg-muted text-foreground rounded-md"
+          disabled={disabled}
+          onClick={() => setOpen(true)}
+        >
+          {selectedPool ? <PoolItem pool={selectedPool} /> : triggerMessage}
+          <ChevronDownIcon className="size-4" />
         </PopoverTrigger>
         <PopoverContent className="w-[440px] bg-background">
           <Command
@@ -88,7 +99,7 @@ export function PoolsDropdownMenu({
                   }}
                   className="hover:bg-primary hover:text-primary-foreground rounded-md px-2"
                 >
-                  {pool.symbol}
+                  <PoolItem pool={pool} />
                 </CommandItem>
               ))}
             </CommandList>
@@ -105,6 +116,37 @@ export function PoolsDropdownMenu({
           </a>
         )}
       </Popover>
+    </div>
+  );
+}
+
+export function PoolItem({ pool }: { pool: IMinimalPool }) {
+  const { context } = useIFrameContext();
+
+  if (!context) return null;
+
+  return (
+    <div className="flex flex-row items-center gap-1">
+      <span>{pool.symbol.slice(5)}</span>
+
+      {pool.allTokens.map((token) => {
+        const tokenObject = new Token(
+          context?.chainId,
+          token.address,
+          token.decimals,
+          token.symbol
+        );
+
+        return (
+          <TokenLogo
+            key={`${pool.id}-${token.address}`}
+            token={tokenObject}
+            width={20}
+            height={20}
+          />
+        );
+      })}
+      <i>${formatNumber(pool.userBalance.totalBalanceUsd, 2)}</i>
     </div>
   );
 }

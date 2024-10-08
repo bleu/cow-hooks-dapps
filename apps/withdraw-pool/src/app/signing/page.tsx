@@ -88,7 +88,7 @@ export default function Page() {
       hookInfo?.permitData.map((permit) => {
         return {
           label: `Approve ${permit.tokenSymbol}`,
-          description: `Approve proxy to manage your ${permit.tokenSymbol}`,
+          description: `Approve proxy to manage the token ${permit.tokenSymbol}`,
           id: `approve-${permit.tokenAddress}`,
           callback: async () => {
             await permitCallback(permit);
@@ -99,8 +99,8 @@ export default function Page() {
     return [
       ...permitSteps,
       {
-        label: "Approve hooks",
-        description: "Approve proxy to execute the hooks in behalf of you",
+        label: "Approve and add hook",
+        description: "Approve proxy to execute the hook in behalf of you",
         id: "approve-hooks",
         callback: cowShedCallback,
       },

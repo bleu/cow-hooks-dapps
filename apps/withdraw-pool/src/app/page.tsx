@@ -22,7 +22,7 @@ import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 export default function Page() {
   const { context, setHookInfo } = useIFrameContext();
   const {
-    userPoolSwr: { data: pools },
+    userPoolSwr: { data: pools, isLoading },
   } = useUserPoolContext();
 
   const form = useForm<typeof withdrawSchema._type>({
@@ -80,7 +80,7 @@ export default function Page() {
     );
 
   if (!context.account) {
-    return <span className="mt-10 text-center">Connect your wallet</span>;
+    return <span className="mt-10 text-center">Connect your wallet first</span>;
   }
 
   if (!ALL_SUPPORTED_CHAIN_IDS.includes(context.chainId)) {
@@ -97,6 +97,7 @@ export default function Page() {
         onSelect={(pool: IMinimalPool) => setValue("poolId", pool.id)}
         selectedPool={selectedPool}
         pools={pools || []}
+        loading={isLoading}
       />
       {poolId && (
         <div className="size-full flex flex-col gap-2">
@@ -104,7 +105,7 @@ export default function Page() {
           <PoolBalancesPreview />
           <Button
             type="submit"
-            className="my-2"
+            className="my-2 rounded-xl text-lg min-h-[58px]"
             disabled={buttonProps.disabled}
             loading={isSubmitting || isSubmitSuccessful}
             loadingText="Creating hook..."

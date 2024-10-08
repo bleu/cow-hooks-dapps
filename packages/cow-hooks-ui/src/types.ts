@@ -41,10 +41,13 @@ export interface IMinimalPool {
     address: Address;
     symbol: string;
     decimals: number;
+    isNested: boolean;
   }[];
+
   userBalance: {
     totalBalance: BigNumberish;
     walletBalance: BigNumberish;
+    totalBalanceUsd: number;
     stakedBalances: {
       balance: BigNumberish;
       stakingId: string;

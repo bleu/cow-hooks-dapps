@@ -33,7 +33,7 @@ export function useGetPoolWithdrawArgs(
               to: cowShedProxy,
               decimals: pool.decimals,
               amount: BigNumber.from(bptWalletAmount).toBigInt(),
-              symbol: "Pool Token",
+              symbol: pool.symbol,
             };
       return [
         transferBptArg,

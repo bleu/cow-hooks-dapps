@@ -22,17 +22,17 @@ const tokenUrlRoot =
 
 export const cowprotocolTokenLogoUrl = (
   address?: string,
-  chainId?: SupportedChainId,
+  chainId?: SupportedChainId
 ) => `${tokenUrlRoot}/${chainId}/${address}/logo.png`;
 
 export const cowTokenListLogoUrl = (
   address?: string,
-  chainId?: SupportedChainId,
+  chainId?: SupportedChainId
 ) => {
   return cowTokenList.find(
     (token) =>
       token.chainId === chainId &&
-      token.address.toLowerCase() === address?.toLowerCase(),
+      token.address.toLowerCase() === address?.toLowerCase()
   )?.logoURI;
 };
 
@@ -45,7 +45,7 @@ const chainIdToName: Record<SupportedChainId, string> = {
 
 export function trustTokenLogoUrl(
   address?: string,
-  chainId?: SupportedChainId,
+  chainId?: SupportedChainId
 ): string {
   return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainIdToName[chainId || 1]}/assets/${address}/logo.png`;
 }
@@ -61,16 +61,11 @@ export const TokenLogo = ({
 }: ImageFallbackProps) => {
   const imagesSrc = [
     cowprotocolTokenLogoUrl(token.address?.toLowerCase(), token.chainId),
-    cowprotocolTokenLogoUrl(token.address, token.chainId),
     cowprotocolTokenLogoUrl(token.address?.toLowerCase(), 1),
-    cowprotocolTokenLogoUrl(token.address, 1),
     cowTokenListLogoUrl(token.address, token.chainId),
     cowTokenListLogoUrl(token.address, 1),
-    trustTokenLogoUrl(token.address, token.chainId),
     trustTokenLogoUrl(token.address?.toLowerCase(), token.chainId),
-    trustTokenLogoUrl(token.address, token.chainId),
     trustTokenLogoUrl(token.address?.toLowerCase(), 1),
-    trustTokenLogoUrl(token.address, 1),
     FALLBACK_SRC,
   ];
   const [index, setIndex] = useState(0);

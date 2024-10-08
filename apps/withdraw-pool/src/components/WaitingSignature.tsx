@@ -26,8 +26,9 @@ export function WaitingSignature({
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="flex flex-row gap-2 items-center mb-10">
-        <span className="text-foreground text-md">{description}</span>
-        {tooltipText && <InfoTooltip text={tooltipText} />}
+        <span className="text-foreground text-lg">
+          {description} {tooltipText && <InfoTooltip text={tooltipText} />}
+        </span>
       </div>
       {isValidating && <Spinner />}
       {error && !isValidating && (
