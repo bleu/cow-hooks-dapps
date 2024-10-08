@@ -36,7 +36,7 @@ function SignatureStep({
   return (
     <div key={step.id} className="flex flex-row items-center gap-2 py-2">
       <div className="inline-flex items-center justify-center w-6 h-6 border-2 border-primary rounded-full">
-        <span className="text-xs w-full text-center">{stepIndex}</span>
+        <span className="text-xs w-full text-center">{stepIndex + 1}</span>
       </div>
       <span className="text-sm">{step.label}</span>
       {stepIndex < currentStepIndex && (

@@ -6,6 +6,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  formatNumber,
   Label,
   Popover,
   PopoverContent,
@@ -16,6 +17,9 @@ import { useMemo, useState } from "react";
 import { Spinner } from "./Spinner";
 import { IMinimalPool } from "./types";
 import { BalancerChainName } from "@bleu/utils";
+import { TokenLogo } from "./TokenLogo";
+import { Token } from "@uniswap/sdk-core";
+import { useIFrameContext } from "./context/iframe";
 
 export function PoolsDropdownMenu({
   onSelect,
@@ -51,7 +55,7 @@ export function PoolsDropdownMenu({
   const triggerMessage = useMemo(() => {
     if (loading) return "Loading pools";
     if (disabled) return "No pools available";
-    return selectedPool?.symbol || "Pool to withdraw";
+    return selectedPool?.symbol || "Liquidity pool";
   }, [loading, disabled, selectedPool]);
 
   return (
@@ -63,8 +67,8 @@ export function PoolsDropdownMenu({
           disabled={disabled}
           onClick={() => setOpen(true)}
         >
-          {triggerMessage}
-          <ChevronDownIcon className="size-4 shrink-0" />
+          {selectedPool ? <PoolItem pool={selectedPool} /> : triggerMessage}
+          <ChevronDownIcon className="size-4" />
         </PopoverTrigger>
         <PopoverContent className="w-[440px] bg-background">
           <Command
@@ -95,7 +99,7 @@ export function PoolsDropdownMenu({
                   }}
                   className="hover:bg-primary hover:text-primary-foreground rounded-md px-2"
                 >
-                  {pool.symbol}
+                  <PoolItem pool={pool} />
                 </CommandItem>
               ))}
             </CommandList>
@@ -112,6 +116,37 @@ export function PoolsDropdownMenu({
           </a>
         )}
       </Popover>
+    </div>
+  );
+}
+
+export function PoolItem({ pool }: { pool: IMinimalPool }) {
+  const { context } = useIFrameContext();
+
+  if (!context) return null;
+
+  return (
+    <div className="flex flex-row items-center gap-1">
+      <span>{pool.symbol.slice(5)}</span>
+
+      {pool.allTokens.map((token) => {
+        const tokenObject = new Token(
+          context?.chainId,
+          token.address,
+          token.decimals,
+          token.symbol
+        );
+
+        return (
+          <TokenLogo
+            key={`${pool.id}-${token.address}`}
+            token={tokenObject}
+            width={20}
+            height={20}
+          />
+        );
+      })}
+      <i>${formatNumber(pool.userBalance.totalBalanceUsd, 2)}</i>
     </div>
   );
 }

@@ -18,7 +18,7 @@ export function TokenAmount({
         {formatNumber(balance, 4)} {token.symbol}
       </span>
       <i className="text-xs h-5">
-        ≈ {fiatValue >= 0 && `$${formatNumber(fiatValue, 2)}`}
+        ≈ ${fiatValue >= 0 ? formatNumber(fiatValue, 2) : "0"}
       </i>
     </div>
   );

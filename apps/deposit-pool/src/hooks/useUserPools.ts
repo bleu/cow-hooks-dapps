@@ -27,10 +27,12 @@ interface IQuery {
       address: Address;
       symbol: string;
       decimals: number;
+      isNested: boolean;
     }[];
     userBalance: {
       totalBalance: string;
       walletBalance: string;
+      totalBalanceUsd: number;
       stakedBalances: {
         balance: string;
         stakingId: string;
@@ -72,10 +74,12 @@ const USER_POOLS_QUERY = gql`
         address
         symbol
         decimals
+        isNested
       }
       userBalance {
         totalBalance
         walletBalance
+        totalBalanceUsd
         stakedBalances {
           balance
           stakingId
@@ -104,6 +108,7 @@ export function useUserPools(chainId?: SupportedChainId, user?: string) {
           return result.pools.map((pool) => ({
             ...pool,
             userBalance: {
+              ...pool.userBalance,
               walletBalance: parseUnits(
                 pool.userBalance.walletBalance,
                 pool.decimals
