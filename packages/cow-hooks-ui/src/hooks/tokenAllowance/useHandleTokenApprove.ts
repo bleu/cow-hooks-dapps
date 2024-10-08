@@ -7,7 +7,7 @@ import { useCallback } from "react";
 import type { Address } from "viem";
 import { MAX_UINT256 } from "@balancer/sdk";
 
-export function useHandleTokenApprove({
+export function useHandleTokenMaxApprove({
   signer,
   spender,
 }: {
@@ -16,34 +16,50 @@ export function useHandleTokenApprove({
 }) {
   return useCallback(
     async (tokenAddress: Address) => {
-      if (!signer || !spender) {
-        throw new Error("Missing context");
-      }
-
-      const approveArgs = {
-        type: TRANSACTION_TYPES.ERC20_APPROVE,
-        token: tokenAddress,
-        spender: spender,
+      handleTokenApprove({
+        signer,
+        spender,
+        tokenAddress,
         amount: MAX_UINT256,
-      } as const;
-      const txData = await TransactionFactory.createRawTx(
-        approveArgs.type,
-        approveArgs
-      );
-
-      const transaction = await signer.sendTransaction({
-        to: tokenAddress,
-        value: "0",
-        data: txData.callData,
       });
-
-      console.log(transaction);
-
-      const receipt = await transaction.wait();
-
-      console.log(receipt);
-      return receipt;
     },
     [signer, spender]
   );
+}
+
+export async function handleTokenApprove({
+  signer,
+  spender,
+  tokenAddress,
+  amount,
+}: {
+  signer: Signer | undefined;
+  spender: Address | undefined;
+  tokenAddress: Address;
+  amount: bigint;
+}) {
+  if (!signer || !spender) {
+    throw new Error("Missing context");
+  }
+
+  const approveArgs = {
+    type: TRANSACTION_TYPES.ERC20_APPROVE,
+    token: tokenAddress,
+    spender: spender,
+    amount,
+  } as const;
+  const txData = await TransactionFactory.createRawTx(
+    approveArgs.type,
+    approveArgs
+  );
+
+  const transaction = await signer.sendTransaction({
+    to: tokenAddress,
+    value: "0",
+    data: txData.callData,
+  });
+
+  const receipt = await transaction.wait();
+
+  return receipt;
 }

@@ -23,15 +23,14 @@ import { useIFrameContext } from "./context/iframe";
 
 export function PoolsDropdownMenu({
   onSelect,
-  selectedPool,
   pools,
   loading,
 }: {
   onSelect: (pool: IMinimalPool) => void;
-  selectedPool?: IMinimalPool;
   pools: IMinimalPool[];
   loading?: boolean;
 }) {
+  const [selectedPool, setSelectedPool] = useState<IMinimalPool>();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -83,7 +82,6 @@ export function PoolsDropdownMenu({
           >
             <CommandInput className="bg-background text-foreground pb-2" />
             <CommandList className="w-full">
-              {loading && <Spinner />}
               <CommandEmpty className="w-full">No results found</CommandEmpty>
               {pools?.map((pool) => (
                 <CommandItem
@@ -96,6 +94,7 @@ export function PoolsDropdownMenu({
                   onSelect={() => {
                     setOpen(false);
                     onSelect(pool);
+                    setSelectedPool(pool);
                   }}
                   className="hover:bg-primary hover:text-primary-foreground rounded-md px-2"
                 >
@@ -111,7 +110,7 @@ export function PoolsDropdownMenu({
             href={poolLink}
             target="_blank"
           >
-            Check the pool details
+            Check pool details
             <ArrowTopRightIcon className="size-4 shrink-0" />
           </a>
         )}
