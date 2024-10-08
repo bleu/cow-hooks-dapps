@@ -100,6 +100,9 @@ module.exports = {
         "animation-duration": "var(--cow-animation-duration)",
         "animation-duration-slow": "var(--cow-animation-duration-slow)",
       },
+      fontFamily: {
+        "inter-sans": '"Inter var", sans-serif',
+      },
     },
   },
   plugins: [],

@@ -87,6 +87,7 @@ export const useClaimVestingData = ({
     errorVesting,
     errorToken,
     errorGasLimit,
+    claimableAmountWei,
   });
   const formattedClaimableAmount =
     recipient === account && claimableAmountWei && decimals
@@ -137,6 +138,7 @@ function getErrorMessage({
   debouncedAddress,
   errorToken,
   errorGasLimit,
+  claimableAmountWei,
 }: {
   account: string | undefined;
   recipient: string | undefined;
@@ -144,6 +146,7 @@ function getErrorMessage({
   errorVesting: Error;
   errorToken: Error;
   errorGasLimit: Error;
+  claimableAmountWei: bigint | undefined;
 }) {
   if (!(isAddress(debouncedAddress) || debouncedAddress === ""))
     return "Insert a valid address";
@@ -152,6 +155,9 @@ function getErrorMessage({
 
   if (recipient && account !== recipient)
     return "You are not the contract recipient";
+
+  if (recipient && account === recipient && claimableAmountWei === BigInt(0))
+    return "You have already claimed your funds";
 
   if (errorVesting) return errorVesting.message;
 
