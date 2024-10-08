@@ -1,5 +1,4 @@
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
-import { IMinimalPool } from "#/types";
+import { IMinimalPool, useIFrameContext } from "@bleu/cow-hooks-ui";
 import {
   GaugeClaimRewardsArgs,
   GaugeWithdrawArgs,

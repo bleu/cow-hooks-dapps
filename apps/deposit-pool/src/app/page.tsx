@@ -5,35 +5,30 @@ import { Button, Form } from "@bleu/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { PoolBalancesPreview } from "#/components/PoolBalancePreview";
-import { WithdrawPctSlider } from "#/components/WithdrawPctSlider";
-import { withdrawSchema } from "#/utils/schema";
-import { useGetHookInfo } from "#/hooks/useGetHookInfo";
+import { depositSchema } from "#/utils/schema";
 import {
+  BalancesPreview,
   IMinimalPool,
   PoolsDropdownMenu,
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
-import { useUserPoolContext } from "#/context/userPools";
-import { useRouter } from "next/navigation";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
+import { useUserPools } from "#/hooks/useUserPools";
+import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
+
+const PREVIEW_LABELS = ["Pool Balance", "Deposit"];
 
 export default function Page() {
-  const { context, setHookInfo } = useIFrameContext();
-  const {
-    userPoolSwr: { data: pools },
-  } = useUserPoolContext();
+  const { context } = useIFrameContext();
+  const { data: pools } = useUserPools(context?.chainId, context?.account);
 
-  const form = useForm<typeof withdrawSchema._type>({
-    resolver: zodResolver(withdrawSchema),
+  const form = useForm<typeof depositSchema._type>({
+    resolver: zodResolver(depositSchema),
     defaultValues: {
       poolId: "",
-      withdrawPct: 100,
     },
   });
-
-  const router = useRouter();
 
   const {
     setValue,
@@ -41,36 +36,30 @@ export default function Page() {
     formState: { isSubmitting, isSubmitSuccessful },
   } = form;
 
-  const { withdrawPct, poolId } = useWatch({ control });
+  const { poolId } = useWatch({ control });
 
   const selectedPool = useMemo(
     () => pools?.find((pool) => pool.id === poolId),
     [pools, poolId]
   );
 
-  const getHooksTransactions = useGetHookInfo(selectedPool);
-
-  const buttonProps = useMemo(() => {
-    if (!withdrawPct || Number(withdrawPct) === 0)
-      return { disabled: true, message: "Define percentage" };
-    return { disabled: false, message: "Add pre-hook" };
-  }, [withdrawPct, poolId]);
-
   const onSubmitCallback = useCallback(
-    async (data: typeof withdrawSchema._type) => {
-      if (!selectedPool || !context?.account) return;
-      const hookInfo = await getHooksTransactions(data.withdrawPct);
-      if (!hookInfo) return;
-      setHookInfo(hookInfo);
-      router.push("/signing");
+    async (data: typeof depositSchema._type) => {
+      console.log(data);
     },
-    [selectedPool, context?.account, getHooksTransactions, setHookInfo, router]
+    []
   );
 
   const onSubmit = useMemo(
     () => form.handleSubmit(onSubmitCallback),
     [form, onSubmitCallback]
   );
+
+  const { data: poolBalances, isLoading } = useUserPoolBalance({
+    poolId,
+    user: context?.account,
+    chainId: context?.chainId,
+  });
 
   if (!context)
     return (
@@ -100,16 +89,20 @@ export default function Page() {
       />
       {poolId && (
         <div className="size-full flex flex-col gap-2">
-          <WithdrawPctSlider />
-          <PoolBalancesPreview />
+          <BalancesPreview
+            labels={PREVIEW_LABELS}
+            balancesList={
+              poolBalances ? [poolBalances, poolBalances] : undefined
+            }
+            isLoading={isLoading}
+          />
           <Button
             type="submit"
             className="my-2"
-            disabled={buttonProps.disabled}
             loading={isSubmitting || isSubmitSuccessful}
             loadingText="Creating hook..."
           >
-            {buttonProps.message}
+            Add post-hook
           </Button>
         </div>
       )}

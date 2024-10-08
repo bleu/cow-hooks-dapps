@@ -1,11 +1,13 @@
+// TODO: Replace this with right api call
+
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 
 import { gql } from "graphql-request";
 import useSWR from "swr";
 
 import { Address, parseUnits } from "viem";
-import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
 import { IMinimalPool } from "@bleu/cow-hooks-ui";
+import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
 
 interface IQuery {
   pools: {
@@ -87,6 +89,7 @@ export function useUserPools(chainId?: SupportedChainId, user?: string) {
   return useSWR(
     [chainId, user],
     async ([chainId, user]): Promise<IMinimalPool[]> => {
+      console.log({ chainId, user });
       if (!user || !chainId) return [];
       const chainName = BalancerChainName[chainId];
       return await GQL_CLIENT[chainId]

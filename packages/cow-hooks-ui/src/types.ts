@@ -2,6 +2,7 @@ import { BigNumberish } from "ethers";
 import { Address } from "viem";
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { HookDappContext } from "@cowprotocol/hook-dapp-lib";
+import { Token } from "@uniswap/sdk-core";
 
 export interface BaseTransaction {
   to: string;
@@ -21,4 +22,38 @@ export interface IHooksInfo {
 export interface HookDappContextAdjusted extends HookDappContext {
   account?: Address;
   chainId: SupportedChainId;
+}
+
+export interface IMinimalPool {
+  id: `0x${string}`;
+  chain: string;
+  decimals: number;
+  symbol: string;
+  address: Address;
+  type: string;
+  protocolVersion: 1 | 2 | 3;
+  dynamicData: {
+    totalLiquidity: string;
+    volume24h: string;
+    totalShares: BigNumberish;
+  };
+  allTokens: {
+    address: Address;
+    symbol: string;
+    decimals: number;
+  }[];
+  userBalance: {
+    totalBalance: BigNumberish;
+    walletBalance: BigNumberish;
+    stakedBalances: {
+      balance: BigNumberish;
+      stakingId: string;
+    }[];
+  };
+}
+
+export interface IBalance {
+  token: Token;
+  balance: BigNumberish;
+  fiatAmount: number;
 }

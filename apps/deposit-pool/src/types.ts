@@ -1,13 +1,6 @@
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { HookDappContext } from "@cowprotocol/hook-dapp-lib";
+import type { Token } from "@uniswap/sdk-core";
 import { BigNumberish } from "ethers";
-import { Address } from "viem";
 import { BaseTransaction } from "@bleu/cow-hooks-ui";
-
-export interface HookDappContextAdjusted extends HookDappContext {
-  account?: Address;
-  chainId: SupportedChainId;
-}
 
 export interface SignatureStepsProps {
   callback: () => Promise<void>;

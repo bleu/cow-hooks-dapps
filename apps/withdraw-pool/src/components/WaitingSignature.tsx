@@ -3,8 +3,7 @@
 import { SignatureStepsProps } from "#/types";
 import { Button } from "@bleu/ui";
 import useSWR from "swr";
-import { Spinner } from "./Spinner";
-import { InfoTooltip } from "@bleu/cow-hooks-ui";
+import { InfoTooltip, Spinner } from "@bleu/cow-hooks-ui";
 
 export function WaitingSignature({
   callback,
