@@ -47,7 +47,7 @@ export function PoolsDropdownMenu({
 
   return (
     <div className="flex flex-col gap-1 py-2">
-      <Label className="px-1">Choose liquidity pool</Label>
+      <Label className="px-1 mb-1">Choose liquidity pool</Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger className="w-full bg-background">
           <div className="flex flex-col">
