@@ -54,15 +54,11 @@ export function useHandleTokenAllowance({
             },
           ],
         });
-      console.log("currentAllowance", currentAllowance);
-      console.log("tokenName", tokenName);
-      console.log({ amount });
       if (currentAllowance === undefined || !tokenName) {
         throw new Error("Token allowance not available");
       }
 
       if (amount <= BigNumber.from(currentAllowance)) {
-        console.log("aqui");
         // amount is less than or equal to current allowance so no need to approve
         return;
       }
@@ -75,7 +71,6 @@ export function useHandleTokenAllowance({
           try {
             // Request account access
             await window.ethereum.request({ method: "eth_requestAccounts" });
-            console.log("Wallet connected");
           } catch (error) {
             console.error("User denied account access");
           }
@@ -91,18 +86,12 @@ export function useHandleTokenAllowance({
         tokenAddress,
         chainId,
         provider: jsonRpcProvider,
-        // provider: web3Provider,
       });
 
-      console.log("permitInfo", permitInfo);
-
       if (!permitInfo || !checkIsPermitInfo(permitInfo)) {
-        console.log("calling handleTokenApprove");
         await handleTokenApprove(tokenAddress);
         return;
       }
-
-      console.log("starting dealing with permit");
 
       const eip2162Utils = getPermitUtilsInstance(
         chainId,
@@ -124,7 +113,7 @@ export function useHandleTokenAllowance({
         eip2162Utils: eip2162Utils,
         account,
         nonce,
-      }).catch((e) => console.log("error", e));
+      });
       if (!hook) throw new Error("Couldn't build hook");
       return hook;
     },

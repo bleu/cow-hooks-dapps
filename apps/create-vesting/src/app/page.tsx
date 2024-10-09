@@ -62,7 +62,6 @@ export default function Page() {
   const onSubmitCallback = useCallback(
     async (data: CreateVestingFormData) => {
       if (!context || !token || !vestingEscrowFactoryAddress) return;
-      console.log("data", data);
       const hookInfo = await getHooksTransactions({
         token,
         vestingEscrowFactoryAddress,
