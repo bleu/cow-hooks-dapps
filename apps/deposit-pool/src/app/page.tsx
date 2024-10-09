@@ -8,20 +8,24 @@ import { useForm, useWatch } from "react-hook-form";
 import { depositSchema } from "#/utils/schema";
 import {
   BalancesPreview,
-  IMinimalPool,
+  IPool,
   PoolsDropdownMenu,
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import { useUserPools } from "#/hooks/useUserPools";
-import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
+import { useTokenPools } from "#/hooks/useTokenPools";
+import { usePoolBalance } from "#/hooks/usePoolBalance";
+import { DropdownPoolComponent } from "#/components/DropdownPoolComponent";
 
 const PREVIEW_LABELS = ["Pool Balance", "Deposit"];
 
 export default function Page() {
   const { context } = useIFrameContext();
-  const { data: pools } = useUserPools(context?.chainId, context?.account);
+  const { data: pools, isLoading: isPoolsLoading } = useTokenPools(
+    context?.chainId,
+    context?.orderParams?.buyTokenAddress
+  );
 
   const form = useForm<typeof depositSchema._type>({
     resolver: zodResolver(depositSchema),
@@ -38,11 +42,6 @@ export default function Page() {
 
   const { poolId } = useWatch({ control });
 
-  const selectedPool = useMemo(
-    () => pools?.find((pool) => pool.id === poolId),
-    [pools, poolId]
-  );
-
   const onSubmitCallback = useCallback(
     async (data: typeof depositSchema._type) => {
       console.log(data);
@@ -55,9 +54,8 @@ export default function Page() {
     [form, onSubmitCallback]
   );
 
-  const { data: poolBalances, isLoading } = useUserPoolBalance({
+  const { data: poolBalances, isLoading: isBalanceLoading } = usePoolBalance({
     poolId,
-    user: context?.account,
     chainId: context?.chainId,
   });
 
@@ -76,6 +74,16 @@ export default function Page() {
     return <span className="mt-10 text-center">Unsupported chain</span>;
   }
 
+  console.log(context.orderParams);
+
+  if (!context?.orderParams?.buyTokenAddress) {
+    return (
+      <div className="w-full text-center mt-10 p-2">
+        <span>Please specify your swap order before proceeding</span>
+      </div>
+    );
+  }
+
   return (
     <Form
       {...form}
@@ -83,9 +91,11 @@ export default function Page() {
       className="w-full flex flex-col gap-1 py-1 px-4"
     >
       <PoolsDropdownMenu
-        onSelect={(pool: IMinimalPool) => setValue("poolId", pool.id)}
-        selectedPool={selectedPool}
+        onSelect={(pool: IPool) => setValue("poolId", pool.id)}
+        loading={isPoolsLoading}
+        PoolComponent={DropdownPoolComponent}
         pools={pools || []}
+        poolsEmptyMessage="None CoW pool with the buy token was found"
       />
       {poolId && (
         <div className="size-full flex flex-col gap-2">
@@ -94,11 +104,11 @@ export default function Page() {
             balancesList={
               poolBalances ? [poolBalances, poolBalances] : undefined
             }
-            isLoading={isLoading}
+            isLoading={isBalanceLoading}
           />
           <Button
             type="submit"
-            className="my-2"
+            className="my-2 rounded-xl text-lg min-h-[58px]"
             loading={isSubmitting || isSubmitSuccessful}
             loadingText="Creating hook..."
           >

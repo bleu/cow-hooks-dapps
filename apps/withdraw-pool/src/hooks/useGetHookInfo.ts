@@ -7,9 +7,9 @@ import {
   TRANSACTION_TYPES,
   TransactionFactory,
 } from "@bleu/utils/transactionFactory";
-import { IMinimalPool } from "@bleu/cow-hooks-ui";
+import { IPool } from "@bleu/cow-hooks-ui";
 
-export function useGetHookInfo(pool?: IMinimalPool) {
+export function useGetHookInfo(pool?: IPool) {
   const getPoolWithdrawArgs = useGetPoolWithdrawArgs(pool);
   const getBalancerGaugeArgs = useGetBalancerGaugeArgs(pool);
 

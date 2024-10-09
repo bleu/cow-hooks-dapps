@@ -14,23 +14,23 @@ import {
 } from "@bleu/ui";
 import { ArrowTopRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
-import { Spinner } from "./Spinner";
-import { IMinimalPool } from "./types";
+import { IPool } from "./types";
 import { BalancerChainName } from "@bleu/utils";
-import { TokenLogo } from "./TokenLogo";
-import { Token } from "@uniswap/sdk-core";
-import { useIFrameContext } from "./context/iframe";
 
 export function PoolsDropdownMenu({
   onSelect,
   pools,
+  PoolComponent,
   loading,
+  poolsEmptyMessage,
 }: {
-  onSelect: (pool: IMinimalPool) => void;
-  pools: IMinimalPool[];
+  onSelect: (pool: IPool) => void;
+  pools: IPool[];
   loading?: boolean;
+  PoolComponent: React.ComponentType<{ pool: IPool }>;
+  poolsEmptyMessage: string;
 }) {
-  const [selectedPool, setSelectedPool] = useState<IMinimalPool>();
+  const [selectedPool, setSelectedPool] = useState<IPool>();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -53,7 +53,7 @@ export function PoolsDropdownMenu({
 
   const triggerMessage = useMemo(() => {
     if (loading) return "Loading...";
-    if (disabled) return "You don't have liquidity in a CoW AMM pool";
+    if (disabled) return poolsEmptyMessage;
     return selectedPool?.symbol || "Liquidity pool";
   }, [loading, disabled, selectedPool]);
 
@@ -66,10 +66,14 @@ export function PoolsDropdownMenu({
           disabled={disabled}
           onClick={() => setOpen(true)}
         >
-          {selectedPool ? <PoolItem pool={selectedPool} /> : triggerMessage}
+          {selectedPool ? (
+            <PoolComponent pool={selectedPool} />
+          ) : (
+            triggerMessage
+          )}
           <ChevronDownIcon className="size-4" />
         </PopoverTrigger>
-        <PopoverContent className="w-[440px] bg-background">
+        <PopoverContent className="w-[440px] max-h-[250px] overflow-y-auto bg-background">
           <Command
             className="w-full"
             filter={(value: string, search: string) => {
@@ -98,7 +102,7 @@ export function PoolsDropdownMenu({
                   }}
                   className="hover:bg-primary hover:text-primary-foreground rounded-md px-2"
                 >
-                  <PoolItem pool={pool} />
+                  <PoolComponent pool={pool} />
                 </CommandItem>
               ))}
             </CommandList>
@@ -115,37 +119,6 @@ export function PoolsDropdownMenu({
           </a>
         )}
       </Popover>
-    </div>
-  );
-}
-
-export function PoolItem({ pool }: { pool: IMinimalPool }) {
-  const { context } = useIFrameContext();
-
-  if (!context) return null;
-
-  return (
-    <div className="flex flex-row items-center gap-1">
-      <span>{pool.symbol.slice(5)}</span>
-
-      {pool.allTokens.map((token) => {
-        const tokenObject = new Token(
-          context?.chainId,
-          token.address,
-          token.decimals,
-          token.symbol
-        );
-
-        return (
-          <TokenLogo
-            key={`${pool.id}-${token.address}`}
-            token={tokenObject}
-            width={20}
-            height={20}
-          />
-        );
-      })}
-      <i>${formatNumber(pool.userBalance.totalBalanceUsd, 2)}</i>
     </div>
   );
 }

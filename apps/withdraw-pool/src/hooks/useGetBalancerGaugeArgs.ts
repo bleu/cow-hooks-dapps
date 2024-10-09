@@ -1,4 +1,4 @@
-import { IMinimalPool, useIFrameContext } from "@bleu/cow-hooks-ui";
+import { IPool, useIFrameContext } from "@bleu/cow-hooks-ui";
 import {
   GaugeClaimRewardsArgs,
   GaugeWithdrawArgs,
@@ -59,7 +59,7 @@ export function getSingleBalancerGaugeArgs({
 }
 
 export function useGetBalancerGaugeArgs(
-  poolData?: IMinimalPool
+  poolData?: IPool
 ): (
   bptAmount: BigNumber
 ) => (ERC20TransferFromArgs | GaugeClaimRewardsArgs | GaugeWithdrawArgs)[] {

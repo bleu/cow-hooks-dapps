@@ -1,7 +1,7 @@
 import { PoolState } from "@balancer/sdk";
-import { IMinimalPool } from "@bleu/cow-hooks-ui";
+import { IPool } from "@bleu/cow-hooks-ui";
 
-export function minimalPoolToPoolState(pool: IMinimalPool): PoolState {
+export function minimalPoolToPoolState(pool: IPool): PoolState {
   return {
     id: pool.id,
     protocolVersion: pool.protocolVersion,

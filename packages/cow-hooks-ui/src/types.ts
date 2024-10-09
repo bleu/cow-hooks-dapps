@@ -24,7 +24,7 @@ export interface HookDappContextAdjusted extends HookDappContext {
   chainId: SupportedChainId;
 }
 
-export interface IMinimalPool {
+export interface IPool {
   id: `0x${string}`;
   chain: string;
   decimals: number;
@@ -33,6 +33,10 @@ export interface IMinimalPool {
   type: string;
   protocolVersion: 1 | 2 | 3;
   dynamicData: {
+    aprItems: {
+      apr: number;
+      id: string;
+    }[];
     totalLiquidity: string;
     volume24h: string;
     totalShares: BigNumberish;
@@ -42,6 +46,7 @@ export interface IMinimalPool {
     symbol: string;
     decimals: number;
     isNested: boolean;
+    weight: number;
   }[];
 
   userBalance: {

@@ -1,13 +1,9 @@
-// TODO: Replace this with right api call
-
+import { IPool } from "#/types";
+import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
-
 import { gql } from "graphql-request";
 import useSWR from "swr";
-
 import { Address, parseUnits } from "viem";
-import { IMinimalPool } from "@bleu/cow-hooks-ui";
-import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
 
 interface IQuery {
   pools: {
@@ -19,6 +15,10 @@ interface IQuery {
     symbol: string;
     protocolVersion: 1 | 2 | 3;
     dynamicData: {
+      aprItems: {
+        apr: number;
+        id: string;
+      }[];
       totalLiquidity: string;
       volume24h: string;
       totalShares: string;
@@ -28,6 +28,7 @@ interface IQuery {
       symbol: string;
       decimals: number;
       isNested: boolean;
+      weight: number;
     }[];
     userBalance: {
       totalBalance: string;
@@ -66,6 +67,10 @@ const USER_POOLS_QUERY = gql`
       type
       protocolVersion
       dynamicData {
+        aprItems {
+          apr
+          id
+        }
         totalLiquidity
         volume24h
         totalShares
@@ -75,6 +80,7 @@ const USER_POOLS_QUERY = gql`
         symbol
         decimals
         isNested
+        weight
       }
       userBalance {
         totalBalance
@@ -89,20 +95,29 @@ const USER_POOLS_QUERY = gql`
   }
 `;
 
-export function useUserPools(chainId?: SupportedChainId, user?: string) {
+interface IGetPoolsWhere {
+  userAddress?: Address;
+  tokensIn?: Address[];
+  poolTypeIn: string[];
+}
+
+export function usePools(
+  where: IGetPoolsWhere,
+  chainId?: SupportedChainId,
+  orderBy?: string
+) {
   return useSWR(
-    [chainId, user],
-    async ([chainId, user]): Promise<IMinimalPool[]> => {
-      console.log({ chainId, user });
-      if (!user || !chainId) return [];
+    [where, chainId],
+    async ([where, chainId]): Promise<IPool[]> => {
+      if (!chainId) return [];
       const chainName = BalancerChainName[chainId];
       return await GQL_CLIENT[chainId]
         .request<IQuery>(USER_POOLS_QUERY, {
           where: {
-            userAddress: user,
+            ...where,
             chainIn: [chainName],
-            poolTypeIn: ["COW_AMM"],
           },
+          orderBy,
         })
         .then((result) => {
           return result.pools.map((pool) => ({

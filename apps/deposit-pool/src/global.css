@@ -74,7 +74,7 @@ div[data-rk] {
     --border: var(--cow-color-border);
     --input: var(--cow-color-paper);
     --primary: var(--cow-color-primary);
-    --primary-foreground: var(--cow-color-white);
+    --primary-foreground: var(--cow-color-button-text);
     --secondary: var(--cow-color-secondary);
     --secondary-foreground: var(--cow-color-secondary-text);
     --destructive: var(--cow-color-danger);

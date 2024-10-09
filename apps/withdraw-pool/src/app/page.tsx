@@ -10,7 +10,7 @@ import { WithdrawPctSlider } from "#/components/WithdrawPctSlider";
 import { withdrawSchema } from "#/utils/schema";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 import {
-  IMinimalPool,
+  IPool,
   PoolsDropdownMenu,
   Spinner,
   useIFrameContext,
@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import { findPoolIdOnCallData } from "#/utils/decodeHookCalldata";
 import { SubmitButton } from "#/components/SubmitButton";
+import { DropdownPoolComponent } from "#/components/DropdownPoolComponent";
 
 export default function Page() {
   const { context, setHookInfo } = useIFrameContext();
@@ -94,9 +95,11 @@ export default function Page() {
       className="w-full flex flex-col gap-1 py-1 px-4"
     >
       <PoolsDropdownMenu
-        onSelect={(pool: IMinimalPool) => setValue("poolId", pool.id)}
+        onSelect={(pool: IPool) => setValue("poolId", pool.id)}
         pools={pools || []}
         loading={isLoading}
+        PoolComponent={DropdownPoolComponent}
+        poolsEmptyMessage="You don't have liquidity in a CoW AMM pool"
       />
       {poolId && (
         <div className="size-full flex flex-col gap-2">
