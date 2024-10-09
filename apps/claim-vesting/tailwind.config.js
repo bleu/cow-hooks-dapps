@@ -103,6 +103,9 @@ module.exports = {
       fontFamily: {
         "inter-sans": '"Inter var", sans-serif',
       },
+      screens: {
+        xsm: "420px",
+      },
     },
   },
   plugins: [],
