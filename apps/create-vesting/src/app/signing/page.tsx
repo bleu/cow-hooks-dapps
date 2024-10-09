@@ -51,10 +51,6 @@ export default function Page() {
     if (!cowShedSignature || !hookInfo || !cowShed) return;
 
     const txs = [...permitTxs, ...hookInfo.txs];
-    console.log("txs to be signed");
-    console.log(txs);
-    console.log("permit txs");
-    console.log(permitTxs);
 
     const cowShedCall = await cowShedSignature(txs);
     if (!cowShedCall) throw new Error("Error signing hooks");
@@ -74,8 +70,6 @@ export default function Page() {
         BigNumber.from(permit.amount),
         permit.tokenAddress as Address
       );
-
-      console.log({ permitData });
 
       if (permitData) {
         setPermitTxs((prev) => [

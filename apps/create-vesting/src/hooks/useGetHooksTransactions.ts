@@ -9,6 +9,8 @@ import { scaleToSecondsMapping } from "#/utils/scaleToSecondsMapping";
 import { createVestingSchema } from "#/utils/schema";
 import { Token } from "@uniswap/sdk-core";
 
+import { isERC20Permit } from "#/utils/isERC20Permit";
+
 interface GetHooksTransactionsParams {
   token: Token;
   vestingEscrowFactoryAddress: Address;
@@ -16,7 +18,7 @@ interface GetHooksTransactionsParams {
 }
 
 export function useGetHooksTransactions() {
-  const { context, cowShedProxy } = useIFrameContext();
+  const { context, cowShedProxy, jsonRpcProvider } = useIFrameContext();
 
   return useCallback(
     async (
@@ -38,24 +40,38 @@ export function useGetHooksTransactions() {
       const tokenAddress = token.address as Address;
       const tokenSymbol = token.symbol ?? "";
 
-      console.log("in useGetHooksTransactions");
-      console.log({ tokenAddress });
-      console.log({ context });
-      console.log({ cowShedProxy });
+      const isTokenERC20Permit =
+        jsonRpcProvider && (await isERC20Permit(tokenAddress, jsonRpcProvider));
+
+      const transferFromTx = isTokenERC20Permit
+        ? // token is permittable
+          TransactionFactory.createRawTx(
+            TRANSACTION_TYPES.ERC20PERMIT_TRANSFER_FROM,
+            {
+              type: TRANSACTION_TYPES.ERC20PERMIT_TRANSFER_FROM,
+              token: tokenAddress,
+              from: context?.account,
+              to: cowShedProxy,
+              amount: amountWei,
+              symbol: tokenSymbol,
+            }
+          )
+        : // token is not permittable
+          TransactionFactory.createRawTx(
+            TRANSACTION_TYPES.ERC20_TRANSFER_FROM,
+            {
+              type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM,
+              token: tokenAddress,
+              from: context?.account,
+              to: cowShedProxy,
+              amount: amountWei,
+              symbol: tokenSymbol,
+            }
+          );
 
       const txs = await Promise.all([
         // Transfer to proxy
-        TransactionFactory.createRawTx(
-          TRANSACTION_TYPES.ERC20PERMIT_TRANSFER_FROM,
-          {
-            type: TRANSACTION_TYPES.ERC20PERMIT_TRANSFER_FROM,
-            token: tokenAddress,
-            from: context?.account,
-            to: cowShedProxy,
-            amount: amountWei,
-            symbol: tokenSymbol,
-          }
-        ),
+        transferFromTx,
         // Proxy approves Vesting Escrow Factory
         TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
           type: TRANSACTION_TYPES.ERC20_APPROVE,
