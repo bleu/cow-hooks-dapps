@@ -115,6 +115,7 @@ export function useHandleTokenAllowance({
         nonce,
       });
       if (!hook) throw new Error("Couldn't build hook");
+      console.log(hook);
       return hook;
     },
     [jsonRpcProvider, context, publicClient, spender]

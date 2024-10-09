@@ -38,16 +38,24 @@ export function useGetHooksTransactions() {
       const tokenAddress = token.address as Address;
       const tokenSymbol = token.symbol ?? "";
 
+      console.log("in useGetHooksTransactions");
+      console.log({ tokenAddress });
+      console.log({ context });
+      console.log({ cowShedProxy });
+
       const txs = await Promise.all([
         // Transfer to proxy
-        TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_TRANSFER_FROM, {
-          type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM,
-          token: tokenAddress,
-          from: context?.account,
-          to: cowShedProxy,
-          amount: amountWei,
-          symbol: tokenSymbol,
-        }),
+        TransactionFactory.createRawTx(
+          TRANSACTION_TYPES.ERC20PERMIT_TRANSFER_FROM,
+          {
+            type: TRANSACTION_TYPES.ERC20PERMIT_TRANSFER_FROM,
+            token: tokenAddress,
+            from: context?.account,
+            to: cowShedProxy,
+            amount: amountWei,
+            symbol: tokenSymbol,
+          }
+        ),
         // Proxy approves Vesting Escrow Factory
         TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
           type: TRANSACTION_TYPES.ERC20_APPROVE,
