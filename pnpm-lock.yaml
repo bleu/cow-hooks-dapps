@@ -498,6 +498,9 @@ importers:
       '@cowprotocol/cow-sdk':
         specifier: ^5.5.1
         version: 5.5.1(encoding@0.1.13)(ethers@5.7.2)
+      '@weiroll/weiroll.js':
+        specifier: ^0.3.0
+        version: 0.3.0
       ethers:
         specifier: 5.7.2
         version: 5.7.2

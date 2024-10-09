@@ -33,6 +33,7 @@ export default function Page() {
     actions,
     context,
     publicClient,
+    recipientOverride: cowShedProxy,
   });
   const cowShedSignature = useCowShedSignature({
     cowShed,
@@ -88,7 +89,7 @@ export default function Page() {
 
   const steps = useMemo(() => {
     const permitSteps =
-      hookInfo?.permitData.map((permit) => {
+      hookInfo?.permitData?.map((permit) => {
         return {
           label: `Approve ${permit.tokenSymbol}`,
           description: `Approve proxy to manage your ${permit.tokenSymbol} (${permit.tokenAddress})`,

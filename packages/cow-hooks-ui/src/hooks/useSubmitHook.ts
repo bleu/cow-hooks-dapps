@@ -8,10 +8,12 @@ export function useSubmitHook({
   actions,
   context,
   publicClient,
+  recipientOverride,
 }: {
   actions: CoWHookDappActions | undefined;
   context: HookDappContextAdjusted | undefined;
   publicClient: PublicClient | undefined;
+  recipientOverride?: string;
 }) {
   return useCallback(
     async (hook: Omit<CowHook, "gasLimit">) => {
@@ -38,10 +40,11 @@ export function useSubmitHook({
         actions.editHook({
           hook: hookWithGasLimit,
           uuid: context.hookToEdit.uuid,
+          recipientOverride,
         });
       }
 
-      actions.addHook({ hook: hookWithGasLimit });
+      actions.addHook({ hook: hookWithGasLimit, recipientOverride });
     },
     [actions, context]
   );

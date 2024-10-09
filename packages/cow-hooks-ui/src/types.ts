@@ -11,7 +11,7 @@ export interface BaseTransaction {
 
 export interface IHooksInfo {
   txs: BaseTransaction[];
-  permitData: {
+  permitData?: {
     tokenAddress: string;
     amount: BigNumberish;
     tokenSymbol: string;
