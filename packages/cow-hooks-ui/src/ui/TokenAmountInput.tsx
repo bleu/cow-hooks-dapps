@@ -58,7 +58,7 @@ export function TokenAmountInput({
           </div>
         )}
         <Input
-          autoComplete="off"
+          // autoComplete="off"
           className={cn(
             "outline-none text-right w-full max-h-10 px-2.5 py-0 border-none rounded-l-xl text-base text-color-text-paper bg-inherit [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
             className

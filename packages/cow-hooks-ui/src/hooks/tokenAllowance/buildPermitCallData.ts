@@ -19,6 +19,8 @@ export async function buildEip2162PermitCallData({
   callDataParams,
 }: BuildEip2162PermitCallDataParams): Promise<string> {
   const [permitParams, chainId, tokenName, ...rest] = callDataParams;
+  console.log("entrou");
+  console.log({ permitParams, chainId, tokenName, ...rest });
   const callData = await eip2162Utils.buildPermitCallData(
     permitParams,
     chainId,

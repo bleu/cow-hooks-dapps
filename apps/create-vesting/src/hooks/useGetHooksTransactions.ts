@@ -31,7 +31,10 @@ export function useGetHooksTransactions() {
       if (!context?.account || !cowShedProxy) return;
 
       const periodInSeconds = period * scaleToSecondsMapping[periodScale];
-      const amountWei = parseUnits(String(amount), token.decimals);
+      const amountWei = parseUnits(
+        amount.toFixed(token.decimals),
+        token.decimals
+      );
       const tokenAddress = token.address as Address;
       const tokenSymbol = token.symbol ?? "";
 

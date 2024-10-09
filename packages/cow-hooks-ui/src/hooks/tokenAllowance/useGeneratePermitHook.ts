@@ -140,7 +140,6 @@ async function generatePermitHookRaw(
   const deadline = getPermitDeadline();
   const value = DEFAULT_PERMIT_VALUE;
 
-  console.log("working until now");
   console.log("nonce", nonce);
   console.log("permitInfo.type", permitInfo.type);
   console.log("owner", owner);
@@ -191,6 +190,9 @@ async function generatePermitHookRaw(
         }).catch((e) => {
           throw new Error(e);
         });
+
+  console.log({ callData });
+  console.log("computing gasLimit");
 
   const gasLimit = await calculateGasLimit(
     callData,

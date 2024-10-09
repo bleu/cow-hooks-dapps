@@ -1,15 +1,15 @@
 import { Address, erc20Abi, PublicClient } from "viem";
 import { useCallback } from "react";
 import { BigNumber, Signer } from "ethers";
-import { JsonRpcProvider } from "@ethersproject/providers";
+import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import {
-  // generatePermitHook,
+  generatePermitHook,
   getPermitUtilsInstance,
   getTokenPermitInfo,
   GetTokenPermitIntoResult,
   PermitInfo,
 } from "@cowprotocol/permit-utils";
-import { generatePermitHook } from "./useGeneratePermitHook";
+// import { generatePermitHook } from "./useGeneratePermitHook";
 import { useHandleTokenApprove } from "./useHandleTokenApprove";
 import { HookDappContextAdjusted } from "../../types";
 
@@ -57,22 +57,42 @@ export function useHandleTokenAllowance({
         });
       console.log("currentAllowance", currentAllowance);
       console.log("tokenName", tokenName);
+      console.log({ amount });
       if (currentAllowance === undefined || !tokenName) {
         throw new Error("Token allowance not available");
       }
 
-      if (amount.lte(currentAllowance)) {
+      if (amount <= BigNumber.from(currentAllowance)) {
+        console.log("aqui");
         // amount is less than or equal to current allowance so no need to approve
         return;
       }
 
       const { chainId, account } = context;
 
+      const web3Provider = new Web3Provider(window.ethereum);
+      async function connectWallet() {
+        if (typeof window.ethereum !== "undefined") {
+          try {
+            // Request account access
+            await window.ethereum.request({ method: "eth_requestAccounts" });
+            console.log("Wallet connected");
+          } catch (error) {
+            console.error("User denied account access");
+          }
+        } else {
+          console.log("Please install MetaMask!");
+        }
+      }
+
+      await connectWallet();
+
       const permitInfo = await getTokenPermitInfo({
         spender,
         tokenAddress,
         chainId,
         provider: jsonRpcProvider,
+        // provider: web3Provider,
       });
 
       console.log("permitInfo", permitInfo);
@@ -87,7 +107,7 @@ export function useHandleTokenAllowance({
 
       const eip2162Utils = getPermitUtilsInstance(
         chainId,
-        jsonRpcProvider,
+        web3Provider,
         account
       );
 
@@ -99,13 +119,14 @@ export function useHandleTokenAllowance({
           name: tokenName,
         },
         spender: spender,
-        provider: jsonRpcProvider,
+        //provider: jsonRpcProvider,
+        provider: web3Provider,
         permitInfo,
         eip2162Utils: eip2162Utils,
         account,
         nonce,
       }).catch((e) => console.log("error", e));
-      console.log("hook", hook);
+      if (!hook) throw new Error("Couldn't build hook");
       return hook;
     },
     [jsonRpcProvider, context, publicClient, spender]
