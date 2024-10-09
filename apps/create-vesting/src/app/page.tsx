@@ -120,7 +120,7 @@ export default function Page() {
               }
             />
             <br className="xsm:h-0 xsm:w-0" />
-            <TokenAmountInput
+            {/* <TokenAmountInput
               name="amount"
               type="number"
               step={`0.${"0".repeat(tokenDecimals ? tokenDecimals - 1 : 8)}1`}
@@ -132,7 +132,7 @@ export default function Page() {
               onKeyDown={(e) =>
                 ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
               }
-            />
+            /> */}
           </div>
           <br />
         </ContentWrapper>

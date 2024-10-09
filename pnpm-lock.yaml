@@ -156,6 +156,9 @@ importers:
       '@uniswap/sdk-core':
         specifier: 5.4.0
         version: 5.4.0
+      '@weiroll/weiroll.js':
+        specifier: ^0.3.0
+        version: 0.3.0
       babel-plugin-react-compiler:
         specifier: 0.0.0-experimental-6067d4e-20240923
         version: 0.0.0-experimental-6067d4e-20240923
@@ -2446,6 +2449,10 @@ packages:
 
   '@webassemblyjs/wast-printer@1.12.1':
     resolution: {integrity: sha512-+X4WAlOisVWQMikjbcvY2e0rwPsKQ9F688lksZhBcPycBBuii3O7m8FACbDMWDojpAqvjIncrG8J0XHKyQfVeA==}
+
+  '@weiroll/weiroll.js@0.3.0':
+    resolution: {integrity: sha512-RV+iKtY/V/Oc0zoPFPaNGAkOOOV89uGdiocxWd4HT5XNdGob0/XI+07GtP0Dv3B7QLwLTs8QMNKPvsH846svrw==}
+    engines: {node: '>=14'}
 
   '@xtuc/ieee754@1.2.0':
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
@@ -8634,6 +8641,13 @@ snapshots:
     dependencies:
       '@webassemblyjs/ast': 1.12.1
       '@xtuc/long': 4.2.2
+
+  '@weiroll/weiroll.js@0.3.0':
+    dependencies:
+      ethers: 5.7.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   '@xtuc/ieee754@1.2.0': {}
 

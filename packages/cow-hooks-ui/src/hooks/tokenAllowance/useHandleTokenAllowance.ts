@@ -65,11 +65,14 @@ export function useHandleTokenAllowance({
 
       const { chainId, account } = context;
 
+      //@ts-ignore
       const web3Provider = new Web3Provider(window.ethereum);
       async function connectWallet() {
+        //@ts-ignore
         if (typeof window.ethereum !== "undefined") {
           try {
             // Request account access
+            //@ts-ignore
             await window.ethereum.request({ method: "eth_requestAccounts" });
           } catch (error) {
             console.error("User denied account access");
