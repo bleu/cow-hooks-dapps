@@ -9,7 +9,6 @@ import {
   GetTokenPermitIntoResult,
   PermitInfo,
 } from "@cowprotocol/permit-utils";
-// import { generatePermitHook } from "./useGeneratePermitHook";
 import { useHandleTokenApprove } from "./useHandleTokenApprove";
 import { HookDappContextAdjusted } from "../../types";
 
