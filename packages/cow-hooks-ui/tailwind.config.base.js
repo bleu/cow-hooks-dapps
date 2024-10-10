@@ -1,5 +1,6 @@
 /* eslint-env node */
 /* eslint-disable @typescript-eslint/no-var-requires */
+const defaultTheme = require("tailwindcss/defaultTheme");
 
 /** @type {import("tailwindcss").Config} */
 module.exports = {
@@ -11,6 +12,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["studiofeixen", ...defaultTheme.fontFamily.sans],
+        serif: ["studiofeixenserif", ...defaultTheme.fontFamily.serif],
+        mono: ["studiofeixenmono", ...defaultTheme.fontFamily.mono],
+      },
       colors: {
         // V3
         "color-primary": "var(--cow-color-primary)",
