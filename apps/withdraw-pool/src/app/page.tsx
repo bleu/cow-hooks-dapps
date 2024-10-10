@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import { decodeHookCallData } from "#/utils/decodeHookCalldata";
 import { SubmitButton } from "#/components/SubmitButton";
+import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
 
 export default function Page() {
   const { context, setHookInfo, publicClient } = useIFrameContext();
@@ -78,6 +79,12 @@ export default function Page() {
     [onSubmitCallback, handleSubmit]
   );
 
+  const { data: poolBalances } = useUserPoolBalance({
+    user: context?.account,
+    chainId: context?.chainId,
+    poolId,
+  });
+
   if (!context) return null;
 
   if (!context.account) {
@@ -91,7 +98,7 @@ export default function Page() {
   if (isLoadingPools) {
     return (
       <div className="w-full text-center mt-10 p-2">
-        <Spinner />
+        <Spinner size="xl" />
       </div>
     );
   }
@@ -116,13 +123,14 @@ export default function Page() {
         pools={pools || []}
         selectedPool={selectedPool}
       />
-      {poolId && (
+      {poolId && poolBalances && (
         <div className="size-full flex flex-col gap-2">
           <WithdrawPctSlider withdrawPct={withdrawPct || 100} />
-          <PoolBalancesPreview />
+          <PoolBalancesPreview poolBalances={poolBalances} />
           <SubmitButton withdrawPct={withdrawPct} poolId={poolId} />
         </div>
       )}
+      {poolId && !poolBalances && <Spinner size="xl" />}
     </Form>
   );
 }

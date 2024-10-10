@@ -28,7 +28,7 @@ export function SubmitButton({
   return (
     <Button
       type="submit"
-      className="my-2 rounded-xl text-lg min-h-[58px]"
+      className="my-2 rounded-2xl text-lg min-h-[58px]"
       disabled={buttonProps.disabled}
       loading={isSubmitting || isSubmitSuccessful}
       loadingText="Creating hook..."

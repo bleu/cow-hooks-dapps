@@ -13,10 +13,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Head>
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <body className="flex h-full flex-col font-sans font-normal bg-transparent text-foreground">
-        <IFrameContextProvider>
-          <UserPoolContextProvider>{children}</UserPoolContextProvider>
-        </IFrameContextProvider>
+      <body className="bg-transparent scrollbar-thumb-primary scrollbar-track-primary">
+        <div className="flex h-full flex-col font-sans font-normal bg-transparent text-foreground scrollbar h-32 overflow-y-scroll">
+          <IFrameContextProvider>
+            <UserPoolContextProvider>{children}</UserPoolContextProvider>
+          </IFrameContextProvider>
+        </div>
       </body>
     </html>
   );

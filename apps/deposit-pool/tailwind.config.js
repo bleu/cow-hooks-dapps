@@ -12,4 +12,5 @@ module.exports = {
     "../../packages/cow-hooks-ui/src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: commonConfig.theme,
+  plugins: commonConfig.plugins
 };

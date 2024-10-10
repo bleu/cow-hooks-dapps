@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  cn,
   Command,
   CommandEmpty,
   CommandInput,
@@ -45,18 +46,21 @@ export function PoolsDropdownMenu({
     return `${baseUrl}/${chainName}/cow/${selectedPool?.id.toLowerCase()}`;
   }, [selectedPool]);
 
-  console.log({ selectedPool });
-
   return (
     <div className="flex flex-col gap-1 py-2">
       <Label className="px-1 mb-1">Choose liquidity pool</Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
-          className="w-full flex p-2 justify-between rounded-md space-x-1 items-center text-sm bg-background disabled:bg-foreground/10 bg-muted text-foreground rounded-md"
+          className={cn(
+            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-background disabled:bg-foreground/10 bg-muted text-foreground",
+            selectedPool
+              ? "bg-background shadow-sm text-foreground hover:bg-primary hover:text-primary-foreground"
+              : "bg-primary text-primary-foreground hover:bg-color-primary-lighter"
+          )}
           onClick={() => setOpen(true)}
         >
           {selectedPool ? <PoolItem pool={selectedPool} /> : "Liquidity pool"}
-          <ChevronDownIcon className="size-4" />
+          <ChevronDownIcon className="size-5" />
         </PopoverTrigger>
         <PopoverContent className="w-[440px] bg-background">
           <Command
