@@ -18,4 +18,3 @@ export * from "./ClaimableAmountContainer";
 export * from "./PoolsDropdownMenu";
 export * from "./Spinner";
 export * from "./BalancesPreview";
-export * from "./styles";

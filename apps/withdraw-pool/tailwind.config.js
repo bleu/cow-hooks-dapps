@@ -1,4 +1,3 @@
-import { Font } from "@bleu/cow-hooks-ui";
 const commonConfig = require("../../packages/cow-hooks-ui/tailwind.config.base.js");
 
 /** @type {import("tailwindcss").Config} */

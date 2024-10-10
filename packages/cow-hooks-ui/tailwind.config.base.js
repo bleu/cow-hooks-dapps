@@ -17,93 +17,88 @@ module.exports = {
         serif: ["studiofeixenserif", ...defaultTheme.fontFamily.serif],
         mono: ["studiofeixenmono", ...defaultTheme.fontFamily.mono],
       },
+      borderWidth: {
+        1: "1px",
+      },
+        screens: {
+        xsm: "420px",
+      },
       colors: {
         // V3
-        "color-primary": "var(--cow-color-primary)",
-        "color-primary-lighter": "var(--cow-color-primary-lighter)",
-        "color-primary-darker": "var(--cow-color-primary-darker)",
-        "color-primary-darkest": "var(--cow-color-primary-darkest)",
-        "color-primary-paper": "var(--cow-color-primary-paper)",
+        "color-primary": "rgb(var(--cow-color-primary) / <alpha-value>)",
+        "color-primary-lighter": "rgb(var(--cow-color-primary-lighter) / <alpha-value>)",
+        "color-primary-darker": "rgb(var(--cow-color-primary-darker) / <alpha-value>)",
+        "color-primary-darkest": "rgb(var(--cow-color-primary-darkest) / <alpha-value>)",
+        "color-primary-paper": "rgb(var(--cow-color-primary-paper) / <alpha-value>)",
 
-        "color-secondary": "var(--cow-color-secondary)",
+        "color-secondary": "rgb(var(--cow-color-secondary) / <alpha-value>)",
 
-        "color-background": "var(--cow-color-background)",
+        "color-background": "rgb(var(--cow-color-background) / <alpha-value>)",
 
-        "color-paper": "var(--cow-color-paper)",
-        "color-paper-darker": "var(--cow-color-paper-darker)",
-        "color-paper-darkest": "var(--cow-color-paper-darkest)",
+        "color-paper": "rgb(var(--cow-color-paper) / <alpha-value>)",
+        "color-paper-darker": "rgb(var(--cow-color-paper-darker) / <alpha-value>)",
+        "color-paper-darkest": "rgb(var(--cow-color-paper-darkest) / <alpha-value>)",
 
-        "box-shadow": "var(--cow-box-shadow)",
-        "box-shadow-2": "var(--cow-box-shadow-2)",
+        "box-shadow": "rgb(var(--cow-box-shadow) / <alpha-value>)",
+        "box-shadow-2": "rgb(var(--cow-box-shadow-2) / <alpha-value>)",
 
-        "color-text": "var(--cow-color-text)",
-        "color-text-paper": "var(--cow-color-text-paper)",
+        "color-text": "rgb(var(--cow-color-text) / <alpha-value>)",
+        "color-text-paper": "rgb(var(--cow-color-text-paper) / <alpha-value>)",
 
-        "color-secondary-text": "var(--cow-color-secondary-text)",
-        "color-disabled-text": "var(--cow-color-disabled-text)",
-        "color-button-text": "var(--cow-color-button-text)",
-        "color-button-text-disabled": "var(--cow-color-button-text-disabled)",
+        "color-secondary-text": "rgb(var(--cow-color-secondary-text) / <alpha-value>)",
+        "color-disabled-text": "rgb(var(--cow-color-disabled-text) / <alpha-value>)",
+        "color-button-text": "rgb(var(--cow-color-button-text) / <alpha-value>)",
+        "color-button-text-disabled": "rgb(var(--cow-color-button-text-disabled) / <alpha-value>)",
 
-        "color-dark-image-paper": "var(--cow-color-dark-image-paper)",
-        "color-dark-image-paper-text": "var(--cow-color-dark-image-paper-text)",
+        "color-dark-image-paper": "rgb(var(--cow-color-dark-image-paper) / <alpha-value>)",
+        "color-dark-image-paper-text": "rgb(var(--cow-color-dark-image-paper-text) / <alpha-value>)",
 
-        "color-warning": "var(--cow-color-warning)",
-        "color-warning-bg": "var(--cow-color-warning-bg)",
-        "color-warning-text": "var(--cow-color-warning-text)",
+        "color-warning": "rgb(var(--cow-color-warning) / <alpha-value>)",
+        "color-warning-bg": "rgb(var(--cow-color-warning-bg) / <alpha-value>)",
+        "color-warning-text": "rgb(var(--cow-color-warning-text) / <alpha-value>)",
 
-        "color-success": "var(--cow-color-success)",
-        "color-success-bg": "var(--cow-color-success-bg)",
-        "color-success-text": "var(--cow-color-success-text)",
+        "color-success": "rgb(var(--cow-color-success) / <alpha-value>)",
+        "color-success-bg": "rgb(var(--cow-color-success-bg) / <alpha-value>)",
+        "color-success-text": "rgb(var(--cow-color-success-text) / <alpha-value>)",
 
-        "color-info": "var(--cow-color-info)",
-        "color-info-bg": "var(--cow-color-info-bg)",
-        "color-info-text": "var(--cow-color-info-text)",
+        "color-info": "rgb(var(--cow-color-info) / <alpha-value>)",
+        "color-info-bg": "rgb(var(--cow-color-info-bg) / <alpha-value>)",
+        "color-info-text": "rgb(var(--cow-color-info-text) / <alpha-value>)",
 
-        "color-alert": "var(--cow-color-alert)",
-        "color-alert-bg": "var(--cow-color-alert-bg)",
-        "color-alert-text": "var(--cow-color-alert-text)",
-        "color-alert-text-darker": "var(--cow-color-alert-text-darker)",
+        "color-alert": "rgb(var(--cow-color-alert) / <alpha-value>)",
+        "color-alert-bg": "rgb(var(--cow-color-alert-bg) / <alpha-value>)",
+        "color-alert-text": "rgb(var(--cow-color-alert-text) / <alpha-value>)",
+        "color-alert-text-darker": "rgb(var(--cow-color-alert-text-darker) / <alpha-value>)",
 
-        "color-danger": "var(--cow-color-danger)",
-        "color-danger-bg": "var(--cow-color-danger-bg)",
-        "color-danger-text": "var(--cow-color-danger-text)",
+        "color-danger": "rgb(var(--cow-color-danger) / <alpha-value>)",
+        "color-danger-bg": "rgb(var(--cow-color-danger-bg) / <alpha-value>)",
+        "color-danger-text": "rgb(var(--cow-color-danger-text) / <alpha-value>)",
 
-        // ================================================================================
+        "color-badge-yellow-bg": "rgb(var(--cow-color-badge-yellow-bg) / <alpha-value>)",
+        "color-badge-yellow-text": "rgb(var(--cow-color-badge-yellow-text) / <alpha-value>)",
 
-        // Badge
-        "color-badge-yellow-bg": "var(--cow-color-badge-yellow-bg)",
-        "color-badge-yellow-text": "var(--cow-color-badge-yellow-text)",
+        "color-white": "rgb(var(--cow-color-white) / <alpha-value>)",
+        "color-blue": "rgb(var(--cow-color-blue) / <alpha-value>)",
+        "color-yellow-light": "rgb(var(--cow-color-yellow-light) / <alpha-value>)",
+        "color-green": "rgb(var(--cow-color-green) / <alpha-value>)",
+        "color-red": "rgb(var(--cow-color-red) / <alpha-value>)",
 
-        // Colors
-        "color-white": "var(--cow-color-white)",
-        "color-blue": "var(--cow-color-blue)",
-        "color-yellow-light": "var(--cow-color-yellow-light)",
-        "color-green": "var(--cow-color-green)",
-        "color-red": "var(--cow-color-red)",
+        "color-border": "rgb(var(--cow-color-border) / <alpha-value>)",
+        "color-container-bg-01": "rgb(var(--cow-container-bg-01) / <alpha-value>)",
+        "color-container-bg-02": "rgb(var(--cow-container-bg-02) / <alpha-value>)",
 
-        // Elements
-        "color-border": "var(--cow-color-border)",
-        "color-container-bg-01": "var(--cow-container-bg-01)",
-        "color-container-bg-02": "var(--cow-container-bg-02)",
+        "modal-backdrop": "rgb(var(--cow-modal-backdrop) / <alpha-value>)",
+        "border-radius-normal": "rgb(var(--cow-border-radius-normal) / <alpha-value>)",
+        "border-radius-large": "rgb(var(--cow-border-radius-large) / <alpha-value>)",
+        "padding-normal": "rgb(var(--cow-padding-normal) / <alpha-value>)",
 
-        // Misc
-        "modal-backdrop": "var(--cow-modal-backdrop)",
-        "border-radius-normal": "var(--cow-border-radius-normal)",
-        "border-radius-large": "var(--cow-border-radius-large)",
-        "padding-normal": "var(--cow-padding-normal)",
+        "icon-color-normal": "rgb(var(--cow-icon-color-normal) / <alpha-value>)",
 
-        // Icons
-        "icon-color-normal": "var(--cow-icon-color-normal)",
+        "color-text1": "rgb(var(--cow-color-text1) / <alpha-value>)",
+        "color-text1-inactive": "rgb(var(--cow-color-text1-inactive) / <alpha-value>)",
+        "color-text2": "rgb(var(--cow-color-text2) / <alpha-value>)",
+        "color-link": "rgb(var(--cow-color-link) / <alpha-value>)",
 
-        // States
-
-        // Text
-        "color-text1": "var(--cow-color-text1)",
-        "color-text1-inactive": "var(--cow-color-text1-inactive)",
-        "color-text2": "var(--cow-color-text2)",
-        "color-link": "var(--cow-color-link)",
-
-        // Animation
         "animation-duration": "var(--cow-animation-duration)",
         "animation-duration-slow": "var(--cow-animation-duration-slow)",
         success: "rgb(var(--success) / <alpha-value>)",
