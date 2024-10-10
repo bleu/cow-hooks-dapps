@@ -10,33 +10,25 @@ import * as weiroll from "@weiroll/weiroll.js";
 import { vestingEscrowFactoryAbi } from "./abis/vestingEscrowFactoryAbi";
 import { Contract } from "ethers";
 import { weirollAbi } from "./abis/weirollAbi";
+import { WEIROLL_ADDRESS, CommandFlags } from "./weiroll";
 
-// Copied from weiroll repo: https://github.com/EnsoFinance/enso-weiroll.js/blob/25081c263663c035cc773b7d90dfc352b7d7a541/src/planner.ts
-/**
- * CommandFlags
- * @description Flags that modify a command's execution
- * @enum {number}
- */
-enum CommandFlags {
-  DELEGATECALL = 0,
-  CALL = 1,
-  STATICCALL = 2,
-  CALL_WITH_VALUE = 3,
-  CALLTYPE_MASK = 3,
-  EXTENDED_COMMAND = 64,
-  TUPLE_RETURN = 128,
-}
-export interface CreateVestingArgs extends BaseArgs {
-  type: TRANSACTION_TYPES.CREATE_VESTING;
+export interface CreateVestingWeirollArgs extends BaseArgs {
+  type: TRANSACTION_TYPES.CREATE_VESTING_WEIROLL;
   token: Address;
   cowShedProxy: Address;
   recipient: Address;
   vestingDuration: bigint;
   vestingEscrowFactoryAddress: Address;
+  amount?: bigint;
 }
 
-export class CreateVestingCreator implements ITransaction<CreateVestingArgs> {
-  async createRawTx(args: CreateVestingArgs): Promise<BaseTransaction> {
+export class CreateVestingWeirollCreator
+  implements ITransaction<CreateVestingWeirollArgs>
+{
+  async createRawTx(args: CreateVestingWeirollArgs): Promise<BaseTransaction> {
+    console.log("in CreateVestingWeirollCreator");
+    console.log({ args });
+
     const planner = new weiroll.Planner();
 
     const tokenWeirollContract = weiroll.Contract.createContract(
@@ -65,7 +57,7 @@ export class CreateVestingCreator implements ITransaction<CreateVestingArgs> {
     const { commands, state } = planner.plan();
 
     return {
-      to: "0x53A349b7E27741a12d9aDe861F78De46bb4b828F",
+      to: WEIROLL_ADDRESS,
       value: BigInt(0),
       callData: encodeFunctionData({
         abi: weirollAbi,
@@ -73,6 +65,32 @@ export class CreateVestingCreator implements ITransaction<CreateVestingArgs> {
         args: [commands, state],
       }),
       isDelegateCall: true,
+    };
+  }
+}
+
+export interface CreateVestingArgs extends BaseArgs {
+  type: TRANSACTION_TYPES.CREATE_VESTING;
+  token: Address;
+  recipient: Address;
+  amount: bigint;
+  vestingDuration: bigint;
+  vestingEscrowFactoryAddress: Address;
+}
+
+export class CreateVestingCreator implements ITransaction<CreateVestingArgs> {
+  async createRawTx(args: CreateVestingArgs): Promise<BaseTransaction> {
+    console.log("in CreateVestingCreator");
+    console.log({ args });
+
+    return {
+      to: args.vestingEscrowFactoryAddress,
+      value: BigInt(0),
+      callData: encodeFunctionData({
+        abi: vestingEscrowFactoryAbi,
+        functionName: "deploy_vesting_contract",
+        args: [args.token, args.recipient, args.amount, args.vestingDuration],
+      }),
     };
   }
 }

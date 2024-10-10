@@ -13,10 +13,10 @@ export const createVestingSchema = z.object({
     .min(1, "Address is required")
     .refine(isAddress, "Insert a valid address"),
   period: z
-    .number({ message: "Invalid amount" })
+    .number({ message: "Invalid period" })
     .gt(0, "Period must be greater than 0"),
   periodScale: z.enum(["Day", "Week", "Month"]),
-  // amount: z
-  //   .number({ message: "Invalid amount" })
-  //   .gt(0, "Amount must be greater than 0"),
+  amount: z
+    .number({ message: "Invalid period" })
+    .gt(0, "Period must be greater than 0"),
 });

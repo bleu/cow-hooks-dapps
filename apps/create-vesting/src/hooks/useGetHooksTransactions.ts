@@ -1,62 +1,31 @@
-import { IHooksInfo, useIFrameContext } from "@bleu/cow-hooks-ui";
-import { useCallback } from "react";
-import {
-  TRANSACTION_TYPES,
-  TransactionFactory,
-} from "@bleu/utils/transactionFactory";
-import { Address, maxUint256, parseUnits } from "viem";
-import { scaleToSecondsMapping } from "#/utils/scaleToSecondsMapping";
+import { IHooksInfo } from "@bleu/cow-hooks-ui";
+import { Address } from "viem";
 import { createVestingSchema } from "#/utils/schema";
 import { Token } from "@uniswap/sdk-core";
+import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
+import { useGetHooksInfoVestAllFromSwap } from "./useGetHooksInfoVestAllFromSwap";
+import { useGetHooksInfoVestUserAmount } from "./useGetHooksInfoVestUserAmount";
 
-interface GetHooksTransactionsParams {
+export interface GetHooksTransactionsParams {
   token: Token;
   vestingEscrowFactoryAddress: Address;
   formData: typeof createVestingSchema._type;
 }
 
 export function useGetHooksTransactions() {
-  const { context, cowShedProxy, jsonRpcProvider } = useIFrameContext();
+  const { vestAllFromSwap } = useTokenAmountTypeContext();
+  const getHooksInfoVestAllFromSwap = useGetHooksInfoVestAllFromSwap();
+  const getHooksInfoVestUserAmount = useGetHooksInfoVestUserAmount();
 
-  return useCallback(
-    async (
-      params: GetHooksTransactionsParams
-    ): Promise<IHooksInfo | undefined> => {
-      const {
-        token,
-        vestingEscrowFactoryAddress,
-        formData: { period, periodScale, recipient },
-      } = params;
+  return async (
+    params: GetHooksTransactionsParams
+  ): Promise<IHooksInfo | undefined> => {
+    const hooksInfo = vestAllFromSwap
+      ? await getHooksInfoVestAllFromSwap(params)
+      : await getHooksInfoVestUserAmount(params);
 
-      if (!context?.account || !cowShedProxy) return;
+    if (!hooksInfo) throw new Error("Error encoding transactions");
 
-      const periodInSeconds = period * scaleToSecondsMapping[periodScale];
-      const tokenAddress = token.address as Address;
-      const tokenSymbol = token.symbol ?? "";
-
-      const txs = await Promise.all([
-        // Proxy approves Vesting Escrow Factory
-        TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
-          type: TRANSACTION_TYPES.ERC20_APPROVE,
-          token: tokenAddress,
-          spender: vestingEscrowFactoryAddress,
-          amount: maxUint256,
-        }),
-        // Create vesting (weiroll)
-        TransactionFactory.createRawTx(TRANSACTION_TYPES.CREATE_VESTING, {
-          type: TRANSACTION_TYPES.CREATE_VESTING,
-          token: tokenAddress,
-          recipient: recipient,
-          cowShedProxy,
-          vestingDuration: BigInt(periodInSeconds),
-          vestingEscrowFactoryAddress: vestingEscrowFactoryAddress,
-        }),
-      ]);
-
-      return {
-        txs,
-      };
-    },
-    [context?.account, cowShedProxy]
-  );
+    return hooksInfo;
+  };
 }

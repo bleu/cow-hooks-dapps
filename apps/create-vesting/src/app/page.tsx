@@ -23,10 +23,13 @@ import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
 import { useRouter } from "next/navigation";
 import { useReadTokenContract } from "#/hooks/useReadTokenContract";
 import { vestingFactoriesMapping } from "#/utils/vestingFactoriesMapping";
+import { WeirollCheckbox } from "#/components/WeirollCheckbox";
+import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
 
 type CreateVestingFormData = typeof createVestingSchema._type;
 
 export default function Page() {
+  const { vestAllFromSwap } = useTokenAmountTypeContext();
   const { context, setHookInfo } = useIFrameContext();
   const router = useRouter();
 
@@ -71,7 +74,7 @@ export default function Page() {
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [context?.account, token, vestingEscrowFactoryAddress]
+    [context?.account, token, vestingEscrowFactoryAddress, vestAllFromSwap]
   );
 
   const onSubmit = useMemo(
@@ -120,7 +123,7 @@ export default function Page() {
               }
             />
             <br className="xsm:h-0 xsm:w-0" />
-            {/* <TokenAmountInput
+            <TokenAmountInput
               name="amount"
               type="number"
               step={`0.${"0".repeat(tokenDecimals ? tokenDecimals - 1 : 8)}1`}
@@ -128,12 +131,15 @@ export default function Page() {
               label="Amount"
               placeholder="0.0"
               autoComplete="off"
+              disabled={vestAllFromSwap}
               validation={{ valueAsNumber: true, required: true }}
               onKeyDown={(e) =>
                 ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
               }
-            /> */}
+            />
           </div>
+          <br />
+          <WeirollCheckbox />
           <br />
         </ContentWrapper>
         <ButtonPrimary type="submit">

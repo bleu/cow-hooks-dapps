@@ -14,6 +14,7 @@ import {
 import { BigNumber, BigNumberish } from "ethers";
 import { useCallback, useMemo, useState } from "react";
 import { Address } from "viem";
+import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
 
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -29,11 +30,13 @@ export default function Page() {
     cowShedProxy,
   } = useIFrameContext();
 
+  const { vestAllFromSwap } = useTokenAmountTypeContext();
+
   const submitHook = useSubmitHook({
     actions,
     context,
     publicClient,
-    recipientOverride: cowShedProxy,
+    recipientOverride: vestAllFromSwap ? cowShedProxy : undefined,
   });
   const cowShedSignature = useCowShedSignature({
     cowShed,
