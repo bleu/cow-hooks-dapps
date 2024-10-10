@@ -48,7 +48,6 @@ export function PoolsDropdownMenu({
 
   return (
     <div className="flex flex-col gap-1 py-2">
-      <Label className="px-1 mb-1">Choose liquidity pool</Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           className={cn(
@@ -59,7 +58,11 @@ export function PoolsDropdownMenu({
           )}
           onClick={() => setOpen(true)}
         >
-          {selectedPool ? <PoolItem pool={selectedPool} /> : "Liquidity pool"}
+          {selectedPool ? (
+            <PoolItem pool={selectedPool} />
+          ) : (
+            "Choose liquidity pool"
+          )}
           <ChevronDownIcon className="size-5" />
         </PopoverTrigger>
         <PopoverContent className="w-[440px] bg-background">
