@@ -18,13 +18,13 @@ import {
 import { useUserPoolContext } from "#/context/userPools";
 import { useRouter } from "next/navigation";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import { findPoolIdOnCallData } from "#/utils/decodeHookCalldata";
+import { decodeHookCallData } from "#/utils/decodeHookCalldata";
 import { SubmitButton } from "#/components/SubmitButton";
 
 export default function Page() {
-  const { context, setHookInfo } = useIFrameContext();
+  const { context, setHookInfo, publicClient } = useIFrameContext();
   const {
-    userPoolSwr: { data: pools, isLoading },
+    userPoolSwr: { data: pools, isLoading: isLoadingPools },
   } = useUserPoolContext();
 
   const form = useForm<typeof withdrawSchema._type>({
@@ -42,18 +42,24 @@ export default function Page() {
   const { withdrawPct, poolId } = useWatch({ control });
 
   useEffect(() => {
-    if (!context?.hookToEdit) return;
-    const recoveredPoolId = findPoolIdOnCallData(
-      context?.hookToEdit?.hook.callData as `0x${string}`
-    );
-    if (!recoveredPoolId) return;
-    setValue("poolId", recoveredPoolId);
+    if (!context?.hookToEdit || !context.account || !publicClient) return;
+    decodeHookCallData(
+      context?.hookToEdit?.hook.callData as `0x${string}`,
+
+      publicClient,
+      context.account
+    ).then((data) => {
+      if (!data) return;
+      setValue("poolId", data.poolId);
+      setValue("withdrawPct", data.withdrawPct);
+    });
   }, [context?.hookToEdit]);
 
-  const selectedPool = useMemo(
-    () => pools?.find((pool) => pool.id === poolId),
-    [pools, poolId]
-  );
+  const selectedPool = useMemo(() => {
+    return pools?.find(
+      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
+    );
+  }, [pools, poolId]);
 
   const getHooksTransactions = useGetHookInfo(selectedPool);
 
@@ -72,12 +78,7 @@ export default function Page() {
     [onSubmitCallback, handleSubmit]
   );
 
-  if (!context)
-    return (
-      <div className="w-full text-center mt-10 p-2">
-        <Spinner />
-      </div>
-    );
+  if (!context) return null;
 
   if (!context.account) {
     return <span className="mt-10 text-center">Connect your wallet first</span>;
@@ -87,6 +88,23 @@ export default function Page() {
     return <span className="mt-10 text-center">Unsupported chain</span>;
   }
 
+  if (isLoadingPools) {
+    return (
+      <div className="w-full text-center mt-10 p-2">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (!pools || pools.length === 0) {
+    return (
+      <span className="mt-10 text-center">
+        You don't have liquidity in a CoW AMM pool
+      </span>
+    );
+  }
+
+  console.log({ selectedPool });
   return (
     <Form
       {...form}
@@ -96,7 +114,7 @@ export default function Page() {
       <PoolsDropdownMenu
         onSelect={(pool: IMinimalPool) => setValue("poolId", pool.id)}
         pools={pools || []}
-        loading={isLoading}
+        selectedPool={selectedPool}
       />
       {poolId && (
         <div className="size-full flex flex-col gap-2">

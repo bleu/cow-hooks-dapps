@@ -3,6 +3,7 @@ import { HookDappContextAdjusted } from "../types";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import { PublicClient } from "viem";
+import { COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS } from "@cowprotocol/cow-sdk";
 
 export function useSubmitHook({
   actions,
@@ -18,7 +19,9 @@ export function useSubmitHook({
       if (!context || !actions) return;
 
       const estimatedGas = await publicClient?.estimateGas({
-        account: context.account,
+        account: COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS[
+          context.chainId
+        ] as `0x${string}`,
         to: hook.target as `0x${string}`,
         value: BigInt(0),
         data: hook.callData as `0x${string}`,

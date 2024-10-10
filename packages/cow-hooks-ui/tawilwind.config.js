@@ -1,16 +1,18 @@
-import {Font} from "@bleu/cow-hooks-ui"
-
+const {Font} = require('./src/fonts');
+ 
 /** @type {import("tailwindcss").Config} */
 module.exports = {
   important: true,
-  content: [
-    "./src/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@bleu/ui/dist/**/*",
-    "../../node_modules/@bleu/ui/dist/**/*",
-    "../../packages/cow-hooks-ui/src/**/*.{js,ts,jsx,tsx}",
-  ],
   theme: {
     extend: {
+    extend: {
+      fontFamily: {
+        'sans': [Font.family],
+        'serif': [Font.familySerif],
+        'mono': [Font.familyMono],
+      },
+      fontWeight: Font.weight,
+    },
       borderWidth: {
         1: "1px",
       },

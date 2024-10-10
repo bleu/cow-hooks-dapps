@@ -7,13 +7,13 @@ export function useHookDeadline({
   context: HookDappContextAdjusted | undefined;
 }) {
   return useMemo(() => {
-    return BigInt(
-      context?.orderParams?.validTo || generateTimestampOnNextHour()
-    ); // TODO check valid to parameter
+    const currentTimestamp = new Date().getTime() / 1000;
+
+    if (
+      !context?.orderParams?.validTo ||
+      context?.orderParams?.validTo < currentTimestamp
+    )
+      return BigInt(currentTimestamp.toFixed() + 60 * 60);
+    return BigInt(context?.orderParams.validTo);
   }, [context?.orderParams?.validTo]);
 }
-
-const generateTimestampOnNextHour = () => {
-  const currentTimestamp = new Date().getTime() / 1000;
-  return currentTimestamp.toFixed() + 60 * 60;
-};

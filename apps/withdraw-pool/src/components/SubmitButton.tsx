@@ -1,3 +1,4 @@
+import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { Button } from "@bleu/ui";
 import { useMemo } from "react";
 import { useFormContext, useFormState } from "react-hook-form";
@@ -10,13 +11,17 @@ export function SubmitButton({
   poolId?: string;
 }) {
   const { control } = useFormContext();
+  const { context } = useIFrameContext();
 
   const { isSubmitSuccessful, isSubmitting } = useFormState({ control });
   const buttonProps = useMemo(() => {
     if (!withdrawPct || Number(withdrawPct) === 0)
       return { disabled: true, message: "Define percentage" };
-    return { disabled: false, message: "Add pre-hook" };
-  }, [withdrawPct, poolId]);
+    return {
+      disabled: false,
+      message: context?.hookToEdit ? "Edit pre-hook" : "Add pre-hook",
+    };
+  }, [withdrawPct, poolId, context?.hookToEdit]);
 
   if (!poolId) return;
 
