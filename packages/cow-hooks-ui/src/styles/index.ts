@@ -1,4 +1,4 @@
-import "./styles/fonts.css";
+import "./fonts.css";
 
 export const Font = {
   family: `'studiofeixen', Arial, sans-serif`,
