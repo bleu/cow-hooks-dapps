@@ -1,5 +1,8 @@
-import { decodeFunctionData } from "viem";
+import { Address, decodeFunctionData, PublicClient } from "viem";
 import { cowShedAbi } from "./abis/cowShedAbi";
+import { withdrawSchema } from "./schema";
+import { cowAmmAbi } from "./abis/cowAmmAbi";
+import { getPctFromValue } from "./math";
 
 interface ICalldata {
   allowFailures: boolean;
@@ -9,7 +12,11 @@ interface ICalldata {
   value: string;
 }
 
-export function findPoolIdOnCallData(string: `0x${string}`) {
+export async function decodeHookCallData(
+  string: `0x${string}`,
+  publicClient: PublicClient,
+  user: Address
+): Promise<typeof withdrawSchema._type | undefined> {
   const decodedFunctionData = decodeFunctionData({
     abi: cowShedAbi,
     data: string,
@@ -27,5 +34,35 @@ export function findPoolIdOnCallData(string: `0x${string}`) {
 
   const lastCallIndex = calls.length - 1;
   const call = calls[lastCallIndex];
-  return call.target.toLowerCase();
+
+  const decodedCoWAmmCallData = decodeFunctionData({
+    abi: cowAmmAbi,
+    data: call.callData as `0x${string}`,
+  });
+
+  const poolAddress = call.target;
+
+  if (decodedCoWAmmCallData.functionName !== "exitPool") {
+    return;
+  }
+
+  if (!decodedCoWAmmCallData.args?.length) {
+    return;
+  }
+
+  const bptAmountToExit = decodedCoWAmmCallData.args[0] as bigint;
+
+  const userPoolBalance = (await publicClient.readContract({
+    address: poolAddress as `0x${string}`,
+    abi: cowAmmAbi,
+    functionName: "balanceOf",
+    args: [user],
+  })) as bigint;
+
+  const withdrawPct = getPctFromValue(bptAmountToExit, userPoolBalance);
+
+  return {
+    poolId: call.target,
+    withdrawPct,
+  };
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import "#/global.css";
+import "@bleu/cow-hooks-ui/global.css";
 import Head from "next/head";
 import type * as React from "react";
 
