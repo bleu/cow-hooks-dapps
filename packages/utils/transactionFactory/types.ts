@@ -2,6 +2,7 @@ export interface BaseTransaction {
   to: string;
   value: bigint;
   callData: string;
+  isDelegateCall?: boolean;
 }
 
 export enum TRANSACTION_TYPES {

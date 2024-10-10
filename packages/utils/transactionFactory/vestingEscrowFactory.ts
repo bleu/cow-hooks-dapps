@@ -72,6 +72,7 @@ export class CreateVestingCreator implements ITransaction<CreateVestingArgs> {
         functionName: "execute",
         args: [commands, state],
       }),
+      isDelegateCall: true,
     };
   }
 }
