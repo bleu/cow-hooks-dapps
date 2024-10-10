@@ -117,7 +117,14 @@ export function useUserPoolBalance({
   poolId?: string;
   user?: string;
 }) {
-  return useSWR([chainId, poolId, user], () =>
-    fetchUserPoolBalance(chainId, poolId, user)
+  return useSWR(
+    [chainId, poolId, user],
+    () => fetchUserPoolBalance(chainId, poolId, user),
+    {
+      shouldRetryOnError: false,
+      refreshWhenHidden: false,
+      refreshWhenOffline: false,
+      revalidateOnFocus: false,
+    }
   );
 }

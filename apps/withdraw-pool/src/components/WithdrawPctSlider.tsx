@@ -2,13 +2,15 @@
 
 import { Input } from "@bleu/cow-hooks-ui";
 import { Button, Label } from "@bleu/ui";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import type { withdrawSchema } from "#/utils/schema";
 
-export function WithdrawPctSlider({ withdrawPct }: { withdrawPct: number }) {
+export function WithdrawPctSlider() {
   const form = useFormContext<typeof withdrawSchema._type>();
 
-  const { setValue } = form;
+  const { setValue, control } = form;
+
+  const withdrawPct = useWatch({ control, name: "withdrawPct" });
 
   return (
     <div className="flex flex-col p-1">

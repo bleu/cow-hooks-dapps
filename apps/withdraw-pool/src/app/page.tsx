@@ -3,10 +3,8 @@
 import { Form } from "@bleu/ui";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { PoolBalancesPreview } from "#/components/PoolBalancePreview";
-import { WithdrawPctSlider } from "#/components/WithdrawPctSlider";
 import { withdrawSchema } from "#/utils/schema";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 import {
@@ -19,8 +17,7 @@ import { useUserPoolContext } from "#/context/userPools";
 import { useRouter } from "next/navigation";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import { decodeHookCallData } from "#/utils/decodeHookCalldata";
-import { SubmitButton } from "#/components/SubmitButton";
-import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
+import { PoolForm } from "#/components/PoolForm";
 
 export default function Page() {
   const { context, setHookInfo, publicClient } = useIFrameContext();
@@ -40,7 +37,7 @@ export default function Page() {
 
   const { setValue, control, handleSubmit } = form;
 
-  const { withdrawPct, poolId } = useWatch({ control });
+  const poolId = useWatch({ control, name: "poolId" });
 
   useEffect(() => {
     if (!context?.hookToEdit || !context.account || !publicClient) return;
@@ -79,12 +76,6 @@ export default function Page() {
     [onSubmitCallback, handleSubmit]
   );
 
-  const { data: poolBalances } = useUserPoolBalance({
-    user: context?.account,
-    chainId: context?.chainId,
-    poolId,
-  });
-
   if (!context) return null;
 
   if (!context.account) {
@@ -111,7 +102,6 @@ export default function Page() {
     );
   }
 
-  console.log({ selectedPool });
   return (
     <Form
       {...form}
@@ -123,14 +113,7 @@ export default function Page() {
         pools={pools || []}
         selectedPool={selectedPool}
       />
-      {poolId && poolBalances && (
-        <div className="size-full flex flex-col gap-2">
-          <WithdrawPctSlider withdrawPct={withdrawPct || 100} />
-          <PoolBalancesPreview poolBalances={poolBalances} />
-          <SubmitButton withdrawPct={withdrawPct} poolId={poolId} />
-        </div>
-      )}
-      {poolId && !poolBalances && <Spinner size="xl" />}
+      <PoolForm poolId={poolId} />
     </Form>
   );
 }
