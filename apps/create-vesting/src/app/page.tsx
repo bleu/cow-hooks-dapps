@@ -28,7 +28,10 @@ import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
 import { useRouter } from "next/navigation";
 import { useReadTokenContract } from "@bleu/cow-hooks-ui";
 import { vestingFactoriesMapping } from "#/utils/vestingFactoriesMapping";
-import { VestAllFromSwapCheckbox } from "#/components/VestAllFromSwapCheckbox";
+import {
+  VestAllFromSwapCheckbox,
+  VestAllCheckbox,
+} from "#/components/Checkboxes";
 import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
 
 export default function Page() {
@@ -144,6 +147,7 @@ export default function Page() {
           </div>
           <br />
           <VestAllFromSwapCheckbox />
+          <VestAllCheckbox />
           <br />
         </ContentWrapper>
         <ButtonPrimary type="submit">

@@ -19,7 +19,7 @@ export interface CreateVestingWeirollArgs extends BaseArgs {
   recipient: Address;
   vestingDuration: bigint;
   vestingEscrowFactoryAddress: Address;
-  amount?: bigint;
+  user?: Address;
 }
 
 export class CreateVestingWeirollCreator
@@ -39,8 +39,24 @@ export class CreateVestingWeirollCreator
     );
 
     const amount = planner.add(
-      tokenWeirollContract.balanceOf(args.cowShedProxy)
+      // if user is passed, it means it is a Vest All operation,
+      // so the user's balance will be read instead of proxy's
+      tokenWeirollContract.balanceOf(args.user ?? args.cowShedProxy)
     );
+
+    if (args.user) {
+      const tokenWeirollContractCall = weiroll.Contract.createContract(
+        new Contract(args.token, erc20Abi),
+        CommandFlags.CALL
+      );
+      planner.add(
+        tokenWeirollContractCall.transferFrom(
+          args.user,
+          args.cowShedProxy,
+          amount
+        )
+      );
+    }
 
     planner.add(
       vestingEscrowContract.deploy_vesting_contract(

@@ -2,8 +2,8 @@ import { IHooksInfo } from "@bleu/cow-hooks-ui";
 import { Address } from "viem";
 import { createVestingSchema } from "#/utils/schema";
 import { Token } from "@uniswap/sdk-core";
-import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
 import { useGetHooksInfoVestAllFromSwap } from "./useGetHooksInfoVestAllFromSwap";
+import { useGetHooksInfoVestAll } from "./useGetHooksInfoVestAll";
 import { useGetHooksInfoVestUserAmount } from "./useGetHooksInfoVestUserAmount";
 
 export interface GetHooksTransactionsParams {
@@ -14,14 +14,21 @@ export interface GetHooksTransactionsParams {
 
 export function useGetHooksTransactions() {
   const getHooksInfoVestAllFromSwap = useGetHooksInfoVestAllFromSwap();
+  const getHooksInfoVestAll = useGetHooksInfoVestAll();
   const getHooksInfoVestUserAmount = useGetHooksInfoVestUserAmount();
 
   return async (
     params: GetHooksTransactionsParams
   ): Promise<IHooksInfo | undefined> => {
-    const hooksInfo = params.formData.vestAllFromSwap
-      ? await getHooksInfoVestAllFromSwap(params)
-      : await getHooksInfoVestUserAmount(params);
+    const {
+      formData: { vestAll, vestAllFromSwap },
+    } = params;
+
+    const hooksInfo = vestAll
+      ? await getHooksInfoVestAll(params)
+      : vestAllFromSwap
+        ? await getHooksInfoVestAllFromSwap(params)
+        : getHooksInfoVestUserAmount(params);
 
     if (!hooksInfo) throw new Error("Error encoding transactions");
 
