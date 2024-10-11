@@ -88,12 +88,11 @@ const USER_POOLS_QUERY = gql`
     }
   }
 `;
-
+//
 export function useUserPools(chainId?: SupportedChainId, user?: string) {
   return useSWR(
     [chainId, user],
     async ([chainId, user]): Promise<IMinimalPool[]> => {
-      console.log({ chainId, user });
       if (!user || !chainId) return [];
       const chainName = BalancerChainName[chainId];
       return await GQL_CLIENT[chainId]

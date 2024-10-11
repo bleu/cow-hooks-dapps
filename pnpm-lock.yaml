@@ -138,6 +138,12 @@ importers:
       '@bleu/ui':
         specifier: 0.1.131
         version: 0.1.131(@types/react-dom@18.3.0)(@types/react@18.3.11)(mapbox-gl@1.13.3)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))(react-router-dom@6.26.2(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)(webpack@5.95.0)
+      '@bleu/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+      '@cowprotocol/cow-sdk':
+        specifier: ^5.5.1
+        version: 5.5.1(encoding@0.1.13)(ethers@5.7.2)
       '@cowprotocol/hook-dapp-lib':
         specifier: 1.0.0-RC1
         version: 1.0.0-RC1
@@ -147,9 +153,18 @@ importers:
       '@radix-ui/react-icons':
         specifier: 1.3.0
         version: 1.3.0(react@19.0.0-rc-e4953922-20240919)
+      '@uniswap/sdk-core':
+        specifier: 5.4.0
+        version: 5.4.0
+      '@weiroll/weiroll.js':
+        specifier: ^0.3.0
+        version: 0.3.0
       babel-plugin-react-compiler:
         specifier: 0.0.0-experimental-6067d4e-20240923
         version: 0.0.0-experimental-6067d4e-20240923
+      ethers:
+        specifier: ^5.7.2
+        version: 5.7.2
       next:
         specifier: 15.0.0-rc.0
         version: 15.0.0-rc.0(babel-plugin-react-compiler@0.0.0-experimental-6067d4e-20240923)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)
@@ -504,6 +519,9 @@ importers:
 
   packages/cow-hooks-ui:
     dependencies:
+      '@1inch/permit-signed-approvals-utils':
+        specifier: 1.5.2
+        version: 1.5.2
       '@balancer/sdk':
         specifier: 0.26.1
         version: 0.26.1(typescript@5.6.2)(zod@3.23.8)
@@ -528,9 +546,15 @@ importers:
       '@cowprotocol/permit-utils':
         specifier: 0.3.1
         version: 0.3.1(cross-fetch@3.1.8(encoding@0.1.13))(ipfs-only-hash@4.0.0(encoding@0.1.13))(multiformats@9.9.0)
+      '@ethersproject/constants':
+        specifier: ^5.7.0
+        version: 5.7.0
       '@ethersproject/providers':
         specifier: 5.7.2
         version: 5.7.2
+      '@ethersproject/wallet':
+        specifier: ^5.7.0
+        version: 5.7.0
       '@radix-ui/react-icons':
         specifier: 1.3.0
         version: 1.3.0(react@19.0.0-rc-e4953922-20240919)
@@ -586,6 +610,9 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.4.47
+      swr:
+        specifier: 2.2.5
+        version: 2.2.5(react@19.0.0-rc-e4953922-20240919)
       tailwindcss:
         specifier: ^3.4.13
         version: 3.4.13
@@ -610,6 +637,9 @@ importers:
       '@cowprotocol/cow-sdk':
         specifier: ^5.5.1
         version: 5.5.1(encoding@0.1.13)(ethers@5.7.2)
+      '@weiroll/weiroll.js':
+        specifier: ^0.3.0
+        version: 0.3.0
       ethers:
         specifier: 5.7.2
         version: 5.7.2
@@ -2564,6 +2594,10 @@ packages:
 
   '@webassemblyjs/wast-printer@1.12.1':
     resolution: {integrity: sha512-+X4WAlOisVWQMikjbcvY2e0rwPsKQ9F688lksZhBcPycBBuii3O7m8FACbDMWDojpAqvjIncrG8J0XHKyQfVeA==}
+
+  '@weiroll/weiroll.js@0.3.0':
+    resolution: {integrity: sha512-RV+iKtY/V/Oc0zoPFPaNGAkOOOV89uGdiocxWd4HT5XNdGob0/XI+07GtP0Dv3B7QLwLTs8QMNKPvsH846svrw==}
+    engines: {node: '>=14'}
 
   '@xtuc/ieee754@1.2.0':
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
@@ -8752,6 +8786,13 @@ snapshots:
     dependencies:
       '@webassemblyjs/ast': 1.12.1
       '@xtuc/long': 4.2.2
+
+  '@weiroll/weiroll.js@0.3.0':
+    dependencies:
+      ethers: 5.7.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   '@xtuc/ieee754@1.2.0': {}
 

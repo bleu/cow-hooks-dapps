@@ -2,6 +2,7 @@ export interface BaseTransaction {
   to: string;
   value: bigint;
   callData: string;
+  isDelegateCall?: boolean;
 }
 
 export enum TRANSACTION_TYPES {
@@ -10,6 +11,8 @@ export enum TRANSACTION_TYPES {
   GAUGE_CLAIM_REWARDS = "GAUGE_CLAIM_REWARDS",
   GAUGE_WITHDRAW = "GAUGE_WITHDRAW",
   BALANCER_WITHDRAW = "BALANCER_WITHDRAW",
+  CREATE_VESTING = "CREATE_VESTING",
+  CREATE_VESTING_WEIROLL = "CREATE_VESTING_WEIROLL",
 }
 
 export interface BaseArgs {

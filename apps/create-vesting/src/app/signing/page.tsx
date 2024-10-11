@@ -2,10 +2,8 @@
 
 import {
   useIFrameContext,
-  WaitingSignature,
   SignatureSteps,
-} from "@bleu/cow-hooks-ui";
-import {
+  WaitingSignature,
   BaseTransaction,
   useCowShedSignature,
   useHandleTokenAllowance,
@@ -14,6 +12,7 @@ import {
 import { BigNumber, BigNumberish } from "ethers";
 import { useCallback, useMemo, useState } from "react";
 import { Address } from "viem";
+import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
 
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -28,10 +27,14 @@ export default function Page() {
     publicClient,
     cowShedProxy,
   } = useIFrameContext();
+
+  const { vestAllFromSwap } = useTokenAmountTypeContext();
+
   const submitHook = useSubmitHook({
     actions,
     context,
     publicClient,
+    recipientOverride: vestAllFromSwap ? cowShedProxy : undefined,
   });
   const cowShedSignature = useCowShedSignature({
     cowShed,
@@ -50,6 +53,7 @@ export default function Page() {
     if (!cowShedSignature || !hookInfo || !cowShed) return;
 
     const txs = [...permitTxs, ...hookInfo.txs];
+
     const cowShedCall = await cowShedSignature(txs);
     if (!cowShedCall) throw new Error("Error signing hooks");
     submitHook({
@@ -89,24 +93,23 @@ export default function Page() {
       hookInfo?.permitData?.map((permit) => {
         return {
           label: `Approve ${permit.tokenSymbol}`,
-          description: `Approve proxy to manage the ${permit.tokenSymbol} token`,
+          description: `Approve proxy to manage your ${permit.tokenSymbol} (${permit.tokenAddress})`,
           id: `approve-${permit.tokenAddress}`,
           callback: async () => {
             await permitCallback(permit);
           },
-          tooltipText: permit.tokenAddress,
         };
       }) || [];
     return [
       ...permitSteps,
       {
-        label: "Approve and add pre-hook",
-        description: "Approve proxy to execute the hook in behalf of you",
+        label: "Approve hooks",
+        description: "Approve proxy to execute the hooks in behalf of you",
         id: "approve-hooks",
         callback: cowShedCallback,
       },
     ];
-  }, [hookInfo, permitCallback]);
+  }, [hookInfo, permitTxs, permitCallback]);
 
   return (
     <div className="flex flex-col gap-2 p-2 text-center h-full justify-between items-center">

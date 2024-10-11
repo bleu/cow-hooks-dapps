@@ -10,7 +10,7 @@ import {
 } from "@bleu/ui";
 import { formatUnits } from "ethers/lib/utils";
 import { IBalance } from "./types";
-import { Spinner } from "./Spinner";
+import { Spinner } from "./ui/Spinner";
 import { TokenInfo } from "./TokenInfo";
 import { TokenAmount } from "./TokenAmount";
 import { useMemo } from "react";

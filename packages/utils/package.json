@@ -19,6 +19,7 @@
   "dependencies": {
     "@balancer/sdk": "0.26.1",
     "@cowprotocol/cow-sdk": "^5.5.1",
+    "@weiroll/weiroll.js": "^0.3.0",
     "ethers": "5.7.2",
     "graphql-request": "^6.1.0",
     "react": "19.0.0-rc-e4953922-20240919",

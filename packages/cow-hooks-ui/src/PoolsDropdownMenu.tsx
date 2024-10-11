@@ -14,7 +14,6 @@ import {
 } from "@bleu/ui";
 import { ArrowTopRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
-import { Spinner } from "./Spinner";
 import { IMinimalPool } from "./types";
 import { BalancerChainName } from "@bleu/utils";
 import { TokenLogo } from "./TokenLogo";
