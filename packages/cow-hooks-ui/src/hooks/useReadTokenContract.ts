@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import useSWR from "swr";
 import { type Address, erc20Abi } from "viem";
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
+import { useIFrameContext } from "../context/iframe";
 
 export const useReadTokenContract = ({
   tokenAddress,

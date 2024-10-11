@@ -14,6 +14,7 @@ export * from "./ui/WaitingSignature";
 export * from "./hooks/cowShed";
 export * from "./hooks/tokenAllowance";
 export * from "./hooks/useSubmitHook";
+export * from "./hooks/useReadTokenContract";
 export * from "./Wrapper";
 export * from "./AddressInput";
 export * from "./ButtonPrimary";

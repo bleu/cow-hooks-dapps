@@ -22,7 +22,7 @@ export const useGetHooksInfoVestAllFromSwap = () => {
       const {
         token,
         vestingEscrowFactoryAddress,
-        formData: { period, periodScale, amount, recipient },
+        formData: { period, periodScale, recipient },
       } = params;
 
       if (!context?.account || !cowShedProxy) return;

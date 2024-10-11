@@ -8,25 +8,28 @@ import {
   TokenAmountInput,
   Wrapper,
   HookDappContextAdjusted,
+  useIFrameContext,
+  Spinner,
 } from "@bleu/cow-hooks-ui";
 import { Token } from "@uniswap/sdk-core";
 
 import { useCallback, useMemo } from "react";
-import { useIFrameContext, Spinner } from "@bleu/cow-hooks-ui";
 import { Form } from "@bleu/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { createVestingSchema, periodScaleOptions } from "#/utils/schema";
+import {
+  CreateVestingFormData,
+  createVestingSchema,
+  periodScaleOptions,
+} from "#/utils/schema";
 
 import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
 import { useRouter } from "next/navigation";
-import { useReadTokenContract } from "#/hooks/useReadTokenContract";
+import { useReadTokenContract } from "@bleu/cow-hooks-ui";
 import { vestingFactoriesMapping } from "#/utils/vestingFactoriesMapping";
-import { WeirollCheckbox } from "#/components/WeirollCheckbox";
+import { VestAllFromSwapCheckbox } from "#/components/VestAllFromSwapCheckbox";
 import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
-
-type CreateVestingFormData = typeof createVestingSchema._type;
 
 export default function Page() {
   const { vestAllFromSwap } = useTokenAmountTypeContext();
@@ -38,6 +41,7 @@ export default function Page() {
     defaultValues: {
       period: 1,
       periodScale: "Day",
+      vestAllFromSwap: false,
     },
   });
 
@@ -139,7 +143,7 @@ export default function Page() {
             />
           </div>
           <br />
-          <WeirollCheckbox />
+          <VestAllFromSwapCheckbox />
           <br />
         </ContentWrapper>
         <ButtonPrimary type="submit">

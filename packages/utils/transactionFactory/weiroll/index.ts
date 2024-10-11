@@ -1,4 +1,4 @@
-// Copied from weiroll repo: https://github.com/EnsoFinance/enso-weiroll.js/blob/25081c263663c035cc773b7d90dfc352b7d7a541/src/planner.ts
+// Copied from weiroll repo: https://github.com/weiroll/weiroll.js/blob/main/src/planner.ts
 /**
  * CommandFlags
  * @description Flags that modify a command's execution

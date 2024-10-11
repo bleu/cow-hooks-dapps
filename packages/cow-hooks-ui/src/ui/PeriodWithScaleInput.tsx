@@ -61,7 +61,6 @@ export function PeriodWithScaleInput({
       )}
       <div className="flex items-center justify-between w-full h-12 px-1 py-2.5 bg-color-paper-darker rounded-xl">
         <Input
-          // autoComplete="off"
           className={cn(
             "outline-none text-left w-14 max-h-10 px-2.5 py-0 border-none rounded-l-xl text-base text-color-text-paper bg-inherit [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
             className

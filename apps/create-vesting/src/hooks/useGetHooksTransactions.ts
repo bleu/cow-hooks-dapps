@@ -13,14 +13,13 @@ export interface GetHooksTransactionsParams {
 }
 
 export function useGetHooksTransactions() {
-  const { vestAllFromSwap } = useTokenAmountTypeContext();
   const getHooksInfoVestAllFromSwap = useGetHooksInfoVestAllFromSwap();
   const getHooksInfoVestUserAmount = useGetHooksInfoVestUserAmount();
 
   return async (
     params: GetHooksTransactionsParams
   ): Promise<IHooksInfo | undefined> => {
-    const hooksInfo = vestAllFromSwap
+    const hooksInfo = params.formData.vestAllFromSwap
       ? await getHooksInfoVestAllFromSwap(params)
       : await getHooksInfoVestUserAmount(params);
 
