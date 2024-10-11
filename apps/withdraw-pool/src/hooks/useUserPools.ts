@@ -3,9 +3,9 @@ import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { gql } from "graphql-request";
 import useSWR from "swr";
 
-import { IMinimalPool } from "../types";
-import { BalancerChainName, GQL_CLIENT } from "#/api/balancer";
 import { Address, parseUnits } from "viem";
+import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
+import { IMinimalPool } from "@bleu/cow-hooks-ui";
 
 interface IQuery {
   pools: {
@@ -25,10 +25,12 @@ interface IQuery {
       address: Address;
       symbol: string;
       decimals: number;
+      isNested: boolean;
     }[];
     userBalance: {
       totalBalance: string;
       walletBalance: string;
+      totalBalanceUsd: number;
       stakedBalances: {
         balance: string;
         stakingId: string;
@@ -70,9 +72,11 @@ const USER_POOLS_QUERY = gql`
         address
         symbol
         decimals
+        isNested
       }
       userBalance {
         totalBalance
+        totalBalanceUsd
         walletBalance
         stakedBalances {
           balance
@@ -101,6 +105,7 @@ export function useUserPools(chainId?: SupportedChainId, user?: string) {
           return result.pools.map((pool) => ({
             ...pool,
             userBalance: {
+              ...pool.userBalance,
               walletBalance: parseUnits(
                 pool.userBalance.walletBalance,
                 pool.decimals

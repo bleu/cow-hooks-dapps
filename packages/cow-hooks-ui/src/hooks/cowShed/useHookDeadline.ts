@@ -7,9 +7,7 @@ export function useHookDeadline({
   context: HookDappContextAdjusted | undefined;
 }) {
   return useMemo(() => {
-    return BigInt(
-      context?.orderParams?.validTo || generateTimestampOnNextHour()
-    ); // TODO check valid to parameter
+    return BigInt(generateTimestampOnNextHour()); // TODO check valid to parameter
   }, [context?.orderParams?.validTo]);
 }
 

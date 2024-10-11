@@ -50,7 +50,6 @@ export default function Page() {
     if (!cowShedSignature || !hookInfo || !cowShed) return;
 
     const txs = [...permitTxs, ...hookInfo.txs];
-
     const cowShedCall = await cowShedSignature(txs);
     if (!cowShedCall) throw new Error("Error signing hooks");
     submitHook({
@@ -87,21 +86,22 @@ export default function Page() {
 
   const steps = useMemo(() => {
     const permitSteps =
-      hookInfo?.permitData.map((permit) => {
+      hookInfo?.permitData?.map((permit) => {
         return {
           label: `Approve ${permit.tokenSymbol}`,
-          description: `Approve proxy to manage your ${permit.tokenSymbol} (${permit.tokenAddress})`,
+          description: `Approve proxy to manage the ${permit.tokenSymbol} token`,
           id: `approve-${permit.tokenAddress}`,
           callback: async () => {
             await permitCallback(permit);
           },
+          tooltipText: permit.tokenAddress,
         };
       }) || [];
     return [
       ...permitSteps,
       {
-        label: "Approve hooks",
-        description: "Approve proxy to execute the hooks in behalf of you",
+        label: "Approve and add pre-hook",
+        description: "Approve proxy to execute the hook in behalf of you",
         id: "approve-hooks",
         callback: cowShedCallback,
       },

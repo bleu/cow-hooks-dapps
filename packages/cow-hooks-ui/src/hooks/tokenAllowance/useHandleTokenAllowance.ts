@@ -9,8 +9,8 @@ import {
   GetTokenPermitIntoResult,
   PermitInfo,
 } from "@cowprotocol/permit-utils";
-import { useHandleTokenApprove } from "./useHandleTokenApprove";
 import { HookDappContextAdjusted } from "../../types";
+import { handleTokenApprove } from "./useHandleTokenApprove";
 
 export function useHandleTokenAllowance({
   signer,
@@ -25,11 +25,6 @@ export function useHandleTokenAllowance({
   publicClient: PublicClient | undefined;
   spender: Address | undefined;
 }) {
-  const handleTokenApprove = useHandleTokenApprove({
-    signer,
-    spender,
-  });
-
   return useCallback(
     async (amount: BigNumber, tokenAddress: Address) => {
       if (!publicClient || !jsonRpcProvider || !context?.account || !spender)
@@ -58,7 +53,7 @@ export function useHandleTokenAllowance({
         throw new Error("Token allowance not available");
       }
 
-      if (amount <= BigNumber.from(currentAllowance)) {
+      if (amount.lte(BigNumber.from(currentAllowance))) {
         // amount is less than or equal to current allowance so no need to approve
         return;
       }
@@ -92,7 +87,13 @@ export function useHandleTokenAllowance({
       });
 
       if (!permitInfo || !checkIsPermitInfo(permitInfo)) {
-        await handleTokenApprove(tokenAddress);
+        const newAllowance = amount.add(currentAllowance);
+        await handleTokenApprove({
+          signer,
+          spender,
+          tokenAddress,
+          amount: newAllowance.toBigInt(),
+        });
         return;
       }
 

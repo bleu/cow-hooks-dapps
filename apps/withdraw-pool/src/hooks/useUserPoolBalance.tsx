@@ -3,10 +3,10 @@ import { Token } from "@uniswap/sdk-core";
 import { gql } from "graphql-request";
 import useSWR from "swr";
 
-import { IPoolBalance } from "../types";
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { BalancerChainName, GQL_CLIENT } from "../api/balancer";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
+import { IBalance } from "@bleu/cow-hooks-ui";
 
 interface IQuery {
   id: `0x${string}`;
@@ -68,7 +68,7 @@ async function fetchUserPoolBalance(
   chainId?: SupportedChainId,
   poolId?: string,
   user?: string
-): Promise<IPoolBalance[]> {
+): Promise<IBalance[]> {
   if (!user || !chainId || !poolId) return [];
   const chainName = BalancerChainName[chainId];
   const result = await GQL_CLIENT[chainId].request<{

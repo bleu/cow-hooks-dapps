@@ -42,6 +42,7 @@ export function useSubmitHook({
           uuid: context.hookToEdit.uuid,
           recipientOverride,
         });
+        return;
       }
 
       actions.addHook({ hook: hookWithGasLimit, recipientOverride });

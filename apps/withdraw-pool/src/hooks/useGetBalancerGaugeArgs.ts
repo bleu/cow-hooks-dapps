@@ -1,5 +1,4 @@
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
-import { IMinimalPool } from "#/types";
+import { IMinimalPool, useIFrameContext } from "@bleu/cow-hooks-ui";
 import {
   GaugeClaimRewardsArgs,
   GaugeWithdrawArgs,
@@ -42,7 +41,7 @@ export function getSingleBalancerGaugeArgs({
       from: cowShedProxy,
       to: cowShedProxy,
       amount: amountToWithdraw.toBigInt(),
-      symbol: "Gauge Token", // TODO: get symbol from token
+      symbol: "pool stacked", // TODO: get symbol from token
     },
     {
       gaugeAddress,

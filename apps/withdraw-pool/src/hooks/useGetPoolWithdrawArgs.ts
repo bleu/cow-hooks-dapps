@@ -1,6 +1,5 @@
-import { IMinimalPool } from "#/types";
 import { useCallback } from "react";
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
+import { IMinimalPool, useIFrameContext } from "@bleu/cow-hooks-ui";
 import { minimalPoolToPoolState } from "#/utils/poolDataConverter";
 import { BigNumber } from "ethers";
 import {
@@ -34,7 +33,7 @@ export function useGetPoolWithdrawArgs(
               to: cowShedProxy,
               decimals: pool.decimals,
               amount: BigNumber.from(bptWalletAmount).toBigInt(),
-              symbol: "Pool Token",
+              symbol: pool.symbol,
             };
       return [
         transferBptArg,

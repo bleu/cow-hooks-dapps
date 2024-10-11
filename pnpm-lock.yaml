@@ -230,6 +230,145 @@ importers:
         specifier: 5.6.2
         version: 5.6.2
 
+  apps/deposit-pool:
+    dependencies:
+      '@balancer-labs/sdk':
+        specifier: 1.1.6
+        version: 1.1.6(encoding@0.1.13)
+      '@balancer/sdk':
+        specifier: 0.26.1
+        version: 0.26.1(typescript@5.6.2)(zod@3.23.8)
+      '@bleu/cow-hooks-ui':
+        specifier: workspace:*
+        version: link:../../packages/cow-hooks-ui
+      '@bleu/tsconfig':
+        specifier: workspace:*
+        version: link:../../packages/tsconfig
+      '@bleu/ui':
+        specifier: 0.1.131
+        version: 0.1.131(@types/react-dom@18.3.0)(@types/react@18.3.11)(mapbox-gl@1.13.3)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))(react-router-dom@6.26.2(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)(webpack@5.95.0)
+      '@bleu/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+      '@cowprotocol/cow-sdk':
+        specifier: ^5.5.1
+        version: 5.5.1(encoding@0.1.13)(ethers@5.7.2)
+      '@cowprotocol/hook-dapp-lib':
+        specifier: 1.0.0-RC1
+        version: 1.0.0-RC1
+      '@cowprotocol/permit-utils':
+        specifier: 0.3.1
+        version: 0.3.1(cross-fetch@3.1.8(encoding@0.1.13))(ipfs-only-hash@4.0.0(encoding@0.1.13))(multiformats@9.9.0)
+      '@ethersproject/providers':
+        specifier: 5.7.2
+        version: 5.7.2
+      '@hookform/resolvers':
+        specifier: 3.9.0
+        version: 3.9.0(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))
+      '@radix-ui/react-icons':
+        specifier: 1.3.0
+        version: 1.3.0(react@19.0.0-rc-e4953922-20240919)
+      '@uniswap/sdk-core':
+        specifier: 5.4.0
+        version: 5.4.0
+      class-variance-authority:
+        specifier: ^0.7.0
+        version: 0.7.0
+      date-fns:
+        specifier: ^3.3.1
+        version: 3.6.0
+      downshift:
+        specifier: ^8.4.0
+        version: 8.5.0(react@19.0.0-rc-e4953922-20240919)
+      ethers:
+        specifier: ^5.7.2
+        version: 5.7.2
+      graphql:
+        specifier: ^16.9.0
+        version: 16.9.0
+      graphql-request:
+        specifier: ^6.1.0
+        version: 6.1.0(encoding@0.1.13)(graphql@16.9.0)
+      next:
+        specifier: 15.0.0-rc.0
+        version: 15.0.0-rc.0(babel-plugin-react-compiler@0.0.0-experimental-6067d4e-20240923)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)
+      react:
+        specifier: 19.0.0-rc-e4953922-20240919
+        version: 19.0.0-rc-e4953922-20240919
+      react-dom:
+        specifier: 19.0.0-rc-e4953922-20240919
+        version: 19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919)
+      react-hook-form:
+        specifier: 7.53.0
+        version: 7.53.0(react@19.0.0-rc-e4953922-20240919)
+      server-only:
+        specifier: ^0.0.1
+        version: 0.0.1
+      swr:
+        specifier: 2.2.5
+        version: 2.2.5(react@19.0.0-rc-e4953922-20240919)
+      tailwind-merge:
+        specifier: ^2.2.1
+        version: 2.5.2
+      tailwindcss-animate:
+        specifier: 1.0.7
+        version: 1.0.7(tailwindcss@3.4.13)
+      tiny-invariant:
+        specifier: ^1.3.3
+        version: 1.3.3
+      url:
+        specifier: ^0.11.4
+        version: 0.11.4
+      viem:
+        specifier: 2.21.14
+        version: 2.21.14(typescript@5.6.2)(zod@3.23.8)
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+    devDependencies:
+      '@biomejs/biome':
+        specifier: 1.9.2
+        version: 1.9.2
+      '@testing-library/dom':
+        specifier: 10.4.0
+        version: 10.4.0
+      '@testing-library/jest-dom':
+        specifier: 6.5.0
+        version: 6.5.0
+      '@testing-library/react':
+        specifier: ^16.0.1
+        version: 16.0.1(@testing-library/dom@10.4.0)(@types/react-dom@18.3.0)(@types/react@18.3.11)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)
+      '@testing-library/user-event':
+        specifier: 14.5.2
+        version: 14.5.2(@testing-library/dom@10.4.0)
+      '@types/jest':
+        specifier: ^29.5.13
+        version: 29.5.13
+      '@types/node':
+        specifier: ^22.5.5
+        version: 22.7.4
+      '@types/react':
+        specifier: ^18.3.7
+        version: 18.3.11
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.0
+      autoprefixer:
+        specifier: ^10.4.20
+        version: 10.4.20(postcss@8.4.47)
+      npm-run-all:
+        specifier: ^4.1.5
+        version: 4.1.5
+      postcss:
+        specifier: ^8.4.47
+        version: 8.4.47
+      tailwindcss:
+        specifier: ^3.4.12
+        version: 3.4.13
+      typescript:
+        specifier: 5.6.2
+        version: 5.6.2
+
   apps/withdraw-pool:
     dependencies:
       '@1inch/permit-signed-approvals-utils':
@@ -504,6 +643,9 @@ importers:
       ethers:
         specifier: 5.7.2
         version: 5.7.2
+      graphql-request:
+        specifier: ^6.1.0
+        version: 6.1.0(encoding@0.1.13)(graphql@16.9.0)
       react:
         specifier: 19.0.0-rc-e4953922-20240919
         version: 19.0.0-rc-e4953922-20240919

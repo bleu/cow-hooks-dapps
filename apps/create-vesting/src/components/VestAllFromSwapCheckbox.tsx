@@ -7,7 +7,6 @@ export const VestAllFromSwapCheckbox = () => {
   const { setValue } = useFormContext();
 
   useEffect(() => {
-    console.log(vestAllFromSwap);
     vestAllFromSwap ? setValue("amount", 1) : setValue("amount", 0);
     setValue("vestAllFromSwap", vestAllFromSwap);
   }, [vestAllFromSwap]);

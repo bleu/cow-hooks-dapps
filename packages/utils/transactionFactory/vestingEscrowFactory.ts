@@ -26,9 +26,6 @@ export class CreateVestingWeirollCreator
   implements ITransaction<CreateVestingWeirollArgs>
 {
   async createRawTx(args: CreateVestingWeirollArgs): Promise<BaseTransaction> {
-    console.log("in CreateVestingWeirollCreator");
-    console.log({ args });
-
     const planner = new weiroll.Planner();
 
     const tokenWeirollContract = weiroll.Contract.createContract(
@@ -80,9 +77,6 @@ export interface CreateVestingArgs extends BaseArgs {
 
 export class CreateVestingCreator implements ITransaction<CreateVestingArgs> {
   async createRawTx(args: CreateVestingArgs): Promise<BaseTransaction> {
-    console.log("in CreateVestingCreator");
-    console.log({ args });
-
     return {
       to: args.vestingEscrowFactoryAddress,
       value: BigInt(0),

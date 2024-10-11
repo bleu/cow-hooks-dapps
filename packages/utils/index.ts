@@ -2,6 +2,7 @@ export * from "./cowTokenList";
 export * from "./addressUtils";
 export * from "./chainInfo";
 export * from "./cowExplorer";
+export * from "./balancerApi";
 
 export { default as parseFixed } from "./parseFixed";
 

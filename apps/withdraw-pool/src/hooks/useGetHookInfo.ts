@@ -1,4 +1,4 @@
-import { IHooksInfo, IMinimalPool } from "#/types";
+import { IHooksInfo } from "#/types";
 import { useCallback } from "react";
 import { useGetBalancerGaugeArgs } from "./useGetBalancerGaugeArgs";
 import { useGetPoolWithdrawArgs } from "./useGetPoolWithdrawArgs";
@@ -7,6 +7,7 @@ import {
   TRANSACTION_TYPES,
   TransactionFactory,
 } from "@bleu/utils/transactionFactory";
+import { IMinimalPool } from "@bleu/cow-hooks-ui";
 
 export function useGetHookInfo(pool?: IMinimalPool) {
   const getPoolWithdrawArgs = useGetPoolWithdrawArgs(pool);
