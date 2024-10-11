@@ -11,10 +11,6 @@ import {
   ERC20TransferFromArgs,
   ERC20TransferFromCreator,
 } from "./erc20";
-import {
-  ERC20PermitTransferFromArgs,
-  ERC20PermitTransferFromCreator,
-} from "./erc20permit";
 import { BaseTransaction, ITransaction, TRANSACTION_TYPES } from "./types";
 import {
   CreateVestingArgs,
@@ -27,7 +23,6 @@ export type AllTransactionArgs = TransactionBindings[keyof TransactionBindings];
 
 export interface TransactionBindings {
   [TRANSACTION_TYPES.ERC20_TRANSFER_FROM]: ERC20TransferFromArgs;
-  [TRANSACTION_TYPES.ERC20PERMIT_TRANSFER_FROM]: ERC20PermitTransferFromArgs;
   [TRANSACTION_TYPES.GAUGE_CLAIM_REWARDS]: GaugeClaimRewardsArgs;
   [TRANSACTION_TYPES.GAUGE_WITHDRAW]: GaugeWithdrawArgs;
   [TRANSACTION_TYPES.BALANCER_WITHDRAW]: BalancerWithdrawArgs;
@@ -42,7 +37,6 @@ const TRANSACTION_CREATORS: {
   >;
 } = {
   [TRANSACTION_TYPES.ERC20_TRANSFER_FROM]: ERC20TransferFromCreator,
-  [TRANSACTION_TYPES.ERC20PERMIT_TRANSFER_FROM]: ERC20PermitTransferFromCreator,
   [TRANSACTION_TYPES.GAUGE_CLAIM_REWARDS]: GaugeClaimRewardsCreator,
   [TRANSACTION_TYPES.GAUGE_WITHDRAW]: GaugeWithdrawCreator,
   [TRANSACTION_TYPES.BALANCER_WITHDRAW]: BalancerWithdrawCreator,
