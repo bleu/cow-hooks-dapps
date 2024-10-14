@@ -88,7 +88,7 @@ export default function Page() {
     return <span className="mt-10 text-center">Unsupported chain</span>;
   }
 
-  if (isLoadingPools || isEditHookLoading) {
+  if (isLoadingPools || (isEditHookLoading && context.hookToEdit)) {
     return (
       <div className="text-center mt-10 p-2">
         <Spinner size="xl" />
