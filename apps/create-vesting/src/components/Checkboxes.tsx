@@ -1,7 +1,7 @@
+import { Input, Label } from "@bleu/ui";
 import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
-import { Input, Label } from "@bleu/ui";
 
 export const FormCheckbox = ({
   name,

@@ -32,7 +32,7 @@ export const createVestingSchema = z
         !schema.vestAllFromAccount
       );
     },
-    { message: "Amount is required", path: ["amount"] }
+    { message: "Amount is required", path: ["amount"] },
   );
 
 export type CreateVestingFormData = typeof createVestingSchema._type;

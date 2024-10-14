@@ -17,7 +17,7 @@ export const useGetHooksInfoVestAllFromSwap = () => {
 
   return useCallback(
     async (
-      params: GetHooksTransactionsParams
+      params: GetHooksTransactionsParams,
     ): Promise<IHooksInfo | undefined> => {
       const {
         token,
@@ -48,12 +48,12 @@ export const useGetHooksInfoVestAllFromSwap = () => {
             cowShedProxy,
             vestingDuration: BigInt(periodInSeconds),
             vestingEscrowFactoryAddress: vestingEscrowFactoryAddress,
-          }
+          },
         ),
       ]);
 
       return { txs };
     },
-    [context?.account, cowShedProxy]
+    [context?.account, cowShedProxy],
   );
 };

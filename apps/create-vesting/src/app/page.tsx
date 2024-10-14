@@ -60,7 +60,7 @@ export default function Page() {
       context?.chainId && tokenAddress && tokenDecimals
         ? new Token(context.chainId, tokenAddress, tokenDecimals, tokenSymbol)
         : undefined,
-    [context?.chainId, tokenAddress, tokenDecimals, tokenSymbol]
+    [context?.chainId, tokenAddress, tokenDecimals, tokenSymbol],
   );
 
   const vestingEscrowFactoryAddress = useMemo(() => {
@@ -88,12 +88,12 @@ export default function Page() {
       router.push,
       setHookInfo,
       getHooksTransactions,
-    ]
+    ],
   );
 
   const onSubmit = useMemo(
     () => form.handleSubmit(onSubmitCallback),
-    [form, onSubmitCallback]
+    [form, onSubmitCallback],
   );
 
   if (!context)
@@ -147,8 +147,9 @@ export default function Page() {
               autoComplete="off"
               disabled={vestAllFromSwap || vestAllFromAccount}
               validation={{
-                setValueAs: (v) => (v === "" ? undefined : parseInt(v, 10)),
-                required: vestAllFromAccount || vestAllFromSwap ? false : true,
+                setValueAs: (v) =>
+                  v === "" ? undefined : Number.parseInt(v, 10),
+                required: !(vestAllFromAccount || vestAllFromSwap),
               }}
               onKeyDown={(e) =>
                 ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()

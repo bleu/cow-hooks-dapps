@@ -17,7 +17,7 @@ export const useGetHooksInfoVestAllFromAccount = () => {
 
   return useCallback(
     async (
-      params: GetHooksTransactionsParams
+      params: GetHooksTransactionsParams,
     ): Promise<IHooksInfo | undefined> => {
       const {
         token,
@@ -50,7 +50,7 @@ export const useGetHooksInfoVestAllFromAccount = () => {
             vestingDuration: BigInt(periodInSeconds),
             vestingEscrowFactoryAddress: vestingEscrowFactoryAddress,
             user: context.account,
-          }
+          },
         ),
       ]);
 
@@ -64,6 +64,6 @@ export const useGetHooksInfoVestAllFromAccount = () => {
 
       return { txs, permitData };
     },
-    [context?.account, cowShedProxy]
+    [context?.account, cowShedProxy],
   );
 };
