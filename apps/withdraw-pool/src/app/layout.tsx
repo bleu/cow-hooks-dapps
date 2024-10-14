@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </Head>
       <body className="bg-transparent">
         <IFrameContextProvider>
-          <div className="font-sans font-normal scrollbar-w-1 scrollbar scrollbar-thumb-foreground/90 scrollbar-track-slate-300 h-[350px] overflow-y-scroll">
+          <div className="font-sans flex justify-center font-normal scrollbar-w-1 scrollbar scrollbar-thumb-foreground/90 scrollbar-track-slate-300 h-[350px] overflow-y-scroll">
             <UserPoolContextProvider>{children}</UserPoolContextProvider>
           </div>
         </IFrameContextProvider>

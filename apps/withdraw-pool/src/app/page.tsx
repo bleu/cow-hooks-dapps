@@ -3,7 +3,7 @@
 import { Form } from "@bleu/ui";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { withdrawSchema } from "#/utils/schema";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
@@ -71,11 +71,6 @@ export default function Page() {
     [context?.account, getHooksTransactions, setHookInfo, router]
   );
 
-  const onSubmit = useMemo(
-    () => handleSubmit(onSubmitCallback),
-    [onSubmitCallback, handleSubmit]
-  );
-
   if (!context) return null;
 
   if (!context.account) {
@@ -88,7 +83,7 @@ export default function Page() {
 
   if (isLoadingPools) {
     return (
-      <div className="w-full text-center mt-10 p-2">
+      <div className="text-center mt-10 p-2">
         <Spinner size="xl" />
       </div>
     );
@@ -105,7 +100,7 @@ export default function Page() {
   return (
     <Form
       {...form}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit(onSubmitCallback)}
       className="w-full flex flex-col gap-1 py-1 px-4"
     >
       <PoolsDropdownMenu
