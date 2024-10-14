@@ -16,7 +16,7 @@ export function SubmitButton({
     if (!withdrawPct || Number(withdrawPct) === 0)
       return { disabled: true, message: "Define percentage" };
     return { disabled: false, message: "Add pre-hook" };
-  }, [withdrawPct, poolId]);
+  }, [withdrawPct]);
 
   if (!poolId) return;
 

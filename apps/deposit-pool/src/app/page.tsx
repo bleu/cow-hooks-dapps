@@ -2,20 +2,20 @@
 
 import { Button, Form } from "@bleu/ui";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useMemo } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { depositSchema } from "#/utils/schema";
 import {
   BalancesPreview,
-  IMinimalPool,
+  type IMinimalPool,
   PoolsDropdownMenu,
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import { useUserPools } from "#/hooks/useUserPools";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useCallback, useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
+import { useUserPools } from "#/hooks/useUserPools";
+import { depositSchema } from "#/utils/schema";
 
 const PREVIEW_LABELS = ["Pool Balance", "Deposit"];
 
@@ -40,19 +40,19 @@ export default function Page() {
 
   const selectedPool = useMemo(
     () => pools?.find((pool) => pool.id === poolId),
-    [pools, poolId]
+    [pools, poolId],
   );
 
   const onSubmitCallback = useCallback(
     async (data: typeof depositSchema._type) => {
       console.log(data);
     },
-    []
+    [],
   );
 
   const onSubmit = useMemo(
     () => form.handleSubmit(onSubmitCallback),
-    [form, onSubmitCallback]
+    [form, onSubmitCallback],
   );
 
   const { data: poolBalances, isLoading } = useUserPoolBalance({

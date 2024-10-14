@@ -9,11 +9,11 @@ import {
   TableRow,
 } from "@bleu/ui";
 import { formatUnits } from "ethers/lib/utils";
-import { IBalance } from "./types";
-import { Spinner } from "./ui/Spinner";
-import { TokenInfo } from "./TokenInfo";
-import { TokenAmount } from "./TokenAmount";
 import { useMemo } from "react";
+import { TokenAmount } from "./TokenAmount";
+import { TokenInfo } from "./TokenInfo";
+import type { IBalance } from "./types";
+import { Spinner } from "./ui/Spinner";
 
 // This component expects that labels and balances are in the same order.
 // For example, if labels = ["Pool Balance", "Withdraw Balance"],
@@ -33,9 +33,9 @@ export function BalancesPreview({
   const tokenBalancesList = useMemo(
     () =>
       labels.map((label, index) =>
-        balancesList?.map((balances) => balances[index])
+        balancesList?.map((balances) => balances[index]),
       ),
-    [balancesList, labels]
+    [balancesList, labels],
   );
 
   if (!balancesList && isLoading) return <Spinner />;
@@ -85,7 +85,7 @@ function BalancePreview({
           <TokenAmount
             token={poolBalance.token}
             balance={Number(
-              formatUnits(poolBalance.balance, poolBalance.token.decimals)
+              formatUnits(poolBalance.balance, poolBalance.token.decimals),
             )}
             fiatValue={poolBalance.fiatAmount}
             className="items-start"

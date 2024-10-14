@@ -1,26 +1,26 @@
 "use client";
 
 import {
+  type PropsWithChildren,
   createContext,
-  PropsWithChildren,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
 
+import { RPC_URL_MAPPING } from "@bleu/utils/transactionFactory";
+import { CowShedHooks } from "@cowprotocol/cow-sdk";
 import {
-  CoWHookDappActions,
-  HookDappContext,
+  type CoWHookDappActions,
+  type HookDappContext,
   initCoWHookDapp,
 } from "@cowprotocol/hook-dapp-lib";
-import { publicClientMapping } from "../utils/clients";
-import { CowShedHooks } from "@cowprotocol/cow-sdk";
-import { Address, PublicClient } from "viem";
-import { HookDappContextAdjusted, IHooksInfo } from "../types";
-import { Signer } from "ethers";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
-import { RPC_URL_MAPPING } from "@bleu/utils/transactionFactory";
+import type { Signer } from "ethers";
+import type { Address, PublicClient } from "viem";
+import type { HookDappContextAdjusted, IHooksInfo } from "../types";
+import { publicClientMapping } from "../utils/clients";
 
 type IFrameContextType = {
   context?: HookDappContextAdjusted;
@@ -61,7 +61,7 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
   }, [context?.chainId]);
 
   const cowShed = useMemo(() => {
-    if (!context) return;
+    if (!context?.chainId) return;
     return new CowShedHooks(context.chainId);
   }, [context?.chainId]);
 
@@ -71,7 +71,7 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
   }, [context?.account, cowShed]) as Address | undefined;
 
   const publicClient = useMemo(() => {
-    if (!context) return;
+    if (!context?.chainId) return;
     return publicClientMapping[context.chainId];
   }, [context?.chainId]);
 

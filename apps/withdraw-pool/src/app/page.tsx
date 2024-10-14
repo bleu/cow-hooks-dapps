@@ -2,24 +2,24 @@
 
 import { Form } from "@bleu/ui";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useMemo } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { PoolBalancesPreview } from "#/components/PoolBalancePreview";
-import { WithdrawPctSlider } from "#/components/WithdrawPctSlider";
-import { withdrawSchema } from "#/utils/schema";
-import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 import {
-  IMinimalPool,
+  type IMinimalPool,
   PoolsDropdownMenu,
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
-import { useUserPoolContext } from "#/context/userPools";
-import { useRouter } from "next/navigation";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import { findPoolIdOnCallData } from "#/utils/decodeHookCalldata";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { PoolBalancesPreview } from "#/components/PoolBalancePreview";
 import { SubmitButton } from "#/components/SubmitButton";
+import { WithdrawPctSlider } from "#/components/WithdrawPctSlider";
+import { useUserPoolContext } from "#/context/userPools";
+import { useGetHookInfo } from "#/hooks/useGetHookInfo";
+import { findPoolIdOnCallData } from "#/utils/decodeHookCalldata";
+import { withdrawSchema } from "#/utils/schema";
 
 export default function Page() {
   const { context, setHookInfo } = useIFrameContext();
@@ -44,15 +44,15 @@ export default function Page() {
   useEffect(() => {
     if (!context?.hookToEdit) return;
     const recoveredPoolId = findPoolIdOnCallData(
-      context?.hookToEdit?.hook.callData as `0x${string}`
+      context?.hookToEdit?.hook.callData as `0x${string}`,
     );
     if (!recoveredPoolId) return;
     setValue("poolId", recoveredPoolId);
-  }, [context?.hookToEdit]);
+  }, [context?.hookToEdit, setValue]);
 
   const selectedPool = useMemo(
     () => pools?.find((pool) => pool.id === poolId),
-    [pools, poolId]
+    [pools, poolId],
   );
 
   const getHooksTransactions = useGetHookInfo(selectedPool);
@@ -64,12 +64,12 @@ export default function Page() {
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [context?.account, getHooksTransactions, setHookInfo, router]
+    [getHooksTransactions, setHookInfo, router],
   );
 
   const onSubmit = useMemo(
     () => handleSubmit(onSubmitCallback),
-    [onSubmitCallback, handleSubmit]
+    [onSubmitCallback, handleSubmit],
   );
 
   if (!context)

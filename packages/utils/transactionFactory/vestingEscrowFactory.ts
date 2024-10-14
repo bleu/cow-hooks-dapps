@@ -1,16 +1,16 @@
-import { Address, encodeFunctionData, erc20Abi } from "viem";
-import {
+import * as weiroll from "@weiroll/weiroll.js";
+import { type Address, encodeFunctionData, erc20Abi } from "viem";
+import type {
   BaseArgs,
   BaseTransaction,
   ITransaction,
   TRANSACTION_TYPES,
 } from "./types";
-import * as weiroll from "@weiroll/weiroll.js";
 
-import { vestingEscrowFactoryAbi } from "./abis/vestingEscrowFactoryAbi";
 import { Contract } from "ethers";
+import { vestingEscrowFactoryAbi } from "./abis/vestingEscrowFactoryAbi";
 import { weirollAbi } from "./abis/weirollAbi";
-import { WEIROLL_ADDRESS, CommandFlags } from "./weiroll";
+import { CommandFlags, WEIROLL_ADDRESS } from "./weiroll";
 
 export interface CreateVestingWeirollArgs extends BaseArgs {
   type: TRANSACTION_TYPES.CREATE_VESTING_WEIROLL;
@@ -30,31 +30,31 @@ export class CreateVestingWeirollCreator
 
     const tokenWeirollContract = weiroll.Contract.createContract(
       new Contract(args.token, erc20Abi),
-      CommandFlags.STATICCALL
+      CommandFlags.STATICCALL,
     );
 
     const vestingEscrowContract = weiroll.Contract.createContract(
       new Contract(args.vestingEscrowFactoryAddress, vestingEscrowFactoryAbi),
-      CommandFlags.CALL
+      CommandFlags.CALL,
     );
 
     const amount = planner.add(
       // if user is passed, it means it is a Vest All operation,
       // so the user's balance will be read instead of proxy's
-      tokenWeirollContract.balanceOf(args.user ?? args.cowShedProxy)
+      tokenWeirollContract.balanceOf(args.user ?? args.cowShedProxy),
     );
 
     if (args.user) {
       const tokenWeirollContractCall = weiroll.Contract.createContract(
         new Contract(args.token, erc20Abi),
-        CommandFlags.CALL
+        CommandFlags.CALL,
       );
       planner.add(
         tokenWeirollContractCall.transferFrom(
           args.user,
           args.cowShedProxy,
-          amount
-        )
+          amount,
+        ),
       );
     }
 
@@ -63,8 +63,8 @@ export class CreateVestingWeirollCreator
         args.token,
         args.recipient,
         amount,
-        args.vestingDuration
-      )
+        args.vestingDuration,
+      ),
     );
 
     const { commands, state } = planner.plan();

@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
-import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
 import { BalancesPreview, useIFrameContext } from "@bleu/cow-hooks-ui";
+import { useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
 import { multiplyValueByPct } from "#/utils/math";
 
 const PREVIEW_LABELS = ["Pool Balance", "Withdraw Balance"];

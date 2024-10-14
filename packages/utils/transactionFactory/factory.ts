@@ -1,21 +1,28 @@
 import {
-  GaugeClaimRewardsArgs,
+  type GaugeClaimRewardsArgs,
   GaugeClaimRewardsCreator,
-  GaugeWithdrawArgs,
+  type GaugeWithdrawArgs,
   GaugeWithdrawCreator,
 } from "./balancerGauge";
-import { BalancerWithdrawArgs, BalancerWithdrawCreator } from "./balancerPool";
 import {
-  ERC20ApproveArgs,
+  type BalancerWithdrawArgs,
+  BalancerWithdrawCreator,
+} from "./balancerPool";
+import {
+  type ERC20ApproveArgs,
   ERC20ApproveCreator,
-  ERC20TransferFromArgs,
+  type ERC20TransferFromArgs,
   ERC20TransferFromCreator,
 } from "./erc20";
-import { BaseTransaction, ITransaction, TRANSACTION_TYPES } from "./types";
 import {
-  CreateVestingArgs,
+  type BaseTransaction,
+  type ITransaction,
+  TRANSACTION_TYPES,
+} from "./types";
+import {
+  type CreateVestingArgs,
   CreateVestingCreator,
-  CreateVestingWeirollArgs,
+  type CreateVestingWeirollArgs,
   CreateVestingWeirollCreator,
 } from "./vestingEscrowFactory";
 
@@ -45,10 +52,11 @@ const TRANSACTION_CREATORS: {
   [TRANSACTION_TYPES.CREATE_VESTING_WEIROLL]: CreateVestingWeirollCreator,
 };
 
+// This class is intentionally designed with only static members
 export class TransactionFactory {
   static async createRawTx<T extends TRANSACTION_TYPES>(
     type: T,
-    args: TransactionBindings[T]
+    args: TransactionBindings[T],
   ): Promise<BaseTransaction> {
     const TransactionCreator = TRANSACTION_CREATORS[type];
     const txCreator = new TransactionCreator();

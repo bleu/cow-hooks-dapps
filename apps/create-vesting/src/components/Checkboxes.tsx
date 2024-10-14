@@ -1,6 +1,6 @@
-import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
 import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
 
 export const FormCheckbox = ({
   name,
@@ -19,7 +19,7 @@ export const FormCheckbox = ({
     console.log("state", state);
     state ? setValue("amount", 1) : setValue("amount", 0);
     setValue(name, state);
-  }, [state]);
+  }, [name, state, setValue]);
 
   return (
     <div className="flex items-center space-x-2">

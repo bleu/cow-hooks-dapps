@@ -6,19 +6,19 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  formatNumber,
   Label,
   Popover,
   PopoverContent,
   PopoverTrigger,
+  formatNumber,
 } from "@bleu/ui";
-import { ArrowTopRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
-import { useMemo, useState } from "react";
-import { IMinimalPool } from "./types";
 import { BalancerChainName } from "@bleu/utils";
-import { TokenLogo } from "./TokenLogo";
+import { ArrowTopRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { Token } from "@uniswap/sdk-core";
+import { useMemo, useState } from "react";
+import { TokenLogo } from "./TokenLogo";
 import { useIFrameContext } from "./context/iframe";
+import type { IMinimalPool } from "./types";
 
 export function PoolsDropdownMenu({
   onSelect,
@@ -108,6 +108,7 @@ export function PoolsDropdownMenu({
             className="inline-flex items-center transition-colors text-primary underline-offset-4 hover:underline justify-start p-0 px-1 m-0 text-xs h-fit"
             href={poolLink}
             target="_blank"
+            rel="noreferrer"
           >
             Check pool details
             <ArrowTopRightIcon className="size-4 shrink-0" />
@@ -132,7 +133,7 @@ export function PoolItem({ pool }: { pool: IMinimalPool }) {
           context?.chainId,
           token.address,
           token.decimals,
-          token.symbol
+          token.symbol,
         );
 
         return (

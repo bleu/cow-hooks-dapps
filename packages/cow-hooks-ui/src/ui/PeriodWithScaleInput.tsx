@@ -1,21 +1,21 @@
-import { InfoTooltip } from "./TooltipBase";
 import {
-  cn,
   Input,
   Label,
   Popover,
   PopoverContent,
   PopoverTrigger,
+  cn,
 } from "@bleu/ui";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { HTMLProps, useState } from "react";
+import { type HTMLProps, useState } from "react";
 import {
-  FieldError,
-  RegisterOptions,
+  type FieldError,
+  type RegisterOptions,
   useFormContext,
   useFormState,
   useWatch,
 } from "react-hook-form";
+import { InfoTooltip } from "./TooltipBase";
 
 interface IPeriodWithScaleInput extends HTMLProps<HTMLInputElement> {
   periodScaleOptions: string[];
@@ -63,7 +63,7 @@ export function PeriodWithScaleInput({
         <Input
           className={cn(
             "outline-none text-left w-14 max-h-10 px-2.5 py-0 border-none rounded-l-xl text-base text-color-text-paper bg-inherit [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
-            className
+            className,
           )}
           {...register(namePeriodValue, validation)}
           {...props}
@@ -85,6 +85,7 @@ export function PeriodWithScaleInput({
               return (
                 <button
                   key={periodScale}
+                  type="button"
                   className="w-[88px] h-8 p-2.5 flex justify-center items-center rounded-xl hover:bg-color-paper-darker"
                   onClick={() => {
                     setOpen(false);

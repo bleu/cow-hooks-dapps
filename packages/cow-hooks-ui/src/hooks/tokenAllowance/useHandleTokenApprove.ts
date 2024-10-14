@@ -1,3 +1,4 @@
+import { MAX_UINT256 } from "@balancer/sdk";
 import {
   TRANSACTION_TYPES,
   TransactionFactory,
@@ -5,7 +6,6 @@ import {
 import type { Signer } from "ethers";
 import { useCallback } from "react";
 import type { Address } from "viem";
-import { MAX_UINT256 } from "@balancer/sdk";
 
 export function useHandleTokenMaxApprove({
   signer,
@@ -23,7 +23,7 @@ export function useHandleTokenMaxApprove({
         amount: MAX_UINT256,
       });
     },
-    [signer, spender]
+    [signer, spender],
   );
 }
 
@@ -50,7 +50,7 @@ export async function handleTokenApprove({
   } as const;
   const txData = await TransactionFactory.createRawTx(
     approveArgs.type,
-    approveArgs
+    approveArgs,
   );
 
   const transaction = await signer.sendTransaction({

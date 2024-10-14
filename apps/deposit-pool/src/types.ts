@@ -1,6 +1,6 @@
+import type { BaseTransaction } from "@bleu/cow-hooks-ui";
 import type { Token } from "@uniswap/sdk-core";
-import { BigNumberish } from "ethers";
-import { BaseTransaction } from "@bleu/cow-hooks-ui";
+import type { BigNumberish } from "ethers";
 
 export interface SignatureStepsProps {
   callback: () => Promise<void>;

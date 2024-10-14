@@ -1,8 +1,8 @@
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, type BigNumberish } from "ethers";
 
 export function multiplyValueByPct(
   value: BigNumberish,
-  pct: number
+  pct: number,
 ): BigNumber {
   return BigNumber.from(value).mul(pct).div(100);
 }

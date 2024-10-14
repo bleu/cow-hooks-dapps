@@ -8,7 +8,7 @@ export function useHookDeadline({
 }) {
   return useMemo(() => {
     return BigInt(generateTimestampOnNextHour()); // TODO check valid to parameter
-  }, [context?.orderParams?.validTo]);
+  }, []);
 }
 
 const generateTimestampOnNextHour = () => {

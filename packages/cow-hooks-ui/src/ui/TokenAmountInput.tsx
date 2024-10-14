@@ -1,14 +1,14 @@
-import { TokenLogo } from "../TokenLogo";
-import { InfoTooltip } from "./TooltipBase";
-import { cn, Input, Label } from "@bleu/ui";
-import { HTMLProps } from "react";
-import { Token } from "@uniswap/sdk-core";
+import { Input, Label, cn } from "@bleu/ui";
+import type { Token } from "@uniswap/sdk-core";
+import type { HTMLProps } from "react";
 import {
-  FieldError,
-  RegisterOptions,
+  type FieldError,
+  type RegisterOptions,
   useFormContext,
   useFormState,
 } from "react-hook-form";
+import { TokenLogo } from "../TokenLogo";
+import { InfoTooltip } from "./TooltipBase";
 
 interface IPeriodWithScaleInput
   extends Omit<HTMLProps<HTMLInputElement>, "name"> {
@@ -61,7 +61,7 @@ export function TokenAmountInput({
           // autoComplete="off"
           className={cn(
             "outline-none text-right w-full max-h-10 px-2.5 py-0 border-none rounded-l-xl text-base text-color-text-paper bg-inherit [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
-            className
+            className,
           )}
           {...register(name, validation)}
           {...props}

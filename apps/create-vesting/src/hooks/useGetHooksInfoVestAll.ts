@@ -1,23 +1,23 @@
 import {
+  BaseTransaction,
+  type IHooksInfo,
+  useIFrameContext,
+} from "@bleu/cow-hooks-ui";
+import {
   TRANSACTION_TYPES,
   TransactionFactory,
 } from "@bleu/utils/transactionFactory";
 import { useCallback } from "react";
-import { GetHooksTransactionsParams } from "./useGetHooksTransactions";
-import {
-  BaseTransaction,
-  IHooksInfo,
-  useIFrameContext,
-} from "@bleu/cow-hooks-ui";
+import { type Address, maxUint256 } from "viem";
 import { scaleToSecondsMapping } from "#/utils/scaleToSecondsMapping";
-import { Address, maxUint256 } from "viem";
+import type { GetHooksTransactionsParams } from "./useGetHooksTransactions";
 
 export const useGetHooksInfoVestAll = () => {
   const { context, cowShedProxy } = useIFrameContext();
 
   return useCallback(
     async (
-      params: GetHooksTransactionsParams
+      params: GetHooksTransactionsParams,
     ): Promise<IHooksInfo | undefined> => {
       const {
         token,
@@ -50,7 +50,7 @@ export const useGetHooksInfoVestAll = () => {
             vestingDuration: BigInt(periodInSeconds),
             vestingEscrowFactoryAddress: vestingEscrowFactoryAddress,
             user: context.account,
-          }
+          },
         ),
       ]);
 
@@ -64,6 +64,6 @@ export const useGetHooksInfoVestAll = () => {
 
       return { txs, permitData };
     },
-    [context?.account, cowShedProxy]
+    [context?.account, cowShedProxy],
   );
 };

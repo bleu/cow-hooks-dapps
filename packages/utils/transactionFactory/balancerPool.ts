@@ -1,20 +1,20 @@
-import { Address } from "viem";
 import {
+  type PoolState,
+  RemoveLiquidity,
+  RemoveLiquidityKind,
+  type RemoveLiquidityProportionalInput,
+  Slippage,
+} from "@balancer/sdk";
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
+import type { BigNumber } from "ethers";
+import type { Address } from "viem";
+import { RPC_URL_MAPPING } from "./rpcs";
+import type {
   BaseArgs,
   BaseTransaction,
   ITransaction,
   TRANSACTION_TYPES,
 } from "./types";
-import {
-  PoolState,
-  RemoveLiquidity,
-  RemoveLiquidityKind,
-  RemoveLiquidityProportionalInput,
-  Slippage,
-} from "@balancer/sdk";
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { BigNumber } from "ethers";
-import { RPC_URL_MAPPING } from "./rpcs";
 
 export interface BalancerWithdrawArgs extends BaseArgs {
   type: TRANSACTION_TYPES.BALANCER_WITHDRAW;

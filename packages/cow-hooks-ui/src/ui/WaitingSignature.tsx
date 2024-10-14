@@ -1,8 +1,8 @@
 "use client";
 
-import { SignatureStepsProps } from "../types";
 import { Button } from "@bleu/ui";
 import useSWR from "swr";
+import type { SignatureStepsProps } from "../types";
 import { Spinner } from "./Spinner";
 import { InfoTooltip } from "./TooltipBase";
 
