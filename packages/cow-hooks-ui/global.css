@@ -175,10 +175,158 @@ div[data-rk] {
   * {
     @apply border-border;
   }
+
   body {
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
     @apply bg-background text-foreground;
+  }
+
+  body {
+    @apply text-color-text-paper;
+  }
+
+  p,
+  label,
+  span,
+  input {
+    @apply text-inherit;
+  }
+
+  label {
+    @apply font-semibold;
+  }
+
+  /* Studio Feixen Sans */
+  @font-face {
+    font-family: "studiofeixen";
+    src: url("/fonts/studiofeixensans-ultralight.woff2") format("woff2");
+    font-weight: 200;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixen";
+    src: url("/fonts/studiofeixensans-light.woff2") format("woff2");
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixen";
+    src: url("/fonts/studiofeixensans-regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixen";
+    src: url("/fonts/studiofeixensans-book.woff2") format("woff2");
+    font-weight: 450;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixen";
+    src: url("/fonts/studiofeixensans-medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixen";
+    src: url("/fonts/studiofeixensans-semibold.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixen";
+    src: url("/fonts/studiofeixensans-bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  /* Studio Feixen Serif */
+  @font-face {
+    font-family: "studiofeixenserif";
+    src: url("/fonts/studiofeixenserif-ultralight.woff2") format("woff2");
+    font-weight: 200;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixenserif";
+    src: url("/fonts/studiofeixenserif-light.woff2") format("woff2");
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixenserif";
+    src: url("/fonts/studiofeixenserif-regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixenserif";
+    src: url("/fonts/studiofeixenserif-book.woff2") format("woff2");
+    font-weight: 450;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixenserif";
+    src: url("/fonts/studiofeixenserif-medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixenserif";
+    src: url("/fonts/studiofeixenserif-semibold.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixenserif";
+    src: url("/fonts/studiofeixenserif-bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  /* Studio Feixen Mono */
+  @font-face {
+    font-family: "studiofeixenmono";
+    src: url("/fonts/studiofeixenmono-ultralight.woff2") format("woff2");
+    font-weight: 200;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixenmono";
+    src: url("/fonts/studiofeixenmono-light.woff2") format("woff2");
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixenmono";
+    src: url("/fonts/studiofeixenmono-regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixenmono";
+    src: url("/fonts/studiofeixenmono-book.woff2") format("woff2");
+    font-weight: 450;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixenmono";
+    src: url("/fonts/studiofeixenmono-medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixenmono";
+    src: url("/fonts/studiofeixenmono-semibold.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "studiofeixenmono";
+    src: url("/fonts/studiofeixenmono-bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
   }
 }
 

@@ -8,11 +8,12 @@ export interface BaseTransaction {
   to: string;
   value: bigint;
   callData: string;
+  isDelegateCall?: boolean;
 }
 
 export interface IHooksInfo {
   txs: BaseTransaction[];
-  permitData: {
+  permitData?: {
     tokenAddress: string;
     amount: BigNumberish;
     tokenSymbol: string;
@@ -22,6 +23,14 @@ export interface IHooksInfo {
 export interface HookDappContextAdjusted extends HookDappContext {
   account?: Address;
   chainId: SupportedChainId;
+}
+
+export interface SignatureStepsProps {
+  callback: () => Promise<void>;
+  label: string;
+  description: string;
+  id: string;
+  tooltipText?: string;
 }
 
 export interface IPool {

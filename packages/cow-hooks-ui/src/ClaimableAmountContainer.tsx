@@ -7,7 +7,7 @@ export const ClaimableAmountContainer = ({
   children?: ReactNode;
 }) => (
   <div
-    className="flex justify-between items-center bg-color-paper-darker p-3 my-4 rounded-xl"
+    className="flex justify-between items-center bg-color-paper-darker p-3 my-4 rounded-xl text-xs xsm:text-base"
     {...props}
   >
     {children}

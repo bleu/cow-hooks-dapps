@@ -1,7 +1,7 @@
 import { Address, erc20Abi, PublicClient } from "viem";
 import { useCallback } from "react";
 import { BigNumber, Signer } from "ethers";
-import { JsonRpcProvider } from "@ethersproject/providers";
+import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import {
   generatePermitHook,
   getPermitUtilsInstance,
@@ -53,12 +53,31 @@ export function useHandleTokenAllowance({
         throw new Error("Token allowance not available");
       }
 
-      if (amount.lte(currentAllowance)) {
+      if (amount.lte(BigNumber.from(currentAllowance))) {
         // amount is less than or equal to current allowance so no need to approve
         return;
       }
 
       const { chainId, account } = context;
+
+      //@ts-ignore
+      const web3Provider = new Web3Provider(window.ethereum);
+      async function connectWallet() {
+        //@ts-ignore
+        if (typeof window.ethereum !== "undefined") {
+          try {
+            // Request account access
+            //@ts-ignore
+            await window.ethereum.request({ method: "eth_requestAccounts" });
+          } catch (error) {
+            console.error("User denied account access");
+          }
+        } else {
+          console.log("Please install MetaMask!");
+        }
+      }
+
+      await connectWallet();
 
       const permitInfo = await getTokenPermitInfo({
         spender,
@@ -80,25 +99,27 @@ export function useHandleTokenAllowance({
 
       const eip2162Utils = getPermitUtilsInstance(
         chainId,
-        jsonRpcProvider,
+        web3Provider,
         account
       );
 
       const nonce = await eip2162Utils.getTokenNonce(tokenAddress, account);
-
-      return await generatePermitHook({
+      const hook = await generatePermitHook({
         chainId,
         inputToken: {
           address: tokenAddress,
           name: tokenName,
         },
         spender: spender,
-        provider: jsonRpcProvider,
+        //provider: jsonRpcProvider,
+        provider: web3Provider,
         permitInfo,
         eip2162Utils: eip2162Utils,
         account,
         nonce,
       });
+      if (!hook) throw new Error("Couldn't build hook");
+      return hook;
     },
     [jsonRpcProvider, context, publicClient, spender]
   );

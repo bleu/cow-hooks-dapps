@@ -10,7 +10,7 @@ import {
 } from "@bleu/ui";
 import { formatUnits } from "ethers/lib/utils";
 import { IBalance } from "./types";
-import { Spinner } from "./Spinner";
+import { Spinner } from "./ui/Spinner";
 import { TokenInfo } from "./TokenInfo";
 import { TokenAmount } from "./TokenAmount";
 import { useMemo } from "react";
@@ -25,7 +25,7 @@ export function BalancesPreview({
   balancesList,
 }: {
   labels: string[];
-  isLoading: boolean;
+  isLoading?: boolean;
   balancesList?: IBalance[][];
 }) {
   if (isLoading) return <Spinner />;
@@ -41,13 +41,17 @@ export function BalancesPreview({
   if (!balancesList && isLoading) return <Spinner />;
 
   return (
-    <div className="p-1 border-muted border-2 rounded-lg">
+    <div className="border border-1 rounded-2xl">
       <Table>
-        <TableHeader>
+        <TableHeader className="[&_tr]:border-b dark:[&_tr]:border-b-1">
           <TableRow className="hover:bg-transparent">
-            <TableHead>Token</TableHead>
+            <TableHead>
+              <span className="font-normal text-sm">Token</span>
+            </TableHead>
             {labels.map((label) => (
-              <TableHead key={`label-${label}`}>{label}</TableHead>
+              <TableHead key={`label-${label}`}>
+                <span className="font-normal text-sm">{label}</span>
+              </TableHead>
             ))}
           </TableRow>
         </TableHeader>
@@ -76,7 +80,7 @@ function BalancePreview({
   labels: string[];
 }) {
   return (
-    <TableRow className="hover:bg-transparent">
+    <TableRow className="hover:bg-transparent border-none">
       <TableCell>
         <TokenInfo token={balances[0].token} showExplorerLink={true} />
       </TableCell>

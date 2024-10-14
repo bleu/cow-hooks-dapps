@@ -10,7 +10,6 @@ import {
   BalancesPreview,
   IPool,
   PoolsDropdownMenu,
-  Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
@@ -59,12 +58,7 @@ export default function Page() {
     chainId: context?.chainId,
   });
 
-  if (!context)
-    return (
-      <div className="w-full text-center mt-10 p-2">
-        <Spinner />
-      </div>
-    );
+  if (!context) return null;
 
   if (!context.account) {
     return <span className="mt-10 text-center">Connect your wallet</span>;
@@ -73,8 +67,6 @@ export default function Page() {
   if (!ALL_SUPPORTED_CHAIN_IDS.includes(context.chainId)) {
     return <span className="mt-10 text-center">Unsupported chain</span>;
   }
-
-  console.log(context.orderParams);
 
   if (!context?.orderParams?.buyTokenAddress) {
     return (
@@ -92,7 +84,6 @@ export default function Page() {
     >
       <PoolsDropdownMenu
         onSelect={(pool: IPool) => setValue("poolId", pool.id)}
-        loading={isPoolsLoading}
         PoolComponent={DropdownPoolComponent}
         pools={pools || []}
         poolsEmptyMessage="None CoW pool with the buy token was found"
