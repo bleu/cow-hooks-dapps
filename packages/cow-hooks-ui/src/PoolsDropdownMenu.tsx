@@ -8,7 +8,6 @@ import {
   CommandItem,
   CommandList,
   formatNumber,
-  Label,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -65,9 +64,8 @@ export function PoolsDropdownMenu({
           )}
           <ChevronDownIcon className="size-5" />
         </PopoverTrigger>
-        <PopoverContent className="w-[440px] bg-background">
+        <PopoverContent className="xsm:w-[440px]">
           <Command
-            className="w-full"
             filter={(value: string, search: string) => {
               setSearch(search);
               if (!search) return 1;
@@ -76,9 +74,9 @@ export function PoolsDropdownMenu({
             }}
             value={search}
           >
-            <CommandInput className="bg-background text-foreground pb-2" />
-            <CommandList className="w-full">
-              <CommandEmpty className="w-full">No results found</CommandEmpty>
+            <CommandInput />
+            <CommandList>
+              <CommandEmpty>No results found</CommandEmpty>
               {pools?.map((pool) => (
                 <CommandItem
                   key={pool.id}
