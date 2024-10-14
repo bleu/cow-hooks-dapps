@@ -35,7 +35,7 @@ import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
 import { vestingFactoriesMapping } from "#/utils/vestingFactoriesMapping";
 
 export default function Page() {
-  const { vestAllFromSwap } = useTokenAmountTypeContext();
+  const { vestAllFromSwap, vestAllFromAccount } = useTokenAmountTypeContext();
   const { context, setHookInfo } = useIFrameContext();
   const router = useRouter();
 
@@ -145,8 +145,11 @@ export default function Page() {
               label="Amount"
               placeholder="0.0"
               autoComplete="off"
-              disabled={vestAllFromSwap}
-              validation={{ valueAsNumber: true, required: true }}
+              disabled={vestAllFromSwap || vestAllFromAccount}
+              validation={{
+                setValueAs: (v) => (v === "" ? undefined : parseInt(v, 10)),
+                required: vestAllFromAccount || vestAllFromSwap ? false : true,
+              }}
               onKeyDown={(e) =>
                 ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
               }
