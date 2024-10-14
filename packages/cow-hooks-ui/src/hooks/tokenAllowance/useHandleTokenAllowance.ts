@@ -73,7 +73,7 @@ export function useHandleTokenAllowance({
             console.error("User denied account access");
           }
         } else {
-          console.log("Please install MetaMask!");
+          console.error("User does not have metamask!");
         }
       }
 

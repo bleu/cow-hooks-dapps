@@ -16,7 +16,6 @@ export const FormCheckbox = ({
   const { setValue } = useFormContext();
 
   useEffect(() => {
-    console.log("state", state);
     state ? setValue("amount", 1) : setValue("amount", 0);
     setValue(name, state);
   }, [name, state, setValue]);

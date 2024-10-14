@@ -26,6 +26,12 @@
       },
       "complexity": {
         "noStaticOnlyClass": "off"
+      },
+      "suspicious": {
+        "noConsole": {
+          "level": "info",
+          "options": { "allow": ["warn", "error"] }
+        }
       }
     }
   },

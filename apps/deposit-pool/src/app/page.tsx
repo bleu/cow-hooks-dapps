@@ -43,17 +43,7 @@ export default function Page() {
     [pools, poolId],
   );
 
-  const onSubmitCallback = useCallback(
-    async (data: typeof depositSchema._type) => {
-      console.log(data);
-    },
-    [],
-  );
-
-  const onSubmit = useMemo(
-    () => form.handleSubmit(onSubmitCallback),
-    [form, onSubmitCallback],
-  );
+  const onSubmit = useMemo(() => form.handleSubmit(() => {}), [form]);
 
   const { data: poolBalances, isLoading } = useUserPoolBalance({
     poolId,
