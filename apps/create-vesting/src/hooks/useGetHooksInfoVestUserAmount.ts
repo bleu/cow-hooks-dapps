@@ -13,7 +13,7 @@ export const useGetHooksInfoVestUserAmount = () => {
 
   return useCallback(
     async (
-      params: GetHooksTransactionsParams,
+      params: GetHooksTransactionsParams
     ): Promise<IHooksInfo | undefined> => {
       const {
         token,
@@ -21,12 +21,12 @@ export const useGetHooksInfoVestUserAmount = () => {
         formData: { period, periodScale, amount, recipient },
       } = params;
 
-      if (!context?.account || !cowShedProxy) return;
+      if (!context?.account || !cowShedProxy || !amount) return;
 
       const periodInSeconds = period * scaleToSecondsMapping[periodScale];
       const amountWei = parseUnits(
         amount.toFixed(token.decimals),
-        token.decimals,
+        token.decimals
       );
       const tokenAddress = token.address as Address;
       const tokenSymbol = token.symbol ?? "";
@@ -69,6 +69,6 @@ export const useGetHooksInfoVestUserAmount = () => {
 
       return { txs, permitData };
     },
-    [context?.account, cowShedProxy],
+    [context?.account, cowShedProxy]
   );
 };
