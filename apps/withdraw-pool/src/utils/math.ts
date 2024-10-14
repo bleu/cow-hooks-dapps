@@ -6,3 +6,10 @@ export function multiplyValueByPct(
 ): BigNumber {
   return BigNumber.from(value).mul(pct).div(100);
 }
+
+export function getPctFromValue(
+  value: BigNumberish,
+  total: BigNumberish
+): number {
+  return BigNumber.from(value).mul(100).div(total).toNumber();
+}

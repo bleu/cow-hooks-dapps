@@ -2,7 +2,7 @@
 
 import { IFrameContextProvider } from "@bleu/cow-hooks-ui";
 import { UserPoolContextProvider } from "#/context/userPools";
-import "#/global.css";
+import "@bleu/cow-hooks-ui/global.css";
 import Head from "next/head";
 
 import type * as React from "react";
@@ -13,9 +13,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Head>
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <body className="flex h-full flex-col font-sans font-normal bg-background text-foreground">
+      <body className="bg-transparent">
         <IFrameContextProvider>
-          <UserPoolContextProvider>{children}</UserPoolContextProvider>
+          <div className="font-sans flex justify-center font-normal scrollbar-w-1 scrollbar scrollbar-thumb-foreground/90 scrollbar-track-slate-300 h-[350px] overflow-y-scroll">
+            <UserPoolContextProvider>{children}</UserPoolContextProvider>
+          </div>
         </IFrameContextProvider>
       </body>
     </html>

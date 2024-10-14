@@ -1,6 +1,6 @@
 "use client";
 
-import "#/global.css";
+import "@bleu/cow-hooks-ui/global.css";
 import { IFrameContextProvider } from "@bleu/cow-hooks-ui";
 import Head from "next/head";
 import type * as React from "react";

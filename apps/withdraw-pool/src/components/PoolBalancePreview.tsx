@@ -1,25 +1,20 @@
 "use client";
 
-import { BalancesPreview, useIFrameContext } from "@bleu/cow-hooks-ui";
 import { useMemo } from "react";
+import { BalancesPreview, IBalance } from "@bleu/cow-hooks-ui";
 import { useFormContext, useWatch } from "react-hook-form";
-import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
 import { multiplyValueByPct } from "#/utils/math";
 
-const PREVIEW_LABELS = ["Pool Balance", "Withdraw Balance"];
+const PREVIEW_LABELS = ["Current balance", "Withdraw balance"];
 
-export function PoolBalancesPreview() {
+export function PoolBalancesPreview({
+  poolBalances,
+}: {
+  poolBalances: IBalance[];
+}) {
   const { control } = useFormContext();
 
-  const { withdrawPct, poolId } = useWatch({ control });
-
-  const { context } = useIFrameContext();
-
-  const { data: poolBalances, isLoading } = useUserPoolBalance({
-    user: context?.account,
-    chainId: context?.chainId,
-    poolId,
-  });
+  const { withdrawPct } = useWatch({ control });
 
   const withdrawBalance = useMemo(() => {
     if (!poolBalances || !withdrawPct) return [];
@@ -30,13 +25,10 @@ export function PoolBalancesPreview() {
     }));
   }, [poolBalances, withdrawPct]);
 
-  if (!poolBalances) return;
-
   return (
     <BalancesPreview
       labels={PREVIEW_LABELS}
       balancesList={[poolBalances, withdrawBalance]}
-      isLoading={isLoading}
     />
   );
 }

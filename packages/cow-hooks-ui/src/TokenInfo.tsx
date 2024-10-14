@@ -5,6 +5,7 @@ import { ArrowTopRightIcon } from "@radix-ui/react-icons";
 import type { Token } from "@uniswap/sdk-core";
 import { BlockExplorerLink } from "./ExplorerLink";
 import { TokenLogo } from "./TokenLogo";
+import { getBlockExplorerUrl } from "@bleu/utils";
 
 export function TokenInfo({
   token,
@@ -17,6 +18,7 @@ export function TokenInfo({
   showBalance?: boolean;
   showExplorerLink?: boolean;
 }) {
+  const tokenLink = getBlockExplorerUrl(token.chainId, "token", token.address);
   return (
     <div className="flex items-center gap-x-1">
       <div className="flex shrink-0 items-center justify-center">
@@ -32,15 +34,9 @@ export function TokenInfo({
         </div>
       </div>
       <div className="flex items-center space-x-1">
-        <span>{token.symbol}</span>
-        {showExplorerLink && (
-          <BlockExplorerLink
-            type="token"
-            label={<ArrowTopRightIcon />}
-            identifier={token.address}
-            networkId={token.chainId}
-          />
-        )}
+        <a className="hover:underline" href={tokenLink} target="_blank">
+          {token.symbol}
+        </a>
       </div>
       <div>
         {balance &&

@@ -51,6 +51,7 @@ export function trustTokenLogoUrl(
 }
 
 const FALLBACK_SRC = "/assets/generic-token-logo.png";
+
 export const TokenLogo = ({
   token,
   alt,
@@ -59,6 +60,11 @@ export const TokenLogo = ({
   className,
   quality,
 }: ImageFallbackProps) => {
+  const [index, setIndex] = useState(0);
+
+  const [reveal, setReveal] = useState(false);
+  const visibility = reveal ? "visible" : "hidden";
+
   const imagesSrc = [
     cowprotocolTokenLogoUrl(token.address?.toLowerCase(), token.chainId),
     cowprotocolTokenLogoUrl(token.address?.toLowerCase(), 1),
@@ -68,22 +74,33 @@ export const TokenLogo = ({
     trustTokenLogoUrl(token.address?.toLowerCase(), 1),
     FALLBACK_SRC,
   ];
-  const [index, setIndex] = useState(0);
+
+  const onError = () => {
+    if (index < imagesSrc.length - 1) {
+      setIndex(index + 1);
+    }
+  };
 
   return (
-    <Image
-      className={className}
-      width={Number(width)}
-      height={Number(height)}
-      quality={quality}
-      alt={alt || ""}
-      src={imagesSrc[index] || FALLBACK_SRC}
-      onError={() => {
-        if (index < imagesSrc.length - 1) {
-          setIndex(index + 1);
-        }
+    <div
+      style={{
+        width: `${width}px`,
+        height: `${height}px`,
+        position: "relative",
       }}
-      unoptimized // Disabling to avoid 404 error log on the console
-    />
+    >
+      <Image
+        className={className}
+        width={Number(width)}
+        height={Number(height)}
+        quality={quality}
+        alt={alt || ""}
+        style={{ visibility }}
+        src={imagesSrc[index] || FALLBACK_SRC}
+        onError={onError}
+        onLoadingComplete={() => setReveal(true)}
+        unoptimized
+      />
+    </div>
   );
 };
