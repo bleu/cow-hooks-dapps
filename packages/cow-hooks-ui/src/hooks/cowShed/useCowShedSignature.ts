@@ -27,7 +27,7 @@ export function useCowShedSignature({
           value: BigInt(tx.value),
           callData: tx.callData,
           allowFailure: false,
-          isDelegateCall: false,
+          isDelegateCall: !!tx.isDelegateCall,
         };
       });
       const nonce = getCowShedNonce();

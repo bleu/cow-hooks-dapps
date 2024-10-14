@@ -1,9 +1,10 @@
 "use client";
 
-import { SignatureStepsProps } from "#/types";
+import { SignatureStepsProps } from "../types";
 import { Button } from "@bleu/ui";
 import useSWR from "swr";
-import { InfoTooltip, Spinner } from "@bleu/cow-hooks-ui";
+import { Spinner } from "./Spinner";
+import { InfoTooltip } from "./TooltipBase";
 
 export function WaitingSignature({
   callback,
