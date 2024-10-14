@@ -2,7 +2,7 @@ import { CowHook, CoWHookDappActions } from "@cowprotocol/hook-dapp-lib";
 import { HookDappContextAdjusted } from "../types";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
-import { PublicClient } from "viem";
+import { Address, PublicClient } from "viem";
 import { COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS } from "@cowprotocol/cow-sdk";
 
 export function useSubmitHook({
@@ -22,7 +22,7 @@ export function useSubmitHook({
         account: COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS[
           context.chainId
         ] as `0x${string}`,
-        to: hook.target as `0x${string}`,
+        to: hook.target as Address,
         value: BigInt(0),
         data: hook.callData as `0x${string}`,
       });

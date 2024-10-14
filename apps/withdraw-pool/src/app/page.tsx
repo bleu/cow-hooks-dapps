@@ -3,7 +3,7 @@
 import { Form } from "@bleu/ui";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { withdrawSchema } from "#/utils/schema";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
@@ -16,10 +16,11 @@ import {
 import { useUserPoolContext } from "#/context/userPools";
 import { useRouter } from "next/navigation";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import { decodeHookCallData } from "#/utils/decodeHookCalldata";
+import { decodeExitPoolHookCalldata } from "#/utils/decodeExitPoolHookCalldata";
 import { PoolForm } from "#/components/PoolForm";
 
 export default function Page() {
+  const [isEditHookLoading, setIsEditHookLoading] = useState(true);
   const { context, setHookInfo, publicClient } = useIFrameContext();
   const {
     userPoolSwr: { data: pools, isLoading: isLoadingPools },
@@ -39,19 +40,25 @@ export default function Page() {
 
   const poolId = useWatch({ control, name: "poolId" });
 
-  useEffect(() => {
+  const loadHookInfo = useCallback(async () => {
     if (!context?.hookToEdit || !context.account || !publicClient) return;
-    decodeHookCallData(
-      context?.hookToEdit?.hook.callData as `0x${string}`,
 
-      publicClient,
-      context.account
-    ).then((data) => {
-      if (!data) return;
+    try {
+      const data = await decodeExitPoolHookCalldata(
+        context?.hookToEdit?.hook.callData as `0x${string}`,
+        publicClient,
+        context.account
+      );
       setValue("poolId", data.poolId);
       setValue("withdrawPct", data.withdrawPct);
-    });
+    } finally {
+      setIsEditHookLoading(false);
+    }
   }, [context?.hookToEdit]);
+
+  useEffect(() => {
+    loadHookInfo();
+  }, [loadHookInfo]);
 
   const selectedPool = useMemo(() => {
     return pools?.find(
@@ -81,7 +88,7 @@ export default function Page() {
     return <span className="mt-10 text-center">Unsupported chain</span>;
   }
 
-  if (isLoadingPools) {
+  if (isLoadingPools || isEditHookLoading) {
     return (
       <div className="text-center mt-10 p-2">
         <Spinner size="xl" />

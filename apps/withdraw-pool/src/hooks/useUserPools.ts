@@ -128,13 +128,6 @@ export function useUserPools(chainId?: SupportedChainId, user?: string) {
             },
           }));
         });
-    },
-    {
-      shouldRetryOnError: false,
-      refreshWhenHidden: false,
-      refreshWhenOffline: false,
-      revalidateOnFocus: false,
-      revalidateOnMount: false,
     }
   );
 }
