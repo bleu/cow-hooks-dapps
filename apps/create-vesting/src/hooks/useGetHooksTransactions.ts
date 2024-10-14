@@ -2,7 +2,7 @@ import type { IHooksInfo } from "@bleu/cow-hooks-ui";
 import type { Token } from "@uniswap/sdk-core";
 import type { Address } from "viem";
 import type { createVestingSchema } from "#/utils/schema";
-import { useGetHooksInfoVestAll } from "./useGetHooksInfoVestAll";
+import { useGetHooksInfoVestAllFromAccount } from "./useGetHooksInfoVestAllFromAccount";
 import { useGetHooksInfoVestAllFromSwap } from "./useGetHooksInfoVestAllFromSwap";
 import { useGetHooksInfoVestUserAmount } from "./useGetHooksInfoVestUserAmount";
 
@@ -14,18 +14,18 @@ export interface GetHooksTransactionsParams {
 
 export function useGetHooksTransactions() {
   const getHooksInfoVestAllFromSwap = useGetHooksInfoVestAllFromSwap();
-  const getHooksInfoVestAll = useGetHooksInfoVestAll();
+  const getHooksInfoVestAllFromAccount = useGetHooksInfoVestAllFromAccount();
   const getHooksInfoVestUserAmount = useGetHooksInfoVestUserAmount();
 
   return async (
-    params: GetHooksTransactionsParams,
+    params: GetHooksTransactionsParams
   ): Promise<IHooksInfo | undefined> => {
     const {
-      formData: { vestAll, vestAllFromSwap },
+      formData: { vestAllFromAccount, vestAllFromSwap },
     } = params;
 
-    const hooksInfo = vestAll
-      ? await getHooksInfoVestAll(params)
+    const hooksInfo = vestAllFromAccount
+      ? await getHooksInfoVestAllFromAccount(params)
       : vestAllFromSwap
         ? await getHooksInfoVestAllFromSwap(params)
         : getHooksInfoVestUserAmount(params);

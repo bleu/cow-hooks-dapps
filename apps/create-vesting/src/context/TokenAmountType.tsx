@@ -11,30 +11,30 @@ import {
 type TokenAmountType = {
   vestAllFromSwap: boolean;
   setVestAllFromSwap: (vestAllFromSwap: boolean) => void;
-  vestAll: boolean;
-  setVestAll: (vestAll: boolean) => void;
+  vestAllFromAccount: boolean;
+  setVestAllFromAccount: (vestAllFromAccount: boolean) => void;
 };
 
 export const TokenAmountTypeContext = createContext({} as TokenAmountType);
 
 export function TokenAmountTypeProvider({ children }: PropsWithChildren) {
   const [vestAllFromSwap, setVestAllFromSwap] = useState<boolean>(false);
-  const [vestAll, setVestAll] = useState<boolean>(false);
+  const [vestAllFromAccount, setVestAllFromAccount] = useState<boolean>(false);
 
   useEffect(() => {
-    if (vestAllFromSwap) setVestAll(false);
+    if (vestAllFromSwap) setVestAllFromAccount(false);
   }, [vestAllFromSwap]);
   useEffect(() => {
-    if (vestAll) setVestAllFromSwap(false);
-  }, [vestAll]);
+    if (vestAllFromAccount) setVestAllFromSwap(false);
+  }, [vestAllFromAccount]);
 
   return (
     <TokenAmountTypeContext.Provider
       value={{
         vestAllFromSwap,
         setVestAllFromSwap,
-        vestAll,
-        setVestAll,
+        vestAllFromAccount,
+        setVestAllFromAccount,
       }}
     >
       {children}

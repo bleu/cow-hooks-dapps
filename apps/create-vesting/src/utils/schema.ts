@@ -20,7 +20,7 @@ export const createVestingSchema = z.object({
     .number({ message: "Invalid period" })
     .gt(0, "Period must be greater than 0"),
   vestAllFromSwap: z.boolean(),
-  vestAll: z.boolean(),
+  vestAllFromAccount: z.boolean(),
 });
 
 export type CreateVestingFormData = typeof createVestingSchema._type;

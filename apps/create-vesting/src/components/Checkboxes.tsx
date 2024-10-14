@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
+import { Input, Label } from "@bleu/ui";
 
 export const FormCheckbox = ({
   name,
@@ -22,7 +23,7 @@ export const FormCheckbox = ({
 
   return (
     <div className="flex items-center space-x-2">
-      <input
+      <Input
         type="checkbox"
         id={name}
         name={name}
@@ -30,12 +31,12 @@ export const FormCheckbox = ({
         onChange={() => setState(!state)}
         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
       />
-      <label
+      <Label
         htmlFor={name}
         className="text-sm font-medium text-gray-900 dark:text-gray-300"
       >
         {label}
-      </label>
+      </Label>
     </div>
   );
 };
@@ -52,13 +53,14 @@ export const VestAllFromSwapCheckbox = () => {
   );
 };
 
-export const VestAllCheckbox = () => {
-  const { vestAll, setVestAll } = useTokenAmountTypeContext();
+export const VestAllFromAccountCheckbox = () => {
+  const { vestAllFromAccount, setVestAllFromAccount } =
+    useTokenAmountTypeContext();
   return (
     <FormCheckbox
-      name="vestAll"
-      state={vestAll}
-      setState={setVestAll}
+      name="vestAllFromAccount"
+      state={vestAllFromAccount}
+      setState={setVestAllFromAccount}
       label="Use all your tokens after swap"
     />
   );

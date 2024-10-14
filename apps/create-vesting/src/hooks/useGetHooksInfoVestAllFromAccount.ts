@@ -12,12 +12,12 @@ import { type Address, maxUint256 } from "viem";
 import { scaleToSecondsMapping } from "#/utils/scaleToSecondsMapping";
 import type { GetHooksTransactionsParams } from "./useGetHooksTransactions";
 
-export const useGetHooksInfoVestAll = () => {
+export const useGetHooksInfoVestAllFromAccount = () => {
   const { context, cowShedProxy } = useIFrameContext();
 
   return useCallback(
     async (
-      params: GetHooksTransactionsParams,
+      params: GetHooksTransactionsParams
     ): Promise<IHooksInfo | undefined> => {
       const {
         token,
@@ -41,16 +41,16 @@ export const useGetHooksInfoVestAll = () => {
         }),
         // transfer from user to proxy and create vesting (weiroll)
         TransactionFactory.createRawTx(
-          TRANSACTION_TYPES.CREATE_VESTING_WEIROLL,
+          TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_USER,
           {
-            type: TRANSACTION_TYPES.CREATE_VESTING_WEIROLL,
+            type: TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_USER,
             token: tokenAddress,
             recipient: recipient,
             cowShedProxy,
             vestingDuration: BigInt(periodInSeconds),
             vestingEscrowFactoryAddress: vestingEscrowFactoryAddress,
             user: context.account,
-          },
+          }
         ),
       ]);
 
@@ -64,6 +64,6 @@ export const useGetHooksInfoVestAll = () => {
 
       return { txs, permitData };
     },
-    [context?.account, cowShedProxy],
+    [context?.account, cowShedProxy]
   );
 };

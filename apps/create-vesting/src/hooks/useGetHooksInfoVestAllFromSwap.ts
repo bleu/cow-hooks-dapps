@@ -17,7 +17,7 @@ export const useGetHooksInfoVestAllFromSwap = () => {
 
   return useCallback(
     async (
-      params: GetHooksTransactionsParams,
+      params: GetHooksTransactionsParams
     ): Promise<IHooksInfo | undefined> => {
       const {
         token,
@@ -40,20 +40,20 @@ export const useGetHooksInfoVestAllFromSwap = () => {
         }),
         // Create vesting (weiroll)
         TransactionFactory.createRawTx(
-          TRANSACTION_TYPES.CREATE_VESTING_WEIROLL,
+          TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_PROXY,
           {
-            type: TRANSACTION_TYPES.CREATE_VESTING_WEIROLL,
+            type: TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_PROXY,
             token: tokenAddress,
             recipient: recipient,
             cowShedProxy,
             vestingDuration: BigInt(periodInSeconds),
             vestingEscrowFactoryAddress: vestingEscrowFactoryAddress,
-          },
+          }
         ),
       ]);
 
       return { txs };
     },
-    [context?.account, cowShedProxy],
+    [context?.account, cowShedProxy]
   );
 };

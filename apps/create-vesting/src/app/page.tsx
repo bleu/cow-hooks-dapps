@@ -27,7 +27,7 @@ import {
 import { useReadTokenContract } from "@bleu/cow-hooks-ui";
 import { useRouter } from "next/navigation";
 import {
-  VestAllCheckbox,
+  VestAllFromAccountCheckbox,
   VestAllFromSwapCheckbox,
 } from "#/components/Checkboxes";
 import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
@@ -60,7 +60,7 @@ export default function Page() {
       context?.chainId && tokenAddress && tokenDecimals
         ? new Token(context.chainId, tokenAddress, tokenDecimals, tokenSymbol)
         : undefined,
-    [context?.chainId, tokenAddress, tokenDecimals, tokenSymbol],
+    [context?.chainId, tokenAddress, tokenDecimals, tokenSymbol]
   );
 
   const vestingEscrowFactoryAddress = useMemo(() => {
@@ -88,12 +88,12 @@ export default function Page() {
       router.push,
       setHookInfo,
       getHooksTransactions,
-    ],
+    ]
   );
 
   const onSubmit = useMemo(
     () => form.handleSubmit(onSubmitCallback),
-    [form, onSubmitCallback],
+    [form, onSubmitCallback]
   );
 
   if (!context)
@@ -154,7 +154,7 @@ export default function Page() {
           </div>
           <br />
           <VestAllFromSwapCheckbox />
-          <VestAllCheckbox />
+          <VestAllFromAccountCheckbox />
           <br />
         </ContentWrapper>
         <ButtonPrimary type="submit">
