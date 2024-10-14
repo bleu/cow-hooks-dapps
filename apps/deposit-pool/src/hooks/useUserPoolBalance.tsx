@@ -9,10 +9,11 @@ import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
 import { IBalance } from "@bleu/cow-hooks-ui";
+import { Address } from "viem";
 
 interface IQuery {
   id: `0x${string}`;
-  address: `0x${string}`;
+  address: Address;
   decimals: number;
   symbol: string;
   type: string;
@@ -27,7 +28,7 @@ interface IQuery {
   };
   poolTokens: {
     id: `0x${string}`;
-    address: `0x${string}`;
+    address: Address;
     name: string;
     decimals: number;
     symbol: string;

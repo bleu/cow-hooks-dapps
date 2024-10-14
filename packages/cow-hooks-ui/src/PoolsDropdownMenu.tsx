@@ -1,13 +1,13 @@
 "use client";
 
 import {
+  cn,
   Command,
   CommandEmpty,
   CommandInput,
   CommandItem,
   CommandList,
   formatNumber,
-  Label,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -23,13 +23,12 @@ import { useIFrameContext } from "./context/iframe";
 export function PoolsDropdownMenu({
   onSelect,
   pools,
-  loading,
+  selectedPool,
 }: {
   onSelect: (pool: IMinimalPool) => void;
   pools: IMinimalPool[];
-  loading?: boolean;
+  selectedPool?: IMinimalPool;
 }) {
-  const [selectedPool, setSelectedPool] = useState<IMinimalPool>();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -46,31 +45,27 @@ export function PoolsDropdownMenu({
     return `${baseUrl}/${chainName}/cow/${selectedPool?.id.toLowerCase()}`;
   }, [selectedPool]);
 
-  const disabled = useMemo(() => {
-    return !pools || pools.length === 0;
-  }, [pools]);
-
-  const triggerMessage = useMemo(() => {
-    if (loading) return "Loading...";
-    if (disabled) return "You don't have liquidity in a CoW AMM pool";
-    return selectedPool?.symbol || "Liquidity pool";
-  }, [loading, disabled, selectedPool]);
-
   return (
     <div className="flex flex-col gap-1 py-2">
-      <Label className="px-1 mb-1">Choose liquidity pool</Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
-          className="w-full flex p-2 justify-between rounded-md space-x-1 items-center text-sm bg-background disabled:bg-foreground/10 bg-muted text-foreground rounded-md"
-          disabled={disabled}
+          className={cn(
+            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-background disabled:bg-foreground/10 bg-muted text-foreground",
+            selectedPool
+              ? "bg-background shadow-sm text-foreground hover:bg-primary hover:text-primary-foreground"
+              : "bg-primary text-primary-foreground hover:bg-color-primary-lighter"
+          )}
           onClick={() => setOpen(true)}
         >
-          {selectedPool ? <PoolItem pool={selectedPool} /> : triggerMessage}
-          <ChevronDownIcon className="size-4" />
+          {selectedPool ? (
+            <PoolItem pool={selectedPool} />
+          ) : (
+            "Choose liquidity pool"
+          )}
+          <ChevronDownIcon className="size-5" />
         </PopoverTrigger>
-        <PopoverContent className="w-[440px] bg-background">
+        <PopoverContent className="xsm:w-[440px]">
           <Command
-            className="w-full"
             filter={(value: string, search: string) => {
               setSearch(search);
               if (!search) return 1;
@@ -79,9 +74,9 @@ export function PoolsDropdownMenu({
             }}
             value={search}
           >
-            <CommandInput className="bg-background text-foreground pb-2" />
-            <CommandList className="w-full">
-              <CommandEmpty className="w-full">No results found</CommandEmpty>
+            <CommandInput />
+            <CommandList>
+              <CommandEmpty>No results found</CommandEmpty>
               {pools?.map((pool) => (
                 <CommandItem
                   key={pool.id}
@@ -93,7 +88,6 @@ export function PoolsDropdownMenu({
                   onSelect={() => {
                     setOpen(false);
                     onSelect(pool);
-                    setSelectedPool(pool);
                   }}
                   className="hover:bg-primary hover:text-primary-foreground rounded-md px-2"
                 >

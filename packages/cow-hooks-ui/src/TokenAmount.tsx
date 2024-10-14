@@ -15,7 +15,9 @@ export function TokenAmount({
   return (
     <span className="text-xs">
       {formatNumber(balance, 4)} {token.symbol}{" "}
-      <i>(≈ ${fiatValue >= 0 ? formatNumber(fiatValue, 2) : "0"})</i>
+      <i className="xsm:block hidden">
+        (≈ ${fiatValue >= 0 ? formatNumber(fiatValue, 2) : "0"})
+      </i>
     </span>
   );
 }

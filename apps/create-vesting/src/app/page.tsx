@@ -9,7 +9,6 @@ import {
   Wrapper,
   HookDappContextAdjusted,
   useIFrameContext,
-  Spinner,
 } from "@bleu/cow-hooks-ui";
 import { Token } from "@uniswap/sdk-core";
 
@@ -87,11 +86,8 @@ export default function Page() {
   );
 
   if (!context)
-    return (
-      <div className="h-full flex items-center justify-center">
-        <Spinner />
-      </div>
-    );
+    // For some reason we had a bug with spinner being rendered without styling. Please use null here
+    return null;
 
   if (!context.account)
     return <span className="mt-10 text-center">Connect your wallet</span>;
