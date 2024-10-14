@@ -10,7 +10,6 @@ import {
   BalancesPreview,
   IMinimalPool,
   PoolsDropdownMenu,
-  Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
@@ -61,12 +60,7 @@ export default function Page() {
     chainId: context?.chainId,
   });
 
-  if (!context)
-    return (
-      <div className="w-full text-center mt-10 p-2">
-        <Spinner />
-      </div>
-    );
+  if (!context) return null;
 
   if (!context.account) {
     return <span className="mt-10 text-center">Connect your wallet</span>;
