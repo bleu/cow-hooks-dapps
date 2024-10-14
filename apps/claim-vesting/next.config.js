@@ -10,11 +10,11 @@ const moduleExports = {
   async headers() {
     return [
       {
-        source: '/manifest.json',
+        source: "/manifest.json",
         headers: [
           {
-            key: 'Access-Control-Allow-Origin',
-            value: '*',
+            key: "Access-Control-Allow-Origin",
+            value: "*",
           },
         ],
       },

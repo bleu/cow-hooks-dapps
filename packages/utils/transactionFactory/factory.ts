@@ -1,22 +1,31 @@
 import {
-  GaugeClaimRewardsArgs,
+  type GaugeClaimRewardsArgs,
   GaugeClaimRewardsCreator,
-  GaugeWithdrawArgs,
+  type GaugeWithdrawArgs,
   GaugeWithdrawCreator,
 } from "./balancerGauge";
-import { BalancerWithdrawArgs, BalancerWithdrawCreator } from "./balancerPool";
 import {
-  ERC20ApproveArgs,
+  type BalancerWithdrawArgs,
+  BalancerWithdrawCreator,
+} from "./balancerPool";
+import {
+  type ERC20ApproveArgs,
   ERC20ApproveCreator,
-  ERC20TransferFromArgs,
+  type ERC20TransferFromArgs,
   ERC20TransferFromCreator,
 } from "./erc20";
-import { BaseTransaction, ITransaction, TRANSACTION_TYPES } from "./types";
 import {
-  CreateVestingArgs,
+  type BaseTransaction,
+  type ITransaction,
+  TRANSACTION_TYPES,
+} from "./types";
+import {
+  type CreateVestingArgs,
   CreateVestingCreator,
-  CreateVestingWeirollArgs,
-  CreateVestingWeirollCreator,
+  CreateVestingWeirollProxyArgs,
+  CreateVestingWeirollProxyCreator,
+  CreateVestingWeirollUserArgs,
+  CreateVestingWeirollUserCreator,
 } from "./vestingEscrowFactory";
 
 export type AllTransactionArgs = TransactionBindings[keyof TransactionBindings];
@@ -28,7 +37,8 @@ export interface TransactionBindings {
   [TRANSACTION_TYPES.BALANCER_WITHDRAW]: BalancerWithdrawArgs;
   [TRANSACTION_TYPES.ERC20_APPROVE]: ERC20ApproveArgs;
   [TRANSACTION_TYPES.CREATE_VESTING]: CreateVestingArgs;
-  [TRANSACTION_TYPES.CREATE_VESTING_WEIROLL]: CreateVestingWeirollArgs;
+  [TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_PROXY]: CreateVestingWeirollProxyArgs;
+  [TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_USER]: CreateVestingWeirollUserArgs;
 }
 
 const TRANSACTION_CREATORS: {
@@ -42,9 +52,13 @@ const TRANSACTION_CREATORS: {
   [TRANSACTION_TYPES.BALANCER_WITHDRAW]: BalancerWithdrawCreator,
   [TRANSACTION_TYPES.ERC20_APPROVE]: ERC20ApproveCreator,
   [TRANSACTION_TYPES.CREATE_VESTING]: CreateVestingCreator,
-  [TRANSACTION_TYPES.CREATE_VESTING_WEIROLL]: CreateVestingWeirollCreator,
+  [TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_PROXY]:
+    CreateVestingWeirollProxyCreator,
+  [TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_USER]:
+    CreateVestingWeirollUserCreator,
 };
 
+// This class is intentionally designed with only static members
 export class TransactionFactory {
   static async createRawTx<T extends TRANSACTION_TYPES>(
     type: T,

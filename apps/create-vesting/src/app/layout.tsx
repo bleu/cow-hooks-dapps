@@ -1,9 +1,9 @@
 "use client";
 
 import "@bleu/cow-hooks-ui/global.css";
+import { IFrameContextProvider } from "@bleu/cow-hooks-ui";
 import Head from "next/head";
 import type * as React from "react";
-import { IFrameContextProvider } from "@bleu/cow-hooks-ui";
 import { TokenAmountTypeProvider } from "#/context/TokenAmountType";
 
 export default function Layout({ children }: { children: React.ReactNode }) {

@@ -1,5 +1,5 @@
-import { Address, encodeFunctionData, erc20Abi } from "viem";
-import {
+import { type Address, encodeFunctionData, erc20Abi } from "viem";
+import type {
   BaseArgs,
   BaseTransaction,
   ITransaction,

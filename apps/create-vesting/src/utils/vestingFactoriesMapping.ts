@@ -1,5 +1,5 @@
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { Address } from "viem";
+import type { Address } from "viem";
 
 export const vestingFactoriesMapping: Record<
   SupportedChainId,

@@ -20,7 +20,7 @@ import { decodeExitPoolHookCalldata } from "#/utils/decodeExitPoolHookCalldata";
 import { PoolForm } from "#/components/PoolForm";
 
 export default function Page() {
-  const [isEditHookLoading, setIsEditHookLoading] = useState(true);
+  const [isEditHookLoading, setIsEditHookLoading] = useState(false);
   const { context, setHookInfo, publicClient } = useIFrameContext();
   const {
     userPoolSwr: { data: pools, isLoading: isLoadingPools },

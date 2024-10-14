@@ -1,8 +1,8 @@
-import { IHooksInfo } from "@bleu/cow-hooks-ui";
-import { Address } from "viem";
-import { createVestingSchema } from "#/utils/schema";
-import { Token } from "@uniswap/sdk-core";
-import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
+import type { IHooksInfo } from "@bleu/cow-hooks-ui";
+import type { Token } from "@uniswap/sdk-core";
+import type { Address } from "viem";
+import type { createVestingSchema } from "#/utils/schema";
+import { useGetHooksInfoVestAllFromAccount } from "./useGetHooksInfoVestAllFromAccount";
 import { useGetHooksInfoVestAllFromSwap } from "./useGetHooksInfoVestAllFromSwap";
 import { useGetHooksInfoVestUserAmount } from "./useGetHooksInfoVestUserAmount";
 
@@ -14,14 +14,21 @@ export interface GetHooksTransactionsParams {
 
 export function useGetHooksTransactions() {
   const getHooksInfoVestAllFromSwap = useGetHooksInfoVestAllFromSwap();
+  const getHooksInfoVestAllFromAccount = useGetHooksInfoVestAllFromAccount();
   const getHooksInfoVestUserAmount = useGetHooksInfoVestUserAmount();
 
   return async (
-    params: GetHooksTransactionsParams
+    params: GetHooksTransactionsParams,
   ): Promise<IHooksInfo | undefined> => {
-    const hooksInfo = params.formData.vestAllFromSwap
-      ? await getHooksInfoVestAllFromSwap(params)
-      : await getHooksInfoVestUserAmount(params);
+    const {
+      formData: { vestAllFromAccount, vestAllFromSwap },
+    } = params;
+
+    const hooksInfo = vestAllFromAccount
+      ? await getHooksInfoVestAllFromAccount(params)
+      : vestAllFromSwap
+        ? await getHooksInfoVestAllFromSwap(params)
+        : getHooksInfoVestUserAmount(params);
 
     if (!hooksInfo) throw new Error("Error encoding transactions");
 

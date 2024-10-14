@@ -1,17 +1,17 @@
 "use client";
 
 import {
-  useIFrameContext,
+  type BaseTransaction,
   SignatureSteps,
   WaitingSignature,
-  BaseTransaction,
   useCowShedSignature,
   useHandleTokenAllowance,
+  useIFrameContext,
   useSubmitHook,
 } from "@bleu/cow-hooks-ui";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, type BigNumberish } from "ethers";
 import { useCallback, useMemo, useState } from "react";
-import { Address } from "viem";
+import type { Address } from "viem";
 import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
 
 export default function Page() {
@@ -60,7 +60,7 @@ export default function Page() {
       target: cowShed.getFactoryAddress(),
       callData: cowShedCall,
     });
-  }, [cowShedSignature, hookInfo, permitTxs, cowShed]);
+  }, [cowShedSignature, submitHook, hookInfo, permitTxs, cowShed]);
 
   const permitCallback = useCallback(
     async (permit: {
@@ -70,7 +70,7 @@ export default function Page() {
     }) => {
       const permitData = await handleTokenAllowance(
         BigNumber.from(permit.amount),
-        permit.tokenAddress as Address
+        permit.tokenAddress as Address,
       );
 
       if (permitData) {
@@ -85,7 +85,7 @@ export default function Page() {
       }
       setCurrentStepIndex((prev) => prev + 1);
     },
-    [handleTokenAllowance]
+    [handleTokenAllowance],
   );
 
   const steps = useMemo(() => {
@@ -109,7 +109,7 @@ export default function Page() {
         callback: cowShedCallback,
       },
     ];
-  }, [hookInfo, permitTxs, permitCallback]);
+  }, [hookInfo, permitCallback, cowShedCallback]);
 
   return (
     <div className="flex flex-col gap-2 p-2 text-center h-full justify-between items-center">

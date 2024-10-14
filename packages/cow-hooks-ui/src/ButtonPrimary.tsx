@@ -14,7 +14,7 @@ export const ButtonPrimary: React.FC<
       {
         "border-transparent outline-none cursor-auto shadow-none bg-color-primary text-color-button-text bg-color-paper-darker text-color-button-text-disabled":
           disabled,
-      }
+      },
     )}
     disabled={disabled}
     {...props}

@@ -2,8 +2,8 @@ import { SupportedChainId } from "@cowprotocol/cow-sdk";
 
 import { GraphQLClient } from "graphql-request";
 
-const BASE_URL = `https://api-v3.balancer.fi/graphql`;
-const TEST_URL = `https://test-api-v3.balancer.fi/graphql`;
+const BASE_URL = "https://api-v3.balancer.fi/graphql";
+const TEST_URL = "https://test-api-v3.balancer.fi/graphql";
 
 export const GQL_CLIENT: Record<SupportedChainId, GraphQLClient> = {
   [SupportedChainId.MAINNET]: new GraphQLClient(BASE_URL),

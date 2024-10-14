@@ -1,8 +1,8 @@
 "use client";
 
-import { useUserPools } from "#/hooks/useUserPools";
-import { createContext, PropsWithChildren, useContext } from "react";
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
+import { type PropsWithChildren, createContext, useContext } from "react";
+import { useUserPools } from "#/hooks/useUserPools";
 
 type UserPoolContextType = {
   userPoolSwr: ReturnType<typeof useUserPools>;

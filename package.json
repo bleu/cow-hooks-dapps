@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "turbo dev",
-    "build": "turbo build"
+    "build": "turbo build",
+    "check": "biome check"
   },
   "repository": {
     "type": "git",
@@ -17,10 +18,7 @@
       "pre-commit": "pnpm lint-staged --relative"
     }
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": ["apps/*", "packages/*"],
   "engines": {
     "node": ">=22"
   },

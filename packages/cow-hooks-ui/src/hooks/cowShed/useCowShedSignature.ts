@@ -1,11 +1,11 @@
-import { useCallback } from "react";
-import { useHookDeadline } from "./useHookDeadline";
-import { type CowShedHooks, type ICoWShedCall } from "@cowprotocol/cow-sdk";
-import { getCowShedNonce } from "./getCowShedNonce";
 import { SigningScheme } from "@cowprotocol/contracts";
+import type { CowShedHooks, ICoWShedCall } from "@cowprotocol/cow-sdk";
 import type { Signer } from "ethers";
+import { useCallback } from "react";
+import { getCowShedNonce } from "./getCowShedNonce";
+import { useHookDeadline } from "./useHookDeadline";
 
-import type { HookDappContextAdjusted, BaseTransaction } from "../../types";
+import type { BaseTransaction, HookDappContextAdjusted } from "../../types";
 
 export function useCowShedSignature({
   cowShed,
@@ -36,16 +36,16 @@ export function useCowShedSignature({
         nonce,
         hookDeadline,
         signer,
-        SigningScheme.EIP712
+        SigningScheme.EIP712,
       );
       return cowShed.encodeExecuteHooksForFactory(
         cowShedCalls,
         nonce,
         hookDeadline,
         context.account,
-        signature
+        signature,
       );
     },
-    [hookDeadline, cowShed, signer, context]
+    [hookDeadline, cowShed, signer, context],
   );
 }

@@ -1,11 +1,11 @@
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 
 import { gql } from "graphql-request";
 import useSWR from "swr";
 
-import { Address, parseUnits } from "viem";
+import type { IMinimalPool } from "@bleu/cow-hooks-ui";
 import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
-import { IMinimalPool } from "@bleu/cow-hooks-ui";
+import { type Address, parseUnits } from "viem";
 
 interface IQuery {
   pools: {
@@ -108,11 +108,11 @@ export function useUserPools(chainId?: SupportedChainId, user?: string) {
               ...pool.userBalance,
               walletBalance: parseUnits(
                 pool.userBalance.walletBalance,
-                pool.decimals
+                pool.decimals,
               ),
               totalBalance: parseUnits(
                 pool.userBalance.totalBalance,
-                pool.decimals
+                pool.decimals,
               ),
               stakedBalances: pool.userBalance.stakedBalances.map((staked) => ({
                 balance: parseUnits(staked.balance, pool.decimals),
@@ -123,11 +123,11 @@ export function useUserPools(chainId?: SupportedChainId, user?: string) {
               ...pool.dynamicData,
               totalShares: parseUnits(
                 pool.dynamicData.totalShares,
-                pool.decimals
+                pool.decimals,
               ),
             },
           }));
         });
-    }
+    },
   );
 }

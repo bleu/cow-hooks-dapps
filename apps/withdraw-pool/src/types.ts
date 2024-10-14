@@ -1,8 +1,8 @@
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { HookDappContext } from "@cowprotocol/hook-dapp-lib";
-import { BigNumberish } from "ethers";
-import { Address } from "viem";
-import { BaseTransaction } from "@bleu/cow-hooks-ui";
+import type { BaseTransaction } from "@bleu/cow-hooks-ui";
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
+import type { HookDappContext } from "@cowprotocol/hook-dapp-lib";
+import type { BigNumberish } from "ethers";
+import type { Address } from "viem";
 
 export interface HookDappContextAdjusted extends HookDappContext {
   account?: Address;

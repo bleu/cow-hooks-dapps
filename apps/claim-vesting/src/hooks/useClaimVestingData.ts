@@ -43,7 +43,7 @@ export const useClaimVestingData = ({
         chain: chainMapping[chainId],
         transport: http(),
       }),
-    [chainId]
+    [chainId],
   );
   const {
     claimableAmountWei,
@@ -96,7 +96,7 @@ export const useClaimVestingData = ({
           6,
           "decimal",
           "standard",
-          0.000001
+          0.000001,
         )
       : "0.0";
   const formattedClaimableAmountFullDecimals =
@@ -106,7 +106,7 @@ export const useClaimVestingData = ({
           Number(decimals),
           "decimal",
           "standard",
-          Number(`0.${"0".repeat(Number(decimals) - 1)}1`)
+          Number(`0.${"0".repeat(Number(decimals) - 1)}1`),
         )
       : "0.0";
   const loading = isLoadingToken || isLoadingVesting || isLoadingGasLimit;

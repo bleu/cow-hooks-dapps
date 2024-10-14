@@ -50,7 +50,7 @@ export function PoolsDropdownMenu({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           className={cn(
-            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-background disabled:bg-foreground/10 bg-muted text-foreground",
+            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm disabled:bg-foreground/10 bg-muted text-foreground",
             selectedPool
               ? "bg-background shadow-sm text-foreground hover:bg-primary hover:text-primary-foreground"
               : "bg-primary text-primary-foreground hover:bg-color-primary-lighter"
