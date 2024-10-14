@@ -16,9 +16,9 @@ export function PoolForm({ poolId }: { poolId?: string }) {
     poolId,
   });
 
-  if (!context || !poolId || !poolBalances || !poolBalances.length) return null;
-
   if (isValidating || isLoading) return <Spinner size="xl" />;
+
+  if (!context || !poolId || !poolBalances || !poolBalances.length) return null;
 
   return (
     <div className="size-full flex flex-col gap-2">
