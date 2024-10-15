@@ -7,18 +7,17 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
-    "check": "biome check"
+    "check": "biome check",
+    "prepare": "husky && husky install"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/bleu/cow-hooks-dapps.git"
   },
-  "config": {
-    "ghooks": {
-      "pre-commit": "pnpm lint-staged --relative"
-    }
-  },
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "engines": {
     "node": ">=22"
   },
@@ -34,7 +33,7 @@
     "@commitlint/config-conventional": "19.5.0",
     "@types/node": "^22.6.1",
     "concurrently": "^9.0.1",
-    "ghooks": "^2.0.4",
+    "husky": "^8.0.0",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "turbo": "2.1.2",
