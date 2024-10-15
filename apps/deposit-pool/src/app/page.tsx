@@ -10,7 +10,7 @@ import {
 } from "@bleu/cow-hooks-ui";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
 import { useUserPools } from "#/hooks/useUserPools";

@@ -32,16 +32,16 @@ export function BalancesPreview({
 
   const tokenBalancesList = useMemo(
     () =>
-      labels.map((label, index) =>
-        balancesList?.map((balances) => balances[index]),
+      labels.map((_label, index) =>
+        balancesList?.map((balances) => balances[index])
       ),
-    [balancesList, labels],
+    [balancesList, labels]
   );
 
   if (!balancesList && isLoading) return <Spinner />;
 
   return (
-    <div className="border border-1 rounded-2xl">
+    <div className="border rounded-2xl">
       <Table>
         <TableHeader className="[&_tr]:border-b dark:[&_tr]:border-b-1">
           <TableRow className="hover:bg-transparent">
@@ -89,10 +89,9 @@ function BalancePreview({
           <TokenAmount
             token={poolBalance.token}
             balance={Number(
-              formatUnits(poolBalance.balance, poolBalance.token.decimals),
+              formatUnits(poolBalance.balance, poolBalance.token.decimals)
             )}
             fiatValue={poolBalance.fiatAmount}
-            className="items-start"
           />
         </TableCell>
       ))}

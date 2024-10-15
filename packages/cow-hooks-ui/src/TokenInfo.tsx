@@ -1,17 +1,14 @@
 "use client";
 import { formatNumber } from "@bleu/ui";
-import { ArrowTopRightIcon } from "@radix-ui/react-icons";
 
 import { getBlockExplorerUrl } from "@bleu/utils";
 import type { Token } from "@uniswap/sdk-core";
-import { BlockExplorerLink } from "./ExplorerLink";
 import { TokenLogo } from "./TokenLogo";
 
 export function TokenInfo({
   token,
   balance,
   showBalance = false,
-  showExplorerLink = true,
 }: {
   token: Token;
   balance?: number;
