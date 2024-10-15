@@ -12,7 +12,7 @@ import {
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { Token } from "@uniswap/sdk-core";
-
+const x = 1;
 import { Form } from "@bleu/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useMemo } from "react";
@@ -60,7 +60,7 @@ export default function Page() {
       context?.chainId && tokenAddress && tokenDecimals
         ? new Token(context.chainId, tokenAddress, tokenDecimals, tokenSymbol)
         : undefined,
-    [context?.chainId, tokenAddress, tokenDecimals, tokenSymbol],
+    [context?.chainId, tokenAddress, tokenDecimals, tokenSymbol]
   );
 
   const vestingEscrowFactoryAddress = useMemo(() => {
@@ -88,12 +88,12 @@ export default function Page() {
       router.push,
       setHookInfo,
       getHooksTransactions,
-    ],
+    ]
   );
 
   const onSubmit = useMemo(
     () => form.handleSubmit(onSubmitCallback),
-    [form, onSubmitCallback],
+    [form, onSubmitCallback]
   );
 
   if (!context)
