@@ -3,9 +3,9 @@ import { IPool, useIFrameContext } from "@bleu/cow-hooks-ui";
 import { minimalPoolToPoolState } from "#/utils/poolDataConverter";
 import { BigNumber } from "ethers";
 import {
+  type BalancerWithdrawArgs,
+  type ERC20TransferFromArgs,
   TRANSACTION_TYPES,
-  ERC20TransferFromArgs,
-  BalancerWithdrawArgs,
 } from "@bleu/utils/transactionFactory/";
 
 export function useGetPoolWithdrawArgs(

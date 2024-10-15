@@ -1,6 +1,6 @@
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { useMemo } from "react";
-import { Address, erc20Abi, getContract } from "viem";
+import { type Address, erc20Abi, getContract } from "viem";
 
 export function useTokenContract(tokenAddress?: Address) {
   const { publicClient } = useIFrameContext();

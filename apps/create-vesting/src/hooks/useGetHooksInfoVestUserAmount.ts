@@ -1,15 +1,15 @@
+import { type IHooksInfo, useIFrameContext } from "@bleu/cow-hooks-ui";
 import {
   TRANSACTION_TYPES,
   TransactionFactory,
 } from "@bleu/utils/transactionFactory";
 import { useCallback } from "react";
-import { GetHooksTransactionsParams } from "./useGetHooksTransactions";
-import { IHooksInfo, useIFrameContext } from "@bleu/cow-hooks-ui";
+import { type Address, parseUnits } from "viem";
 import { scaleToSecondsMapping } from "#/utils/scaleToSecondsMapping";
-import { Address, parseUnits } from "viem";
+import type { GetHooksTransactionsParams } from "./useGetHooksTransactions";
 
 export const useGetHooksInfoVestUserAmount = () => {
-  const { context, cowShedProxy, jsonRpcProvider } = useIFrameContext();
+  const { context, cowShedProxy } = useIFrameContext();
 
   return useCallback(
     async (
@@ -21,7 +21,7 @@ export const useGetHooksInfoVestUserAmount = () => {
         formData: { period, periodScale, amount, recipient },
       } = params;
 
-      if (!context?.account || !cowShedProxy) return;
+      if (!context?.account || !cowShedProxy || !amount) return;
 
       const periodInSeconds = period * scaleToSecondsMapping[periodScale];
       const amountWei = parseUnits(
@@ -36,7 +36,7 @@ export const useGetHooksInfoVestUserAmount = () => {
         TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_TRANSFER_FROM, {
           type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM,
           token: tokenAddress,
-          from: context?.account!,
+          from: context?.account,
           to: cowShedProxy,
           amount: amountWei,
           symbol: tokenSymbol,
@@ -69,6 +69,6 @@ export const useGetHooksInfoVestUserAmount = () => {
 
       return { txs, permitData };
     },
-    [context?.account, cowShedProxy, jsonRpcProvider]
+    [context?.account, cowShedProxy]
   );
 };

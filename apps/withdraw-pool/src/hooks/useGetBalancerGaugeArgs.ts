@@ -1,14 +1,14 @@
 import { IPool, useIFrameContext } from "@bleu/cow-hooks-ui";
 import {
-  GaugeClaimRewardsArgs,
-  GaugeWithdrawArgs,
-  ERC20TransferFromArgs,
+  type ERC20TransferFromArgs,
+  type GaugeClaimRewardsArgs,
+  type GaugeWithdrawArgs,
   TRANSACTION_TYPES,
 } from "@bleu/utils/transactionFactory";
-import { HookDappContext } from "@cowprotocol/hook-dapp-lib";
+import type { HookDappContext } from "@cowprotocol/hook-dapp-lib";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
-import { Address } from "viem";
+import type { Address } from "viem";
 
 export function getSingleBalancerGaugeArgs({
   totalBptToWithdraw,

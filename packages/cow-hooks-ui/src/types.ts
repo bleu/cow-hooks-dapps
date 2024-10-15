@@ -1,8 +1,8 @@
-import { BigNumberish } from "ethers";
-import { Address } from "viem";
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { HookDappContext } from "@cowprotocol/hook-dapp-lib";
-import { Token } from "@uniswap/sdk-core";
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
+import type { HookDappContext } from "@cowprotocol/hook-dapp-lib";
+import type { Token } from "@uniswap/sdk-core";
+import type { BigNumberish } from "ethers";
+import type { Address } from "viem";
 
 export interface BaseTransaction {
   to: string;

@@ -42,7 +42,7 @@ export const useReadTokenContract = ({
         decimals: tokenResults?.[1],
       };
     },
-    [publicClient]
+    [publicClient],
   );
 
   const {

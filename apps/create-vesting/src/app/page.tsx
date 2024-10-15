@@ -1,37 +1,41 @@
 "use client";
 
 import {
-  Input,
-  PeriodWithScaleInput,
   ButtonPrimary,
   ContentWrapper,
+  type HookDappContextAdjusted,
+  Input,
+  PeriodWithScaleInput,
+  Spinner,
   TokenAmountInput,
   Wrapper,
-  HookDappContextAdjusted,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { Token } from "@uniswap/sdk-core";
 
-import { useCallback, useMemo } from "react";
 import { Form } from "@bleu/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import {
-  CreateVestingFormData,
+  type CreateVestingFormData,
   createVestingSchema,
   periodScaleOptions,
 } from "#/utils/schema";
 
-import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
-import { useRouter } from "next/navigation";
 import { useReadTokenContract } from "@bleu/cow-hooks-ui";
-import { vestingFactoriesMapping } from "#/utils/vestingFactoriesMapping";
-import { VestAllFromSwapCheckbox } from "#/components/VestAllFromSwapCheckbox";
+import { useRouter } from "next/navigation";
+import {
+  VestAllFromAccountCheckbox,
+  VestAllFromSwapCheckbox,
+} from "#/components/Checkboxes";
 import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
+import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
+import { vestingFactoriesMapping } from "#/utils/vestingFactoriesMapping";
 
 export default function Page() {
-  const { vestAllFromSwap } = useTokenAmountTypeContext();
+  const { vestAllFromSwap, vestAllFromAccount } = useTokenAmountTypeContext();
   const { context, setHookInfo } = useIFrameContext();
   const router = useRouter();
 
@@ -56,7 +60,7 @@ export default function Page() {
       context?.chainId && tokenAddress && tokenDecimals
         ? new Token(context.chainId, tokenAddress, tokenDecimals, tokenSymbol)
         : undefined,
-    [context?.chainId, tokenAddress, tokenDecimals]
+    [context?.chainId, tokenAddress, tokenDecimals, tokenSymbol],
   );
 
   const vestingEscrowFactoryAddress = useMemo(() => {
@@ -67,7 +71,7 @@ export default function Page() {
 
   const onSubmitCallback = useCallback(
     async (data: CreateVestingFormData) => {
-      if (!context || !token || !vestingEscrowFactoryAddress) return;
+      if (!context?.account || !token || !vestingEscrowFactoryAddress) return;
       const hookInfo = await getHooksTransactions({
         token,
         vestingEscrowFactoryAddress,
@@ -77,12 +81,19 @@ export default function Page() {
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [context?.account, token, vestingEscrowFactoryAddress, vestAllFromSwap]
+    [
+      context?.account,
+      token,
+      vestingEscrowFactoryAddress,
+      router.push,
+      setHookInfo,
+      getHooksTransactions,
+    ],
   );
 
   const onSubmit = useMemo(
     () => form.handleSubmit(onSubmitCallback),
-    [form, onSubmitCallback]
+    [form, onSubmitCallback],
   );
 
   if (!context)
@@ -131,8 +142,12 @@ export default function Page() {
               label="Amount"
               placeholder="0.0"
               autoComplete="off"
-              disabled={vestAllFromSwap}
-              validation={{ valueAsNumber: true, required: true }}
+              disabled={vestAllFromSwap || vestAllFromAccount}
+              validation={{
+                setValueAs: (v) =>
+                  v === "" ? undefined : Number.parseInt(v, 10),
+                required: !(vestAllFromAccount || vestAllFromSwap),
+              }}
               onKeyDown={(e) =>
                 ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
               }
@@ -140,6 +155,7 @@ export default function Page() {
           </div>
           <br />
           <VestAllFromSwapCheckbox />
+          <VestAllFromAccountCheckbox />
           <br />
         </ContentWrapper>
         <ButtonPrimary type="submit">

@@ -1,15 +1,15 @@
-import { Address, erc20Abi, PublicClient } from "viem";
-import { useCallback } from "react";
-import { BigNumber, Signer } from "ethers";
-import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import {
+  type GetTokenPermitIntoResult,
+  type PermitInfo,
   generatePermitHook,
   getPermitUtilsInstance,
   getTokenPermitInfo,
-  GetTokenPermitIntoResult,
-  PermitInfo,
 } from "@cowprotocol/permit-utils";
-import { HookDappContextAdjusted } from "../../types";
+import { type JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
+import { BigNumber, type Signer } from "ethers";
+import { useCallback } from "react";
+import { type Address, type PublicClient, erc20Abi } from "viem";
+import type { HookDappContextAdjusted } from "../../types";
 import { handleTokenApprove } from "./useHandleTokenApprove";
 
 export function useHandleTokenAllowance({
@@ -73,7 +73,7 @@ export function useHandleTokenAllowance({
             console.error("User denied account access");
           }
         } else {
-          console.log("Please install MetaMask!");
+          console.error("User does not have metamask!");
         }
       }
 
@@ -100,7 +100,7 @@ export function useHandleTokenAllowance({
       const eip2162Utils = getPermitUtilsInstance(
         chainId,
         web3Provider,
-        account
+        account,
       );
 
       const nonce = await eip2162Utils.getTokenNonce(tokenAddress, account);
@@ -121,12 +121,12 @@ export function useHandleTokenAllowance({
       if (!hook) throw new Error("Couldn't build hook");
       return hook;
     },
-    [jsonRpcProvider, context, publicClient, spender]
+    [jsonRpcProvider, context, publicClient, spender, signer],
   );
 }
 
 export function checkIsPermitInfo(
-  permitInfo: GetTokenPermitIntoResult
+  permitInfo: GetTokenPermitIntoResult,
 ): permitInfo is PermitInfo {
   return "type" in permitInfo && permitInfo.type !== "unsupported";
 }

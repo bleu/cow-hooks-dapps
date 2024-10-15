@@ -1,11 +1,11 @@
-import { Address, encodeFunctionData, erc20Abi } from "viem";
-import {
+import { type Address, encodeFunctionData, erc20Abi } from "viem";
+import { balancerGaugeAbi } from "./abis/balancerGaugeAbi";
+import type {
   BaseArgs,
   BaseTransaction,
   ITransaction,
   TRANSACTION_TYPES,
 } from "./types";
-import { balancerGaugeAbi } from "./abis/balancerGaugeAbi";
 
 export interface GaugeClaimRewardsArgs extends BaseArgs {
   type: TRANSACTION_TYPES.GAUGE_CLAIM_REWARDS;

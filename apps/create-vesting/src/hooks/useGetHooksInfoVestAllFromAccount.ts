@@ -8,11 +8,11 @@ import {
   TransactionFactory,
 } from "@bleu/utils/transactionFactory";
 import { useCallback } from "react";
-import { type Address, maxUint256, parseUnits } from "viem";
+import { type Address, maxUint256 } from "viem";
 import { scaleToSecondsMapping } from "#/utils/scaleToSecondsMapping";
 import type { GetHooksTransactionsParams } from "./useGetHooksTransactions";
 
-export const useGetHooksInfoVestAllFromSwap = () => {
+export const useGetHooksInfoVestAllFromAccount = () => {
   const { context, cowShedProxy } = useIFrameContext();
 
   return useCallback(
@@ -29,30 +29,40 @@ export const useGetHooksInfoVestAllFromSwap = () => {
 
       const periodInSeconds = period * scaleToSecondsMapping[periodScale];
       const tokenAddress = token.address as Address;
+      const tokenSymbol = token.symbol ?? "";
 
       const txs = await Promise.all([
-        // Proxy approves Vesting Escrow Factory
+        // Approve create vesting
         TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
           type: TRANSACTION_TYPES.ERC20_APPROVE,
           token: tokenAddress,
           spender: vestingEscrowFactoryAddress,
           amount: maxUint256,
         }),
-        // Create vesting (weiroll)
+        // transfer from user to proxy and create vesting (weiroll)
         TransactionFactory.createRawTx(
-          TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_PROXY,
+          TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_USER,
           {
-            type: TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_PROXY,
+            type: TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_USER,
             token: tokenAddress,
             recipient: recipient,
             cowShedProxy,
             vestingDuration: BigInt(periodInSeconds),
             vestingEscrowFactoryAddress: vestingEscrowFactoryAddress,
+            user: context.account,
           },
         ),
       ]);
 
-      return { txs };
+      const permitData = [
+        {
+          tokenAddress: tokenAddress,
+          amount: maxUint256,
+          tokenSymbol: tokenSymbol,
+        },
+      ];
+
+      return { txs, permitData };
     },
     [context?.account, cowShedProxy],
   );

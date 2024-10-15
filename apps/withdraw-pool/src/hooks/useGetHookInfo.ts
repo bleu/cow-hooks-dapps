@@ -1,13 +1,13 @@
-import { IHooksInfo } from "#/types";
-import { useCallback } from "react";
-import { useGetBalancerGaugeArgs } from "./useGetBalancerGaugeArgs";
-import { useGetPoolWithdrawArgs } from "./useGetPoolWithdrawArgs";
-import { multiplyValueByPct } from "#/utils/math";
+import type { IPool } from "@bleu/cow-hooks-ui";
 import {
   TRANSACTION_TYPES,
   TransactionFactory,
 } from "@bleu/utils/transactionFactory";
-import { IPool } from "@bleu/cow-hooks-ui";
+import { useCallback } from "react";
+import type { IHooksInfo } from "#/types";
+import { multiplyValueByPct } from "#/utils/math";
+import { useGetBalancerGaugeArgs } from "./useGetBalancerGaugeArgs";
+import { useGetPoolWithdrawArgs } from "./useGetPoolWithdrawArgs";
 
 export function useGetHookInfo(pool?: IPool) {
   const getPoolWithdrawArgs = useGetPoolWithdrawArgs(pool);
