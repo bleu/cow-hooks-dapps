@@ -15,19 +15,19 @@ import { ArrowTopRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
 import { IPool } from "./types";
 import { BalancerChainName } from "@bleu/utils";
+import { useIFrameContext } from "./context/iframe";
+import { TokenLogoWithWeight } from "./TokenLogoWithWeight";
+import { Token } from "@uniswap/sdk-core";
 
 export function PoolsDropdownMenu({
   onSelect,
   pools,
-  PoolComponent,
-  poolsEmptyMessage,
-
+  PoolItemInfo,
   selectedPool,
 }: {
   onSelect: (pool: IPool) => void;
   pools: IPool[];
-  PoolComponent: React.ComponentType<{ pool: IPool }>;
-  poolsEmptyMessage: string;
+  PoolItemInfo: React.ComponentType<{ pool: IPool }>;
   selectedPool?: IPool;
 }) {
   const [open, setOpen] = useState(false);
@@ -51,21 +51,17 @@ export function PoolsDropdownMenu({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           className={cn(
-            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-background disabled:bg-foreground/10 bg-muted text-foreground",
+            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-background disabled:bg-foreground/10 bg-muted text-foreground group",
             selectedPool
-              ? "bg-background shadow-sm text-foreground hover:bg-primary hover:text-primary-foreground"
+              ? "bg-background shadow-sm text-foreground hover:bg-muted hover:text-muted-foreground"
               : "bg-primary text-primary-foreground hover:bg-color-primary-lighter"
           )}
           onClick={() => setOpen(true)}
         >
-          {selectedPool ? (
-            <PoolComponent pool={selectedPool} />
-          ) : (
-            poolsEmptyMessage
-          )}
+          {selectedPool ? <PoolLogo pool={selectedPool} /> : "Select a pool"}
           <ChevronDownIcon className="size-4" />
         </PopoverTrigger>
-        <PopoverContent className="w-[440px] max-h-[250px] overflow-y-auto bg-background">
+        <PopoverContent className="w-[440px] max-h-[250px] overflow-y-auto bg-background rounded-xl">
           <Command
             filter={(value: string, search: string) => {
               setSearch(search);
@@ -90,9 +86,10 @@ export function PoolsDropdownMenu({
                     setOpen(false);
                     onSelect(pool);
                   }}
-                  className="hover:bg-primary hover:text-primary-foreground rounded-md px-2"
+                  className="group hover:bg-muted hover:text-muted-foreground rounded-md px-2 cursor-pointer flex flex-col gap-1 items-start"
                 >
-                  <PoolComponent pool={pool} />
+                  <PoolLogo pool={pool} />
+                  <PoolItemInfo pool={pool} />
                 </CommandItem>
               ))}
             </CommandList>
@@ -109,6 +106,32 @@ export function PoolsDropdownMenu({
           </a>
         )}
       </Popover>
+    </div>
+  );
+}
+
+export function PoolLogo({ pool }: { pool: IPool }) {
+  const { context } = useIFrameContext();
+
+  if (!context) return null;
+
+  return (
+    <div className="flex flex-row gap-1">
+      {pool.allTokens.map((token) => (
+        <TokenLogoWithWeight
+          className="group-hover:bg-primary group-hover:text-primary-foreground"
+          key={`${pool.id}-${token.address}`}
+          token={
+            new Token(
+              context.chainId,
+              token.address,
+              token.decimals,
+              token.symbol
+            )
+          }
+          weight={token.weight}
+        />
+      ))}
     </div>
   );
 }

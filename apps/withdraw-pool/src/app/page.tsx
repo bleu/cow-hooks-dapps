@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import { decodeExitPoolHookCalldata } from "#/utils/decodeExitPoolHookCalldata";
 import { PoolForm } from "#/components/PoolForm";
-import { DropdownPoolComponent } from "#/components/DropdownPoolComponent";
+import { PoolItemInfo } from "#/components/PoolItemInfo";
 
 export default function Page() {
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
@@ -89,7 +89,7 @@ export default function Page() {
     return <span className="mt-10 text-center">Unsupported chain</span>;
   }
 
-  if (isLoadingPools || isEditHookLoading) {
+  if (isLoadingPools || (isEditHookLoading && context.hookToEdit)) {
     return (
       <div className="text-center mt-10 p-2">
         <Spinner size="xl" />
@@ -114,8 +114,7 @@ export default function Page() {
       <PoolsDropdownMenu
         onSelect={(pool: IPool) => setValue("poolId", pool.id)}
         pools={pools || []}
-        PoolComponent={DropdownPoolComponent}
-        poolsEmptyMessage="You don't have liquidity in a CoW AMM pool"
+        PoolItemInfo={PoolItemInfo}
         selectedPool={selectedPool}
       />
       <PoolForm poolId={poolId} />
