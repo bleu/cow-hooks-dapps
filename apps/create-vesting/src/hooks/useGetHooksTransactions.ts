@@ -18,7 +18,7 @@ export function useGetHooksTransactions() {
   const getHooksInfoVestUserAmount = useGetHooksInfoVestUserAmount();
 
   return async (
-    params: GetHooksTransactionsParams,
+    params: GetHooksTransactionsParams
   ): Promise<IHooksInfo | undefined> => {
     const {
       formData: { vestAllFromAccount, vestAllFromSwap },

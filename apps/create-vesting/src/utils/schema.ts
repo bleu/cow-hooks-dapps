@@ -3,10 +3,6 @@ import { z } from "zod";
 
 export const periodScaleOptions = ["Day", "Week", "Month"];
 
-const refinePeriodScale = (value: string) => {
-  return periodScaleOptions.includes(value);
-};
-
 export const createVestingSchema = z
   .object({
     recipient: z
@@ -32,7 +28,7 @@ export const createVestingSchema = z
         !schema.vestAllFromAccount
       );
     },
-    { message: "Amount is required", path: ["amount"] },
+    { message: "Amount is required", path: ["amount"] }
   );
 
 export type CreateVestingFormData = typeof createVestingSchema._type;
