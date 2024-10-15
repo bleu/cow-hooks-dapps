@@ -12,7 +12,6 @@ import {
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { Token } from "@uniswap/sdk-core";
-
 import { Form } from "@bleu/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useMemo } from "react";
@@ -71,6 +70,7 @@ export default function Page() {
 
   const onSubmitCallback = useCallback(
     async (data: CreateVestingFormData) => {
+      console.log("data", data);
       if (!context?.account || !token || !vestingEscrowFactoryAddress) return;
       const hookInfo = await getHooksTransactions({
         token,
@@ -111,13 +111,13 @@ export default function Page() {
   return (
     <Form {...form} onSubmit={onSubmit} className="contents">
       <Wrapper>
-        <ContentWrapper>
+        <div className="flex flex-col flex-grow pt-2 items-start justify-start text-center">
           <Input
             name="recipient"
             label="Recipient"
             placeholder="0xabc..."
             autoComplete="off"
-            className="h-12 p-2.5 rounded-xl bg-color-paper-darker border-none placeholder:opacity-100"
+            className="h-12 p-2.5 rounded-xl bg-color-paper-darker border-none"
           />
           <br />
           <div className="flex flex-col w-full xsm:gap-4 xsm:flex-row">
@@ -156,7 +156,7 @@ export default function Page() {
           <br />
           <VestAllFromSwapCheckbox />
           <VestAllFromAccountCheckbox />
-        </ContentWrapper>
+        </div>
         <ButtonPrimary type="submit">
           <ButtonText context={context} />
         </ButtonPrimary>
