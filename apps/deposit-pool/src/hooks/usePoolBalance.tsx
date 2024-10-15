@@ -34,6 +34,7 @@ interface IQuery {
     symbol: string;
     balance: string;
     balanceUSD: number;
+    weight: number;
   }[];
 }
 
@@ -62,6 +63,7 @@ export const POOL_QUERY = gql`
         symbol
         balance
         balanceUSD
+        weight
       }
     }
   }
@@ -90,6 +92,7 @@ async function fetchPoolBalance(
       token: new Token(chainId, token.address, token.decimals, token.symbol),
       balance: balanceTotal,
       fiatAmount: token.balanceUSD,
+      weight: token.weight,
     };
   });
   return balances;

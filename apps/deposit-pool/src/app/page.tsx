@@ -5,28 +5,26 @@ import { Button, Form } from "@bleu/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { depositSchema } from "#/utils/schema";
+import { depositSchema, depositSchemaType } from "#/utils/schema";
 import {
-  BalancesPreview,
   IPool,
   PoolsDropdownMenu,
+  Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import { useTokenPools } from "#/hooks/useTokenPools";
-import { usePoolBalance } from "#/hooks/usePoolBalance";
-import { DropdownPoolComponent } from "#/components/DropdownPoolComponent";
-
-const PREVIEW_LABELS = ["Pool Balance", "Deposit"];
+import { PoolItemInfo } from "#/components/PoolItemInfo";
+import { TokenAmountInputs } from "#/components/TokenAmountInputs";
 
 export default function Page() {
   const { context } = useIFrameContext();
-  const { data: pools, isLoading: isPoolsLoading } = useTokenPools(
+  const { data: pools, isLoading: isLoadingPools } = useTokenPools(
     context?.chainId,
     context?.orderParams?.buyTokenAddress
   );
 
-  const form = useForm<typeof depositSchema._type>({
+  const form = useForm<depositSchemaType>({
     resolver: zodResolver(depositSchema),
     defaultValues: {
       poolId: "",
@@ -41,31 +39,36 @@ export default function Page() {
 
   const { poolId } = useWatch({ control });
 
-  const onSubmitCallback = useCallback(
-    async (data: typeof depositSchema._type) => {
-      console.log(data);
-    },
-    []
+  const selectedPool = useMemo(
+    () => pools?.find((pool) => pool.id === poolId),
+    [pools, poolId]
   );
+
+  const onSubmitCallback = useCallback(async (data: depositSchemaType) => {
+    console.log(data);
+  }, []);
 
   const onSubmit = useMemo(
     () => form.handleSubmit(onSubmitCallback),
     [form, onSubmitCallback]
   );
 
-  const { data: poolBalances, isLoading: isBalanceLoading } = usePoolBalance({
-    poolId,
-    chainId: context?.chainId,
-  });
-
   if (!context) return null;
 
   if (!context.account) {
-    return <span className="mt-10 text-center">Connect your wallet</span>;
+    return <span className="mt-10 text-center">Connect your wallet first</span>;
   }
 
   if (!ALL_SUPPORTED_CHAIN_IDS.includes(context.chainId)) {
     return <span className="mt-10 text-center">Unsupported chain</span>;
+  }
+
+  if (isLoadingPools) {
+    return (
+      <div className="text-center mt-10 p-2">
+        <Spinner size="xl" />
+      </div>
+    );
   }
 
   if (!context?.orderParams?.buyTokenAddress) {
@@ -84,19 +87,13 @@ export default function Page() {
     >
       <PoolsDropdownMenu
         onSelect={(pool: IPool) => setValue("poolId", pool.id)}
-        PoolComponent={DropdownPoolComponent}
+        PoolItemInfo={PoolItemInfo}
         pools={pools || []}
-        poolsEmptyMessage="None CoW pool with the buy token was found"
+        selectedPool={selectedPool}
       />
-      {poolId && (
+      {selectedPool && (
         <div className="size-full flex flex-col gap-2">
-          <BalancesPreview
-            labels={PREVIEW_LABELS}
-            balancesList={
-              poolBalances ? [poolBalances, poolBalances] : undefined
-            }
-            isLoading={isBalanceLoading}
-          />
+          <TokenAmountInputs pool={selectedPool} />
           <Button
             type="submit"
             className="my-2 rounded-xl text-lg min-h-[58px]"

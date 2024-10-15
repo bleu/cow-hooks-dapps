@@ -33,6 +33,14 @@ export interface SignatureStepsProps {
   tooltipText?: string;
 }
 
+export interface IToken {
+  address: Address;
+  symbol: string;
+  decimals: number;
+  isNested: boolean;
+  weight: number;
+}
+
 export interface IPool {
   id: `0x${string}`;
   chain: string;
@@ -50,13 +58,7 @@ export interface IPool {
     volume24h: string;
     totalShares: BigNumberish;
   };
-  allTokens: {
-    address: Address;
-    symbol: string;
-    decimals: number;
-    isNested: boolean;
-    weight: number;
-  }[];
+  allTokens: IToken[];
 
   userBalance: {
     totalBalance: BigNumberish;
@@ -73,4 +75,5 @@ export interface IBalance {
   token: Token;
   balance: BigNumberish;
   fiatAmount: number;
+  weight: number;
 }
