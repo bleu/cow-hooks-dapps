@@ -14,10 +14,7 @@
     "type": "git",
     "url": "https://github.com/bleu/cow-hooks-dapps.git"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": ["apps/*", "packages/*"],
   "engines": {
     "node": ">=22"
   },

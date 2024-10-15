@@ -48,22 +48,22 @@ export class CreateVestingWeirollProxyCreator
   implements ITransaction<CreateVestingWeirollProxyArgs>
 {
   async createRawTx(
-    args: CreateVestingWeirollProxyArgs
+    args: CreateVestingWeirollProxyArgs,
   ): Promise<BaseTransaction> {
     const planner = new weiroll.Planner();
 
     const tokenWeirollContract = weiroll.Contract.createContract(
       new Contract(args.token, erc20Abi),
-      CommandFlags.STATICCALL
+      CommandFlags.STATICCALL,
     );
 
     const vestingEscrowContract = weiroll.Contract.createContract(
       new Contract(args.vestingEscrowFactoryAddress, vestingEscrowFactoryAbi),
-      CommandFlags.CALL
+      CommandFlags.CALL,
     );
 
     const amount = planner.add(
-      tokenWeirollContract.balanceOf(args.cowShedProxy)
+      tokenWeirollContract.balanceOf(args.cowShedProxy),
     );
 
     planner.add(
@@ -71,8 +71,8 @@ export class CreateVestingWeirollProxyCreator
         args.token,
         args.recipient,
         amount,
-        args.vestingDuration
-      )
+        args.vestingDuration,
+      ),
     );
 
     const { commands, state } = planner.plan();
@@ -104,23 +104,23 @@ export class CreateVestingWeirollUserCreator
   implements ITransaction<CreateVestingWeirollUserArgs>
 {
   async createRawTx(
-    args: CreateVestingWeirollUserArgs
+    args: CreateVestingWeirollUserArgs,
   ): Promise<BaseTransaction> {
     const planner = new weiroll.Planner();
 
     const tokenWeirollContract = weiroll.Contract.createContract(
       new Contract(args.token, erc20Abi),
-      CommandFlags.STATICCALL
+      CommandFlags.STATICCALL,
     );
 
     const tokenWeirollContractCall = weiroll.Contract.createContract(
       new Contract(args.token, erc20Abi),
-      CommandFlags.CALL
+      CommandFlags.CALL,
     );
 
     const vestingEscrowContract = weiroll.Contract.createContract(
       new Contract(args.vestingEscrowFactoryAddress, vestingEscrowFactoryAbi),
-      CommandFlags.CALL
+      CommandFlags.CALL,
     );
 
     const amount = planner.add(tokenWeirollContract.balanceOf(args.user));
@@ -129,8 +129,8 @@ export class CreateVestingWeirollUserCreator
       tokenWeirollContractCall.transferFrom(
         args.user,
         args.cowShedProxy,
-        amount
-      )
+        amount,
+      ),
     );
 
     planner.add(
@@ -138,8 +138,8 @@ export class CreateVestingWeirollUserCreator
         args.token,
         args.recipient,
         amount,
-        args.vestingDuration
-      )
+        args.vestingDuration,
+      ),
     );
 
     const { commands, state } = planner.plan();

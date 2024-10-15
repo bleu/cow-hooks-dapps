@@ -2,10 +2,10 @@
 import { formatNumber } from "@bleu/ui";
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
 
+import { getBlockExplorerUrl } from "@bleu/utils";
 import type { Token } from "@uniswap/sdk-core";
 import { BlockExplorerLink } from "./ExplorerLink";
 import { TokenLogo } from "./TokenLogo";
-import { getBlockExplorerUrl } from "@bleu/utils";
 
 export function TokenInfo({
   token,
@@ -34,7 +34,12 @@ export function TokenInfo({
         </div>
       </div>
       <div className="flex items-center space-x-1">
-        <a className="hover:underline" href={tokenLink} target="_blank">
+        <a
+          className="hover:underline"
+          href={tokenLink}
+          target="_blank"
+          rel="noreferrer"
+        >
           {token.symbol}
         </a>
       </div>

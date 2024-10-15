@@ -9,7 +9,7 @@ export function multiplyValueByPct(
 
 export function getPctFromValue(
   value: BigNumberish,
-  total: BigNumberish
+  total: BigNumberish,
 ): number {
   return BigNumber.from(value).mul(100).div(total).toNumber();
 }

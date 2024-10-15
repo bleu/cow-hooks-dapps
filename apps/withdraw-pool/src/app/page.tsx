@@ -2,22 +2,22 @@
 
 import { Form } from "@bleu/ui";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { withdrawSchema } from "#/utils/schema";
-import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 import {
-  IMinimalPool,
+  type IMinimalPool,
   PoolsDropdownMenu,
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
-import { useUserPoolContext } from "#/context/userPools";
-import { useRouter } from "next/navigation";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import { decodeExitPoolHookCalldata } from "#/utils/decodeExitPoolHookCalldata";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
+import { useUserPoolContext } from "#/context/userPools";
+import { useGetHookInfo } from "#/hooks/useGetHookInfo";
+import { decodeExitPoolHookCalldata } from "#/utils/decodeExitPoolHookCalldata";
+import { withdrawSchema } from "#/utils/schema";
 
 export default function Page() {
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
@@ -47,14 +47,14 @@ export default function Page() {
       const data = await decodeExitPoolHookCalldata(
         context?.hookToEdit?.hook.callData as `0x${string}`,
         publicClient,
-        context.account
+        context.account,
       );
       setValue("poolId", data.poolId);
       setValue("withdrawPct", data.withdrawPct);
     } finally {
       setIsEditHookLoading(false);
     }
-  }, [context?.hookToEdit]);
+  }, [context?.hookToEdit, context?.account, setValue, publicClient]);
 
   useEffect(() => {
     loadHookInfo();
@@ -62,7 +62,7 @@ export default function Page() {
 
   const selectedPool = useMemo(() => {
     return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
+      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
     );
   }, [pools, poolId]);
 
@@ -75,7 +75,7 @@ export default function Page() {
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [context?.account, getHooksTransactions, setHookInfo, router]
+    [getHooksTransactions, setHookInfo, router],
   );
 
   if (!context) return null;

@@ -1,9 +1,9 @@
-import { CowHook, CoWHookDappActions } from "@cowprotocol/hook-dapp-lib";
-import { HookDappContextAdjusted } from "../types";
+import { COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS } from "@cowprotocol/cow-sdk";
+import type { CoWHookDappActions, CowHook } from "@cowprotocol/hook-dapp-lib";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
-import { Address, PublicClient } from "viem";
-import { COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS } from "@cowprotocol/cow-sdk";
+import type { Address, PublicClient } from "viem";
+import type { HookDappContextAdjusted } from "../types";
 
 export function useSubmitHook({
   actions,
@@ -50,6 +50,6 @@ export function useSubmitHook({
 
       actions.addHook({ hook: hookWithGasLimit, recipientOverride });
     },
-    [actions, context]
+    [actions, context, recipientOverride, publicClient?.estimateGas],
   );
 }
