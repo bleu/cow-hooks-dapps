@@ -17,7 +17,7 @@ export function SubmitButton({ poolId }: { poolId?: string }) {
       disabled: false,
       message: context?.hookToEdit ? "Edit pre-hook" : "Add pre-hook",
     };
-  }, [withdrawPct, poolId, context?.hookToEdit]);
+  }, [withdrawPct, context?.hookToEdit]);
 
   if (!poolId) return;
 

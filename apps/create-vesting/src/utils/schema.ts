@@ -3,10 +3,6 @@ import { z } from "zod";
 
 export const periodScaleOptions = ["Day", "Week", "Month"];
 
-const refinePeriodScale = (value: string) => {
-  return periodScaleOptions.includes(value);
-};
-
 export const createVestingSchema = z
   .object({
     recipient: z

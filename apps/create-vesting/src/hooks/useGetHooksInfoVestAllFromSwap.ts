@@ -1,14 +1,10 @@
-import {
-  BaseTransaction,
-  type IHooksInfo,
-  useIFrameContext,
-} from "@bleu/cow-hooks-ui";
+import { type IHooksInfo, useIFrameContext } from "@bleu/cow-hooks-ui";
 import {
   TRANSACTION_TYPES,
   TransactionFactory,
 } from "@bleu/utils/transactionFactory";
 import { useCallback } from "react";
-import { type Address, maxUint256, parseUnits } from "viem";
+import { type Address, maxUint256 } from "viem";
 import { scaleToSecondsMapping } from "#/utils/scaleToSecondsMapping";
 import type { GetHooksTransactionsParams } from "./useGetHooksTransactions";
 

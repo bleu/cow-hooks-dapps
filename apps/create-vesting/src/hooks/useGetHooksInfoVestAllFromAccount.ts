@@ -1,8 +1,4 @@
-import {
-  BaseTransaction,
-  type IHooksInfo,
-  useIFrameContext,
-} from "@bleu/cow-hooks-ui";
+import { type IHooksInfo, useIFrameContext } from "@bleu/cow-hooks-ui";
 import {
   TRANSACTION_TYPES,
   TransactionFactory,

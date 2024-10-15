@@ -1,7 +1,10 @@
-import React from "react";
+import type React from "react";
 
-import { SizeProp } from "@fortawesome/fontawesome-svg-core";
-import { faSpinner, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import type { SizeProp } from "@fortawesome/fontawesome-svg-core";
+import {
+  type IconDefinition,
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export interface SpinnerProps {

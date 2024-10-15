@@ -5,11 +5,11 @@ import { Token } from "@uniswap/sdk-core";
 import { gql } from "graphql-request";
 import useSWR from "swr";
 
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import type { IBalance } from "@bleu/cow-hooks-ui";
 import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
-import { IBalance } from "@bleu/cow-hooks-ui";
-import { Address } from "viem";
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
+import { formatUnits, parseUnits } from "ethers/lib/utils";
+import type { Address } from "viem";
 
 interface IQuery {
   id: `0x${string}`;
@@ -70,7 +70,7 @@ export const POOL_QUERY = gql`
 async function fetchUserPoolBalance(
   chainId?: SupportedChainId,
   poolId?: string,
-  user?: string
+  user?: string,
 ): Promise<IBalance[]> {
   if (!user || !chainId || !poolId) return [];
   const chainName = BalancerChainName[chainId];
@@ -86,11 +86,11 @@ async function fetchUserPoolBalance(
   }
   const userBpt = parseUnits(
     result.pool.userBalance.totalBalance.toString(),
-    result.pool.decimals
+    result.pool.decimals,
   );
   const totalBpt = parseUnits(
     result.pool.dynamicData.totalShares.toString(),
-    result.pool.decimals
+    result.pool.decimals,
   );
   return result.pool.poolTokens.map((token) => {
     const balanceUSDTotal = parseUnits(token.balanceUSD.toString(), 18);
@@ -101,11 +101,11 @@ async function fetchUserPoolBalance(
         token.address,
         token.decimals,
         token.symbol,
-        token.name
+        token.name,
       ),
       balance: balanceTotal.mul(userBpt).div(totalBpt),
       fiatAmount: Number(
-        formatUnits(balanceUSDTotal.mul(userBpt).div(totalBpt), 18)
+        formatUnits(balanceUSDTotal.mul(userBpt).div(totalBpt), 18),
       ),
     };
   });
@@ -121,6 +121,6 @@ export function useUserPoolBalance({
   user?: string;
 }) {
   return useSWR([chainId, poolId, user], () =>
-    fetchUserPoolBalance(chainId, poolId, user)
+    fetchUserPoolBalance(chainId, poolId, user),
   );
 }

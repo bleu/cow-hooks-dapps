@@ -69,7 +69,7 @@ export function useHandleTokenAllowance({
             // Request account access
             //@ts-ignore
             await window.ethereum.request({ method: "eth_requestAccounts" });
-          } catch (error) {
+          } catch {
             console.error("User denied account access");
           }
         } else {

@@ -1,8 +1,8 @@
-import { Address, decodeFunctionData, PublicClient } from "viem";
-import { cowShedAbi } from "./abis/cowShedAbi";
-import { withdrawSchema } from "./schema";
+import { type Address, type PublicClient, decodeFunctionData } from "viem";
 import { cowAmmAbi } from "./abis/cowAmmAbi";
+import { cowShedAbi } from "./abis/cowShedAbi";
 import { getPctFromValue } from "./math";
+import type { withdrawSchema } from "./schema";
 
 interface ICalldata {
   allowFailures: boolean;
@@ -15,7 +15,7 @@ interface ICalldata {
 export async function decodeExitPoolHookCalldata(
   string: `0x${string}`,
   publicClient: PublicClient,
-  user: Address
+  user: Address,
 ): Promise<typeof withdrawSchema._type> {
   const decodedFunctionData = decodeFunctionData({
     abi: cowShedAbi,

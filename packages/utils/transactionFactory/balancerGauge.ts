@@ -1,4 +1,4 @@
-import { type Address, encodeFunctionData, erc20Abi } from "viem";
+import { type Address, encodeFunctionData } from "viem";
 import { balancerGaugeAbi } from "./abis/balancerGaugeAbi";
 import type {
   BaseArgs,
