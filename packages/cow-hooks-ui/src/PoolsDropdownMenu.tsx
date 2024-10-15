@@ -51,9 +51,9 @@ export function PoolsDropdownMenu({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           className={cn(
-            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-background disabled:bg-foreground/10 bg-muted text-foreground group",
+            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-background bg-muted text-foreground group",
             selectedPool
-              ? "bg-background shadow-sm text-foreground hover:bg-muted hover:text-muted-foreground"
+              ? "bg-muted shadow-sm text-foreground hover:bg-color-paper-darkest hover:text-primary"
               : "bg-primary text-primary-foreground hover:bg-color-primary-lighter"
           )}
           onClick={() => setOpen(true)}
@@ -86,7 +86,7 @@ export function PoolsDropdownMenu({
                     setOpen(false);
                     onSelect(pool);
                   }}
-                  className="group hover:bg-muted hover:text-muted-foreground rounded-md px-2 cursor-pointer flex flex-col gap-1 items-start"
+                  className="group hover:bg-color-paper-darkest hover:text-muted-foreground rounded-md px-2 cursor-pointer flex flex-col gap-1 items-start"
                 >
                   <PoolLogo pool={pool} />
                   <PoolItemInfo pool={pool} />
@@ -97,7 +97,7 @@ export function PoolsDropdownMenu({
         </PopoverContent>
         {poolLink && (
           <a
-            className="inline-flex items-center transition-colors text-primary underline-offset-4 hover:underline justify-start p-0 px-1 m-0 text-xs h-fit"
+            className="inline-flex items-center transition-colors text-primary underline-offset-4 hover:underline justify-start p-0 px-1 m-0 text-xs h-fit w-fit"
             href={poolLink}
             target="_blank"
           >
