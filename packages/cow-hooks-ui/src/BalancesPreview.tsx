@@ -33,9 +33,9 @@ export function BalancesPreview({
   const tokenBalancesList = useMemo(
     () =>
       labels.map((_label, index) =>
-        balancesList?.map((balances) => balances[index])
+        balancesList?.map((balances) => balances[index]),
       ),
-    [balancesList, labels]
+    [balancesList, labels],
   );
 
   if (!balancesList && isLoading) return <Spinner />;
@@ -89,7 +89,7 @@ function BalancePreview({
           <TokenAmount
             token={poolBalance.token}
             balance={Number(
-              formatUnits(poolBalance.balance, poolBalance.token.decimals)
+              formatUnits(poolBalance.balance, poolBalance.token.decimals),
             )}
             fiatValue={poolBalance.fiatAmount}
           />
