@@ -146,6 +146,10 @@ export function usePools(
             },
           }));
         });
+    },
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
     }
   );
 }

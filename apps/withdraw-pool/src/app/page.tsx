@@ -2,11 +2,9 @@
 
 import { Form } from "@bleu/ui";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { withdrawSchema } from "#/utils/schema";
-import { useGetHookInfo } from "#/hooks/useGetHookInfo";
+import { useFormContext, useWatch } from "react-hook-form";
+import { WithdrawSchemaType } from "#/utils/schema";
 import {
   IPool,
   PoolsDropdownMenu,
@@ -14,7 +12,6 @@ import {
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { useUserPoolContext } from "#/context/userPools";
-import { useRouter } from "next/navigation";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import { decodeExitPoolHookCalldata } from "#/utils/decodeExitPoolHookCalldata";
 import { PoolForm } from "#/components/PoolForm";
@@ -22,22 +19,12 @@ import { PoolItemInfo } from "#/components/PoolItemInfo";
 
 export default function Page() {
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
-  const { context, setHookInfo, publicClient } = useIFrameContext();
+  const { context, publicClient } = useIFrameContext();
   const {
     userPoolSwr: { data: pools, isLoading: isLoadingPools },
   } = useUserPoolContext();
 
-  const form = useForm<typeof withdrawSchema._type>({
-    resolver: zodResolver(withdrawSchema),
-    defaultValues: {
-      poolId: "",
-      withdrawPct: 100,
-    },
-  });
-
-  const router = useRouter();
-
-  const { setValue, control, handleSubmit } = form;
+  const { setValue, control } = useFormContext<WithdrawSchemaType>();
 
   const poolId = useWatch({ control, name: "poolId" });
 
@@ -57,27 +44,16 @@ export default function Page() {
     }
   }, [context?.hookToEdit]);
 
-  useEffect(() => {
-    loadHookInfo();
-  }, [loadHookInfo]);
-
   const selectedPool = useMemo(() => {
     return pools?.find(
       (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
     );
   }, [pools, poolId]);
 
-  const getHooksTransactions = useGetHookInfo(selectedPool);
-
-  const onSubmitCallback = useCallback(
-    async (data: typeof withdrawSchema._type) => {
-      const hookInfo = await getHooksTransactions(data.withdrawPct);
-      if (!hookInfo) return;
-      setHookInfo(hookInfo);
-      router.push("/signing");
-    },
-    [context?.account, getHooksTransactions, setHookInfo, router]
-  );
+  useEffect(() => {
+    if (poolId) return;
+    loadHookInfo();
+  }, [loadHookInfo]);
 
   if (!context) return null;
 
@@ -106,11 +82,7 @@ export default function Page() {
   }
 
   return (
-    <Form
-      {...form}
-      onSubmit={handleSubmit(onSubmitCallback)}
-      className="w-full flex flex-col gap-1 py-1 px-4"
-    >
+    <div className="w-full flex flex-col gap-1 py-1 px-4">
       <PoolsDropdownMenu
         onSelect={(pool: IPool) => setValue("poolId", pool.id)}
         pools={pools || []}
@@ -118,6 +90,6 @@ export default function Page() {
         selectedPool={selectedPool}
       />
       <PoolForm poolId={poolId} />
-    </Form>
+    </div>
   );
 }

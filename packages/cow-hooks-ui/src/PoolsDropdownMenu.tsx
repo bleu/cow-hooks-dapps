@@ -53,7 +53,7 @@ export function PoolsDropdownMenu({
           className={cn(
             "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-background bg-muted text-foreground group",
             selectedPool
-              ? "bg-muted shadow-sm text-foreground hover:bg-color-paper-darkest hover:text-primary"
+              ? "bg-muted shadow-sm text-foreground hover:bg-primary hover:text-primary-foreground"
               : "bg-primary text-primary-foreground hover:bg-color-primary-lighter"
           )}
           onClick={() => setOpen(true)}
