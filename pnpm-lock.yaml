@@ -576,6 +576,9 @@ importers:
       ethers:
         specifier: ~5.7.2
         version: 5.7.2
+      graphql-request:
+        specifier: ^6.1.0
+        version: 6.1.0(encoding@0.1.13)(graphql@16.9.0)
       react:
         specifier: 19.0.0-rc-e4953922-20240919
         version: 19.0.0-rc-e4953922-20240919

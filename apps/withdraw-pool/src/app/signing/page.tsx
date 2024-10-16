@@ -12,7 +12,8 @@ import {
   useSubmitHook,
 } from "@bleu/cow-hooks-ui";
 import { BigNumber, type BigNumberish } from "ethers";
-import { useCallback, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Address } from "viem";
 
 export default function Page() {
@@ -28,6 +29,8 @@ export default function Page() {
     publicClient,
     cowShedProxy,
   } = useIFrameContext();
+  const [account, setAccount] = useState<string>();
+  const router = useRouter();
   const submitHook = useSubmitHook({
     actions,
     context,
@@ -46,13 +49,27 @@ export default function Page() {
     spender: cowShedProxy,
   });
 
+  useEffect(() => {
+    if (!account && context?.account) {
+      setAccount(context.account);
+      return;
+    }
+    if (
+      account &&
+      context?.account &&
+      context.account.toLowerCase() !== account.toLowerCase()
+    ) {
+      router.push("/");
+    }
+  }, [context?.account]);
+
   const cowShedCallback = useCallback(async () => {
     if (!cowShedSignature || !hookInfo || !cowShed) return;
 
     const txs = [...permitTxs, ...hookInfo.txs];
     const cowShedCall = await cowShedSignature(txs);
     if (!cowShedCall) throw new Error("Error signing hooks");
-    submitHook({
+    await submitHook({
       target: cowShed.getFactoryAddress(),
       callData: cowShedCall,
     });
@@ -66,7 +83,7 @@ export default function Page() {
     }) => {
       const permitData = await handleTokenAllowance(
         BigNumber.from(permit.amount),
-        permit.tokenAddress as Address,
+        permit.tokenAddress as Address
       );
 
       if (permitData) {
@@ -81,7 +98,7 @@ export default function Page() {
       }
       setCurrentStepIndex((prev) => prev + 1);
     },
-    [handleTokenAllowance],
+    [handleTokenAllowance]
   );
 
   const steps = useMemo(() => {

@@ -5,6 +5,7 @@ import useSWR from "swr";
 import type { SignatureStepsProps } from "../types";
 import { Spinner } from "./Spinner";
 import { InfoTooltip } from "./TooltipBase";
+import { useRouter } from "next/navigation";
 
 export function WaitingSignature({
   callback,
@@ -24,6 +25,8 @@ export function WaitingSignature({
     },
   });
 
+  const router = useRouter();
+
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="flex flex-row gap-2 items-center mb-10">
@@ -33,14 +36,27 @@ export function WaitingSignature({
       </div>
       {isValidating && <Spinner />}
       {error && !isValidating && (
-        <Button
-          type="button"
-          variant="destructive"
-          className="bg-destructive/15 hover:bg-destructive/50"
-          onClick={() => mutate()}
-        >
-          Error on signature, try again
-        </Button>
+        <div className="flex flex-col gap-2 items-center">
+          <span className="font-semibold text-md text-destructive">
+            {error.message
+              .replace(error?.code || "", "")
+              .replace(":", "")
+              .trim()}
+          </span>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="destructive"
+              className="bg-destructive/15 hover:bg-destructive/50"
+              onClick={() => mutate()}
+            >
+              Try again
+            </Button>
+            <Button type="button" onClick={router.back}>
+              Back
+            </Button>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -32,6 +32,7 @@ interface IQuery {
     symbol: string;
     balance: string;
     balanceUSD: number;
+    weight: number;
   }[];
 }
 
@@ -60,6 +61,7 @@ export const POOL_QUERY = gql`
         symbol
         balance
         balanceUSD
+        weight
       }
     }
   }
@@ -105,6 +107,7 @@ async function fetchUserPoolBalance(
       fiatAmount: Number(
         formatUnits(balanceUSDTotal.mul(userBpt).div(totalBpt), 18)
       ),
+      weight: token.weight,
     };
   });
 }
@@ -118,7 +121,12 @@ export function useUserPoolBalance({
   poolId?: string;
   user?: string;
 }) {
-  return useSWR([chainId, poolId, user], () =>
-    fetchUserPoolBalance(chainId, poolId, user)
+  return useSWR(
+    [chainId, poolId, user],
+    () => fetchUserPoolBalance(chainId, poolId, user),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
   );
 }

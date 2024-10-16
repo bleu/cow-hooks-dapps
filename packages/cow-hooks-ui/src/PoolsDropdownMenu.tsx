@@ -7,27 +7,28 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  formatNumber,
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@bleu/ui";
 import { ArrowTopRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
-import { IMinimalPool } from "./types";
 import { BalancerChainName } from "@bleu/utils";
-import { TokenLogo } from "./TokenLogo";
-import { Token } from "@uniswap/sdk-core";
 import { useIFrameContext } from "./context/iframe";
+import { TokenLogoWithWeight } from "./TokenLogoWithWeight";
+import { Token } from "@uniswap/sdk-core";
+import { IPool } from "./types";
 
 export function PoolsDropdownMenu({
   onSelect,
   pools,
+  PoolItemInfo,
   selectedPool,
 }: {
-  onSelect: (pool: IMinimalPool) => void;
-  pools: IMinimalPool[];
-  selectedPool?: IMinimalPool;
+  onSelect: (pool: IPool) => void;
+  pools: IPool[];
+  PoolItemInfo: React.ComponentType<{ pool: IPool }>;
+  selectedPool?: IPool;
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -50,21 +51,17 @@ export function PoolsDropdownMenu({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           className={cn(
-            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm disabled:bg-foreground/10 bg-muted text-foreground",
+            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-background bg-muted text-foreground group",
             selectedPool
-              ? "bg-background shadow-sm text-foreground hover:bg-primary hover:text-primary-foreground"
+              ? "bg-muted shadow-sm text-foreground hover:bg-primary hover:text-primary-foreground"
               : "bg-primary text-primary-foreground hover:bg-color-primary-lighter"
           )}
           onClick={() => setOpen(true)}
         >
-          {selectedPool ? (
-            <PoolItem pool={selectedPool} />
-          ) : (
-            "Choose liquidity pool"
-          )}
-          <ChevronDownIcon className="size-5" />
+          {selectedPool ? <PoolLogo pool={selectedPool} /> : "Select a pool"}
+          <ChevronDownIcon className="size-4" />
         </PopoverTrigger>
-        <PopoverContent className="xsm:w-[440px]">
+        <PopoverContent className="w-[440px] max-h-[250px] overflow-y-auto bg-background rounded-xl">
           <Command
             filter={(value: string, search: string) => {
               setSearch(search);
@@ -89,9 +86,10 @@ export function PoolsDropdownMenu({
                     setOpen(false);
                     onSelect(pool);
                   }}
-                  className="hover:bg-primary hover:text-primary-foreground rounded-md px-2"
+                  className="group hover:bg-color-paper-darkest hover:text-muted-foreground rounded-md px-2 cursor-pointer flex flex-col gap-1 items-start"
                 >
-                  <PoolItem pool={pool} />
+                  <PoolLogo pool={pool} />
+                  <PoolItemInfo pool={pool} />
                 </CommandItem>
               ))}
             </CommandList>
@@ -99,7 +97,7 @@ export function PoolsDropdownMenu({
         </PopoverContent>
         {poolLink && (
           <a
-            className="inline-flex items-center transition-colors text-primary underline-offset-4 hover:underline justify-start p-0 px-1 m-0 text-xs h-fit"
+            className="inline-flex items-center transition-colors text-primary underline-offset-4 hover:underline justify-start p-0 px-1 m-0 text-xs h-fit w-fit"
             href={poolLink}
             target="_blank"
           >
@@ -112,33 +110,28 @@ export function PoolsDropdownMenu({
   );
 }
 
-export function PoolItem({ pool }: { pool: IMinimalPool }) {
+export function PoolLogo({ pool }: { pool: IPool }) {
   const { context } = useIFrameContext();
 
   if (!context) return null;
 
   return (
-    <div className="flex flex-row items-center gap-1">
-      <span>{pool.symbol.slice(5)}</span>
-
-      {pool.allTokens.map((token) => {
-        const tokenObject = new Token(
-          context?.chainId,
-          token.address,
-          token.decimals,
-          token.symbol
-        );
-
-        return (
-          <TokenLogo
-            key={`${pool.id}-${token.address}`}
-            token={tokenObject}
-            width={20}
-            height={20}
-          />
-        );
-      })}
-      <i>${formatNumber(pool.userBalance.totalBalanceUsd, 2)}</i>
+    <div className="flex flex-row gap-1">
+      {pool.allTokens.map((token) => (
+        <TokenLogoWithWeight
+          className="group-hover:bg-primary group-hover:text-primary-foreground"
+          key={`${pool.id}-${token.address}`}
+          token={
+            new Token(
+              context.chainId,
+              token.address,
+              token.decimals,
+              token.symbol
+            )
+          }
+          weight={token.weight}
+        />
+      ))}
     </div>
   );
 }

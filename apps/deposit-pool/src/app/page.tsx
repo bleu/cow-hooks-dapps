@@ -2,27 +2,30 @@
 
 import { Button, Form } from "@bleu/ui";
 
+import { useCallback, useMemo } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, useFormContext, useWatch } from "react-hook-form";
+import { depositSchema, DepositSchemaType } from "#/utils/schema";
 import {
-  BalancesPreview,
-  type IMinimalPool,
+  IPool,
   PoolsDropdownMenu,
+  Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useMemo } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
-import { useUserPools } from "#/hooks/useUserPools";
-import { depositSchema } from "#/utils/schema";
-
-const PREVIEW_LABELS = ["Pool Balance", "Deposit"];
+import { useTokenPools } from "#/hooks/useTokenPools";
+import { PoolItemInfo } from "#/components/PoolItemInfo";
+import { TokenAmountInputs } from "#/components/TokenAmountInputs";
+import { Address } from "viem";
 
 export default function Page() {
   const { context } = useIFrameContext();
-  const { data: pools } = useUserPools(context?.chainId, context?.account);
+  const { data: pools, isLoading: isLoadingPools } = useTokenPools(
+    context?.chainId,
+    context?.orderParams?.buyTokenAddress as Address
+  );
 
-  const form = useForm<typeof depositSchema._type>({
+  const form = useForm<DepositSchemaType>({
     resolver: zodResolver(depositSchema),
     defaultValues: {
       poolId: "",
@@ -33,31 +36,48 @@ export default function Page() {
     setValue,
     control,
     formState: { isSubmitting, isSubmitSuccessful },
-  } = form;
+  } = useFormContext<DepositSchemaType>();
 
   const { poolId } = useWatch({ control });
 
   const selectedPool = useMemo(
     () => pools?.find((pool) => pool.id === poolId),
-    [pools, poolId],
+    [pools, poolId]
   );
 
-  const onSubmit = useMemo(() => form.handleSubmit(() => {}), [form]);
+  const onSubmitCallback = useCallback(async (data: DepositSchemaType) => {
+    console.log(data);
+  }, []);
 
-  const { data: poolBalances, isLoading } = useUserPoolBalance({
-    poolId,
-    user: context?.account,
-    chainId: context?.chainId,
-  });
+  const onSubmit = useMemo(
+    () => form.handleSubmit(onSubmitCallback),
+    [form, onSubmitCallback]
+  );
 
   if (!context) return null;
 
   if (!context.account) {
-    return <span className="mt-10 text-center">Connect your wallet</span>;
+    return <span className="mt-10 text-center">Connect your wallet first</span>;
   }
 
   if (!ALL_SUPPORTED_CHAIN_IDS.includes(context.chainId)) {
     return <span className="mt-10 text-center">Unsupported chain</span>;
+  }
+
+  if (isLoadingPools) {
+    return (
+      <div className="text-center mt-10 p-2">
+        <Spinner size="xl" />
+      </div>
+    );
+  }
+
+  if (!context?.orderParams?.buyTokenAddress) {
+    return (
+      <div className="w-full text-center mt-10 p-2">
+        <span>Please specify your swap order before proceeding</span>
+      </div>
+    );
   }
 
   return (
@@ -67,22 +87,17 @@ export default function Page() {
       className="w-full flex flex-col gap-1 py-1 px-4"
     >
       <PoolsDropdownMenu
-        onSelect={(pool: IMinimalPool) => setValue("poolId", pool.id)}
-        selectedPool={selectedPool}
+        onSelect={(pool: IPool) => setValue("poolId", pool.id)}
+        PoolItemInfo={PoolItemInfo}
         pools={pools || []}
+        selectedPool={selectedPool}
       />
-      {poolId && (
+      {selectedPool && (
         <div className="size-full flex flex-col gap-2">
-          <BalancesPreview
-            labels={PREVIEW_LABELS}
-            balancesList={
-              poolBalances ? [poolBalances, poolBalances] : undefined
-            }
-            isLoading={isLoading}
-          />
+          <TokenAmountInputs pool={selectedPool} />
           <Button
             type="submit"
-            className="my-2"
+            className="my-2 rounded-xl text-lg min-h-[58px]"
             loading={isSubmitting || isSubmitSuccessful}
             loadingText="Creating hook..."
           >

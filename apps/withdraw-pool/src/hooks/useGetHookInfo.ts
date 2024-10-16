@@ -1,4 +1,4 @@
-import type { IMinimalPool } from "@bleu/cow-hooks-ui";
+import type { IPool } from "@bleu/cow-hooks-ui";
 import {
   TRANSACTION_TYPES,
   TransactionFactory,
@@ -9,7 +9,7 @@ import { multiplyValueByPct } from "#/utils/math";
 import { useGetBalancerGaugeArgs } from "./useGetBalancerGaugeArgs";
 import { useGetPoolWithdrawArgs } from "./useGetPoolWithdrawArgs";
 
-export function useGetHookInfo(pool?: IMinimalPool) {
+export function useGetHookInfo(pool?: IPool) {
   const getPoolWithdrawArgs = useGetPoolWithdrawArgs(pool);
   const getBalancerGaugeArgs = useGetBalancerGaugeArgs(pool);
 
@@ -19,7 +19,7 @@ export function useGetHookInfo(pool?: IMinimalPool) {
 
       const bptAmount = multiplyValueByPct(
         pool.userBalance.totalBalance,
-        withdrawPct,
+        withdrawPct
       );
       const balancerGaugeArgs = getBalancerGaugeArgs(bptAmount);
       const poolWithdrawArgs = getPoolWithdrawArgs(bptAmount);
@@ -30,7 +30,7 @@ export function useGetHookInfo(pool?: IMinimalPool) {
       const txs = await Promise.all(
         argsArray.map((arg) => {
           return TransactionFactory.createRawTx(arg.type, arg);
-        }),
+        })
       );
 
       const permitData = argsArray
@@ -47,6 +47,6 @@ export function useGetHookInfo(pool?: IMinimalPool) {
         permitData: permitData,
       };
     },
-    [getPoolWithdrawArgs, getBalancerGaugeArgs, pool],
+    [getPoolWithdrawArgs, getBalancerGaugeArgs, pool]
   );
 }

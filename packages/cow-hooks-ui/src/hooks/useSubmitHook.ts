@@ -20,14 +20,18 @@ export function useSubmitHook({
     async (hook: Omit<CowHook, "gasLimit">) => {
       if (!context || !actions) return;
 
-      const estimatedGas = await publicClient?.estimateGas({
-        account: COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS[
-          context.chainId
-        ] as `0x${string}`,
-        to: hook.target as Address,
-        value: BigInt(0),
-        data: hook.callData as `0x${string}`,
-      });
+      const estimatedGas = await publicClient
+        ?.estimateGas({
+          account: COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS[
+            context.chainId
+          ] as `0x${string}`,
+          to: hook.target as Address,
+          value: BigInt(0),
+          data: hook.callData as `0x${string}`,
+        })
+        .catch(() => {
+          throw new Error("Failed to estimate hook gas");
+        });
 
       const gasLimit = BigNumber.from(estimatedGas)
         .mul(120)

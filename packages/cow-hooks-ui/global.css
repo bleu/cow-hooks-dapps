@@ -79,7 +79,7 @@ div[data-rk] {
     --secondary-foreground: var(--cow-color-secondary-text);
     --destructive: var(--cow-color-danger);
     --destructive-foreground: var(--cow-color-danger-text);
-    --muted: var(--cow-color-paper-darkest);
+    --muted: var(--cow-color-paper-darker);
     --muted-foreground: var(--cow-color-secondary-text);
     --accent: var(--cow-color-info);
     --accent-foreground: var(--cow-color-white);
