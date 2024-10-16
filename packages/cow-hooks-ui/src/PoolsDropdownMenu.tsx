@@ -13,11 +13,11 @@ import {
 } from "@bleu/ui";
 import { ArrowTopRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
-import { IPool } from "./types";
 import { BalancerChainName } from "@bleu/utils";
 import { useIFrameContext } from "./context/iframe";
 import { TokenLogoWithWeight } from "./TokenLogoWithWeight";
 import { Token } from "@uniswap/sdk-core";
+import { IPool } from "./types";
 
 export function PoolsDropdownMenu({
   onSelect,

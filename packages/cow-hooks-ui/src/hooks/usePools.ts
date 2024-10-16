@@ -1,9 +1,9 @@
-import { IPool } from "#/types";
 import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { gql } from "graphql-request";
 import useSWR from "swr";
 import { Address, parseUnits } from "viem";
+import { IPool } from "../types";
 
 interface IQuery {
   pools: {
