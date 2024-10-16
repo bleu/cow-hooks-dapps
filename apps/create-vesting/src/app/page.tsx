@@ -2,7 +2,6 @@
 
 import {
   ButtonPrimary,
-  ContentWrapper,
   type HookDappContextAdjusted,
   Input,
   PeriodWithScaleInput,
@@ -34,16 +33,11 @@ import { vestingFactoriesMapping } from "#/utils/vestingFactoriesMapping";
 import { useFormatVariables } from "#/hooks/useFormatVariables";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import type { Address } from "viem";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
 export default function Page() {
   const { context, setHookInfo } = useIFrameContext();
   const router = useRouter();
-  // const [amountPreview, setAmountPreview] = useState<string | undefined>(
-  //   undefined,
-  // );
-  // const [amountPreviewFullDecimals, setAmountPreviewFullDecimals] = useState<
-  //   string | undefined
-  // >(undefined);
 
   const form = useForm<CreateVestingFormData>({
     resolver: zodResolver(createVestingSchema),
@@ -99,7 +93,6 @@ export default function Page() {
 
   const onSubmitCallback = useCallback(
     async (data: CreateVestingFormData) => {
-      console.log("data", data);
       if (!context?.account || !token || !vestingEscrowFactoryAddress) return;
       const hookInfo = await getHooksTransactions({
         token,
@@ -151,6 +144,12 @@ export default function Page() {
     ? String(swapAmountFloat)
     : String(allAfterSwapFloat);
 
+  const isOutOfFunds =
+    !!vestUserInput &&
+    !!amount &&
+    !!allAfterSwapFloat &&
+    amount > allAfterSwapFloat;
+
   return (
     <Form {...form} onSubmit={onSubmit} className="contents">
       <Wrapper>
@@ -167,7 +166,6 @@ export default function Page() {
             namePeriodValue="period"
             namePeriodScale="periodScale"
             type="number"
-            step="0.0000001"
             label="Lock-up Period"
             validation={{ valueAsNumber: true, required: true }}
             onKeyDown={(e) =>
@@ -188,8 +186,7 @@ export default function Page() {
             userBalance={formattedUserBalance}
             userBalanceFullDecimals={String(userBalanceFloat)}
             validation={{
-              setValueAs: (v) =>
-                v === "" ? undefined : Number.parseInt(v, 10),
+              setValueAs: (v) => (v === "" ? undefined : Number(v)),
               required: !(vestAllFromAccount || vestAllFromSwap),
             }}
             onKeyDown={(e) =>
@@ -202,24 +199,26 @@ export default function Page() {
             <VestAllFromAccountCheckbox />
           </div>
         </div>
-        {vestUserInput &&
-          amount &&
-          allAfterSwapFloat &&
-          amount < allAfterSwapFloat && (
-            <span className="text-center text-destructive py-2">
-              You won't have enough funds after swap. Transaction is likely to
-              fail
-            </span>
-          )}
-        <ButtonPrimary type="submit">
-          <ButtonText context={context} />
+        <ButtonPrimary type="submit" disabled={isOutOfFunds}>
+          <ButtonText context={context} isOutOfFunds={isOutOfFunds} />
         </ButtonPrimary>
       </Wrapper>
     </Form>
   );
 }
 
-const ButtonText = ({ context }: { context: HookDappContextAdjusted }) => {
+const ButtonText = ({
+  context,
+  isOutOfFunds,
+}: { context: HookDappContextAdjusted; isOutOfFunds: boolean }) => {
+  if (isOutOfFunds)
+    return (
+      <span className="flex items-center justify-center gap-2">
+        <ExclamationTriangleIcon className="w-6 h-6" />
+        You won't have enough funds
+      </span>
+    );
+
   if (context?.hookToEdit && context?.isPreHook)
     return <span>Update Pre-hook</span>;
   if (context?.hookToEdit && !context?.isPreHook)

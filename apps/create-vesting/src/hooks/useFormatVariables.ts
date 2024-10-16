@@ -18,8 +18,10 @@ export const useFormatVariables = ({
   const swapAmountFloat =
     //@ts-ignore // wait for CoW to add buyAmunt in context
     context?.orderParams?.buyAmount && tokenDecimals
-      ? Number(userBalance) / 10 ** Number(tokenDecimals)
+      ? //@ts-ignore
+        Number(context?.orderParams?.buyAmount) / 10 ** Number(tokenDecimals)
       : undefined;
+
   const allAfterSwapFloat =
     userBalanceFloat && swapAmountFloat
       ? userBalanceFloat + swapAmountFloat
@@ -30,13 +32,11 @@ export const useFormatVariables = ({
     : "";
 
   const formattedSwapAmount = swapAmountFloat
-    ? // ? formatNumber(swapAmountFloat, 6, "decimal", "standard", 0.000001)
-      formatNumber(0.0024, 6, "decimal", "standard", 0.000001)
+    ? formatNumber(swapAmountFloat, 6, "decimal", "standard", 0.000001)
     : "";
 
   const formattedAllAfterSwap = allAfterSwapFloat
-    ? // ? formatNumber(allAfterSwapFloat, 6, "decimal", "standard", 0.000001)
-      formatNumber(0.0044, 6, "decimal", "standard", 0.000001)
+    ? formatNumber(allAfterSwapFloat, 6, "decimal", "standard", 0.000001)
     : "";
 
   return {
