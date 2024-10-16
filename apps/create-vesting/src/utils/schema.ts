@@ -15,20 +15,17 @@ export const createVestingSchema = z
     periodScale: z.enum(["Day", "Week", "Month"]),
     amount: z
       .number({ message: "Invalid amount" })
-      .gt(0, "Period must be greater than 0")
+      .gt(0, "Amount must be greater than 0")
       .optional(),
     vestAllFromSwap: z.boolean(),
     vestAllFromAccount: z.boolean(),
+    vestUserInput: z.boolean(),
   })
   .refine(
     (schema) => {
-      return !(
-        schema.amount === undefined &&
-        !schema.vestAllFromSwap &&
-        !schema.vestAllFromAccount
-      );
+      return !(schema.amount === undefined && schema.vestUserInput);
     },
-    { message: "Amount is required", path: ["amount"] }
+    { message: "Amount is required", path: ["amount"] },
   );
 
 export type CreateVestingFormData = typeof createVestingSchema._type;

@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import useSWR from "swr";
-import { type Address, erc20Abi } from "viem";
+import { type Address, erc20Abi, zeroAddress } from "viem";
 import { useIFrameContext } from "../context/iframe";
 
 export const useReadTokenContract = ({
@@ -8,7 +8,7 @@ export const useReadTokenContract = ({
 }: {
   tokenAddress: Address | undefined;
 }) => {
-  const { publicClient } = useIFrameContext();
+  const { publicClient, context } = useIFrameContext();
 
   const readTokenContract = useCallback(
     async (address: Address) => {
@@ -29,6 +29,11 @@ export const useReadTokenContract = ({
               ...tokenContract,
               functionName: "decimals",
             },
+            {
+              ...tokenContract,
+              functionName: "balanceOf",
+              args: [context?.account ?? zeroAddress],
+            },
           ],
         }));
 
@@ -40,9 +45,10 @@ export const useReadTokenContract = ({
       return {
         symbol: tokenResults?.[0],
         decimals: tokenResults?.[1],
+        balance: context?.account ? tokenResults?.[2] : undefined,
       };
     },
-    [publicClient],
+    [publicClient, context?.account],
   );
 
   const {
@@ -61,6 +67,13 @@ export const useReadTokenContract = ({
     ? String(tokenData.symbol.result)
     : "";
   const tokenDecimals = tokenData?.decimals?.result;
+  const userBalance = tokenData?.balance?.result;
 
-  return { tokenSymbol, tokenDecimals, isLoadingToken, errorToken };
+  return {
+    tokenSymbol,
+    tokenDecimals,
+    userBalance,
+    isLoadingToken,
+    errorToken,
+  };
 };

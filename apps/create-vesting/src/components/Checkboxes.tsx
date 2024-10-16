@@ -1,5 +1,5 @@
 import { Input, Label } from "@bleu/ui";
-import { useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
@@ -8,20 +8,29 @@ export const Checkbox = ({
   label,
   isSelectedMessage,
   unselectTrigger,
+  onSelectSideEffect,
   radius = 14,
+  ...props
 }: {
   name: string;
   label?: string;
   isSelectedMessage?: string;
   unselectTrigger?: boolean;
+  onSelectSideEffect?: () => void;
   radius?: number;
-}) => {
+} & React.InputHTMLAttributes<HTMLInputElement>) => {
   const { register, control, setValue } = useFormContext();
-  const isSelected = useWatch({ control })[name];
+  const isSelected = useWatch({ control, name });
 
   useEffect(() => {
     if (unselectTrigger === true) setValue(name, false);
   }, [unselectTrigger, setValue, name]);
+
+  useEffect(() => {
+    if (isSelected && onSelectSideEffect) {
+      onSelectSideEffect();
+    }
+  }, [isSelected, onSelectSideEffect]);
 
   return (
     <div className="flex flex-col items-start justify-start">
@@ -33,6 +42,7 @@ export const Checkbox = ({
             checked={isSelected}
             {...register(name)}
             className="sr-only" // This hides the input visually but keeps it accessible
+            {...props}
           />
           <label
             htmlFor={name}
@@ -73,7 +83,7 @@ export const Checkbox = ({
         <Label>{label}</Label>
       </div>
       {isSelected && isSelectedMessage && (
-        <span className="flex items-center ml-4 pt-1 pb-2 font-normal text-xs text-mono text-color-alert-text">
+        <span className="flex items-center ml-4 pt-1 font-normal text-xs text-mono opacity-70">
           <ExclamationTriangleIcon className="w-4 h-4 mr-1" />
           {isSelectedMessage}
         </span>
@@ -82,30 +92,55 @@ export const Checkbox = ({
   );
 };
 
+export const VestUserInputCheckbox = () => {
+  const { control, setValue } = useFormContext();
+  const vestUserInput = useWatch({ control, name: "vestUserInput" });
+  const vestAllFromSwap = useWatch({ control, name: "vestAllFromSwap" });
+  const vestAllFromAccount = useWatch({ control, name: "vestAllFromAccount" });
+
+  return (
+    <Checkbox
+      name="vestUserInput"
+      label="Input vesting amount manually"
+      unselectTrigger={vestAllFromAccount || vestAllFromSwap}
+      onSelectSideEffect={() => setValue("amount", "")}
+      disabled={vestUserInput}
+    />
+  );
+};
+
 export const VestAllFromSwapCheckbox = () => {
-  const { control } = useFormContext();
-  const { vestAllFromAccount } = useWatch({ control });
+  const { control, setValue } = useFormContext();
+  const vestUserInput = useWatch({ control, name: "vestUserInput" });
+  const vestAllFromSwap = useWatch({ control, name: "vestAllFromSwap" });
+  const vestAllFromAccount = useWatch({ control, name: "vestAllFromAccount" });
 
   return (
     <Checkbox
       name="vestAllFromSwap"
       label="Use all tokens from swap"
-      unselectTrigger={vestAllFromAccount}
-      isSelectedMessage="The token buy amount may vary after the swap due to price changes."
+      unselectTrigger={vestAllFromAccount || vestUserInput}
+      isSelectedMessage="The token buy amount may vary after the order due to price changes."
+      disabled={vestAllFromSwap}
+      onSelectSideEffect={() => setValue("amount", undefined)}
     />
   );
 };
 
 export const VestAllFromAccountCheckbox = () => {
-  const { control } = useFormContext();
-  const { vestAllFromSwap } = useWatch({ control });
+  const { control, setValue } = useFormContext();
+  const vestUserInput = useWatch({ control, name: "vestUserInput" });
+  const vestAllFromSwap = useWatch({ control, name: "vestAllFromSwap" });
+  const vestAllFromAccount = useWatch({ control, name: "vestAllFromAccount" });
 
   return (
     <Checkbox
       name="vestAllFromAccount"
       label="Use all your tokens after swap"
-      unselectTrigger={vestAllFromSwap}
-      isSelectedMessage="The token buy amount may vary after the swap due to price changes."
+      unselectTrigger={vestAllFromSwap || vestUserInput}
+      isSelectedMessage="The token buy amount may vary after the order due to price changes."
+      disabled={vestAllFromAccount}
+      onSelectSideEffect={() => setValue("amount", undefined)}
     />
   );
 };
