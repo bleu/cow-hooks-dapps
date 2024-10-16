@@ -11,12 +11,12 @@ import { formatNumber, Input, Label } from "@bleu/ui";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
 import { useFormContext, useWatch } from "react-hook-form";
-import { depositSchemaType } from "#/utils/schema";
+import { DepositSchemaType } from "#/utils/schema";
 import { Address, formatUnits } from "viem";
 
 export function TokenAmountInputs({ pool }: { pool: IPool | undefined }) {
   const { context } = useIFrameContext();
-  const { control, setValue } = useFormContext<depositSchemaType>();
+  const { control, setValue } = useFormContext<DepositSchemaType>();
 
   const { data: poolBalances, isLoading: isBalanceLoading } = usePoolBalance({
     poolId: pool?.id,
@@ -131,7 +131,7 @@ export function TokenAmountInput({
   tokenPrice?: number;
   updateTokenAmounts: (amount: number, address: Address) => void;
 }) {
-  const { register, control } = useFormContext<depositSchemaType>();
+  const { register, control } = useFormContext<DepositSchemaType>();
 
   const amount = useWatch({
     control,

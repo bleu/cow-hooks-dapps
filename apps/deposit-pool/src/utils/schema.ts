@@ -6,4 +6,4 @@ export const depositSchema = z.object({
   referenceTokenAddress: z.string(),
 });
 
-export type depositSchemaType = z.infer<typeof depositSchema>;
+export type DepositSchemaType = z.infer<typeof depositSchema>;

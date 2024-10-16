@@ -2,10 +2,10 @@
 
 import { Button, Form } from "@bleu/ui";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useMemo } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { depositSchema, depositSchemaType } from "#/utils/schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, useFormContext, useWatch } from "react-hook-form";
+import { depositSchema, DepositSchemaType } from "#/utils/schema";
 import {
   IPool,
   PoolsDropdownMenu,
@@ -16,15 +16,16 @@ import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import { useTokenPools } from "#/hooks/useTokenPools";
 import { PoolItemInfo } from "#/components/PoolItemInfo";
 import { TokenAmountInputs } from "#/components/TokenAmountInputs";
+import { Address } from "viem";
 
 export default function Page() {
   const { context } = useIFrameContext();
   const { data: pools, isLoading: isLoadingPools } = useTokenPools(
     context?.chainId,
-    context?.orderParams?.buyTokenAddress
+    context?.orderParams?.buyTokenAddress as Address
   );
 
-  const form = useForm<depositSchemaType>({
+  const form = useForm<DepositSchemaType>({
     resolver: zodResolver(depositSchema),
     defaultValues: {
       poolId: "",
@@ -35,7 +36,7 @@ export default function Page() {
     setValue,
     control,
     formState: { isSubmitting, isSubmitSuccessful },
-  } = form;
+  } = useFormContext<DepositSchemaType>();
 
   const { poolId } = useWatch({ control });
 
@@ -44,7 +45,7 @@ export default function Page() {
     [pools, poolId]
   );
 
-  const onSubmitCallback = useCallback(async (data: depositSchemaType) => {
+  const onSubmitCallback = useCallback(async (data: DepositSchemaType) => {
     console.log(data);
   }, []);
 
