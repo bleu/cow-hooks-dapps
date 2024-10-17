@@ -54,8 +54,8 @@ importers:
         specifier: ^5.5.1
         version: 5.5.1(encoding@0.1.13)(ethers@6.13.3)
       '@cowprotocol/hook-dapp-lib':
-        specifier: 1.0.0-RC1
-        version: 1.0.0-RC1
+        specifier: 1.1.0-RC0
+        version: 1.1.0-RC0
       '@ethersproject/providers':
         specifier: 5.7.2
         version: 5.7.2
@@ -145,8 +145,8 @@ importers:
         specifier: ^5.5.1
         version: 5.5.1(encoding@0.1.13)(ethers@5.7.2)
       '@cowprotocol/hook-dapp-lib':
-        specifier: 1.0.0-RC1
-        version: 1.0.0-RC1
+        specifier: 1.1.0-RC0
+        version: 1.1.0-RC0
       '@fortawesome/fontawesome-svg-core':
         specifier: ^6.6.0
         version: 6.6.0
@@ -266,8 +266,8 @@ importers:
         specifier: ^5.5.1
         version: 5.5.1(encoding@0.1.13)(ethers@5.7.2)
       '@cowprotocol/hook-dapp-lib':
-        specifier: 1.0.0-RC1
-        version: 1.0.0-RC1
+        specifier: 1.1.0-RC0
+        version: 1.1.0-RC0
       '@cowprotocol/permit-utils':
         specifier: 0.3.1
         version: 0.3.1(cross-fetch@3.1.8(encoding@0.1.13))(ipfs-only-hash@4.0.0(encoding@0.1.13))(multiformats@9.9.0)
@@ -411,8 +411,8 @@ importers:
         specifier: ^5.5.1
         version: 5.5.1(encoding@0.1.13)(ethers@5.7.2)
       '@cowprotocol/hook-dapp-lib':
-        specifier: 1.0.0-RC1
-        version: 1.0.0-RC1
+        specifier: 1.1.0-RC0
+        version: 1.1.0-RC0
       '@cowprotocol/permit-utils':
         specifier: 0.3.1
         version: 0.3.1(cross-fetch@3.1.8(encoding@0.1.13))(ipfs-only-hash@4.0.0(encoding@0.1.13))(multiformats@9.9.0)
@@ -553,8 +553,8 @@ importers:
         specifier: ^5.5.1
         version: 5.5.1(encoding@0.1.13)(ethers@5.7.2)
       '@cowprotocol/hook-dapp-lib':
-        specifier: 1.0.0-RC1
-        version: 1.0.0-RC1
+        specifier: 1.1.0-RC0
+        version: 1.1.0-RC0
       '@cowprotocol/permit-utils':
         specifier: 0.3.1
         version: 0.3.1(cross-fetch@3.1.8(encoding@0.1.13))(ipfs-only-hash@4.0.0(encoding@0.1.13))(multiformats@9.9.0)
@@ -1073,8 +1073,8 @@ packages:
     peerDependencies:
       ethers: ^5.7.2
 
-  '@cowprotocol/hook-dapp-lib@1.0.0-RC1':
-    resolution: {integrity: sha512-j4TAKefSU7cnfPLoaeISkuWpA04jZ9FOiZRcUG8QFVtgbBrvYqzLlOosOT6RARw9qN372yQK6bobzkOT0G+TWg==}
+  '@cowprotocol/hook-dapp-lib@1.1.0-RC0':
+    resolution: {integrity: sha512-LfwdK1XWLgZapZoEmFbOvO6LCvr4RsNsedvCvnqdp6kfqSuZEuvcnNz+mSJ3SF5IY7yLtUhSBDzldXPyxaNr/A==}
 
   '@cowprotocol/iframe-transport@1.0.0':
     resolution: {integrity: sha512-tQJno9m1ywUs2aNekvQoMG6qzrNgNamo5tO1bctQQh2+81OMQYTjw8N5L7mQMIFzbRRphcJubg5ciy9LFAo7PA==}
@@ -6924,7 +6924,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@cowprotocol/hook-dapp-lib@1.0.0-RC1':
+  '@cowprotocol/hook-dapp-lib@1.1.0-RC0':
     dependencies:
       '@cowprotocol/iframe-transport': 1.0.0
 
