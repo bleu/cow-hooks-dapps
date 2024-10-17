@@ -42,10 +42,6 @@ export default function Page() {
     context,
   });
   const handleTokenAllowance = useHandleTokenAllowance({
-    signer,
-    jsonRpcProvider,
-    context,
-    publicClient,
     spender: cowShedProxy,
   });
 
@@ -70,7 +66,7 @@ export default function Page() {
     }) => {
       const permitData = await handleTokenAllowance(
         BigNumber.from(permit.amount),
-        permit.tokenAddress as Address,
+        permit.tokenAddress as Address
       );
 
       if (permitData) {
@@ -85,7 +81,7 @@ export default function Page() {
       }
       setCurrentStepIndex((prev) => prev + 1);
     },
-    [handleTokenAllowance],
+    [handleTokenAllowance]
   );
 
   const steps = useMemo(() => {

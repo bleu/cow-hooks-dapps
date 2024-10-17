@@ -1,58 +1,43 @@
 "use client";
 
-import { Button, Form } from "@bleu/ui";
+import { Button } from "@bleu/ui";
 
-import { useCallback, useMemo } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFormContext, useWatch } from "react-hook-form";
-import { depositSchema, DepositSchemaType } from "#/utils/schema";
+import { useFormContext, useFormState, useWatch } from "react-hook-form";
 import {
-  IPool,
+  type IPool,
   PoolsDropdownMenu,
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import { useTokenPools } from "#/hooks/useTokenPools";
+import { useTokenBuyPools } from "#/hooks/useTokenBuyPools";
 import { PoolItemInfo } from "#/components/PoolItemInfo";
 import { TokenAmountInputs } from "#/components/TokenAmountInputs";
-import { Address } from "viem";
+import { useSelectedPool } from "#/hooks/useSelectedPool";
+import { FormType } from "#/types";
+import { useMemo } from "react";
 
 export default function Page() {
   const { context } = useIFrameContext();
-  const { data: pools, isLoading: isLoadingPools } = useTokenPools(
-    context?.chainId,
-    context?.orderParams?.buyTokenAddress as Address
-  );
+  const { data: pools, isLoading: isLoadingPools } = useTokenBuyPools();
 
-  const form = useForm<DepositSchemaType>({
-    resolver: zodResolver(depositSchema),
-    defaultValues: {
-      poolId: "",
-    },
+  const { setValue, control } = useFormContext<FormType>();
+
+  const { isSubmitting, isSubmitSuccessful } = useFormState({
+    control,
   });
 
-  const {
-    setValue,
+  const [amounts, referenceTokenAddress] = useWatch({
     control,
-    formState: { isSubmitting, isSubmitSuccessful },
-  } = useFormContext<DepositSchemaType>();
+    name: ["amounts", "referenceTokenAddress"],
+  });
 
-  const { poolId } = useWatch({ control });
+  const referenceAmount = useMemo(() => {
+    if (!referenceTokenAddress || !amounts) return;
+    return amounts[referenceTokenAddress.toLowerCase()];
+  }, [amounts, referenceTokenAddress]);
 
-  const selectedPool = useMemo(
-    () => pools?.find((pool) => pool.id === poolId),
-    [pools, poolId]
-  );
-
-  const onSubmitCallback = useCallback(async (data: DepositSchemaType) => {
-    console.log(data);
-  }, []);
-
-  const onSubmit = useMemo(
-    () => form.handleSubmit(onSubmitCallback),
-    [form, onSubmitCallback]
-  );
+  const selectedPool = useSelectedPool();
 
   if (!context) return null;
 
@@ -81,11 +66,7 @@ export default function Page() {
   }
 
   return (
-    <Form
-      {...form}
-      onSubmit={onSubmit}
-      className="w-full flex flex-col gap-1 py-1 px-4"
-    >
+    <div className="w-full flex flex-col gap-1 py-1 px-4">
       <PoolsDropdownMenu
         onSelect={(pool: IPool) => setValue("poolId", pool.id)}
         PoolItemInfo={PoolItemInfo}
@@ -99,12 +80,13 @@ export default function Page() {
             type="submit"
             className="my-2 rounded-xl text-lg min-h-[58px]"
             loading={isSubmitting || isSubmitSuccessful}
+            disabled={!referenceAmount || referenceAmount <= 0}
             loadingText="Creating hook..."
           >
             Add post-hook
           </Button>
         </div>
       )}
-    </Form>
+    </div>
   );
 }
