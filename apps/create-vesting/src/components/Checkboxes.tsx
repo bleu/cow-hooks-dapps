@@ -39,7 +39,6 @@ export const Checkbox = ({
           <Input
             type="checkbox"
             id={name}
-            checked={isSelected}
             {...register(name)}
             className="sr-only" // This hides the input visually but keeps it accessible
             {...props}

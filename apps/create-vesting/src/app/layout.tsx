@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <link rel="manifest" href="/manifest.json" />
       </Head>
       <IFrameContextProvider>
-        <body className="flex flex-col h-full font-sans font-normal">
+        <body className="flex flex-col h-full font-sans font-normal bg-transparent">
           {children}
         </body>
       </IFrameContextProvider>

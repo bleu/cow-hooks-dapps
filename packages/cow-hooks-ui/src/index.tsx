@@ -21,3 +21,4 @@ export * from "./ButtonPrimary";
 export * from "./ClaimableAmountContainer";
 export * from "./PoolsDropdownMenu";
 export * from "./BalancesPreview";
+export * from "./utils/getAddressByEns";

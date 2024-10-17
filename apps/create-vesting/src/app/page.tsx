@@ -34,10 +34,14 @@ import { useFormatVariables } from "#/hooks/useFormatVariables";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import type { Address } from "viem";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+// import { decodeCalldata } from "#/utils/decodeCalldata";
+import { HelpMode } from "#/components/HelpMode";
+import { validateRecipient } from "#/utils/validateRecipient";
 
 export default function Page() {
   const { context, setHookInfo } = useIFrameContext();
   const router = useRouter();
+  const [onHelpMode, setOnHelpMode] = useState(false);
 
   const form = useForm<CreateVestingFormData>({
     resolver: zodResolver(createVestingSchema),
@@ -50,7 +54,7 @@ export default function Page() {
     },
   });
 
-  const { control } = form;
+  const { control, clearErrors, setError } = form;
   const vestUserInput = useWatch({ control, name: "vestUserInput" });
   const vestAllFromSwap = useWatch({ control, name: "vestAllFromSwap" });
   const vestAllFromAccount = useWatch({ control, name: "vestAllFromAccount" });
@@ -94,12 +98,34 @@ export default function Page() {
   const onSubmitCallback = useCallback(
     async (data: CreateVestingFormData) => {
       if (!context?.account || !token || !vestingEscrowFactoryAddress) return;
+
+      // Validate ENS name and get address
+      clearErrors("recipient");
+      let address: string;
+      try {
+        address = await validateRecipient(data.recipient);
+      } catch (error) {
+        if (error instanceof Error) {
+          setError("recipient", {
+            type: "manual",
+            message: error.message,
+          });
+        } else {
+          setError("recipient", {
+            type: "manual",
+            message: "Couldn't verify ENS name",
+          });
+        }
+        return;
+      }
+
       const hookInfo = await getHooksTransactions({
         token,
         vestingEscrowFactoryAddress,
-        formData: data,
+        formData: { ...data, recipient: address },
       });
       if (!hookInfo) return;
+
       setHookInfo(hookInfo);
       router.push("/signing");
     },
@@ -110,6 +136,8 @@ export default function Page() {
       router.push,
       setHookInfo,
       getHooksTransactions,
+      setError,
+      clearErrors,
     ],
   );
 
@@ -120,8 +148,8 @@ export default function Page() {
 
   if (!context)
     return (
-      <div className="flex items-center justify-center w-full h-full ">
-        <Spinner size="lg" />
+      <div className="flex items-center justify-center w-full h-full bg-transparent text-color-text-paper">
+        <Spinner size="lg" style={{ color: "gray" }} />
       </div>
     );
 
@@ -135,6 +163,10 @@ export default function Page() {
 
   if (!ALL_SUPPORTED_CHAIN_IDS.includes(context.chainId)) {
     return <span className="mt-10 text-center">Unsupported chain</span>;
+  }
+
+  if (onHelpMode) {
+    return <HelpMode setOnHelpMode={setOnHelpMode} />;
   }
 
   const amountPreview = vestAllFromSwap
@@ -151,59 +183,68 @@ export default function Page() {
     amount > allAfterSwapFloat;
 
   return (
-    <Form {...form} onSubmit={onSubmit} className="contents">
-      <Wrapper>
-        <div className="flex flex-col flex-grow py-4 gap-4 items-start justify-start text-center">
-          <Input
-            name="recipient"
-            label="Vesting Recipient Address"
-            placeholder="0xabc..."
-            autoComplete="off"
-            className="h-12 p-2.5 rounded-xl bg-color-paper-darker border-none"
-          />
-          <PeriodWithScaleInput
-            periodScaleOptions={periodScaleOptions}
-            namePeriodValue="period"
-            namePeriodScale="periodScale"
-            type="number"
-            label="Lock-up Period"
-            validation={{ valueAsNumber: true, required: true }}
-            onKeyDown={(e) =>
-              ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
-            }
-          />
-          <TokenAmountInput
-            name="amount"
-            type="number"
-            step={`0.${"0".repeat(tokenDecimals ? tokenDecimals - 1 : 8)}1`}
-            token={token}
-            label="Vesting Amount"
-            placeholder="0.0"
-            autoComplete="off"
-            disabled={vestAllFromSwap || vestAllFromAccount}
-            disabledValue={amountPreview}
-            disabledValueFullDecimals={amountPreviewFullDecimals}
-            userBalance={formattedUserBalance}
-            userBalanceFullDecimals={String(userBalanceFloat)}
-            validation={{
-              setValueAs: (v) => (v === "" ? undefined : Number(v)),
-              required: !(vestAllFromAccount || vestAllFromSwap),
-            }}
-            onKeyDown={(e) =>
-              ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
-            }
-          />
-          <div className="flex flex-col gap-y-2">
-            <VestUserInputCheckbox />
-            <VestAllFromSwapCheckbox />
-            <VestAllFromAccountCheckbox />
+    <>
+      <Form {...form} onSubmit={onSubmit} className="contents">
+        <Wrapper>
+          <div className="flex flex-col flex-grow py-4 gap-4 items-start justify-start text-center">
+            <Input
+              name="recipient"
+              label="Vesting Recipient"
+              placeholder="Address or ENS name"
+              autoComplete="off"
+              className="h-12 p-2.5 rounded-xl bg-color-paper-darker border-none"
+            />
+            <PeriodWithScaleInput
+              periodScaleOptions={periodScaleOptions}
+              namePeriodValue="period"
+              namePeriodScale="periodScale"
+              type="number"
+              label="Lock-up Period"
+              validation={{ valueAsNumber: true, required: true }}
+              onKeyDown={(e) =>
+                ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
+              }
+            />
+            <TokenAmountInput
+              name="amount"
+              type="number"
+              step={`0.${"0".repeat(tokenDecimals ? tokenDecimals - 1 : 8)}1`}
+              token={token}
+              label="Vesting Amount"
+              placeholder="0.0"
+              autoComplete="off"
+              disabled={vestAllFromSwap || vestAllFromAccount}
+              disabledValue={amountPreview}
+              disabledValueFullDecimals={amountPreviewFullDecimals}
+              userBalance={formattedUserBalance}
+              userBalanceFullDecimals={String(userBalanceFloat)}
+              validation={{
+                setValueAs: (v) => (v === "" ? undefined : Number(v)),
+                required: !(vestAllFromAccount || vestAllFromSwap),
+              }}
+              onKeyDown={(e) =>
+                ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
+              }
+            />
+            <div className="flex flex-col gap-y-2">
+              <VestUserInputCheckbox />
+              <VestAllFromSwapCheckbox />
+              <VestAllFromAccountCheckbox />
+            </div>
           </div>
-        </div>
-        <ButtonPrimary type="submit" disabled={isOutOfFunds}>
-          <ButtonText context={context} isOutOfFunds={isOutOfFunds} />
-        </ButtonPrimary>
-      </Wrapper>
-    </Form>
+          <ButtonPrimary type="submit" disabled={isOutOfFunds}>
+            <ButtonText context={context} isOutOfFunds={isOutOfFunds} />
+          </ButtonPrimary>
+        </Wrapper>
+      </Form>
+      <button
+        className="rounded-xl p-2 mt-2 bg-color-paper-darker text-color-text-paper hover:text-color-button-text hover:bg-color-primary"
+        type="button"
+        onClick={() => setOnHelpMode(true)}
+      >
+        How Can I access my contract later?
+      </button>
+    </>
   );
 }
 
