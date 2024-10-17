@@ -33,12 +33,14 @@ type IFrameContextType = {
   hookInfo?: IHooksInfo;
   setHookInfo: (info: IHooksInfo) => void;
   jsonRpcProvider?: JsonRpcProvider;
+  web3Provider?: Web3Provider;
 };
 
 export const IFrameContext = createContext({} as IFrameContextType);
 
 export function IFrameContextProvider({ children }: PropsWithChildren) {
   const [context, setContext] = useState<HookDappContextAdjusted>();
+  const [web3Provider, setWeb3Provider] = useState<Web3Provider>();
   const [actions, setActions] = useState<CoWHookDappActions>();
   const [signer, setSigner] = useState<Signer>();
   const [hookInfo, setHookInfo] = useState<IHooksInfo>();
@@ -50,9 +52,12 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
 
     setActions(actions);
 
-    // TODO: refactor to use viem
     const web3Provider = new Web3Provider(provider);
+    setWeb3Provider(web3Provider);
     setSigner(web3Provider.getSigner());
+    console.log("web3Provider.connection.url", {
+      url: web3Provider.connection.url,
+    });
   }, []);
 
   const jsonRpcProvider = useMemo(() => {
@@ -93,6 +98,7 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
         signer,
         actions,
         jsonRpcProvider,
+        web3Provider,
       }}
     >
       {children}

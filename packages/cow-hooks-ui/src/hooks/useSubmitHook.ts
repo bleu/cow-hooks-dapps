@@ -10,18 +10,21 @@ export function useSubmitHook({
   context,
   publicClient,
   recipientOverride,
+  defaultGasLimit,
 }: {
   actions: CoWHookDappActions | undefined;
   context: HookDappContextAdjusted | undefined;
   publicClient: PublicClient | undefined;
   recipientOverride?: string;
+  defaultGasLimit?: bigint;
 }) {
   return useCallback(
     async (hook: Omit<CowHook, "gasLimit">) => {
-      if (!context || !actions) return;
+      if (!context || !actions || !publicClient)
+        throw new Error("Missing context");
 
       const estimatedGas = await publicClient
-        ?.estimateGas({
+        .estimateGas({
           account: COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS[
             context.chainId
           ] as `0x${string}`,
@@ -30,7 +33,9 @@ export function useSubmitHook({
           data: hook.callData as `0x${string}`,
         })
         .catch(() => {
+          console.log(hook.target, hook.callData);
           throw new Error("Failed to estimate hook gas");
+          // return defaultGasLimit || BigInt(0);
         });
 
       const gasLimit = BigNumber.from(estimatedGas)

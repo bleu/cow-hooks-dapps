@@ -42,10 +42,6 @@ export default function Page() {
     context,
   });
   const handleTokenAllowance = useHandleTokenAllowance({
-    signer,
-    jsonRpcProvider,
-    context,
-    publicClient,
     spender: cowShedProxy,
   });
 
