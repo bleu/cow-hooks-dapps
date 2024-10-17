@@ -34,7 +34,7 @@ export function FormContextProvider({ children }: PropsWithChildren) {
       const hookInfo = await getHookInfo(data);
       if (!hookInfo) return;
       setHookInfo(hookInfo);
-      router.push("/signing");
+      await router.push("/signing");
     },
     [context?.account, getHookInfo, setHookInfo, router]
   );

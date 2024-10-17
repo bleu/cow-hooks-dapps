@@ -23,7 +23,7 @@ export default function Page() {
 
   const { setValue, control } = useFormContext<FormType>();
 
-  const { isSubmitting, isSubmitSuccessful } = useFormState({
+  const { isSubmitting } = useFormState({
     control,
   });
 
@@ -79,7 +79,7 @@ export default function Page() {
           <Button
             type="submit"
             className="my-2 rounded-xl text-lg min-h-[58px]"
-            loading={isSubmitting || isSubmitSuccessful}
+            loading={isSubmitting}
             disabled={!referenceAmount || referenceAmount <= 0}
             loadingText="Creating hook..."
           >
