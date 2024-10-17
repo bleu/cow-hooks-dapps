@@ -16,10 +16,8 @@ export const useFormatVariables = ({
       : undefined;
 
   const swapAmountFloat =
-    //@ts-ignore // wait for CoW to add buyAmunt in context
     context?.orderParams?.buyAmount && tokenDecimals
-      ? //@ts-ignore
-        Number(context?.orderParams?.buyAmount) / 10 ** Number(tokenDecimals)
+      ? Number(context?.orderParams?.buyAmount) / 10 ** Number(tokenDecimals)
       : undefined;
 
   const allAfterSwapFloat =

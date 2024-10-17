@@ -34,14 +34,15 @@ import { useFormatVariables } from "#/hooks/useFormatVariables";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import type { Address } from "viem";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-// import { decodeCalldata } from "#/utils/decodeCalldata";
+import { decodeCalldata } from "#/utils/decodeCalldata";
 import { HelpMode } from "#/components/HelpMode";
 import { validateRecipient } from "#/utils/validateRecipient";
 
 export default function Page() {
-  const { context, setHookInfo } = useIFrameContext();
+  const { context, setHookInfo, publicClient } = useIFrameContext();
   const router = useRouter();
   const [onHelpMode, setOnHelpMode] = useState(false);
+  const [isEditHookLoading, setIsEditHookLoading] = useState(true);
 
   const form = useForm<CreateVestingFormData>({
     resolver: zodResolver(createVestingSchema),
@@ -54,7 +55,7 @@ export default function Page() {
     },
   });
 
-  const { control, clearErrors, setError } = form;
+  const { control, clearErrors, setError, setValue } = form;
   const vestUserInput = useWatch({ control, name: "vestUserInput" });
   const vestAllFromSwap = useWatch({ control, name: "vestAllFromSwap" });
   const vestAllFromAccount = useWatch({ control, name: "vestAllFromAccount" });
@@ -145,6 +146,45 @@ export default function Page() {
     () => form.handleSubmit(onSubmitCallback),
     [form, onSubmitCallback],
   );
+
+  const loadHookInfo = useCallback(async () => {
+    if (
+      !context?.hookToEdit ||
+      !context.account ||
+      !publicClient ||
+      !tokenDecimals ||
+      !isEditHookLoading
+    )
+      return;
+    try {
+      const data = await decodeCalldata(
+        context?.hookToEdit?.hook.callData as `0x${string}`,
+        publicClient,
+        context.account,
+        tokenDecimals,
+      );
+      if (data) {
+        setValue("vestUserInput", data.vestUserInput);
+        setValue("vestAllFromSwap", data.vestAllFromSwap);
+        setValue("vestAllFromAccount", data.vestAllFromAccount);
+        setValue("recipient", data.recipient);
+        setValue("period", data.period);
+        setValue("amount", data.amount);
+        setIsEditHookLoading(false);
+      }
+    } catch {}
+  }, [
+    context?.hookToEdit,
+    context?.account,
+    publicClient,
+    tokenDecimals,
+    setValue,
+    isEditHookLoading,
+  ]);
+
+  if (context?.hookToEdit && isEditHookLoading) {
+    loadHookInfo();
+  }
 
   if (!context)
     return (
