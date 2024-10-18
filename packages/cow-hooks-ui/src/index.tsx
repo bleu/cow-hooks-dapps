@@ -4,6 +4,8 @@ export * from "./TokenInfo";
 export * from "./TokenLogo";
 export * from "./types";
 export * from "./context/iframe";
+export * from "./ui/ClipboardButton";
+export * from "./ui/Info";
 export * from "./ui/InputBase";
 export * from "./ui/TooltipBase";
 export * from "./ui/PeriodWithScaleInput";

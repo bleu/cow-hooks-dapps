@@ -2,7 +2,9 @@
 
 import {
   ButtonPrimary,
+  ClipBoardButton,
   type HookDappContextAdjusted,
+  Info,
   Input,
   PeriodWithScaleInput,
   Spinner,
@@ -35,13 +37,11 @@ import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import type { Address } from "viem";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { decodeCalldata } from "#/utils/decodeCalldata";
-import { HelpMode } from "#/components/HelpMode";
 import { validateRecipient } from "#/utils/validateRecipient";
 
 export default function Page() {
   const { context, setHookInfo, publicClient } = useIFrameContext();
   const router = useRouter();
-  const [onHelpMode, setOnHelpMode] = useState(false);
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
 
   const form = useForm<CreateVestingFormData>({
@@ -205,10 +205,6 @@ export default function Page() {
     return <span className="mt-10 text-center">Unsupported chain</span>;
   }
 
-  if (onHelpMode) {
-    return <HelpMode setOnHelpMode={setOnHelpMode} />;
-  }
-
   const amountPreview = vestAllFromSwap
     ? formattedSwapAmount
     : formattedAllAfterSwap;
@@ -272,21 +268,29 @@ export default function Page() {
               <VestAllFromAccountCheckbox />
             </div>
           </div>
+          <Info content={<InfoContent />} />
           <ButtonPrimary type="submit" disabled={isOutOfFunds}>
             <ButtonText context={context} isOutOfFunds={isOutOfFunds} />
           </ButtonPrimary>
         </Wrapper>
       </Form>
-      <button
-        className="rounded-xl p-2 mt-2 bg-color-paper-darker text-color-text-paper hover:text-color-button-text hover:bg-color-primary"
-        type="button"
-        onClick={() => setOnHelpMode(true)}
-      >
-        How Can I access my contract later?
-      </button>
     </>
   );
 }
+
+const InfoContent = () => {
+  return (
+    <span className="cursor-default">
+      To access Vesting Post-hook contract after swap, connect with the
+      recipient wallet at{" "}
+      <ClipBoardButton
+        buttonText="llamapay.io/vesting"
+        contentToCopy="https://llamapay.io/vesting"
+        className="flex items-center justify-center gap-1 cursor-pointer"
+      />
+    </span>
+  );
+};
 
 const ButtonText = ({
   context,

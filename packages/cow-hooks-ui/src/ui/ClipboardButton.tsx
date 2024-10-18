@@ -1,4 +1,4 @@
-import { useCopyToClipboard } from "#/hooks/useCopyToClipboard";
+import { useCopyToClipboard } from "../hooks/useCopyToClipboard";
 import { ClipboardCopyIcon, CheckIcon } from "@radix-ui/react-icons";
 
 export const ClipBoardButton = ({
