@@ -4,3 +4,7 @@ export * from "./erc20";
 export * from "./factory";
 export * from "./rpcs";
 export * from "./types";
+export * from "./abis/balancerGaugeAbi";
+export * from "./abis/cowShedAbi";
+export * from "./abis/vestingEscrowFactoryAbi";
+export * from "./abis/weirollAbi";

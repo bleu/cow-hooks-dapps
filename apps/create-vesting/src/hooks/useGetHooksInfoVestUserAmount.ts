@@ -52,7 +52,7 @@ export const useGetHooksInfoVestUserAmount = () => {
         TransactionFactory.createRawTx(TRANSACTION_TYPES.CREATE_VESTING, {
           type: TRANSACTION_TYPES.CREATE_VESTING,
           token: tokenAddress,
-          recipient: recipient,
+          recipient: recipient as Address,
           amount: amountWei,
           vestingDuration: BigInt(periodInSeconds),
           vestingEscrowFactoryAddress: vestingEscrowFactoryAddress,

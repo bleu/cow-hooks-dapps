@@ -2,169 +2,176 @@
 
 import {
   ButtonPrimary,
-  ContentWrapper,
+  ClipBoardButton,
   type HookDappContextAdjusted,
-  Input,
-  PeriodWithScaleInput,
-  TokenAmountInput,
+  Info,
+  Spinner,
   Wrapper,
   useIFrameContext,
-  useReadTokenContract,
 } from "@bleu/cow-hooks-ui";
-import { Form } from "@bleu/ui";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Token } from "@uniswap/sdk-core";
-import { useCallback, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useCallback, useState } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 
-import {
-  type CreateVestingFormData,
-  createVestingSchema,
-  periodScaleOptions,
-} from "#/utils/schema";
-
-import { useRouter } from "next/navigation";
-import {
-  VestAllFromAccountCheckbox,
-  VestAllFromSwapCheckbox,
-} from "#/components/Checkboxes";
-import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
-import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
-import { vestingFactoriesMapping } from "#/utils/vestingFactoriesMapping";
+import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { AmountInput } from "#/components/AmountInput";
+import { PeriodInput } from "#/components/PeriodInput";
+import { RecipientInput } from "#/components/RecipientInput";
+import { VestAllFromAccountCheckbox } from "#/components/VestAllFromAccountCheckbox";
+import { VestAllFromSwapCheckbox } from "#/components/VestAllFromSwapCheckbox";
+import { VestUserInputCheckbox } from "#/components/VestUserInputCheckbox";
+import { useTokenContext } from "#/context/token";
+import { useFormatVariables } from "#/hooks/useFormatVariables";
+import { decodeCalldata } from "#/utils/decodeCalldata";
 
 export default function Page() {
-  const { vestAllFromSwap, vestAllFromAccount } = useTokenAmountTypeContext();
-  const { context, setHookInfo } = useIFrameContext();
-  const router = useRouter();
+  const { context, publicClient } = useIFrameContext();
+  const [isEditHookLoading, setIsEditHookLoading] = useState(true);
 
-  const form = useForm<CreateVestingFormData>({
-    resolver: zodResolver(createVestingSchema),
-    defaultValues: {
-      period: 1,
-      periodScale: "Day",
-      vestAllFromSwap: false,
-    },
+  const { token } = useTokenContext();
+
+  const { control, setValue } = useFormContext();
+
+  const vestUserInput = useWatch({ control, name: "vestUserInput" });
+  const vestAllFromSwap = useWatch({ control, name: "vestAllFromSwap" });
+  const vestAllFromAccount = useWatch({ control, name: "vestAllFromAccount" });
+  const amount = useWatch({ control, name: "amount" });
+
+  const {
+    userBalanceFloat,
+    swapAmountFloat,
+    allAfterSwapFloat,
+    formattedUserBalance,
+    formattedSwapAmount,
+    formattedAllAfterSwap,
+  } = useFormatVariables({
+    userBalance: token?.userBalance,
+    tokenDecimals: token?.decimals,
   });
 
-  const getHooksTransactions = useGetHooksTransactions();
-  const tokenAddress = context?.orderParams?.buyTokenAddress as
-    | `0x${string}`
-    | undefined;
+  const loadHookInfo = useCallback(async () => {
+    if (
+      !context?.hookToEdit ||
+      !context.account ||
+      !publicClient ||
+      !token?.decimals ||
+      !isEditHookLoading
+    )
+      return;
+    try {
+      const data = await decodeCalldata(
+        context?.hookToEdit?.hook.callData as `0x${string}`,
+        token.decimals,
+      );
+      if (data) {
+        setValue("vestUserInput", data.vestUserInput);
+        setValue("vestAllFromSwap", data.vestAllFromSwap);
+        setValue("vestAllFromAccount", data.vestAllFromAccount);
+        setValue("recipient", data.recipient);
+        setValue("period", data.period);
+        setValue("amount", data.amount);
+        setIsEditHookLoading(false);
+      }
+    } catch {}
+  }, [
+    context?.hookToEdit,
+    context?.account,
+    publicClient,
+    token?.decimals,
+    setValue,
+    isEditHookLoading,
+  ]);
 
-  const { tokenSymbol, tokenDecimals } = useReadTokenContract({ tokenAddress });
-
-  const token = useMemo(
-    () =>
-      context?.chainId && tokenAddress && tokenDecimals
-        ? new Token(context.chainId, tokenAddress, tokenDecimals, tokenSymbol)
-        : undefined,
-    [context?.chainId, tokenAddress, tokenDecimals, tokenSymbol],
-  );
-
-  const vestingEscrowFactoryAddress = useMemo(() => {
-    return context?.chainId
-      ? vestingFactoriesMapping[context.chainId]
-      : undefined;
-  }, [context?.chainId]);
-
-  const onSubmitCallback = useCallback(
-    async (data: CreateVestingFormData) => {
-      if (!context?.account || !token || !vestingEscrowFactoryAddress) return;
-      const hookInfo = await getHooksTransactions({
-        token,
-        vestingEscrowFactoryAddress,
-        formData: data,
-      });
-      if (!hookInfo) return;
-      setHookInfo(hookInfo);
-      router.push("/signing");
-    },
-    [
-      context?.account,
-      token,
-      vestingEscrowFactoryAddress,
-      router.push,
-      setHookInfo,
-      getHooksTransactions,
-    ],
-  );
-
-  const onSubmit = useMemo(
-    () => form.handleSubmit(onSubmitCallback),
-    [form, onSubmitCallback],
-  );
+  if (context?.hookToEdit && isEditHookLoading) {
+    loadHookInfo();
+  }
 
   if (!context)
-    // For some reason we had a bug with spinner being rendered without styling. Please use null here
-    return null;
+    return (
+      <div className="flex items-center justify-center w-full h-full bg-transparent text-color-text-paper">
+        <Spinner size="lg" style={{ color: "gray" }} />
+      </div>
+    );
 
   if (!context.account)
-    return <span className="mt-10 text-center">Connect your wallet</span>;
+    return <span className="mt-10 text-center">Connect your wallet first</span>;
 
   if (!context?.orderParams?.buyTokenAddress)
     return (
       <span className="mt-10 text-center">Provide a buy token in swap</span>
     );
 
+  if (!ALL_SUPPORTED_CHAIN_IDS.includes(context.chainId)) {
+    return <span className="mt-10 text-center">Unsupported chain</span>;
+  }
+
+  const amountPreview = vestAllFromSwap
+    ? formattedSwapAmount
+    : formattedAllAfterSwap;
+  const amountPreviewFullDecimals = vestAllFromSwap
+    ? String(swapAmountFloat)
+    : String(allAfterSwapFloat);
+
+  const isOutOfFunds =
+    !!vestUserInput &&
+    !!amount &&
+    !!allAfterSwapFloat &&
+    amount > allAfterSwapFloat;
+
   return (
-    <Form {...form} onSubmit={onSubmit} className="contents">
-      <Wrapper>
-        <ContentWrapper>
-          <Input
-            name="recipient"
-            label="Recipient"
-            placeholder="0xabc..."
-            autoComplete="off"
-            className="h-12 p-2.5 rounded-xl bg-color-paper-darker border-none placeholder:opacity-100"
-          />
-          <br />
-          <div className="flex flex-col w-full xsm:gap-4 xsm:flex-row">
-            <PeriodWithScaleInput
-              periodScaleOptions={periodScaleOptions}
-              namePeriodValue="period"
-              namePeriodScale="periodScale"
-              type="number"
-              step="0.0000001"
-              label="Period"
-              validation={{ valueAsNumber: true, required: true }}
-              onKeyDown={(e) =>
-                ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
-              }
-            />
-            <br className="xsm:h-0 xsm:w-0" />
-            <TokenAmountInput
-              name="amount"
-              type="number"
-              step={`0.${"0".repeat(tokenDecimals ? tokenDecimals - 1 : 8)}1`}
-              token={token}
-              label="Amount"
-              placeholder="0.0"
-              autoComplete="off"
-              disabled={vestAllFromSwap || vestAllFromAccount}
-              validation={{
-                setValueAs: (v) =>
-                  v === "" ? undefined : Number.parseInt(v, 10),
-                required: !(vestAllFromAccount || vestAllFromSwap),
-              }}
-              onKeyDown={(e) =>
-                ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
-              }
-            />
-          </div>
-          <br />
+    <Wrapper>
+      <div className="flex flex-col flex-grow py-4 gap-4 items-start justify-start text-center">
+        <RecipientInput />
+        <PeriodInput />
+        <AmountInput
+          token={token}
+          vestAllFromSwap={vestAllFromSwap}
+          vestAllFromAccount={vestAllFromAccount}
+          amountPreview={amountPreview}
+          amountPreviewFullDecimals={amountPreviewFullDecimals}
+          formattedUserBalance={formattedUserBalance}
+          userBalanceFloat={userBalanceFloat}
+        />
+        <div className="flex flex-col gap-y-2">
+          <VestUserInputCheckbox />
           <VestAllFromSwapCheckbox />
           <VestAllFromAccountCheckbox />
-          <br />
-        </ContentWrapper>
-        <ButtonPrimary type="submit">
-          <ButtonText context={context} />
-        </ButtonPrimary>
-      </Wrapper>
-    </Form>
+        </div>
+      </div>
+      <Info content={<InfoContent />} />
+      <ButtonPrimary type="submit" disabled={isOutOfFunds}>
+        <ButtonText context={context} isOutOfFunds={isOutOfFunds} />
+      </ButtonPrimary>
+    </Wrapper>
   );
 }
 
-const ButtonText = ({ context }: { context: HookDappContextAdjusted }) => {
+const InfoContent = () => {
+  return (
+    <span className="cursor-default">
+      To access Vesting Post-hook contract after swap, connect with the
+      recipient wallet at{" "}
+      <ClipBoardButton
+        buttonText="llamapay.io/vesting"
+        contentToCopy="https://llamapay.io/vesting"
+        className="flex items-center justify-center gap-1 cursor-pointer"
+      />
+    </span>
+  );
+};
+
+const ButtonText = ({
+  context,
+  isOutOfFunds,
+}: { context: HookDappContextAdjusted; isOutOfFunds: boolean }) => {
+  if (isOutOfFunds)
+    return (
+      <span className="flex items-center justify-center gap-2">
+        <ExclamationTriangleIcon className="w-6 h-6" />
+        You won't have enough funds
+      </span>
+    );
+
   if (context?.hookToEdit && context?.isPreHook)
     return <span>Update Pre-hook</span>;
   if (context?.hookToEdit && !context?.isPreHook)

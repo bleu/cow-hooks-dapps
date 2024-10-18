@@ -40,7 +40,7 @@ export const useGetHooksInfoVestAllFromSwap = () => {
           {
             type: TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_PROXY,
             token: tokenAddress,
-            recipient: recipient,
+            recipient: recipient as Address,
             cowShedProxy,
             vestingDuration: BigInt(periodInSeconds),
             vestingEscrowFactoryAddress: vestingEscrowFactoryAddress,
@@ -48,7 +48,7 @@ export const useGetHooksInfoVestAllFromSwap = () => {
         ),
       ]);
 
-      return { txs };
+      return { txs, recipientOverride: cowShedProxy };
     },
     [context?.account, cowShedProxy],
   );

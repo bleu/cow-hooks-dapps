@@ -10,7 +10,7 @@ import {
 import { TokenLogo } from "../TokenLogo";
 import { InfoTooltip } from "./TooltipBase";
 
-interface IPeriodWithScaleInput
+export interface ITokenAmountInput
   extends Omit<HTMLProps<HTMLInputElement>, "name"> {
   name: string;
   token?: Token | undefined;
@@ -19,6 +19,11 @@ interface IPeriodWithScaleInput
   tooltipLink?: string;
   extraLabelElement?: React.ReactNode;
   validation?: RegisterOptions;
+  disabled?: boolean;
+  disabledValue?: string | undefined;
+  disabledValueFullDecimals?: string | undefined;
+  userBalance?: string | undefined;
+  userBalanceFullDecimals?: string | undefined;
 }
 
 export function TokenAmountInput({
@@ -30,8 +35,13 @@ export function TokenAmountInput({
   extraLabelElement,
   validation,
   className,
+  disabled,
+  disabledValue,
+  disabledValueFullDecimals,
+  userBalance,
+  userBalanceFullDecimals,
   ...props
-}: IPeriodWithScaleInput) {
+}: ITokenAmountInput) {
   const { register, control } = useFormContext();
 
   const { errors } = useFormState({ control });
@@ -48,24 +58,44 @@ export function TokenAmountInput({
           {extraLabelElement}
         </div>
       )}
-      <div className="flex items-center justify-between w-full h-12 py-2.5 px-1.5 bg-color-paper-darker rounded-xl">
-        {token && (
-          <div className="w-min h-8 p-2.5 flex items-center justify-start gap-2 rounded-xl text-color-text-paper bg-color-paper">
-            <div className="w-4 h-4">
-              <TokenLogo token={token} height={16} width={16} alt="" />
+      <div className="flex items-center justify-between w-full h-20 py-4 px-6 bg-color-paper-darker rounded-xl">
+        <div className="rounded-xl text-color-text-paper bg-color-paper cursor-default">
+          {token && (
+            <div className="min-w-30 w-fit h-12 px-4 flex items-center justify-center gap-2">
+              <div className="w-6 h-6">
+                <TokenLogo token={token} height={24} width={24} alt="" />
+              </div>
+              <span className="m-0 p-0 min-h-fit">{token?.symbol}</span>
             </div>
-            <span className="m-0 p-0 min-h-fit">{token?.symbol}</span>
-          </div>
-        )}
-        <Input
-          // autoComplete="off"
-          className={cn(
-            "outline-none text-right w-full max-h-10 px-2.5 py-0 border-none rounded-l-xl text-base text-color-text-paper bg-inherit [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
-            className,
           )}
-          {...register(name, validation)}
-          {...props}
-        />
+        </div>
+        <div className="flex flex-col justify-between items-end h-full">
+          {disabled ? (
+            <span
+              title={disabledValueFullDecimals}
+              className="outline-none text-right p-0 m-0 border-none text-xl text-color-text-paper bg-inherit placeholder:opacity-70 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-default"
+            >
+              ≈ {disabledValue}
+            </span>
+          ) : (
+            <Input
+              className={cn(
+                "outline-none text-right p-0 m-0 h-min border-none text-xl text-color-text-paper bg-inherit placeholder:opacity-70 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
+                className,
+              )}
+              {...register(name, validation)}
+              {...props}
+            />
+          )}
+          {userBalance && token?.symbol && (
+            <span
+              title={userBalanceFullDecimals}
+              className="opacity-40 text-xs cursor-default"
+            >
+              Balance: {userBalance} {token?.symbol}
+            </span>
+          )}
+        </div>
       </div>
       {errorMessage && (
         <div className="mt-1 ml-2 text-start text-sm text-destructive">
