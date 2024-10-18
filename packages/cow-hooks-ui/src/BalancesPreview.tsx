@@ -7,6 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  cn,
 } from "@bleu/ui";
 import { formatUnits } from "ethers/lib/utils";
 import { useMemo } from "react";
@@ -41,16 +42,23 @@ export function BalancesPreview({
   if (!balancesList && isLoading) return <Spinner />;
 
   return (
-    <div className="border rounded-2xl">
+    <div className="border border-color-text/25 rounded-2xl">
       <Table>
-        <TableHeader className="[&_tr]:border-b dark:[&_tr]:border-b-1">
-          <TableRow className="hover:bg-transparent">
+        <TableHeader className="[&_tr]:border-b border-color-text/25 dark:[&_tr]:border-b-1">
+          <TableRow className="hover:bg-transparent border-color-text/25">
             <TableHead>
               <span className="font-normal text-sm">Token</span>
             </TableHead>
-            {labels.map((label) => (
+            {labels.map((label, index) => (
               <TableHead key={`label-${label}`}>
-                <span className="font-normal text-sm">{label}</span>
+                <span
+                  className={cn(
+                    "text-sm",
+                    index === 1 ? "font-semibold" : "font-normal",
+                  )}
+                >
+                  {label}
+                </span>
               </TableHead>
             ))}
           </TableRow>
@@ -92,6 +100,7 @@ function BalancePreview({
               formatUnits(poolBalance.balance, poolBalance.token.decimals),
             )}
             fiatValue={poolBalance.fiatAmount}
+            className={index === 1 ? "font-semibold" : ""}
           />
         </TableCell>
       ))}

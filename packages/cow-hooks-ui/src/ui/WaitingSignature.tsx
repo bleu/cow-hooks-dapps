@@ -20,9 +20,7 @@ export function WaitingSignature({
     revalidateOnMount: true,
     revalidateOnReconnect: false,
     shouldRetryOnError: false,
-    onError: (error) => {
-      console.error(error);
-    },
+    onError: (_error) => {},
   });
 
   const router = useRouter();

@@ -101,7 +101,7 @@ export function useHandleTokenAllowance({
         });
         if (!hook) throw new Error("Couldn't build permit");
         return hook;
-      } catch {
+      } catch (_error) {
         await handleTokenApprove({
           signer,
           spender,
