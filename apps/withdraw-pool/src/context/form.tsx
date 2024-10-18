@@ -2,13 +2,13 @@
 
 import { type PropsWithChildren, useCallback, useEffect, useMemo } from "react";
 
-import { useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { withdrawSchema, WithdrawSchemaType } from "#/utils/schema";
-import { Form } from "@bleu/ui";
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
+import { Form } from "@bleu/ui";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useForm, useWatch } from "react-hook-form";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
+import { type WithdrawSchemaType, withdrawSchema } from "#/utils/schema";
 import { useUserPoolContext } from "./userPools";
 
 export function FormContextProvider({ children }: PropsWithChildren) {
@@ -31,7 +31,7 @@ export function FormContextProvider({ children }: PropsWithChildren) {
 
   const selectedPool = useMemo(() => {
     return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
+      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
     );
   }, [pools, poolId]);
 
@@ -46,9 +46,10 @@ export function FormContextProvider({ children }: PropsWithChildren) {
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [context?.account, getHooksTransactions, setHookInfo, router]
+    [getHooksTransactions, setHookInfo, router],
   );
 
+  // biome-ignore lint:
   useEffect(() => {
     setValue("poolId", "");
   }, [context?.account]);

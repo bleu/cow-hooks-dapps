@@ -1,21 +1,19 @@
 "use client";
 
-import { Form } from "@bleu/ui";
-
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
-import { WithdrawSchemaType } from "#/utils/schema";
 import {
-  IPool,
+  type IPool,
   PoolsDropdownMenu,
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
-import { useUserPoolContext } from "#/context/userPools";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import { decodeExitPoolHookCalldata } from "#/utils/decodeExitPoolHookCalldata";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
 import { PoolItemInfo } from "#/components/PoolItemInfo";
+import { useUserPoolContext } from "#/context/userPools";
+import { decodeExitPoolHookCalldata } from "#/utils/decodeExitPoolHookCalldata";
+import type { WithdrawSchemaType } from "#/utils/schema";
 
 export default function Page() {
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
@@ -35,25 +33,25 @@ export default function Page() {
       const data = await decodeExitPoolHookCalldata(
         context?.hookToEdit?.hook.callData as `0x${string}`,
         publicClient,
-        context.account
+        context.account,
       );
       setValue("poolId", data.poolId);
       setValue("withdrawPct", data.withdrawPct);
     } finally {
       setIsEditHookLoading(false);
     }
-  }, [context?.hookToEdit]);
+  }, [context?.account, context?.hookToEdit, publicClient, setValue]);
 
   const selectedPool = useMemo(() => {
     return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
+      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
     );
   }, [pools, poolId]);
 
   useEffect(() => {
     if (poolId) return;
     loadHookInfo();
-  }, [loadHookInfo]);
+  }, [loadHookInfo, poolId]);
 
   if (!context) return null;
 

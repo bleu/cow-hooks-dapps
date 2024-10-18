@@ -1,7 +1,7 @@
-import { useFormContext, useWatch } from "react-hook-form";
-import { useTokenBuyPools } from "./useTokenBuyPools";
 import { useMemo } from "react";
-import { FormType } from "#/types";
+import { useFormContext, useWatch } from "react-hook-form";
+import type { FormType } from "#/types";
+import { useTokenBuyPools } from "./useTokenBuyPools";
 
 export function useSelectedPool() {
   const { data: pools } = useTokenBuyPools();
@@ -9,6 +9,6 @@ export function useSelectedPool() {
   const poolId = useWatch({ control, name: "poolId" });
   return useMemo(
     () => pools?.find((pool) => pool.id === poolId),
-    [pools, poolId]
+    [pools, poolId],
   );
 }

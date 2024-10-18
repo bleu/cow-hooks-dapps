@@ -1,7 +1,7 @@
 "use client";
 
+import { BalancesPreview, type IBalance } from "@bleu/cow-hooks-ui";
 import { useMemo } from "react";
-import { BalancesPreview, IBalance } from "@bleu/cow-hooks-ui";
 import { useFormContext, useWatch } from "react-hook-form";
 import { multiplyValueByPct } from "#/utils/math";
 

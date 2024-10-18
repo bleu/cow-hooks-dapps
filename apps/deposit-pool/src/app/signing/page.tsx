@@ -56,7 +56,7 @@ export default function Page() {
     ) {
       router.push("/");
     }
-  }, [context?.account]);
+  }, [context?.account, account, router.push]);
 
   const cowShedCallback = useCallback(async () => {
     if (!cowShedSignature || !hookInfo || !cowShed) return;
@@ -78,7 +78,7 @@ export default function Page() {
     }) => {
       const permitData = await handleTokenAllowance(
         BigNumber.from(permit.amount),
-        permit.tokenAddress as Address
+        permit.tokenAddress as Address,
       );
 
       if (permitData) {
@@ -93,7 +93,7 @@ export default function Page() {
       }
       setCurrentStepIndex((prev) => prev + 1);
     },
-    [handleTokenAllowance]
+    [handleTokenAllowance],
   );
 
   const steps = useMemo(() => {

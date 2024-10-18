@@ -1,9 +1,9 @@
 import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { gql } from "graphql-request";
 import useSWR from "swr";
-import { Address, parseUnits } from "viem";
-import { IPool } from "../types";
+import { type Address, parseUnits } from "viem";
+import type { IPool } from "../types";
 
 interface IQuery {
   pools: {
@@ -104,7 +104,7 @@ interface IGetPoolsWhere {
 export function usePools(
   where: IGetPoolsWhere,
   chainId?: SupportedChainId,
-  orderBy?: string
+  orderBy?: string,
 ) {
   return useSWR(
     [where, chainId],
@@ -126,11 +126,11 @@ export function usePools(
               ...pool.userBalance,
               walletBalance: parseUnits(
                 pool.userBalance.walletBalance,
-                pool.decimals
+                pool.decimals,
               ),
               totalBalance: parseUnits(
                 pool.userBalance.totalBalance,
-                pool.decimals
+                pool.decimals,
               ),
               stakedBalances: pool.userBalance.stakedBalances.map((staked) => ({
                 balance: parseUnits(staked.balance, pool.decimals),
@@ -141,7 +141,7 @@ export function usePools(
               ...pool.dynamicData,
               totalShares: parseUnits(
                 pool.dynamicData.totalShares,
-                pool.decimals
+                pool.decimals,
               ),
             },
           }));
@@ -150,6 +150,6 @@ export function usePools(
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-    }
+    },
   );
 }

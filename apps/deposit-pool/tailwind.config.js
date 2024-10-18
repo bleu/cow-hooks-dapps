@@ -13,5 +13,5 @@ module.exports = {
     "../../packages/cow-hooks-ui/node_modules/tailwind-scrollbar/**/*",
   ],
   theme: commonConfig.theme,
-  plugins: commonConfig.plugins
+  plugins: commonConfig.plugins,
 };

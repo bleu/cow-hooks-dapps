@@ -7,9 +7,9 @@ import {
 } from "@cowprotocol/permit-utils";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
-import { type Address, type PublicClient, erc20Abi } from "viem";
-import { handleTokenApprove } from "./useHandleTokenApprove";
+import { type Address, erc20Abi } from "viem";
 import { useIFrameContext } from "../../context/iframe";
+import { handleTokenApprove } from "./useHandleTokenApprove";
 
 export function useHandleTokenAllowance({
   spender,
@@ -62,7 +62,7 @@ export function useHandleTokenAllowance({
       const eip2162Utils = getPermitUtilsInstance(
         chainId,
         web3Provider,
-        account
+        account,
       );
       const [permitInfo, nonce] = await Promise.all([
         getTokenPermitInfo({
@@ -85,20 +85,6 @@ export function useHandleTokenAllowance({
         return;
       }
 
-      console.log({
-        chainId,
-        inputToken: {
-          address: tokenAddress,
-          name: tokenName,
-        },
-        spender,
-        provider: jsonRpcProvider,
-        permitInfo,
-        eip2162Utils: eip2162Utils,
-        account,
-        nonce,
-      });
-
       const hook = await generatePermitHook({
         chainId,
         inputToken: {
@@ -115,12 +101,12 @@ export function useHandleTokenAllowance({
       if (!hook) throw new Error("Couldn't build permit");
       return hook;
     },
-    [jsonRpcProvider, context, publicClient, spender, signer, web3Provider]
+    [jsonRpcProvider, context, publicClient, spender, signer, web3Provider],
   );
 }
 
 export function checkIsPermitInfo(
-  permitInfo: GetTokenPermitIntoResult
+  permitInfo: GetTokenPermitIntoResult,
 ): permitInfo is PermitInfo {
   return "type" in permitInfo && permitInfo.type !== "unsupported";
 }
