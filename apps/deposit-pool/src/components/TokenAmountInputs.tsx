@@ -6,17 +6,16 @@ import {
   TokenLogoWithWeight,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
-import Image from "next/image";
 import { formatNumber, Input, Label } from "@bleu/ui";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
 import { useFormContext, useWatch } from "react-hook-form";
-import { DepositSchemaType } from "#/utils/schema";
 import { Address, formatUnits } from "viem";
+import { FormType } from "#/types";
 
 export function TokenAmountInputs({ pool }: { pool: IPool | undefined }) {
   const { context } = useIFrameContext();
-  const { control, setValue } = useFormContext<DepositSchemaType>();
+  const { control, setValue } = useFormContext<FormType>();
 
   const { data: poolBalances, isLoading: isBalanceLoading } = usePoolBalance({
     poolId: pool?.id,
@@ -36,8 +35,6 @@ export function TokenAmountInputs({ pool }: { pool: IPool | undefined }) {
     return poolBalances.reduce((acc, poolBalance, index) => {
       const amount = Number(amounts?.[poolBalance.token.address.toLowerCase()]);
       const tokenPrice = tokenPrices[index];
-
-      console.log({ amount, tokenPrice });
 
       if (amount && tokenPrice) {
         return acc + amount * tokenPrice;
@@ -131,7 +128,7 @@ export function TokenAmountInput({
   tokenPrice?: number;
   updateTokenAmounts: (amount: number, address: Address) => void;
 }) {
-  const { register, control } = useFormContext<DepositSchemaType>();
+  const { register, control } = useFormContext<FormType>();
 
   const amount = useWatch({
     control,
@@ -178,6 +175,11 @@ export function TokenAmountInput({
             )
               e.preventDefault();
           }}
+          onWheel={(e) => {
+            // @ts-ignore
+            e.target.blur();
+          }}
+          step={10 ** poolBalance.token.decimals}
         />
         <i className="text-xs text-right font-light">
           ${amountUsd && amountUsd >= 0 ? formatNumber(amountUsd, 2) : "0"}

@@ -18,10 +18,11 @@ export function useSubmitHook({
 }) {
   return useCallback(
     async (hook: Omit<CowHook, "gasLimit">) => {
-      if (!context || !actions) return;
+      if (!context || !actions || !publicClient)
+        throw new Error("Missing context");
 
       const estimatedGas = await publicClient
-        ?.estimateGas({
+        .estimateGas({
           account: COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS[
             context.chainId
           ] as `0x${string}`,
