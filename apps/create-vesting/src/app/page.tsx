@@ -5,10 +5,7 @@ import {
   ClipBoardButton,
   type HookDappContextAdjusted,
   Info,
-  Input,
-  PeriodWithScaleInput,
   Spinner,
-  TokenAmountInput,
   Wrapper,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
@@ -20,16 +17,10 @@ import { useForm, useWatch } from "react-hook-form";
 import {
   type CreateVestingFormData,
   createVestingSchema,
-  periodScaleOptions,
 } from "#/utils/schema";
 
 import { useReadTokenContract } from "@bleu/cow-hooks-ui";
 import { useRouter } from "next/navigation";
-import {
-  VestAllFromAccountCheckbox,
-  VestAllFromSwapCheckbox,
-  VestUserInputCheckbox,
-} from "#/components/Checkboxes";
 import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
 import { vestingFactoriesMapping } from "#/utils/vestingFactoriesMapping";
 import { useFormatVariables } from "#/hooks/useFormatVariables";
@@ -38,6 +29,12 @@ import type { Address } from "viem";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { decodeCalldata } from "#/utils/decodeCalldata";
 import { validateRecipient } from "#/utils/validateRecipient";
+import { VestUserInputCheckbox } from "#/components/VestUserInputCheckbox";
+import { VestAllFromSwapCheckbox } from "#/components/VestAllFromSwapCheckbox";
+import { VestAllFromAccountCheckbox } from "#/components/VestAllFromAccountCheckbox";
+import { RecipientInput } from "#/components/RecipientInput";
+import { PeriodInput } from "#/components/PeriodInput";
+import { AmountInput } from "#/components/AmountInput";
 
 export default function Page() {
   const { context, setHookInfo, publicClient } = useIFrameContext();
@@ -120,6 +117,14 @@ export default function Page() {
         return;
       }
 
+      if (address.toLowerCase() === context.account.toLowerCase()) {
+        setError("recipient", {
+          type: "manual",
+          message: "You can't create a vesting to yourself",
+        });
+        return;
+      }
+
       const hookInfo = await getHooksTransactions({
         token,
         vestingEscrowFactoryAddress,
@@ -159,8 +164,6 @@ export default function Page() {
     try {
       const data = await decodeCalldata(
         context?.hookToEdit?.hook.callData as `0x${string}`,
-        publicClient,
-        context.account,
         tokenDecimals,
       );
       if (data) {
@@ -223,44 +226,16 @@ export default function Page() {
       <Form {...form} onSubmit={onSubmit} className="contents">
         <Wrapper>
           <div className="flex flex-col flex-grow py-4 gap-4 items-start justify-start text-center">
-            <Input
-              name="recipient"
-              label="Vesting Recipient"
-              placeholder="Address or ENS name"
-              autoComplete="off"
-              className="h-12 p-2.5 rounded-xl bg-color-paper-darker border-none"
-            />
-            <PeriodWithScaleInput
-              periodScaleOptions={periodScaleOptions}
-              namePeriodValue="period"
-              namePeriodScale="periodScale"
-              type="number"
-              label="Lock-up Period"
-              validation={{ valueAsNumber: true, required: true }}
-              onKeyDown={(e) =>
-                ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
-              }
-            />
-            <TokenAmountInput
-              name="amount"
-              type="number"
-              step={`0.${"0".repeat(tokenDecimals ? tokenDecimals - 1 : 8)}1`}
+            <RecipientInput />
+            <PeriodInput />
+            <AmountInput
               token={token}
-              label="Vesting Amount"
-              placeholder="0.0"
-              autoComplete="off"
-              disabled={vestAllFromSwap || vestAllFromAccount}
-              disabledValue={amountPreview}
-              disabledValueFullDecimals={amountPreviewFullDecimals}
-              userBalance={formattedUserBalance}
-              userBalanceFullDecimals={String(userBalanceFloat)}
-              validation={{
-                setValueAs: (v) => (v === "" ? undefined : Number(v)),
-                required: !(vestAllFromAccount || vestAllFromSwap),
-              }}
-              onKeyDown={(e) =>
-                ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
-              }
+              vestAllFromSwap={vestAllFromSwap}
+              vestAllFromAccount={vestAllFromAccount}
+              amountPreview={amountPreview}
+              amountPreviewFullDecimals={amountPreviewFullDecimals}
+              formattedUserBalance={formattedUserBalance}
+              userBalanceFloat={userBalanceFloat}
             />
             <div className="flex flex-col gap-y-2">
               <VestUserInputCheckbox />

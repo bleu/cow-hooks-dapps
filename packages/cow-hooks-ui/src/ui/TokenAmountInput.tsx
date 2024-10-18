@@ -10,7 +10,7 @@ import {
 import { TokenLogo } from "../TokenLogo";
 import { InfoTooltip } from "./TooltipBase";
 
-interface IPeriodWithScaleInput
+export interface ITokenAmountInput
   extends Omit<HTMLProps<HTMLInputElement>, "name"> {
   name: string;
   token?: Token | undefined;
@@ -41,7 +41,7 @@ export function TokenAmountInput({
   userBalance,
   userBalanceFullDecimals,
   ...props
-}: IPeriodWithScaleInput) {
+}: ITokenAmountInput) {
   const { register, control } = useFormContext();
 
   const { errors } = useFormState({ control });

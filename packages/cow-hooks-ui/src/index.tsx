@@ -4,6 +4,7 @@ export * from "./TokenInfo";
 export * from "./TokenLogo";
 export * from "./types";
 export * from "./context/iframe";
+export * from "./ui/Checkbox";
 export * from "./ui/ClipboardButton";
 export * from "./ui/Info";
 export * from "./ui/InputBase";

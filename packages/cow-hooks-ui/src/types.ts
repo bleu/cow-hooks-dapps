@@ -18,7 +18,7 @@ export interface IHooksInfo {
     amount: BigNumberish;
     tokenSymbol: string;
   }[];
-  recipientOverride?: string | undefined;
+  recipientOverride?: string;
 }
 
 export interface HookDappContextAdjusted extends HookDappContext {
