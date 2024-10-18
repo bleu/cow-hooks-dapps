@@ -21,7 +21,7 @@ export function WaitingSignature({
     revalidateOnReconnect: false,
     shouldRetryOnError: false,
     onError: (error) => {
-      console.error(error);
+      console.log(error);
     },
   });
 
@@ -38,10 +38,10 @@ export function WaitingSignature({
       {error && !isValidating && (
         <div className="flex flex-col gap-2 items-center">
           <span className="font-semibold text-md text-destructive">
-            {error.message
-              .replace(error?.code || "", "")
-              .replace(":", "")
-              .trim()}
+            {error?.message
+              ?.replace(error?.code || "", "")
+              ?.replace(":", "")
+              ?.trim() || "An error occurred"}
           </span>
           <div className="flex gap-2">
             <Button

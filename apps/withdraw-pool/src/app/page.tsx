@@ -1,7 +1,5 @@
 "use client";
 
-import { Form } from "@bleu/ui";
-
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { WithdrawSchemaType } from "#/utils/schema";
@@ -51,7 +49,10 @@ export default function Page() {
   }, [pools, poolId]);
 
   useEffect(() => {
-    if (poolId) return;
+    if (poolId) {
+      setIsEditHookLoading(false);
+      return;
+    }
     loadHookInfo();
   }, [loadHookInfo]);
 
