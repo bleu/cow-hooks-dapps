@@ -15,8 +15,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <link rel="manifest" href="/manifest.json" />
       </Head>
       <IFrameContextProvider>
-        <body className="flex flex-col h-full font-sans font-normal bg-transparent">
-          {children}
+        <body className="bg-transparent">
+          <div className="font-sans font-normal scrollbar-w-1 scrollbar scrollbar-thumb-color-paper-darkest scrollbar-track-color-paper-darker h-screen overflow-y-scroll">
+            {children}
+          </div>
         </body>
       </IFrameContextProvider>
     </html>
