@@ -28,7 +28,7 @@ import {
 const addLiquidity = new AddLiquidity();
 
 export function useGetHookInfo(pool?: IPool) {
-  const { cowShedProxy, context } = useIFrameContext();
+  const { cowShedProxy, context, publicClient } = useIFrameContext();
   const tokenAllowances = useTokensAllowances({
     tokenAddresses: pool?.allTokens.map((token) => token.address) || [],
     spender: cowShedProxy,
@@ -124,7 +124,7 @@ export function useGetHookInfo(pool?: IPool) {
         recipient: context.account,
       };
 
-      const transferFromUserToProxyTxs = query.amountsIn.map((tokenAmount) => {
+      const transferFromUserToProxyArgs = query.amountsIn.map((tokenAmount) => {
         return {
           type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM,
           token: tokenAmount.token.address,
@@ -145,8 +145,8 @@ export function useGetHookInfo(pool?: IPool) {
       });
 
       return Promise.all(
-        [...transferFromUserToProxyTxs, ...approveArgs, depositArg].map((arg) =>
-          TransactionFactory.createRawTx(arg.type, arg)
+        [...transferFromUserToProxyArgs, ...approveArgs, depositArg].map(
+          (arg) => TransactionFactory.createRawTx(arg.type, arg)
         )
       );
     },

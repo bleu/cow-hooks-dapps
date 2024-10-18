@@ -55,9 +55,6 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
     const web3Provider = new Web3Provider(provider);
     setWeb3Provider(web3Provider);
     setSigner(web3Provider.getSigner());
-    console.log("web3Provider.connection.url", {
-      url: web3Provider.connection.url,
-    });
   }, []);
 
   const jsonRpcProvider = useMemo(() => {
