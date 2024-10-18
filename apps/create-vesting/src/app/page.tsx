@@ -20,9 +20,9 @@ import { RecipientInput } from "#/components/RecipientInput";
 import { VestAllFromAccountCheckbox } from "#/components/VestAllFromAccountCheckbox";
 import { VestAllFromSwapCheckbox } from "#/components/VestAllFromSwapCheckbox";
 import { VestUserInputCheckbox } from "#/components/VestUserInputCheckbox";
+import { useTokenContext } from "#/context/token";
 import { useFormatVariables } from "#/hooks/useFormatVariables";
 import { decodeCalldata } from "#/utils/decodeCalldata";
-import { useTokenContext } from "#/context/token";
 
 export default function Page() {
   const { context, publicClient } = useIFrameContext();
