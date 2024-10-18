@@ -17,7 +17,7 @@ export function useSubmitHook({
   recipientOverride?: string;
 }) {
   return useCallback(
-    async (hook: Omit<CowHook, "gasLimit">) => {
+    async (hook: Omit<CowHook, "gasLimit" | "dappId">) => {
       if (!context || !actions || !publicClient)
         throw new Error("Missing context");
 

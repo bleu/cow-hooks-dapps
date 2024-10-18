@@ -41,7 +41,7 @@ export const useGetHooksInfoVestAllFromAccount = () => {
           {
             type: TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_USER,
             token: tokenAddress,
-            recipient: recipient,
+            recipient: recipient as Address,
             cowShedProxy,
             vestingDuration: BigInt(periodInSeconds),
             vestingEscrowFactoryAddress: vestingEscrowFactoryAddress,

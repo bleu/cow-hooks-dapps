@@ -48,6 +48,7 @@ const decodeVestFromUserInput = (
 
   const createVestingData = decodeFunctionData({
     abi: vestingEscrowFactoryAbi,
+    //@ts-ignore
     data: decodedFunctionData.args[0].at(-1).callData as `0x${string}`,
   });
 
@@ -74,6 +75,7 @@ const decodeVestAllFromSwap = (
 
   const weirollData = decodeFunctionData({
     abi: weirollAbi,
+    //@ts-ignore
     data: decodedFunctionData.args[0].at(-1).callData as `0x${string}`,
   });
 
@@ -81,11 +83,14 @@ const decodeVestAllFromSwap = (
   if (!args) throw new Error("decode has no args");
 
   // The number of states in a vestAllFromSwap is 4
+  //@ts-ignore
   if (args[1].length !== 4)
     throw new Error("type of vesting was vestAllFromAccount");
 
+  //@ts-ignore
   result.recipient = `0x${args[1][2].slice(-40)}` as string;
   result.amount = undefined;
+  //@ts-ignore
   result.period = Number.parseInt(args[1][3]) / scaleToSecondsMapping.Day;
   result.periodScale = "Day";
   result.vestUserInput = false;
@@ -101,16 +106,20 @@ const decodeVestAllFromAccount = (
 
   const weirollData = decodeFunctionData({
     abi: weirollAbi,
+    //@ts-ignore
     data: decodedFunctionData.args[0].at(-1).callData as `0x${string}`,
   });
   const args = weirollData?.args;
   if (!args) throw new Error("decode has no args");
 
   // The number of states in a vestAllFromAccount is 6
+  //@ts-ignore
   if (args[1].length !== 6) throw new Error("Unknown type of transaction");
 
+  //@ts-ignore
   result.recipient = `0x${args[1][3].slice(-40)}` as string;
   result.amount = undefined;
+  //@ts-ignore
   result.period = Number.parseInt(args[1][4]) / scaleToSecondsMapping.Day;
   result.periodScale = "Day";
   result.vestUserInput = false;
