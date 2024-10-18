@@ -23,7 +23,7 @@ export function useHandleTokenMaxApprove({
         amount: MAX_UINT256,
       });
     },
-    [signer, spender],
+    [signer, spender]
   );
 }
 
@@ -50,14 +50,18 @@ export async function handleTokenApprove({
   } as const;
   const txData = await TransactionFactory.createRawTx(
     approveArgs.type,
-    approveArgs,
+    approveArgs
   );
 
-  const transaction = await signer.sendTransaction({
-    to: tokenAddress,
-    value: "0",
-    data: txData.callData,
-  });
+  const transaction = await signer
+    .sendTransaction({
+      to: tokenAddress,
+      value: "0",
+      data: txData.callData,
+    })
+    .catch(() => {
+      throw new Error("User rejected transaction");
+    });
 
   const receipt = await transaction.wait();
 

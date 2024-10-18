@@ -31,21 +31,25 @@ export function useCowShedSignature({
         };
       });
       const nonce = getCowShedNonce();
-      const signature = await cowShed.signCalls(
-        cowShedCalls,
-        nonce,
-        hookDeadline,
-        signer,
-        SigningScheme.EIP712,
-      );
+      const signature = await cowShed
+        .signCalls(
+          cowShedCalls,
+          nonce,
+          hookDeadline,
+          signer,
+          SigningScheme.EIP712
+        )
+        .catch(() => {
+          throw new Error("User rejected signature");
+        });
       return cowShed.encodeExecuteHooksForFactory(
         cowShedCalls,
         nonce,
         hookDeadline,
         context.account,
-        signature,
+        signature
       );
     },
-    [hookDeadline, cowShed, signer, context],
+    [hookDeadline, cowShed, signer, context]
   );
 }

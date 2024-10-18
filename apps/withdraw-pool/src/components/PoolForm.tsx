@@ -8,15 +8,16 @@ export function PoolForm({ poolId }: { poolId?: string }) {
   const { context } = useIFrameContext();
   const {
     data: poolBalances,
-    isValidating,
     isLoading,
+    isValidating,
   } = useUserPoolBalance({
     user: context?.account,
     chainId: context?.chainId,
     poolId,
   });
 
-  if (isValidating || isLoading) return <Spinner size="xl" />;
+  if (!poolBalances?.length && (isLoading || isValidating))
+    return <Spinner size="xl" />;
 
   if (!context || !poolId || !poolBalances || !poolBalances.length) return null;
 

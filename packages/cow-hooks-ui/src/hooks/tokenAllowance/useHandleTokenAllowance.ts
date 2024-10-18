@@ -7,7 +7,7 @@ import {
 } from "@cowprotocol/permit-utils";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
-import { type Address, erc20Abi } from "viem";
+import { type Address, erc20Abi, maxUint256 } from "viem";
 import { useIFrameContext } from "../../context/iframe";
 import { handleTokenApprove } from "./useHandleTokenApprove";
 
@@ -62,51 +62,61 @@ export function useHandleTokenAllowance({
       const eip2162Utils = getPermitUtilsInstance(
         chainId,
         web3Provider,
-        account,
+        account
       );
-      const [permitInfo, nonce] = await Promise.all([
-        getTokenPermitInfo({
-          spender,
-          tokenAddress,
-          chainId,
-          provider: jsonRpcProvider,
-        }),
-        eip2162Utils.getTokenNonce(tokenAddress, account),
-      ]);
 
-      if (!permitInfo || !checkIsPermitInfo(permitInfo)) {
-        const newAllowance = amount.add(currentAllowance);
+      try {
+        const [permitInfo, nonce] = await Promise.all([
+          getTokenPermitInfo({
+            spender,
+            tokenAddress,
+            chainId,
+            provider: jsonRpcProvider,
+          }),
+          eip2162Utils.getTokenNonce(tokenAddress, account),
+        ]);
+
+        if (!permitInfo || !checkIsPermitInfo(permitInfo)) {
+          await handleTokenApprove({
+            signer,
+            spender,
+            tokenAddress,
+            amount: maxUint256,
+          });
+          return;
+        }
+
+        const hook = await generatePermitHook({
+          chainId,
+          inputToken: {
+            address: tokenAddress,
+            name: tokenName,
+          },
+          spender,
+          provider: jsonRpcProvider,
+          permitInfo,
+          eip2162Utils: eip2162Utils,
+          account,
+          nonce,
+        });
+        if (!hook) throw new Error("Couldn't build permit");
+        return hook;
+      } catch (error) {
         await handleTokenApprove({
           signer,
           spender,
           tokenAddress,
-          amount: newAllowance.toBigInt(),
+          amount: maxUint256,
         });
         return;
       }
-
-      const hook = await generatePermitHook({
-        chainId,
-        inputToken: {
-          address: tokenAddress,
-          name: tokenName,
-        },
-        spender,
-        provider: jsonRpcProvider,
-        permitInfo,
-        eip2162Utils: eip2162Utils,
-        account,
-        nonce,
-      });
-      if (!hook) throw new Error("Couldn't build permit");
-      return hook;
     },
-    [jsonRpcProvider, context, publicClient, spender, signer, web3Provider],
+    [jsonRpcProvider, context, publicClient, spender, signer, web3Provider]
   );
 }
 
 export function checkIsPermitInfo(
-  permitInfo: GetTokenPermitIntoResult,
+  permitInfo: GetTokenPermitIntoResult
 ): permitInfo is PermitInfo {
   return "type" in permitInfo && permitInfo.type !== "unsupported";
 }
