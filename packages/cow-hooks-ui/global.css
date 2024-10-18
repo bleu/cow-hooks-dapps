@@ -335,3 +335,25 @@ div[data-rk] {
     @apply px-4;
   }
 }
+
+@layer utilities {
+  /* Webkit browsers (Chrome, Safari, newer versions of Edge) */
+  .scrollbar::-webkit-scrollbar {
+    width: 4px; /* Corresponds to scrollbar-w-1 */
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    background: rgb(var(--cow-color-paper-darker));
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: rgb(var(--cow-color-paper-darkest));
+    border-radius: 2px;
+  }
+
+  /* Firefox */
+  .scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--cow-color-paper-darkest)) rgb(var(--cow-color-paper-darker));
+  }
+}

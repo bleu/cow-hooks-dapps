@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </Head>
       <body className="bg-transparent">
         <IFrameContextProvider>
-          <div className="font-sans font-normal scrollbar-w-1 scrollbar scrollbar-thumb-color-paper-darkest scrollbar-track-color-paper-darker h-screen overflow-y-scroll">
+          <div className="font-sans font-normal scrollbar scrollbar-custom h-screen overflow-y-scroll p-[16px] bg-transparent text-color-text">
             <FormContextProvider>{children}</FormContextProvider>
           </div>
         </IFrameContextProvider>
