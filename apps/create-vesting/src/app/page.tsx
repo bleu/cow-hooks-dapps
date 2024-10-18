@@ -8,22 +8,12 @@ import {
   Spinner,
   Wrapper,
   useIFrameContext,
-  useReadTokenContract,
 } from "@bleu/cow-hooks-ui";
-import { Form } from "@bleu/ui";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Token } from "@uniswap/sdk-core";
-import { useCallback, useMemo, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import {
-  type CreateVestingFormData,
-  createVestingSchema,
-} from "#/utils/schema";
+import { useCallback, useState } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { useRouter } from "next/navigation";
-import type { Address } from "viem";
 import { AmountInput } from "#/components/AmountInput";
 import { PeriodInput } from "#/components/PeriodInput";
 import { RecipientInput } from "#/components/RecipientInput";
@@ -31,41 +21,21 @@ import { VestAllFromAccountCheckbox } from "#/components/VestAllFromAccountCheck
 import { VestAllFromSwapCheckbox } from "#/components/VestAllFromSwapCheckbox";
 import { VestUserInputCheckbox } from "#/components/VestUserInputCheckbox";
 import { useFormatVariables } from "#/hooks/useFormatVariables";
-import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
 import { decodeCalldata } from "#/utils/decodeCalldata";
-import { validateRecipient } from "#/utils/validateRecipient";
-import { vestingFactoriesMapping } from "#/utils/vestingFactoriesMapping";
+import { useTokenContext } from "#/context/token";
 
 export default function Page() {
-  const { context, setHookInfo, publicClient } = useIFrameContext();
-  const router = useRouter();
+  const { context, publicClient } = useIFrameContext();
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
 
-  const form = useForm<CreateVestingFormData>({
-    resolver: zodResolver(createVestingSchema),
-    defaultValues: {
-      period: 1,
-      periodScale: "Day",
-      vestUserInput: false,
-      vestAllFromSwap: true,
-      vestAllFromAccount: false,
-    },
-  });
+  const { token } = useTokenContext();
 
-  const { control, clearErrors, setError, setValue } = form;
+  const { control, setValue } = useFormContext();
+
   const vestUserInput = useWatch({ control, name: "vestUserInput" });
   const vestAllFromSwap = useWatch({ control, name: "vestAllFromSwap" });
   const vestAllFromAccount = useWatch({ control, name: "vestAllFromAccount" });
   const amount = useWatch({ control, name: "amount" });
-
-  const getHooksTransactions = useGetHooksTransactions();
-  const tokenAddress = context?.orderParams?.buyTokenAddress as
-    | Address
-    | undefined;
-
-  const { tokenSymbol, tokenDecimals, userBalance } = useReadTokenContract({
-    tokenAddress,
-  });
 
   const {
     userBalanceFloat,
@@ -75,96 +45,23 @@ export default function Page() {
     formattedSwapAmount,
     formattedAllAfterSwap,
   } = useFormatVariables({
-    userBalance,
-    tokenDecimals,
+    userBalance: token?.userBalance,
+    tokenDecimals: token?.decimals,
   });
-
-  const token = useMemo(
-    () =>
-      context?.chainId && tokenAddress && tokenDecimals
-        ? new Token(context.chainId, tokenAddress, tokenDecimals, tokenSymbol)
-        : undefined,
-    [context?.chainId, tokenAddress, tokenDecimals, tokenSymbol],
-  );
-
-  const vestingEscrowFactoryAddress = useMemo(() => {
-    return context?.chainId
-      ? vestingFactoriesMapping[context.chainId]
-      : undefined;
-  }, [context?.chainId]);
-
-  const onSubmitCallback = useCallback(
-    async (data: CreateVestingFormData) => {
-      if (!context?.account || !token || !vestingEscrowFactoryAddress) return;
-
-      // Validate ENS name and get address
-      clearErrors("recipient");
-      let address: string;
-      try {
-        address = await validateRecipient(data.recipient);
-      } catch (error) {
-        if (error instanceof Error) {
-          setError("recipient", {
-            type: "manual",
-            message: error.message,
-          });
-        } else {
-          setError("recipient", {
-            type: "manual",
-            message: "Couldn't verify ENS name",
-          });
-        }
-        return;
-      }
-
-      if (address.toLowerCase() === context.account.toLowerCase()) {
-        setError("recipient", {
-          type: "manual",
-          message: "You can't create a vesting to yourself",
-        });
-        return;
-      }
-
-      const hookInfo = await getHooksTransactions({
-        token,
-        vestingEscrowFactoryAddress,
-        formData: { ...data, recipient: address },
-      });
-      if (!hookInfo) return;
-
-      setHookInfo(hookInfo);
-      router.push("/signing");
-    },
-    [
-      context?.account,
-      token,
-      vestingEscrowFactoryAddress,
-      router.push,
-      setHookInfo,
-      getHooksTransactions,
-      setError,
-      clearErrors,
-    ],
-  );
-
-  const onSubmit = useMemo(
-    () => form.handleSubmit(onSubmitCallback),
-    [form, onSubmitCallback],
-  );
 
   const loadHookInfo = useCallback(async () => {
     if (
       !context?.hookToEdit ||
       !context.account ||
       !publicClient ||
-      !tokenDecimals ||
+      !token?.decimals ||
       !isEditHookLoading
     )
       return;
     try {
       const data = await decodeCalldata(
         context?.hookToEdit?.hook.callData as `0x${string}`,
-        tokenDecimals,
+        token.decimals,
       );
       if (data) {
         setValue("vestUserInput", data.vestUserInput);
@@ -180,7 +77,7 @@ export default function Page() {
     context?.hookToEdit,
     context?.account,
     publicClient,
-    tokenDecimals,
+    token?.decimals,
     setValue,
     isEditHookLoading,
   ]);
@@ -222,34 +119,30 @@ export default function Page() {
     amount > allAfterSwapFloat;
 
   return (
-    <>
-      <Form {...form} onSubmit={onSubmit} className="contents">
-        <Wrapper>
-          <div className="flex flex-col flex-grow py-4 gap-4 items-start justify-start text-center">
-            <RecipientInput />
-            <PeriodInput />
-            <AmountInput
-              token={token}
-              vestAllFromSwap={vestAllFromSwap}
-              vestAllFromAccount={vestAllFromAccount}
-              amountPreview={amountPreview}
-              amountPreviewFullDecimals={amountPreviewFullDecimals}
-              formattedUserBalance={formattedUserBalance}
-              userBalanceFloat={userBalanceFloat}
-            />
-            <div className="flex flex-col gap-y-2">
-              <VestUserInputCheckbox />
-              <VestAllFromSwapCheckbox />
-              <VestAllFromAccountCheckbox />
-            </div>
-          </div>
-          <Info content={<InfoContent />} />
-          <ButtonPrimary type="submit" disabled={isOutOfFunds}>
-            <ButtonText context={context} isOutOfFunds={isOutOfFunds} />
-          </ButtonPrimary>
-        </Wrapper>
-      </Form>
-    </>
+    <Wrapper>
+      <div className="flex flex-col flex-grow py-4 gap-4 items-start justify-start text-center">
+        <RecipientInput />
+        <PeriodInput />
+        <AmountInput
+          token={token}
+          vestAllFromSwap={vestAllFromSwap}
+          vestAllFromAccount={vestAllFromAccount}
+          amountPreview={amountPreview}
+          amountPreviewFullDecimals={amountPreviewFullDecimals}
+          formattedUserBalance={formattedUserBalance}
+          userBalanceFloat={userBalanceFloat}
+        />
+        <div className="flex flex-col gap-y-2">
+          <VestUserInputCheckbox />
+          <VestAllFromSwapCheckbox />
+          <VestAllFromAccountCheckbox />
+        </div>
+      </div>
+      <Info content={<InfoContent />} />
+      <ButtonPrimary type="submit" disabled={isOutOfFunds}>
+        <ButtonText context={context} isOutOfFunds={isOutOfFunds} />
+      </ButtonPrimary>
+    </Wrapper>
   );
 }
 
