@@ -92,6 +92,8 @@ div[data-rk] {
     --info: var(--cow-color-info);
     --success: var(--cow-color-success);
     --warning: var(--cow-color-warning);
+    --scrollbar-thumb: rgba(0, 35, 78, 0.2);
+    --scrollbar-track: rgba(236, 241, 248, 1);
   }
 
   [data-theme="dark"] {
@@ -170,6 +172,8 @@ div[data-rk] {
     --info: var(--cow-color-info);
     --success: var(--cow-color-success);
     --warning: var(--cow-color-warning);
+    --scrollbar-thumb: rgba(222, 227, 230, 0.2);
+    --scrollbar-track: rgba(24, 25, 59, 1);
   }
 
   * {
@@ -179,7 +183,6 @@ div[data-rk] {
   body {
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
-    @apply bg-background text-foreground;
   }
 
   body {
@@ -337,23 +340,43 @@ div[data-rk] {
 }
 
 @layer utilities {
-  /* Webkit browsers (Chrome, Safari, newer versions of Edge) */
-  .scrollbar::-webkit-scrollbar {
-    width: 4px; /* Corresponds to scrollbar-w-1 */
-  }
-
-  .scrollbar::-webkit-scrollbar-track {
-    background: rgb(var(--cow-color-paper-darker));
-  }
-
-  .scrollbar::-webkit-scrollbar-thumb {
-    background: rgb(var(--cow-color-paper-darkest));
-    border-radius: 2px;
-  }
-
-  /* Firefox */
-  .scrollbar {
+  .custom-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: rgb(var(--cow-color-paper-darkest)) rgb(var(--cow-color-paper-darker));
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
   }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 20px;
+    border: 2px solid var(--scrollbar-track);
+  }
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 20px;
+  border: 2px solid var(--scrollbar-track);
 }

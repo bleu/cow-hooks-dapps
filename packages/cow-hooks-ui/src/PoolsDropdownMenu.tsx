@@ -49,7 +49,7 @@ export function PoolsDropdownMenu({
   }, [selectedPool]);
 
   return (
-    <div className="flex flex-col items-center gap-2 py-2">
+    <div className="flex flex-col items-center gap-2">
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger
           className={cn(
