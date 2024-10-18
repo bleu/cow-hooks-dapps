@@ -24,7 +24,7 @@ export function TokenAmountInputs({ pool }: { pool: IPool | undefined }) {
 
   const tokenPrices = useMemo(
     () => poolBalances?.map((poolBalance) => getTokenPrice(poolBalance)),
-    [poolBalances]
+    [poolBalances],
   );
 
   const amounts = useWatch({ control, name: "amounts" });
@@ -61,14 +61,14 @@ export function TokenAmountInputs({ pool }: { pool: IPool | undefined }) {
 
         const tokenAmountKey = `amounts.${tokenAmountAddress}` as const;
         const calculatedAmount = Number(
-          formatUnits(tokenAmount.rawAmount, tokenAmount.decimals)
+          formatUnits(tokenAmount.rawAmount, tokenAmount.decimals),
         );
         setValue(tokenAmountKey, calculatedAmount);
       }
 
       setValue("referenceTokenAddress", address);
     },
-    [poolBalances, tokenPrices, pool, setValue]
+    [poolBalances, tokenPrices, pool, setValue],
   );
 
   if (!context) return null;
@@ -148,7 +148,7 @@ export function TokenAmountInput({
         updateTokenAmounts(amount, poolBalance.token.address as Address);
       }
     },
-    [updateTokenAmounts, poolBalance.token.address]
+    [updateTokenAmounts, poolBalance.token.address],
   );
 
   return (
@@ -171,7 +171,7 @@ export function TokenAmountInput({
           onKeyDown={(e) => {
             if (
               ["Enter", "-", "e", "E", "+", "ArrowUp", "ArrowDown"].includes(
-                e.key
+                e.key,
               )
             )
               e.preventDefault();

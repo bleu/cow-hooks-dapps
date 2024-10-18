@@ -2,18 +2,17 @@
 
 import { cn } from "@bleu/ui";
 import { BalancerChainName } from "@bleu/utils";
+import * as Dialog from "@radix-ui/react-dialog";
 import {
   ArrowLeftIcon,
   ArrowTopRightIcon,
   ChevronDownIcon,
-  DividerHorizontalIcon,
 } from "@radix-ui/react-icons";
 import { Token } from "@uniswap/sdk-core";
 import { useMemo, useState } from "react";
 import { TokenLogoWithWeight } from "./TokenLogoWithWeight";
 import { useIFrameContext } from "./context/iframe";
 import type { IPool } from "./types";
-import * as Dialog from "@radix-ui/react-dialog";
 import {
   Command,
   CommandEmpty,
@@ -57,7 +56,7 @@ export function PoolsDropdownMenu({
             "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm text-foreground group",
             selectedPool
               ? "bg-muted shadow-sm text-foreground hover:bg-primary hover:text-primary-foreground"
-              : "bg-primary text-primary-foreground hover:bg-color-primary-lighter"
+              : "bg-primary text-primary-foreground hover:bg-color-primary-lighter",
           )}
           onClick={() => setOpen(true)}
         >
@@ -142,7 +141,7 @@ export function PoolLogo({ pool }: { pool: IPool }) {
               context.chainId,
               token.address,
               token.decimals,
-              token.symbol
+              token.symbol,
             )
           }
           weight={token.weight}

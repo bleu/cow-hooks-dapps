@@ -33,7 +33,7 @@ export default function Page() {
       const data = await decodeExitPoolHookCalldata(
         context?.hookToEdit?.hook.callData as `0x${string}`,
         publicClient,
-        context.account
+        context.account,
       );
       setValue("poolId", data.poolId);
       setValue("withdrawPct", data.withdrawPct);
@@ -44,7 +44,7 @@ export default function Page() {
 
   const selectedPool = useMemo(() => {
     return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
+      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
     );
   }, [pools, poolId]);
 

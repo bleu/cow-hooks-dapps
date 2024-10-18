@@ -1,13 +1,13 @@
 "use client";
 
 import {
-  cn,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
+  cn,
 } from "@bleu/ui";
 import { formatUnits } from "ethers/lib/utils";
 import { useMemo } from "react";
@@ -34,9 +34,9 @@ export function BalancesPreview({
   const tokenBalancesList = useMemo(
     () =>
       labels.map((_label, index) =>
-        balancesList?.map((balances) => balances[index])
+        balancesList?.map((balances) => balances[index]),
       ),
-    [balancesList, labels]
+    [balancesList, labels],
   );
 
   if (!balancesList && isLoading) return <Spinner />;
@@ -54,7 +54,7 @@ export function BalancesPreview({
                 <span
                   className={cn(
                     "text-sm",
-                    index == 1 ? "font-semibold" : "font-normal"
+                    index === 1 ? "font-semibold" : "font-normal",
                   )}
                 >
                   {label}
@@ -97,7 +97,7 @@ function BalancePreview({
           <TokenAmount
             token={poolBalance.token}
             balance={Number(
-              formatUnits(poolBalance.balance, poolBalance.token.decimals)
+              formatUnits(poolBalance.balance, poolBalance.token.decimals),
             )}
             fiatValue={poolBalance.fiatAmount}
             className={index === 1 ? "font-semibold" : ""}
