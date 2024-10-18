@@ -1,14 +1,14 @@
+import * as weiroll from "@weiroll/weiroll.js";
+import { Contract } from "ethers";
 import { type Address, encodeFunctionData, erc20Abi } from "viem";
+import { weirollAbi } from "./abis/weirollAbi";
 import type {
   BaseArgs,
   BaseTransaction,
   ITransaction,
   TRANSACTION_TYPES,
 } from "./types";
-import * as weiroll from "@weiroll/weiroll.js";
-import { Contract } from "ethers";
 import { CommandFlags, WEIROLL_ADDRESS } from "./weiroll";
-import { weirollAbi } from "./abis/weirollAbi";
 
 interface ERC20TransferFromExtraArgs {
   token: Address;
@@ -67,12 +67,12 @@ export class ERC20TransferFromAllWeirollCreator
 
     const tokenWeirollContract = weiroll.Contract.createContract(
       new Contract(token, erc20Abi),
-      CommandFlags.STATICCALL
+      CommandFlags.STATICCALL,
     );
 
     const tokenWeirollContractCall = weiroll.Contract.createContract(
       new Contract(token, erc20Abi),
-      CommandFlags.CALL
+      CommandFlags.CALL,
     );
 
     const amount = planner.add(tokenWeirollContract.balanceOf(from));

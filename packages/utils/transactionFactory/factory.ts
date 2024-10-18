@@ -5,7 +5,7 @@ import {
   GaugeWithdrawCreator,
 } from "./balancerGauge";
 import {
-  BalancerDepositArgs,
+  type BalancerDepositArgs,
   BalancerDepositCreator,
   type BalancerWithdrawArgs,
   BalancerWithdrawCreator,
@@ -13,7 +13,7 @@ import {
 import {
   type ERC20ApproveArgs,
   ERC20ApproveCreator,
-  ERC20TransferFromAllWeirollArgs,
+  type ERC20TransferFromAllWeirollArgs,
   ERC20TransferFromAllWeirollCreator,
   type ERC20TransferFromArgs,
   ERC20TransferFromCreator,
@@ -26,9 +26,9 @@ import {
 import {
   type CreateVestingArgs,
   CreateVestingCreator,
-  CreateVestingWeirollProxyArgs,
+  type CreateVestingWeirollProxyArgs,
   CreateVestingWeirollProxyCreator,
-  CreateVestingWeirollUserArgs,
+  type CreateVestingWeirollUserArgs,
   CreateVestingWeirollUserCreator,
 } from "./vestingEscrowFactory";
 
@@ -71,7 +71,7 @@ const TRANSACTION_CREATORS: {
 export class TransactionFactory {
   static async createRawTx<T extends TRANSACTION_TYPES>(
     type: T,
-    args: TransactionBindings[T]
+    args: TransactionBindings[T],
   ): Promise<BaseTransaction> {
     const TransactionCreator = TRANSACTION_CREATORS[type];
     const txCreator = new TransactionCreator();

@@ -6,15 +6,14 @@ import {
   type HookDappContextAdjusted,
   Input,
   PeriodWithScaleInput,
-  Spinner,
   TokenAmountInput,
   Wrapper,
   useIFrameContext,
+  useReadTokenContract,
 } from "@bleu/cow-hooks-ui";
-import { Token } from "@uniswap/sdk-core";
-
 import { Form } from "@bleu/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Token } from "@uniswap/sdk-core";
 import { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
@@ -24,7 +23,6 @@ import {
   periodScaleOptions,
 } from "#/utils/schema";
 
-import { useReadTokenContract } from "@bleu/cow-hooks-ui";
 import { useRouter } from "next/navigation";
 import {
   VestAllFromAccountCheckbox,

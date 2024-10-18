@@ -1,5 +1,5 @@
 import { cn } from "@bleu/ui";
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import type { ButtonHTMLAttributes } from "react";
 
 export const ButtonPrimary: React.FC<
   ButtonHTMLAttributes<HTMLButtonElement>

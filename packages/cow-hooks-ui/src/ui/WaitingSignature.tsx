@@ -1,11 +1,11 @@
 "use client";
 
 import { Button } from "@bleu/ui";
+import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import type { SignatureStepsProps } from "../types";
 import { Spinner } from "./Spinner";
 import { InfoTooltip } from "./TooltipBase";
-import { useRouter } from "next/navigation";
 
 export function WaitingSignature({
   callback,

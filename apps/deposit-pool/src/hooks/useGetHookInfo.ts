@@ -1,34 +1,34 @@
 import {
-  IHooksInfo,
+  AddLiquidity,
+  AddLiquidityKind,
+  type AddLiquidityProportionalInput,
+  MAX_UINT256,
+} from "@balancer/sdk";
+import {
+  type IHooksInfo,
+  type IPool,
   minimalPoolToPoolState,
   useIFrameContext,
   useTokensAllowances,
-  type IPool,
 } from "@bleu/cow-hooks-ui";
 import {
-  BalancerDepositArgs,
-  ERC20ApproveArgs,
-  ERC20TransferFromAllWeirollArgs,
-  ERC20TransferFromArgs,
+  type BalancerDepositArgs,
+  type ERC20ApproveArgs,
+  type ERC20TransferFromAllWeirollArgs,
+  type ERC20TransferFromArgs,
   RPC_URL_MAPPING,
   TRANSACTION_TYPES,
   TransactionFactory,
 } from "@bleu/utils/transactionFactory";
-import { useCallback, useMemo } from "react";
-import { Address, maxUint256, parseUnits } from "viem";
 import { BigNumber } from "ethers";
-import { FormType } from "#/types";
-import {
-  AddLiquidity,
-  AddLiquidityKind,
-  AddLiquidityProportionalInput,
-  MAX_UINT256,
-} from "@balancer/sdk";
+import { useCallback, useMemo } from "react";
+import { type Address, maxUint256, parseUnits } from "viem";
+import type { FormType } from "#/types";
 
 const addLiquidity = new AddLiquidity();
 
 export function useGetHookInfo(pool?: IPool) {
-  const { cowShedProxy, context, publicClient } = useIFrameContext();
+  const { cowShedProxy, context } = useIFrameContext();
   const tokenAllowances = useTokensAllowances({
     tokenAddresses: pool?.allTokens.map((token) => token.address) || [],
     spender: cowShedProxy,
@@ -55,7 +55,7 @@ export function useGetHookInfo(pool?: IPool) {
         const tokenAddress = token.address.toLowerCase();
         const amount = params.amounts[tokenAddress];
         const amountBigNumber = BigNumber.from(
-          parseUnits(amount.toString(), token.decimals)
+          parseUnits(amount.toString(), token.decimals),
         );
         return {
           tokenAddress,
@@ -82,7 +82,7 @@ export function useGetHookInfo(pool?: IPool) {
           }) || []
       );
     },
-    [pool, tokenAllowances, defaultPermitData]
+    [pool, tokenAllowances, defaultPermitData],
   );
 
   const getPoolDepositTxs = useCallback(
@@ -94,7 +94,7 @@ export function useGetHookInfo(pool?: IPool) {
       const referenceTokenDecimals = pool.allTokens.find(
         (token) =>
           token.address.toLowerCase() ===
-          params.referenceTokenAddress.toLowerCase()
+          params.referenceTokenAddress.toLowerCase(),
       )?.decimals;
 
       if (!referenceTokenDecimals) throw new Error("Invalid reference token");
@@ -107,7 +107,7 @@ export function useGetHookInfo(pool?: IPool) {
             params.amounts[
               params.referenceTokenAddress.toLowerCase()
             ].toString(),
-            referenceTokenDecimals
+            referenceTokenDecimals,
           ),
           decimals: referenceTokenDecimals,
           address: params.referenceTokenAddress as Address,
@@ -146,11 +146,11 @@ export function useGetHookInfo(pool?: IPool) {
 
       return Promise.all(
         [...transferFromUserToProxyArgs, ...approveArgs, depositArg].map(
-          (arg) => TransactionFactory.createRawTx(arg.type, arg)
-        )
+          (arg) => TransactionFactory.createRawTx(arg.type, arg),
+        ),
       );
     },
-    [context, cowShedProxy, pool]
+    [context, cowShedProxy, pool],
   );
 
   const getWeirollTransferFromProxyToUserTxs = useCallback(() => {
@@ -171,7 +171,7 @@ export function useGetHookInfo(pool?: IPool) {
     return Promise.all(
       weirollTransferFromProxyArgs.map((arg) => {
         return TransactionFactory.createRawTx(arg.type, arg);
-      })
+      }),
     );
   }, [context?.account, cowShedProxy, pool]);
 
@@ -189,6 +189,6 @@ export function useGetHookInfo(pool?: IPool) {
         txs: [...poolDepositTxs, ...transferFromProxyToUserTxs],
       };
     },
-    [getPermitData, getPoolDepositTxs, getWeirollTransferFromProxyToUserTxs]
+    [getPermitData, getPoolDepositTxs, getWeirollTransferFromProxyToUserTxs],
   );
 }

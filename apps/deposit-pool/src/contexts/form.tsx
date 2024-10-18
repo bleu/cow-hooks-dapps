@@ -2,13 +2,13 @@
 
 import { type PropsWithChildren, useCallback, useEffect, useMemo } from "react";
 
-import { useForm, useWatch } from "react-hook-form";
-import { Form } from "@bleu/ui";
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
+import { Form } from "@bleu/ui";
 import { useRouter } from "next/navigation";
+import { useForm, useWatch } from "react-hook-form";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 import { useTokenBuyPools } from "#/hooks/useTokenBuyPools";
-import { FormType } from "#/types";
+import type { FormType } from "#/types";
 
 export function FormContextProvider({ children }: PropsWithChildren) {
   const { context, setHookInfo } = useIFrameContext();
@@ -24,7 +24,7 @@ export function FormContextProvider({ children }: PropsWithChildren) {
 
   const selectedPool = useMemo(
     () => pools?.find((pool) => pool.id === poolId),
-    [pools, poolId]
+    [pools, poolId],
   );
 
   const getHookInfo = useGetHookInfo(selectedPool);
@@ -36,12 +36,13 @@ export function FormContextProvider({ children }: PropsWithChildren) {
       setHookInfo(hookInfo);
       await router.push("/signing");
     },
-    [context?.account, getHookInfo, setHookInfo, router]
+    [getHookInfo, setHookInfo, router],
   );
 
+  // biome-ignore lint:
   useEffect(() => {
     setValue("poolId", "");
-  }, [context?.account, setValue]);
+  }, [context?.account]);
 
   return (
     <Form

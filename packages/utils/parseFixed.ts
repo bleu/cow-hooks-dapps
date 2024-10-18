@@ -3,7 +3,7 @@ function getMultiplier(decimals: string | number) {
     try {
       // biome-ignore lint:
       decimals = Number.parseInt(decimals);
-    } catch (e) {
+    } catch {
       // eslint-disable-next-line no-console
       console.error(`Invalid decimal size: ${decimals}`);
     }

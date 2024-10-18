@@ -1,20 +1,20 @@
-import { useCallback } from "react";
 import {
-  IPool,
+  type IPool,
   minimalPoolToPoolState,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
-import { BigNumber } from "ethers";
 import {
   type BalancerWithdrawArgs,
   type ERC20TransferFromArgs,
   TRANSACTION_TYPES,
 } from "@bleu/utils/transactionFactory/";
+import { BigNumber } from "ethers";
+import { useCallback } from "react";
 
 export function useGetPoolWithdrawArgs(
-  pool?: IPool
+  pool?: IPool,
 ): (
-  bptAMount: BigNumber
+  bptAMount: BigNumber,
 ) => (ERC20TransferFromArgs | BalancerWithdrawArgs)[] | undefined {
   const { context, cowShedProxy } = useIFrameContext();
 
@@ -54,6 +54,6 @@ export function useGetPoolWithdrawArgs(
         | BalancerWithdrawArgs
       )[];
     },
-    [context, cowShedProxy, pool]
+    [context, cowShedProxy, pool],
   );
 }

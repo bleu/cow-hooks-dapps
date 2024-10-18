@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  cn,
   Command,
   CommandEmpty,
   CommandInput,
@@ -10,14 +9,15 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  cn,
 } from "@bleu/ui";
-import { ArrowTopRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
-import { useMemo, useState } from "react";
 import { BalancerChainName } from "@bleu/utils";
-import { useIFrameContext } from "./context/iframe";
-import { TokenLogoWithWeight } from "./TokenLogoWithWeight";
+import { ArrowTopRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { Token } from "@uniswap/sdk-core";
-import { IPool } from "./types";
+import { useMemo, useState } from "react";
+import { TokenLogoWithWeight } from "./TokenLogoWithWeight";
+import { useIFrameContext } from "./context/iframe";
+import type { IPool } from "./types";
 
 export function PoolsDropdownMenu({
   onSelect,
@@ -51,10 +51,10 @@ export function PoolsDropdownMenu({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           className={cn(
-            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-background bg-muted text-foreground group",
+            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm text-foreground group",
             selectedPool
               ? "bg-muted shadow-sm text-foreground hover:bg-primary hover:text-primary-foreground"
-              : "bg-primary text-primary-foreground hover:bg-color-primary-lighter"
+              : "bg-primary text-primary-foreground hover:bg-color-primary-lighter",
           )}
           onClick={() => setOpen(true)}
         >
@@ -100,6 +100,7 @@ export function PoolsDropdownMenu({
             className="inline-flex items-center transition-colors text-primary underline-offset-4 hover:underline justify-start p-0 px-1 m-0 text-xs h-fit w-fit"
             href={poolLink}
             target="_blank"
+            rel="noreferrer"
           >
             Check pool details
             <ArrowTopRightIcon className="size-4 shrink-0" />
@@ -126,7 +127,7 @@ export function PoolLogo({ pool }: { pool: IPool }) {
               context.chainId,
               token.address,
               token.decimals,
-              token.symbol
+              token.symbol,
             )
           }
           weight={token.weight}

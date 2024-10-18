@@ -1,8 +1,8 @@
-import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
 import { Spinner, useIFrameContext } from "@bleu/cow-hooks-ui";
-import { WithdrawPctSlider } from "./WithdrawPctSlider";
+import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
 import { PoolBalancesPreview } from "./PoolBalancePreview";
 import { SubmitButton } from "./SubmitButton";
+import { WithdrawPctSlider } from "./WithdrawPctSlider";
 
 export function PoolForm({ poolId }: { poolId?: string }) {
   const { context } = useIFrameContext();
