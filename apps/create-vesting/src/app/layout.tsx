@@ -20,7 +20,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <TokenContextProvider>
           <body className="bg-transparent">
             <FormContextProvider>
-              <div className="font-sans font-normal scrollbar-w-1 scrollbar scrollbar-thumb-color-paper-darkest scrollbar-track-color-paper-darker h-screen overflow-y-scroll">
+              <div className="w-full font-sans font-normal flex flex-col flex-wrap flex-grow scrollbar-w-1 scrollbar scrollbar-thumb-color-paper-darkest scrollbar-track-color-paper-darker h-screen overflow-y-scroll">
                 {children}
               </div>
             </FormContextProvider>
