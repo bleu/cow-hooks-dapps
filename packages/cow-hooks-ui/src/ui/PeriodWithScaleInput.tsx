@@ -1,11 +1,4 @@
-import {
-  Input,
-  Label,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  cn,
-} from "@bleu/ui";
+import { Label, Popover, PopoverContent, PopoverTrigger, cn } from "@bleu/ui";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { type HTMLProps, useState } from "react";
 import {

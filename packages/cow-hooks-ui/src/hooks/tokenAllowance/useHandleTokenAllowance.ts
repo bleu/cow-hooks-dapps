@@ -62,7 +62,7 @@ export function useHandleTokenAllowance({
       const eip2162Utils = getPermitUtilsInstance(
         chainId,
         web3Provider,
-        account
+        account,
       );
 
       try {
@@ -101,7 +101,7 @@ export function useHandleTokenAllowance({
         });
         if (!hook) throw new Error("Couldn't build permit");
         return hook;
-      } catch (error) {
+      } catch {
         await handleTokenApprove({
           signer,
           spender,
@@ -111,12 +111,12 @@ export function useHandleTokenAllowance({
         return;
       }
     },
-    [jsonRpcProvider, context, publicClient, spender, signer, web3Provider]
+    [jsonRpcProvider, context, publicClient, spender, signer, web3Provider],
   );
 }
 
 export function checkIsPermitInfo(
-  permitInfo: GetTokenPermitIntoResult
+  permitInfo: GetTokenPermitIntoResult,
 ): permitInfo is PermitInfo {
   return "type" in permitInfo && permitInfo.type !== "unsupported";
 }

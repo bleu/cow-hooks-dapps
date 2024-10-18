@@ -1,6 +1,6 @@
 import { Input, Label } from "@bleu/ui";
-import { useFormContext, useWatch } from "react-hook-form";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { useFormContext, useWatch } from "react-hook-form";
 
 export const Checkbox = ({
   name,

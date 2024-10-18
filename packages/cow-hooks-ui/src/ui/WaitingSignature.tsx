@@ -21,7 +21,7 @@ export function WaitingSignature({
     revalidateOnReconnect: false,
     shouldRetryOnError: false,
     onError: (error) => {
-      console.log(error);
+      console.error(error);
     },
   });
 

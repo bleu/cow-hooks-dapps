@@ -1,5 +1,5 @@
-import { useFormContext } from "react-hook-form";
 import { Checkbox } from "@bleu/cow-hooks-ui";
+import { useFormContext } from "react-hook-form";
 
 export const VestAllFromAccountCheckbox = () => {
   const { setValue } = useFormContext();

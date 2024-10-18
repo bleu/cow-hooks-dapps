@@ -10,9 +10,9 @@ import {
   useIFrameContext,
   useReadTokenContract,
 } from "@bleu/cow-hooks-ui";
-import { Token } from "@uniswap/sdk-core";
 import { Form } from "@bleu/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Token } from "@uniswap/sdk-core";
 import { useCallback, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import {
@@ -20,21 +20,21 @@ import {
   createVestingSchema,
 } from "#/utils/schema";
 
-import { useRouter } from "next/navigation";
-import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
-import { vestingFactoriesMapping } from "#/utils/vestingFactoriesMapping";
-import { useFormatVariables } from "#/hooks/useFormatVariables";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import type { Address } from "viem";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
+import type { Address } from "viem";
+import { AmountInput } from "#/components/AmountInput";
+import { PeriodInput } from "#/components/PeriodInput";
+import { RecipientInput } from "#/components/RecipientInput";
+import { VestAllFromAccountCheckbox } from "#/components/VestAllFromAccountCheckbox";
+import { VestAllFromSwapCheckbox } from "#/components/VestAllFromSwapCheckbox";
+import { VestUserInputCheckbox } from "#/components/VestUserInputCheckbox";
+import { useFormatVariables } from "#/hooks/useFormatVariables";
+import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
 import { decodeCalldata } from "#/utils/decodeCalldata";
 import { validateRecipient } from "#/utils/validateRecipient";
-import { VestUserInputCheckbox } from "#/components/VestUserInputCheckbox";
-import { VestAllFromSwapCheckbox } from "#/components/VestAllFromSwapCheckbox";
-import { VestAllFromAccountCheckbox } from "#/components/VestAllFromAccountCheckbox";
-import { RecipientInput } from "#/components/RecipientInput";
-import { PeriodInput } from "#/components/PeriodInput";
-import { AmountInput } from "#/components/AmountInput";
+import { vestingFactoriesMapping } from "#/utils/vestingFactoriesMapping";
 
 export default function Page() {
   const { context, setHookInfo, publicClient } = useIFrameContext();

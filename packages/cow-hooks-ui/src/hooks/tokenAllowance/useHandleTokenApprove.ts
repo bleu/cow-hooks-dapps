@@ -23,7 +23,7 @@ export function useHandleTokenMaxApprove({
         amount: MAX_UINT256,
       });
     },
-    [signer, spender]
+    [signer, spender],
   );
 }
 
@@ -50,7 +50,7 @@ export async function handleTokenApprove({
   } as const;
   const txData = await TransactionFactory.createRawTx(
     approveArgs.type,
-    approveArgs
+    approveArgs,
   );
 
   const transaction = await signer

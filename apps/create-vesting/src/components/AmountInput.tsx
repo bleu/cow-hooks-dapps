@@ -1,4 +1,4 @@
-import { TokenAmountInput, type ITokenAmountInput } from "@bleu/cow-hooks-ui";
+import { TokenAmountInput } from "@bleu/cow-hooks-ui";
 import type { Token } from "@uniswap/sdk-core";
 
 export const AmountInput = ({

@@ -37,7 +37,7 @@ export function useCowShedSignature({
           nonce,
           hookDeadline,
           signer,
-          SigningScheme.EIP712
+          SigningScheme.EIP712,
         )
         .catch(() => {
           throw new Error("User rejected signature");
@@ -47,9 +47,9 @@ export function useCowShedSignature({
         nonce,
         hookDeadline,
         context.account,
-        signature
+        signature,
       );
     },
-    [hookDeadline, cowShed, signer, context]
+    [hookDeadline, cowShed, signer, context],
   );
 }

@@ -1,5 +1,5 @@
-import { JsonRpcProvider } from "@ethersproject/providers";
 import { RPC_URL_MAPPING } from "@bleu/utils/transactionFactory";
+import { JsonRpcProvider } from "@ethersproject/providers";
 
 const provider = new JsonRpcProvider(RPC_URL_MAPPING[1]);
 
