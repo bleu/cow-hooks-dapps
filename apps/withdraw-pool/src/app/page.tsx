@@ -83,7 +83,7 @@ export default function Page() {
   }
 
   return (
-    <div className="w-full flex flex-col gap-1 py-1 px-4">
+    <div className="w-full flex flex-col gap-1">
       <PoolsDropdownMenu
         onSelect={(pool: IPool) => setValue("poolId", pool.id)}
         pools={pools || []}

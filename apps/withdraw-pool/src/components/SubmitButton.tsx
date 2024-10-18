@@ -22,14 +22,16 @@ export function SubmitButton({ poolId }: { poolId?: string }) {
   if (!poolId) return;
 
   return (
-    <Button
-      type="submit"
-      className="my-2 rounded-2xl text-lg min-h-[58px]"
-      disabled={buttonProps.disabled}
-      loading={isSubmitting}
-      loadingText="Creating hook..."
-    >
-      {buttonProps.message}
-    </Button>
+    <div className="flex w-full">
+      <Button
+        type="submit"
+        className="my-2 w-full rounded-2xl text-lg h-[58px]"
+        disabled={buttonProps.disabled}
+        loading={isSubmitting}
+        loadingText="Creating hook..."
+      >
+        {buttonProps.message}
+      </Button>
+    </div>
   );
 }
