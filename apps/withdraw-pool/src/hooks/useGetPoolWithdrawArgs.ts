@@ -1,4 +1,8 @@
-import { type IMinimalPool, useIFrameContext } from "@bleu/cow-hooks-ui";
+import {
+  type IPool,
+  minimalPoolToPoolState,
+  useIFrameContext,
+} from "@bleu/cow-hooks-ui";
 import {
   type BalancerWithdrawArgs,
   type ERC20TransferFromArgs,
@@ -6,10 +10,9 @@ import {
 } from "@bleu/utils/transactionFactory/";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
-import { minimalPoolToPoolState } from "#/utils/poolDataConverter";
 
 export function useGetPoolWithdrawArgs(
-  pool?: IMinimalPool,
+  pool?: IPool,
 ): (
   bptAMount: BigNumber,
 ) => (ERC20TransferFromArgs | BalancerWithdrawArgs)[] | undefined {

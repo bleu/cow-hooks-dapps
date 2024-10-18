@@ -8,6 +8,7 @@ import {
   Spinner,
   Wrapper,
   useIFrameContext,
+  useReadTokenContract,
 } from "@bleu/cow-hooks-ui";
 import { Token } from "@uniswap/sdk-core";
 import { Form } from "@bleu/ui";
@@ -19,7 +20,6 @@ import {
   createVestingSchema,
 } from "#/utils/schema";
 
-import { useReadTokenContract } from "@bleu/cow-hooks-ui";
 import { useRouter } from "next/navigation";
 import { useGetHooksTransactions } from "#/hooks/useGetHooksTransactions";
 import { vestingFactoriesMapping } from "#/utils/vestingFactoriesMapping";

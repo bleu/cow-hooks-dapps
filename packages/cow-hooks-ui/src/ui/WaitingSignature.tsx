@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@bleu/ui";
+import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import type { SignatureStepsProps } from "../types";
 import { Spinner } from "./Spinner";
@@ -20,9 +21,11 @@ export function WaitingSignature({
     revalidateOnReconnect: false,
     shouldRetryOnError: false,
     onError: (error) => {
-      console.error(error);
+      console.log(error);
     },
   });
+
+  const router = useRouter();
 
   return (
     <div className="flex flex-col justify-center items-center">
@@ -33,14 +36,27 @@ export function WaitingSignature({
       </div>
       {isValidating && <Spinner />}
       {error && !isValidating && (
-        <Button
-          type="button"
-          variant="destructive"
-          className="bg-destructive/15 hover:bg-destructive/50"
-          onClick={() => mutate()}
-        >
-          Error on signature, try again
-        </Button>
+        <div className="flex flex-col gap-2 items-center">
+          <span className="font-semibold text-md text-destructive">
+            {error?.message
+              ?.replace(error?.code || "", "")
+              ?.replace(":", "")
+              ?.trim() || "An error occurred"}
+          </span>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="destructive"
+              className="bg-destructive/15 hover:bg-destructive/50"
+              onClick={() => mutate()}
+            >
+              Try again
+            </Button>
+            <Button type="button" onClick={router.back}>
+              Back
+            </Button>
+          </div>
+        </div>
       )}
     </div>
   );

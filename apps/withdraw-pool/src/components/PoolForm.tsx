@@ -1,22 +1,23 @@
-import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
 import { Spinner, useIFrameContext } from "@bleu/cow-hooks-ui";
-import { WithdrawPctSlider } from "./WithdrawPctSlider";
+import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
 import { PoolBalancesPreview } from "./PoolBalancePreview";
 import { SubmitButton } from "./SubmitButton";
+import { WithdrawPctSlider } from "./WithdrawPctSlider";
 
 export function PoolForm({ poolId }: { poolId?: string }) {
   const { context } = useIFrameContext();
   const {
     data: poolBalances,
-    isValidating,
     isLoading,
+    isValidating,
   } = useUserPoolBalance({
     user: context?.account,
     chainId: context?.chainId,
     poolId,
   });
 
-  if (isValidating || isLoading) return <Spinner size="xl" />;
+  if (!poolBalances?.length && (isLoading || isValidating))
+    return <Spinner size="xl" />;
 
   if (!context || !poolId || !poolBalances || !poolBalances.length) return null;
 

@@ -22,7 +22,6 @@ export default function Page() {
     cowShed,
     signer,
     context,
-    jsonRpcProvider,
     publicClient,
     cowShedProxy,
   } = useIFrameContext();
@@ -39,10 +38,6 @@ export default function Page() {
     context,
   });
   const handleTokenAllowance = useHandleTokenAllowance({
-    signer,
-    jsonRpcProvider,
-    context,
-    publicClient,
     spender: cowShedProxy,
   });
 

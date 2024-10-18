@@ -7,7 +7,7 @@ export function SubmitButton({ poolId }: { poolId?: string }) {
   const { control } = useFormContext();
   const { context } = useIFrameContext();
 
-  const { isSubmitSuccessful, isSubmitting } = useFormState({ control });
+  const { isSubmitting } = useFormState({ control });
 
   const withdrawPct = useWatch({ control, name: "withdrawPct" });
   const buttonProps = useMemo(() => {
@@ -15,9 +15,9 @@ export function SubmitButton({ poolId }: { poolId?: string }) {
       return { disabled: true, message: "Define percentage" };
     return {
       disabled: false,
-      message: context?.hookToEdit ? "Edit pre-hook" : "Add pre-hook",
+      message: context?.hookToEdit ? "Update pre-hook" : "Add pre-hook",
     };
-  }, [withdrawPct, poolId, context?.hookToEdit]);
+  }, [withdrawPct, context?.hookToEdit]);
 
   if (!poolId) return;
 
@@ -26,7 +26,7 @@ export function SubmitButton({ poolId }: { poolId?: string }) {
       type="submit"
       className="my-2 rounded-2xl text-lg min-h-[58px]"
       disabled={buttonProps.disabled}
-      loading={isSubmitting || isSubmitSuccessful}
+      loading={isSubmitting}
       loadingText="Creating hook..."
     >
       {buttonProps.message}

@@ -1,16 +1,14 @@
-import { cn, formatNumber } from "@bleu/ui";
+import { formatNumber } from "@bleu/ui";
 import type { Token } from "@uniswap/sdk-core";
 
 export function TokenAmount({
   token,
   balance,
   fiatValue,
-  className,
 }: {
   token: Token;
   balance: number;
   fiatValue: number;
-  className?: string;
 }) {
   return (
     <span className="text-xs">

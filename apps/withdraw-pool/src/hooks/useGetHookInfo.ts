@@ -1,4 +1,4 @@
-import type { IMinimalPool } from "@bleu/cow-hooks-ui";
+import type { IPool } from "@bleu/cow-hooks-ui";
 import {
   TRANSACTION_TYPES,
   TransactionFactory,
@@ -9,7 +9,7 @@ import { multiplyValueByPct } from "#/utils/math";
 import { useGetBalancerGaugeArgs } from "./useGetBalancerGaugeArgs";
 import { useGetPoolWithdrawArgs } from "./useGetPoolWithdrawArgs";
 
-export function useGetHookInfo(pool?: IMinimalPool) {
+export function useGetHookInfo(pool?: IPool) {
   const getPoolWithdrawArgs = useGetPoolWithdrawArgs(pool);
   const getBalancerGaugeArgs = useGetBalancerGaugeArgs(pool);
 

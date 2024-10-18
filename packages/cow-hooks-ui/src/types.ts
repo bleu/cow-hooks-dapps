@@ -34,7 +34,15 @@ export interface SignatureStepsProps {
   tooltipText?: string;
 }
 
-export interface IMinimalPool {
+export interface IToken {
+  address: Address;
+  symbol: string;
+  decimals: number;
+  isNested: boolean;
+  weight: number;
+}
+
+export interface IPool {
   id: `0x${string}`;
   chain: string;
   decimals: number;
@@ -43,16 +51,15 @@ export interface IMinimalPool {
   type: string;
   protocolVersion: 1 | 2 | 3;
   dynamicData: {
+    aprItems: {
+      apr: number;
+      id: string;
+    }[];
     totalLiquidity: string;
     volume24h: string;
     totalShares: BigNumberish;
   };
-  allTokens: {
-    address: Address;
-    symbol: string;
-    decimals: number;
-    isNested: boolean;
-  }[];
+  allTokens: IToken[];
 
   userBalance: {
     totalBalance: BigNumberish;
@@ -69,4 +76,5 @@ export interface IBalance {
   token: Token;
   balance: BigNumberish;
   fiatAmount: number;
+  weight: number;
 }
