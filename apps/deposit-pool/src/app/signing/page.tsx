@@ -1,18 +1,20 @@
 "use client";
 
 import {
-  type BaseTransaction,
   SignatureSteps,
   WaitingSignature,
+  useIFrameContext,
+} from "@bleu/cow-hooks-ui";
+import {
+  type BaseTransaction,
   useCowShedSignature,
   useHandleTokenAllowance,
-  useIFrameContext,
   useSubmitHook,
 } from "@bleu/cow-hooks-ui";
 import { BigNumber, type BigNumberish } from "ethers";
-import { useCallback, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Address } from "viem";
-import { useTokenAmountTypeContext } from "#/context/TokenAmountType";
 
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -26,14 +28,12 @@ export default function Page() {
     publicClient,
     cowShedProxy,
   } = useIFrameContext();
-
-  const { vestAllFromSwap } = useTokenAmountTypeContext();
-
+  const [account, setAccount] = useState<string>();
+  const router = useRouter();
   const submitHook = useSubmitHook({
     actions,
     context,
     publicClient,
-    recipientOverride: vestAllFromSwap ? cowShedProxy : undefined,
   });
   const cowShedSignature = useCowShedSignature({
     cowShed,
@@ -44,14 +44,27 @@ export default function Page() {
     spender: cowShedProxy,
   });
 
+  useEffect(() => {
+    if (!account && context?.account) {
+      setAccount(context.account);
+      return;
+    }
+    if (
+      account &&
+      context?.account &&
+      context.account.toLowerCase() !== account.toLowerCase()
+    ) {
+      router.push("/");
+    }
+  }, [context?.account]);
+
   const cowShedCallback = useCallback(async () => {
     if (!cowShedSignature || !hookInfo || !cowShed) return;
 
     const txs = [...permitTxs, ...hookInfo.txs];
-
     const cowShedCall = await cowShedSignature(txs);
     if (!cowShedCall) throw new Error("Error signing hooks");
-    submitHook({
+    await submitHook({
       target: cowShed.getFactoryAddress(),
       callData: cowShedCall,
     });
@@ -65,7 +78,7 @@ export default function Page() {
     }) => {
       const permitData = await handleTokenAllowance(
         BigNumber.from(permit.amount),
-        permit.tokenAddress as Address,
+        permit.tokenAddress as Address
       );
 
       if (permitData) {
@@ -80,7 +93,7 @@ export default function Page() {
       }
       setCurrentStepIndex((prev) => prev + 1);
     },
-    [handleTokenAllowance],
+    [handleTokenAllowance]
   );
 
   const steps = useMemo(() => {
@@ -88,18 +101,19 @@ export default function Page() {
       hookInfo?.permitData?.map((permit) => {
         return {
           label: `Approve ${permit.tokenSymbol}`,
-          description: `Approve proxy to manage your ${permit.tokenSymbol} (${permit.tokenAddress})`,
+          description: `Approve proxy to spend the ${permit.tokenSymbol} token`,
           id: `approve-${permit.tokenAddress}`,
           callback: async () => {
             await permitCallback(permit);
           },
+          tooltipText: permit.tokenAddress,
         };
       }) || [];
     return [
       ...permitSteps,
       {
-        label: "Approve hooks",
-        description: "Approve proxy to execute the hooks in behalf of you",
+        label: "Approve and add pre-hook",
+        description: "Approve proxy to execute the hook in behalf of you",
         id: "approve-hooks",
         callback: cowShedCallback,
       },

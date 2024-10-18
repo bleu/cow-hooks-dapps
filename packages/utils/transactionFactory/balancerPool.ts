@@ -1,8 +1,10 @@
 import {
+  AddLiquidity,
+  AddLiquidityQueryOutput,
   type PoolState,
   RemoveLiquidity,
   RemoveLiquidityKind,
-  type RemoveLiquidityProportionalInput,
+  RemoveLiquidityProportionalInput,
   Slippage,
 } from "@balancer/sdk";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
@@ -26,8 +28,30 @@ export interface BalancerWithdrawArgs extends BaseArgs {
   recipient: Address;
 }
 
-const removeLiquidity = new RemoveLiquidity();
+export interface BalancerDepositArgs extends BaseArgs {
+  type: TRANSACTION_TYPES.BALANCER_DEPOSIT;
+  chainId: SupportedChainId;
+  sender: Address;
+  recipient: Address;
+  query: AddLiquidityQueryOutput;
+}
 
+const removeLiquidity = new RemoveLiquidity();
+const addLiquidity = new AddLiquidity();
+
+export class BalancerDepositCreator
+  implements ITransaction<BalancerDepositArgs>
+{
+  async createRawTx(args: BalancerDepositArgs): Promise<BaseTransaction> {
+    return addLiquidity.buildCall({
+      ...args.query,
+      slippage: Slippage.fromPercentage("0"),
+      sender: args.sender,
+      chainId: args.chainId,
+      recipient: args.recipient,
+    });
+  }
+}
 export class BalancerWithdrawCreator
   implements ITransaction<BalancerWithdrawArgs>
 {

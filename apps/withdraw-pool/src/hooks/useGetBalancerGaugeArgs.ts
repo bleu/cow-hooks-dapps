@@ -1,4 +1,4 @@
-import { type IMinimalPool, useIFrameContext } from "@bleu/cow-hooks-ui";
+import { IPool, useIFrameContext } from "@bleu/cow-hooks-ui";
 import {
   type ERC20TransferFromArgs,
   type GaugeClaimRewardsArgs,
@@ -59,9 +59,9 @@ export function getSingleBalancerGaugeArgs({
 }
 
 export function useGetBalancerGaugeArgs(
-  poolData?: IMinimalPool,
+  poolData?: IPool
 ): (
-  bptAmount: BigNumber,
+  bptAmount: BigNumber
 ) => (ERC20TransferFromArgs | GaugeClaimRewardsArgs | GaugeWithdrawArgs)[] {
   const { context, cowShedProxy } = useIFrameContext();
 
@@ -77,13 +77,13 @@ export function useGetBalancerGaugeArgs(
               .reduce((a, b) => BigNumber.from(a).add(b), 0);
 
           const walletBalance = BigNumber.from(
-            poolData.userBalance.walletBalance,
+            poolData.userBalance.walletBalance
           );
 
           return getSingleBalancerGaugeArgs({
             totalBptToWithdraw: bptAmount,
             bptAlreadyWithdraw: walletBalance.add(
-              stackedBalanceAlreadyWithdraw,
+              stackedBalanceAlreadyWithdraw
             ),
             maxBptToWithdraw: BigNumber.from(stakedBalance.balance),
             gaugeAddress: poolData.address,
@@ -95,6 +95,6 @@ export function useGetBalancerGaugeArgs(
         .flat();
     },
 
-    [poolData, context, cowShedProxy],
+    [poolData, context, cowShedProxy]
   );
 }

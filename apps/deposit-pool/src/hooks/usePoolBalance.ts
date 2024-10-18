@@ -1,14 +1,12 @@
-// TODO: Replace this with right api call
-
 import { Token } from "@uniswap/sdk-core";
 
 import { gql } from "graphql-request";
 import useSWR from "swr";
 
-import type { IBalance } from "@bleu/cow-hooks-ui";
-import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { parseUnits } from "ethers/lib/utils";
+import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
+import type { IBalance } from "@bleu/cow-hooks-ui";
 import type { Address } from "viem";
 
 interface IQuery {
@@ -34,6 +32,7 @@ interface IQuery {
     symbol: string;
     balance: string;
     balanceUSD: number;
+    weight: number;
   }[];
 }
 
@@ -62,65 +61,47 @@ export const POOL_QUERY = gql`
         symbol
         balance
         balanceUSD
+        weight
       }
     }
   }
 `;
 
-async function fetchUserPoolBalance(
+async function fetchPoolBalance(
   chainId?: SupportedChainId,
   poolId?: string,
-  user?: string,
 ): Promise<IBalance[]> {
-  if (!user || !chainId || !poolId) return [];
+  if (!chainId || !poolId) return [];
   const chainName = BalancerChainName[chainId];
   const result = await GQL_CLIENT[chainId].request<{
     pool: IQuery;
   }>(POOL_QUERY, {
     id: poolId,
     chain: chainName,
-    userAddress: user,
   });
   if (!result.pool) {
     throw new Error("Pool not found");
   }
-  const userBpt = parseUnits(
-    result.pool.userBalance.totalBalance.toString(),
-    result.pool.decimals,
-  );
-  const totalBpt = parseUnits(
-    result.pool.dynamicData.totalShares.toString(),
-    result.pool.decimals,
-  );
-  return result.pool.poolTokens.map((token) => {
-    const balanceUSDTotal = parseUnits(token.balanceUSD.toString(), 18);
+
+  const balances = result.pool.poolTokens.map((token) => {
     const balanceTotal = parseUnits(token.balance.toString(), token.decimals);
+
     return {
-      token: new Token(
-        chainId,
-        token.address,
-        token.decimals,
-        token.symbol,
-        token.name,
-      ),
-      balance: balanceTotal.mul(userBpt).div(totalBpt),
-      fiatAmount: Number(
-        formatUnits(balanceUSDTotal.mul(userBpt).div(totalBpt), 18),
-      ),
+      token: new Token(chainId, token.address, token.decimals, token.symbol),
+      balance: balanceTotal,
+      fiatAmount: token.balanceUSD,
+      weight: token.weight,
     };
   });
+  return balances;
 }
 
-export function useUserPoolBalance({
+export function usePoolBalance({
   chainId,
   poolId,
-  user,
 }: {
   chainId?: SupportedChainId;
   poolId?: string;
-  user?: string;
 }) {
-  return useSWR([chainId, poolId, user], () =>
-    fetchUserPoolBalance(chainId, poolId, user),
-  );
+  return useSWR([chainId, poolId], () => fetchPoolBalance(chainId, poolId));
 }

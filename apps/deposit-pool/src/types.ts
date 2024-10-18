@@ -1,6 +1,3 @@
-import type { BaseTransaction } from "@bleu/cow-hooks-ui";
-import type { BigNumberish } from "ethers";
-
 export interface SignatureStepsProps {
   callback: () => Promise<void>;
   label: string;
@@ -9,11 +6,8 @@ export interface SignatureStepsProps {
   tooltipText?: string;
 }
 
-export interface IHooksInfo {
-  txs: BaseTransaction[];
-  permitData: {
-    tokenAddress: string;
-    amount: BigNumberish;
-    tokenSymbol: string;
-  }[];
-}
+export type FormType = {
+  poolId: string;
+  amounts: Record<string, number>;
+  referenceTokenAddress: string;
+};
