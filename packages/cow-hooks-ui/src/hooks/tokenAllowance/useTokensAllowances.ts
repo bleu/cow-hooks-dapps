@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
+import useSWR from "swr";
 import { type Address, erc20Abi } from "viem";
 import { useIFrameContext } from "../../context/iframe";
-import useSWR from "swr";
 
 export function useTokensAllowances({
   spender,
@@ -18,7 +18,7 @@ export function useTokensAllowances({
         address,
         abi: erc20Abi,
       })),
-    [tokenAddresses]
+    [tokenAddresses],
   );
 
   const updateAllowances = useCallback(async () => {
@@ -42,13 +42,13 @@ export function useTokensAllowances({
         acc[address.toLowerCase()] = allowances[index];
         return acc;
       },
-      {} as Record<string, bigint>
+      {} as Record<string, bigint>,
     );
-  }, [publicClient, context, spender, tokenContracts]);
+  }, [publicClient, context, spender, tokenContracts, tokenAddresses]);
 
   const { data } = useSWR<Record<string, bigint>>(
     ["allowances", tokenContracts, spender, context?.account],
-    updateAllowances
+    updateAllowances,
   );
   return data;
 }

@@ -1,5 +1,5 @@
 import { cn } from "@bleu/ui";
-import { Token } from "@uniswap/sdk-core";
+import type { Token } from "@uniswap/sdk-core";
 import { TokenLogo } from "./TokenLogo";
 
 export function TokenLogoWithWeight({
@@ -15,7 +15,7 @@ export function TokenLogoWithWeight({
     <div
       className={cn(
         "flex items-center rounded-xl text-md py-1 px-2 gap-1 bg-background text-foreground border border-1 border-muted",
-        className
+        className,
       )}
     >
       <div>{weight * 100}%</div>

@@ -19,7 +19,7 @@ export function useGetHookInfo(pool?: IPool) {
 
       const bptAmount = multiplyValueByPct(
         pool.userBalance.totalBalance,
-        withdrawPct
+        withdrawPct,
       );
       const balancerGaugeArgs = getBalancerGaugeArgs(bptAmount);
       const poolWithdrawArgs = getPoolWithdrawArgs(bptAmount);
@@ -30,7 +30,7 @@ export function useGetHookInfo(pool?: IPool) {
       const txs = await Promise.all(
         argsArray.map((arg) => {
           return TransactionFactory.createRawTx(arg.type, arg);
-        })
+        }),
       );
 
       const permitData = argsArray
@@ -47,6 +47,6 @@ export function useGetHookInfo(pool?: IPool) {
         permitData: permitData,
       };
     },
-    [getPoolWithdrawArgs, getBalancerGaugeArgs, pool]
+    [getPoolWithdrawArgs, getBalancerGaugeArgs, pool],
   );
 }

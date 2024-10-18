@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  cn,
   Command,
   CommandEmpty,
   CommandInput,
@@ -10,13 +9,14 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  cn,
 } from "@bleu/ui";
-import { ArrowTopRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
-import { useMemo, useState } from "react";
 import { BalancerChainName } from "@bleu/utils";
-import { useIFrameContext } from "./context/iframe";
-import { TokenLogoWithWeight } from "./TokenLogoWithWeight";
+import { ArrowTopRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { Token } from "@uniswap/sdk-core";
+import { useMemo, useState } from "react";
+import { TokenLogoWithWeight } from "./TokenLogoWithWeight";
+import { useIFrameContext } from "./context/iframe";
 import type { IPool } from "./types";
 
 export function PoolsDropdownMenu({

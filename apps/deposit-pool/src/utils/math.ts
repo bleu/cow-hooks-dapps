@@ -1,6 +1,6 @@
 import { calculateProportionalAmounts } from "@balancer/sdk";
-import { IBalance, IPool } from "@bleu/cow-hooks-ui";
-import { Address, formatUnits, parseUnits } from "viem";
+import type { IBalance, IPool } from "@bleu/cow-hooks-ui";
+import { type Address, formatUnits, parseUnits } from "viem";
 
 export function getTokenPrice({ balance, fiatAmount, token }: IBalance) {
   const baseUnits = Number(balance) / Number(10 ** token.decimals);
@@ -22,7 +22,7 @@ export function calculateProportionalTokenAmounts({
 }) {
   const referenceToken = poolBalances.find(
     (balance) =>
-      balance.token.address.toLowerCase() === tokenAddress.toLowerCase()
+      balance.token.address.toLowerCase() === tokenAddress.toLowerCase(),
   );
 
   if (!referenceToken) {
@@ -34,13 +34,13 @@ export function calculateProportionalTokenAmounts({
       address: pool.address,
       totalShares: formatUnits(
         BigInt(pool.dynamicData.totalShares.toString()),
-        pool.decimals
+        pool.decimals,
       ) as `${number}`,
       tokens: poolBalances.map((balance) => ({
         address: balance.token.address.toLowerCase() as Address,
         balance: formatUnits(
           BigInt(balance.balance.toString()),
-          balance.token.decimals
+          balance.token.decimals,
         ) as `${number}`,
         decimals: balance.token.decimals,
       })),
@@ -50,8 +50,8 @@ export function calculateProportionalTokenAmounts({
       decimals: referenceToken.token.decimals,
       rawAmount: parseUnits(
         tokenAmount.toString(),
-        referenceToken.token.decimals
+        referenceToken.token.decimals,
       ),
-    }
+    },
   );
 }

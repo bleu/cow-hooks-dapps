@@ -1,5 +1,5 @@
-import type { IPool } from "../types";
 import type { PoolState } from "@balancer/sdk";
+import type { IPool } from "../types";
 
 export function minimalPoolToPoolState(pool: IPool): PoolState {
   return {

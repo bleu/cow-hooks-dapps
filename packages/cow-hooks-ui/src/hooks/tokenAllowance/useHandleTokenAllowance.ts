@@ -7,9 +7,9 @@ import {
 } from "@cowprotocol/permit-utils";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
-import { type Address, type PublicClient, erc20Abi } from "viem";
-import { handleTokenApprove } from "./useHandleTokenApprove";
+import { type Address, erc20Abi } from "viem";
 import { useIFrameContext } from "../../context/iframe";
+import { handleTokenApprove } from "./useHandleTokenApprove";
 
 export function useHandleTokenAllowance({
   spender,

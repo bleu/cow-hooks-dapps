@@ -55,6 +55,6 @@ export function useSubmitHook({
 
       actions.addHook({ hook: hookWithGasLimit, recipientOverride });
     },
-    [actions, context, recipientOverride, publicClient?.estimateGas],
+    [actions, context, recipientOverride, publicClient],
   );
 }

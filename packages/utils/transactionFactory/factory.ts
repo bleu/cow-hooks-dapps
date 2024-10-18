@@ -5,7 +5,7 @@ import {
   GaugeWithdrawCreator,
 } from "./balancerGauge";
 import {
-  BalancerDepositArgs,
+  type BalancerDepositArgs,
   BalancerDepositCreator,
   type BalancerWithdrawArgs,
   BalancerWithdrawCreator,
@@ -13,7 +13,7 @@ import {
 import {
   type ERC20ApproveArgs,
   ERC20ApproveCreator,
-  ERC20TransferFromAllWeirollArgs,
+  type ERC20TransferFromAllWeirollArgs,
   ERC20TransferFromAllWeirollCreator,
   type ERC20TransferFromArgs,
   ERC20TransferFromCreator,

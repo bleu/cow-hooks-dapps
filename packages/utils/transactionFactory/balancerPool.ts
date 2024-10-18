@@ -1,10 +1,10 @@
 import {
   AddLiquidity,
-  AddLiquidityQueryOutput,
+  type AddLiquidityQueryOutput,
   type PoolState,
   RemoveLiquidity,
   RemoveLiquidityKind,
-  RemoveLiquidityProportionalInput,
+  type RemoveLiquidityProportionalInput,
   Slippage,
 } from "@balancer/sdk";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";

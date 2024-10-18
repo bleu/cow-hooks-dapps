@@ -3,10 +3,10 @@ import { Token } from "@uniswap/sdk-core";
 import { gql } from "graphql-request";
 import useSWR from "swr";
 
+import type { IBalance } from "@bleu/cow-hooks-ui";
+import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { parseUnits } from "ethers/lib/utils";
-import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
-import type { IBalance } from "@bleu/cow-hooks-ui";
 import type { Address } from "viem";
 
 interface IQuery {

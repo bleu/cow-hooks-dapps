@@ -1,6 +1,5 @@
 "use client";
 
-import type { WithdrawSchemaType } from "#/utils/schema";
 import {
   type IPool,
   PoolsDropdownMenu,
@@ -9,11 +8,12 @@ import {
 } from "@bleu/cow-hooks-ui";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useWatch, useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
+import { PoolItemInfo } from "#/components/PoolItemInfo";
 import { useUserPoolContext } from "#/context/userPools";
 import { decodeExitPoolHookCalldata } from "#/utils/decodeExitPoolHookCalldata";
-import { PoolItemInfo } from "#/components/PoolItemInfo";
+import type { WithdrawSchemaType } from "#/utils/schema";
 
 export default function Page() {
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
@@ -40,7 +40,7 @@ export default function Page() {
     } finally {
       setIsEditHookLoading(false);
     }
-  }, [context?.hookToEdit]);
+  }, [context?.account, context?.hookToEdit, publicClient, setValue]);
 
   const selectedPool = useMemo(() => {
     return pools?.find(
@@ -51,7 +51,7 @@ export default function Page() {
   useEffect(() => {
     if (poolId) return;
     loadHookInfo();
-  }, [loadHookInfo]);
+  }, [loadHookInfo, poolId]);
 
   if (!context) return null;
 
