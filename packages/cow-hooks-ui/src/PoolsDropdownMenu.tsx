@@ -26,11 +26,13 @@ export function PoolsDropdownMenu({
   pools,
   PoolItemInfo,
   selectedPool,
+  isCheckDetailsCentered = true,
 }: {
   onSelect: (pool: IPool) => void;
   pools: IPool[];
   PoolItemInfo: React.ComponentType<{ pool: IPool }>;
   selectedPool?: IPool;
+  isCheckDetailsCentered: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -111,7 +113,10 @@ export function PoolsDropdownMenu({
         </Dialog.Portal>
         {poolLink && (
           <a
-            className="inline-flex items-center transition-colors text-primary underline-offset-4 hover:underline justify-start p-0 px-1 m-0 text-xs h-fit w-fit"
+            className={cn(
+              "inline-flex justify-start transition-colors text-primary underline-offset-4 hover:underline p-0 m-0 text-xs h-fit w-full",
+              { "justify-center": isCheckDetailsCentered },
+            )}
             href={poolLink}
             target="_blank"
             rel="noreferrer"

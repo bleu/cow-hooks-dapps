@@ -93,6 +93,7 @@ export default function Page() {
         PoolItemInfo={PoolItemInfo}
         pools={pools || []}
         selectedPool={selectedPool}
+        isCheckDetailsCentered={false}
       />
       {selectedPool && (
         <div className="size-full flex flex-col gap-2">
