@@ -1,7 +1,7 @@
 "use client";
 
 import "@bleu/cow-hooks-ui/global.css";
-import { IFrameContextProvider } from "@bleu/cow-hooks-ui";
+import { IFrameContextProvider, Scrollbar } from "@bleu/cow-hooks-ui";
 import Head from "next/head";
 import type * as React from "react";
 import { FormContextProvider } from "#/context/form";
@@ -20,9 +20,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <TokenContextProvider>
           <body className="bg-transparent">
             <FormContextProvider>
-              <div className="font-sans font-normal scrollbar-w-1 scrollbar scrollbar-thumb-color-paper-darkest scrollbar-track-color-paper-darker h-screen overflow-y-scroll">
-                {children}
-              </div>
+              <Scrollbar>{children}</Scrollbar>
             </FormContextProvider>
           </body>
         </TokenContextProvider>

@@ -13,6 +13,7 @@ export * from "./ui/TooltipBase";
 export * from "./ui/PeriodWithScaleInput";
 export * from "./ui/TokenAmountInput";
 export * from "./hooks";
+export * from "./ui/Scrollbar";
 export * from "./ui/Spinner";
 export * from "./ui/SignaturesSteps";
 export * from "./ui/WaitingSignature";
