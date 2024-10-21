@@ -177,16 +177,15 @@ export function useGetHookInfo(pool?: IPool) {
 
   return useCallback(
     async (args: FormType): Promise<IHooksInfo> => {
-      const [permitData, poolDepositTxs, transferFromProxyToUserTxs] =
-        await Promise.all([
-          getPermitData(args),
-          getPoolDepositTxs(args),
-          getWeirollTransferFromProxyToUserTxs(),
-        ]);
+      const [permitData, poolDepositTxs] = await Promise.all([
+        getPermitData(args),
+        getPoolDepositTxs(args),
+        getWeirollTransferFromProxyToUserTxs(),
+      ]);
 
       return {
         permitData: permitData || [],
-        txs: [...poolDepositTxs, ...transferFromProxyToUserTxs],
+        txs: [...poolDepositTxs],
       };
     },
     [getPermitData, getPoolDepositTxs, getWeirollTransferFromProxyToUserTxs],
