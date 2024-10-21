@@ -17,8 +17,11 @@ export function PoolForm({ poolId }: { poolId?: string }) {
   });
 
   if (!poolBalances?.length && (isLoading || isValidating))
-    return <Spinner size="xl" />;
-
+    return (
+      <div className="flex justify-center w-[50px] mt-5">
+        <Spinner size="xl" />
+      </div>
+    );
   if (!context || !poolId || !poolBalances || !poolBalances.length) return null;
 
   return (
