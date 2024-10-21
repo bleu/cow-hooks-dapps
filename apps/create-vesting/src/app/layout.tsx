@@ -1,7 +1,7 @@
 "use client";
 
 import "@bleu/cow-hooks-ui/global.css";
-import { IFrameContextProvider } from "@bleu/cow-hooks-ui";
+import { RootLayout } from "@bleu/cow-hooks-ui";
 import Head from "next/head";
 import type * as React from "react";
 import { FormContextProvider } from "#/context/form";
@@ -16,7 +16,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Head>
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <IFrameContextProvider>
+      <RootLayout>
         <TokenContextProvider>
           <body className="bg-transparent">
             <FormContextProvider>
@@ -26,7 +26,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </FormContextProvider>
           </body>
         </TokenContextProvider>
-      </IFrameContextProvider>
+      </RootLayout>
     </html>
   );
 }

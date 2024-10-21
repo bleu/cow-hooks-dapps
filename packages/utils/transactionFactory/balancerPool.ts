@@ -77,7 +77,7 @@ export class BalancerWithdrawCreator
     const query = await removeLiquidity.query(removeLiquidityInput, poolState);
     const call = removeLiquidity.buildCall({
       ...query,
-      slippage: Slippage.fromPercentage("1"), // same used here https://github.com/balancer/b-sdk/blob/9e08225c6f39471e0befcdd45683263d2c47595d/examples/removeLiquidity/removeLiquidity.ts
+      slippage: Slippage.fromPercentage("0"),
       sender,
       recipient,
       chainId,

@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { Token } from "@uniswap/sdk-core";
+import { useTokenLogoContext } from "./context/tokenLogo";
 
 type ImageAttributes = React.DetailedHTMLProps<
   React.ImgHTMLAttributes<HTMLImageElement>,
@@ -60,7 +61,8 @@ export const TokenLogo = ({
   className,
   quality,
 }: ImageFallbackProps) => {
-  const [index, setIndex] = useState(0);
+  const { getTokenLogoSrcIndex, setTokenLogoSrcIndex } = useTokenLogoContext();
+  const [index, setIndex] = useState(getTokenLogoSrcIndex(token.address));
 
   const [reveal, setReveal] = useState(false);
   const visibility = reveal ? "visible" : "hidden";
@@ -96,9 +98,12 @@ export const TokenLogo = ({
         quality={quality}
         alt={alt || ""}
         style={{ visibility }}
-        src={imagesSrc[index] || FALLBACK_SRC}
+        src={imagesSrc[index] as string}
         onError={onError}
-        onLoadingComplete={() => setReveal(true)}
+        onLoadingComplete={() => {
+          setReveal(true);
+          setTokenLogoSrcIndex(token.address, index);
+        }}
         unoptimized
       />
     </div>
