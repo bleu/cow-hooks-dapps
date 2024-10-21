@@ -25,3 +25,4 @@ export * from "./BalancesPreview";
 export * from "./utils/getAddressByEns";
 export * from "./TokenLogoWithWeight";
 export * from "./utils/poolDataConverter";
+export * from "./RootLayout";

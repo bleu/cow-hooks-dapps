@@ -1,6 +1,6 @@
 "use client";
 
-import { IFrameContextProvider } from "@bleu/cow-hooks-ui";
+import { RootLayout } from "@bleu/cow-hooks-ui";
 import { FormContextProvider } from "#/contexts/form";
 import "@bleu/cow-hooks-ui/global.css";
 import Head from "next/head";
@@ -14,11 +14,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <link rel="manifest" href="/manifest.json" />
       </Head>
       <body className="bg-transparent">
-        <IFrameContextProvider>
+        <RootLayout>
           <div className="font-sans font-normal scrollbar scrollbar-custom h-screen overflow-y-scroll p-[16px] bg-transparent text-color-text">
             <FormContextProvider>{children}</FormContextProvider>
           </div>
-        </IFrameContextProvider>
+        </RootLayout>
       </body>
     </html>
   );
