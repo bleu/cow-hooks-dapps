@@ -60,6 +60,6 @@ export function useSubmitHook({
 
       actions.addHook({ hook: hookWithGasLimit, recipientOverride });
     },
-    [actions, context, recipientOverride, publicClient]
+    [actions, context, recipientOverride, publicClient],
   );
 }
