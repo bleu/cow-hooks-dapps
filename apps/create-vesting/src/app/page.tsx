@@ -63,7 +63,7 @@ export default function Page() {
     try {
       const data = await decodeCalldata(
         context?.hookToEdit?.hook.callData as `0x${string}`,
-        token.decimals
+        token.decimals,
       );
       if (data) {
         setValue("vestUserInput", data.vestUserInput);
