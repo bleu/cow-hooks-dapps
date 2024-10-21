@@ -100,7 +100,7 @@ export default function Page() {
 
   if (!context?.orderParams?.buyTokenAddress)
     return (
-      <span className="mt-10 text-center">Provide a buy token in swap</span>
+      <span className="mt-10 text-center">Provide a buy amount in swap</span>
     );
 
   if (!ALL_SUPPORTED_CHAIN_IDS.includes(context.chainId)) {
