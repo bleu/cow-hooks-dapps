@@ -74,8 +74,8 @@ export const Checkbox = ({
         <Label>{label}</Label>
       </div>
       {isSelected && isSelectedMessage && (
-        <span className="flex items-center ml-4 pt-1 font-normal text-xs opacity-70">
-          <ExclamationTriangleIcon className="w-4 h-4 mr-1" />
+        <span className="ml-4 pt-1 font-normal text-xs opacity-70">
+          <ExclamationTriangleIcon className="w-4 h-4 mr-1 inline" />
           {isSelectedMessage}
         </span>
       )}

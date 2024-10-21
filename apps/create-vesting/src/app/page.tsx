@@ -23,6 +23,7 @@ import { VestUserInputCheckbox } from "#/components/VestUserInputCheckbox";
 import { useTokenContext } from "#/context/token";
 import { useFormatVariables } from "#/hooks/useFormatVariables";
 import { decodeCalldata } from "#/utils/decodeCalldata";
+import type { CreateVestingFormData } from "#/utils/schema";
 
 export default function Page() {
   const { context, publicClient } = useIFrameContext();
@@ -30,12 +31,13 @@ export default function Page() {
 
   const { token } = useTokenContext();
 
-  const { control, setValue } = useFormContext();
+  const { control, setValue } = useFormContext<CreateVestingFormData>();
 
   const vestUserInput = useWatch({ control, name: "vestUserInput" });
   const vestAllFromSwap = useWatch({ control, name: "vestAllFromSwap" });
   const vestAllFromAccount = useWatch({ control, name: "vestAllFromAccount" });
   const amount = useWatch({ control, name: "amount" });
+  const recipient = useWatch({ control, name: "recipient" });
 
   const {
     userBalanceFloat,
@@ -61,7 +63,7 @@ export default function Page() {
     try {
       const data = await decodeCalldata(
         context?.hookToEdit?.hook.callData as `0x${string}`,
-        token.decimals,
+        token.decimals
       );
       if (data) {
         setValue("vestUserInput", data.vestUserInput);
@@ -121,7 +123,7 @@ export default function Page() {
   return (
     <Wrapper>
       <div className="flex flex-col flex-grow py-4 gap-4 items-start justify-start text-center">
-        <RecipientInput />
+        <RecipientInput value={recipient} />
         <PeriodInput />
         <AmountInput
           token={token}
@@ -163,7 +165,10 @@ const InfoContent = () => {
 const ButtonText = ({
   context,
   isOutOfFunds,
-}: { context: HookDappContextAdjusted; isOutOfFunds: boolean }) => {
+}: {
+  context: HookDappContextAdjusted;
+  isOutOfFunds: boolean;
+}) => {
   if (isOutOfFunds)
     return (
       <span className="flex items-center justify-center gap-2">
