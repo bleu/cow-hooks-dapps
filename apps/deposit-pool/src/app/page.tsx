@@ -9,17 +9,19 @@ import {
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useFormContext, useFormState, useWatch } from "react-hook-form";
 import { PoolItemInfo } from "#/components/PoolItemInfo";
 import { TokenAmountInputs } from "#/components/TokenAmountInputs";
 import { useSelectedPool } from "#/hooks/useSelectedPool";
 import { useTokenBuyPools } from "#/hooks/useTokenBuyPools";
 import type { FormType } from "#/types";
+import { decodeCalldata } from "#/utils/decodeCalldata";
 
 export default function Page() {
   const { context } = useIFrameContext();
   const { data: pools, isLoading: isLoadingPools } = useTokenBuyPools();
+  const [isEditHookLoading, setIsEditHookLoading] = useState(true);
 
   const { setValue, control } = useFormContext<FormType>();
 
@@ -38,6 +40,25 @@ export default function Page() {
   }, [amounts, referenceTokenAddress]);
 
   const selectedPool = useSelectedPool();
+
+  const loadHookInfo = useCallback(async () => {
+    if (!context?.hookToEdit || !context.account || !isEditHookLoading) return;
+    try {
+      const data = await decodeCalldata(
+        context?.hookToEdit?.hook.callData as `0x${string}`,
+      );
+      if (data) {
+        setValue("poolId", data.poolId);
+        setValue("amounts", data.amounts);
+        setValue("referenceTokenAddress", data.referenceTokenAddress);
+        setIsEditHookLoading(false);
+      }
+    } catch {}
+  }, [context?.hookToEdit, context?.account, setValue, isEditHookLoading]);
+
+  if (context?.hookToEdit && isEditHookLoading) {
+    loadHookInfo();
+  }
 
   if (!context) return null;
 
