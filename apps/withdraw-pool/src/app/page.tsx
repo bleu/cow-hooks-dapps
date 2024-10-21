@@ -32,8 +32,6 @@ export default function Page() {
     try {
       const data = await decodeExitPoolHookCalldata(
         context?.hookToEdit?.hook.callData as `0x${string}`,
-        publicClient,
-        context.account,
       );
       setValue("poolId", data.poolId);
       setValue("withdrawPct", data.withdrawPct);

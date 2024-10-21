@@ -14,7 +14,9 @@ import {
 import { BigNumber, type BigNumberish } from "ethers";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import type { Address } from "viem";
+import type { WithdrawSchemaType } from "#/utils/schema";
 
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -28,6 +30,7 @@ export default function Page() {
     publicClient,
     cowShedProxy,
   } = useIFrameContext();
+  const { getValues } = useFormContext<WithdrawSchemaType>();
   const [account, setAccount] = useState<string>();
   const router = useRouter();
   const submitHook = useSubmitHook({
@@ -64,11 +67,14 @@ export default function Page() {
     const txs = [...permitTxs, ...hookInfo.txs];
     const cowShedCall = await cowShedSignature(txs);
     if (!cowShedCall) throw new Error("Error signing hooks");
+    const withdrawPct = getValues("withdrawPct");
+    const cowShedCallDataWithWithdrawPct =
+      cowShedCall + Number(withdrawPct.toFixed()).toString(16); // adding to facilitate editing the hook
     await submitHook({
       target: cowShed.getFactoryAddress(),
-      callData: cowShedCall,
+      callData: cowShedCallDataWithWithdrawPct,
     });
-  }, [cowShedSignature, submitHook, hookInfo, permitTxs, cowShed]);
+  }, [cowShedSignature, submitHook, hookInfo, permitTxs, cowShed, getValues]);
 
   const permitCallback = useCallback(
     async (permit: {
