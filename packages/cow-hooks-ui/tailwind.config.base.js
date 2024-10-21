@@ -9,6 +9,8 @@ module.exports = {
     "./node_modules/@bleu/ui/dist/**/*",
     "../../node_modules/@bleu/ui/dist/**/*",
     "../../packages/cow-hooks-ui/src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/preline/dist/*.js",
+    "../../node_modules/preline/dist/*.js",
   ],
   theme: {
     extend: {
@@ -166,5 +168,6 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwind-scrollbar")],
+  plugins: [require('preline/plugin'),
+],
 };

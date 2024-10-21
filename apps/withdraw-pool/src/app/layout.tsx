@@ -16,7 +16,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </Head>
       <body>
         <IFrameContextProvider>
-          <div className="font-sans font-normal scrollbar-custom h-screen overflow-y-scroll p-[16px] text-color-text">
+          <div className="font-sans overflow-y-auto font-normal h-screen text-color-text p-[16px] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-muted [&::-webkit-scrollbar-thumb]:bg-foreground/15 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:rounded-full">
             <UserPoolContextProvider>
               <FormContextProvider>{children}</FormContextProvider>
             </UserPoolContextProvider>
