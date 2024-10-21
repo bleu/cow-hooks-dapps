@@ -29,7 +29,7 @@
     "description": "Create LlamaPay Vesting is a powerful hook designed to streamline the process of setting up a LlamaPay vesting contract right after your swap.",
     "version": "0.0.1",
     "website": "https://github.com/bleu/cow-hooks-dapps",
-    "image": "http://127.0.0.1:3000/llama-pay-icon.png",
+    "image": "https://cow-hooks-dapps-create-vesting.vercel.app/llama-pay-icon.png",
     "walletCompatibility": ["EOA", "Smart contract"],
     "conditions": {
       "position": "post",
