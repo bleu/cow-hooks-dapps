@@ -180,7 +180,7 @@ export function TokenAmountInput({
             // @ts-ignore
             e.target.blur();
           }}
-          step={10 ** poolBalance.token.decimals}
+          step={`0.${"0".repeat(poolBalance?.token?.decimals - 1)}1`}
         />
         <i className="text-xs text-right font-light">
           ${amountUsd && amountUsd >= 0 ? formatNumber(amountUsd, 2) : "0"}

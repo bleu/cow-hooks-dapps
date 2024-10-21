@@ -49,7 +49,7 @@ export function calculateProportionalTokenAmounts({
       address: referenceToken.token.address.toLowerCase() as Address,
       decimals: referenceToken.token.decimals,
       rawAmount: parseUnits(
-        tokenAmount.toString(),
+        tokenAmount.toFixed(referenceToken.token.decimals),
         referenceToken.token.decimals,
       ),
     },
