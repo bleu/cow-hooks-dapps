@@ -113,7 +113,7 @@ export default function Page() {
       ...permitSteps,
       {
         label: "Approve and add pre-hook",
-        description: "Approve proxy to execute the hook in behalf of you",
+        description: "Approve proxy to execute the hook on your behalf",
         id: "approve-hooks",
         callback: cowShedCallback,
       },
