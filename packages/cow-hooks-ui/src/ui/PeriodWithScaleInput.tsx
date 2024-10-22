@@ -62,9 +62,9 @@ export function PeriodWithScaleInput({
           {...props}
         />
         <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger className="p-0">
+          <PopoverTrigger className="p-0 [outline:none]">
             <div
-              className="w-[100px] h-8 p-2.5 flex items-center justify-between rounded-xl text-color-text-paper bg-color-paper hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out"
+              className="w-[100px] h-8 p-2.5 flex items-center justify-between rounded-xl text-color-text-paper bg-color-paper hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]"
               onClick={() => setOpen(true)}
             >
               <span className="m-0 p-0 min-h-fit">
@@ -79,7 +79,7 @@ export function PeriodWithScaleInput({
                 <button
                   key={periodScale}
                   type="button"
-                  className="w-[100px] h-8 p-2.5 flex justify-start items-center rounded-xl hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out"
+                  className="w-[100px] h-8 p-2.5 flex justify-start items-center rounded-xl hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]"
                   onClick={() => {
                     setOpen(false);
                     setValue(namePeriodScale, periodScale);
