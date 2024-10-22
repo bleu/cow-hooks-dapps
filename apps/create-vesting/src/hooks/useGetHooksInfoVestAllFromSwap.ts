@@ -23,7 +23,9 @@ export const useGetHooksInfoVestAllFromSwap = () => {
 
       if (!context?.account || !cowShedProxy) return;
 
-      const periodInSeconds = period * scaleToSecondsMapping[periodScale];
+      const periodInSeconds = Math.ceil(
+        period * scaleToSecondsMapping[periodScale],
+      );
       const tokenAddress = token.address as Address;
 
       const txs = await Promise.all([

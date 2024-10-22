@@ -23,7 +23,9 @@ export const useGetHooksInfoVestUserAmount = () => {
 
       if (!context?.account || !cowShedProxy || !amount) return;
 
-      const periodInSeconds = period * scaleToSecondsMapping[periodScale];
+      const periodInSeconds = Math.ceil(
+        period * scaleToSecondsMapping[periodScale],
+      );
       const amountWei = parseUnits(
         amount.toFixed(token.decimals),
         token.decimals,
