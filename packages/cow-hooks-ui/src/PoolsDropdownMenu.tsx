@@ -1,6 +1,4 @@
 "use client";
-
-import { cn } from "@bleu/ui";
 import { BalancerChainName } from "@bleu/utils";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
@@ -49,15 +47,12 @@ export function PoolsDropdownMenu({
   }, [selectedPool]);
 
   return (
-    <div className="flex flex-col items-center gap-2 py-2">
+    <div className="flex w-full flex-col items-center gap-2">
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger
-          className={cn(
-            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm text-foreground group",
-            selectedPool
-              ? "bg-muted shadow-sm text-foreground hover:bg-primary hover:text-primary-foreground"
-              : "bg-primary text-primary-foreground hover:bg-color-primary-lighter",
-          )}
+          className={
+            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-muted shadow-sm text-foreground group hover:bg-primary hover:text-primary-foreground"
+          }
           onClick={() => setOpen(true)}
         >
           {selectedPool ? <PoolLogo pool={selectedPool} /> : "Select a pool"}

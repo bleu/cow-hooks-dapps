@@ -4,7 +4,7 @@ import { gql } from "graphql-request";
 import useSWR from "swr";
 
 import type { IBalance } from "@bleu/cow-hooks-ui";
-import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
+import { BALANCER_GQL_CLIENT, BalancerChainName } from "@bleu/utils";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import type { Address } from "viem";
@@ -74,7 +74,7 @@ async function fetchUserPoolBalance(
 ): Promise<IBalance[]> {
   if (!user || !chainId || !poolId) return [];
   const chainName = BalancerChainName[chainId];
-  const result = await GQL_CLIENT[chainId].request<{
+  const result = await BALANCER_GQL_CLIENT[chainId].request<{
     pool: IQuery;
   }>(POOL_QUERY, {
     id: poolId,

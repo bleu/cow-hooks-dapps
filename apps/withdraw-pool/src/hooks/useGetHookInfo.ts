@@ -22,7 +22,7 @@ export function useGetHookInfo(pool?: IPool) {
         withdrawPct,
       );
       const balancerGaugeArgs = getBalancerGaugeArgs(bptAmount);
-      const poolWithdrawArgs = getPoolWithdrawArgs(bptAmount);
+      const poolWithdrawArgs = await getPoolWithdrawArgs(bptAmount);
       if (!poolWithdrawArgs) return;
 
       const argsArray = [...balancerGaugeArgs, ...poolWithdrawArgs];
