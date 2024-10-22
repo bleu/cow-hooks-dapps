@@ -17,7 +17,7 @@ import type { WithdrawSchemaType } from "#/utils/schema";
 
 export default function Page() {
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
-  const { context, publicClient } = useIFrameContext();
+  const { context } = useIFrameContext();
   const {
     userPoolSwr: { data: pools, isLoading: isLoadingPools },
   } = useUserPoolContext();
@@ -27,22 +27,22 @@ export default function Page() {
   const poolId = useWatch({ control, name: "poolId" });
 
   const loadHookInfo = useCallback(async () => {
-    if (!context?.hookToEdit || !context.account || !publicClient) return;
+    if (!context?.hookToEdit || !context.account) return;
 
     try {
       const data = await decodeExitPoolHookCalldata(
-        context?.hookToEdit?.hook.callData as `0x${string}`,
+        context?.hookToEdit?.hook.callData as `0x${string}`
       );
       setValue("poolId", data.poolId);
       setValue("withdrawPct", data.withdrawPct);
     } finally {
       setIsEditHookLoading(false);
     }
-  }, [context?.account, context?.hookToEdit, publicClient, setValue]);
+  }, [context?.account, context?.hookToEdit, setValue]);
 
   const selectedPool = useMemo(() => {
     return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
+      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
     );
   }, [pools, poolId]);
 
