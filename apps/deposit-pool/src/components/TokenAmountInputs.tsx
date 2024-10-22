@@ -5,9 +5,9 @@ import {
   TokenLogoWithWeight,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
-import { Input, Label, formatNumber } from "@bleu/ui";
+import { Button, Input, Label, formatNumber } from "@bleu/ui";
 import { useCallback, useMemo } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
+import { useFormContext, useFormState, useWatch } from "react-hook-form";
 import { type Address, formatUnits } from "viem";
 import { usePoolBalance } from "#/hooks/usePoolBalance";
 import type { FormType } from "#/types";
@@ -22,12 +22,24 @@ export function TokenAmountInputs({ pool }: { pool: IPool | undefined }) {
     chainId: context?.chainId,
   });
 
+  const { isSubmitting } = useFormState({
+    control,
+  });
+
+  const [amounts, referenceTokenAddress] = useWatch({
+    control,
+    name: ["amounts", "referenceTokenAddress"],
+  });
+
+  const referenceAmount = useMemo(() => {
+    if (!referenceTokenAddress || !amounts) return;
+    return amounts[referenceTokenAddress.toLowerCase()];
+  }, [amounts, referenceTokenAddress]);
+
   const tokenPrices = useMemo(
     () => poolBalances?.map((poolBalance) => getTokenPrice(poolBalance)),
     [poolBalances],
   );
-
-  const amounts = useWatch({ control, name: "amounts" });
 
   const totalUsd = useMemo(() => {
     if (!poolBalances || !tokenPrices || !amounts) return 0;
@@ -116,6 +128,15 @@ export function TokenAmountInputs({ pool }: { pool: IPool | undefined }) {
         Once you add the hook, any changes to the swap won't automatically
         update it. Review and adjust before swapping.
       </div>
+      <Button
+        type="submit"
+        className="my-2 rounded-xl text-lg min-h-[58px]"
+        loading={isSubmitting}
+        disabled={!referenceAmount || referenceAmount <= 0}
+        loadingText="Creating hook..."
+      >
+        Add post-hook
+      </Button>
     </div>
   );
 }

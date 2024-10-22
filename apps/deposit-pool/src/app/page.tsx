@@ -1,7 +1,5 @@
 "use client";
 
-import { Button } from "@bleu/ui";
-
 import {
   type IPool,
   PoolsDropdownMenu,
@@ -9,8 +7,8 @@ import {
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import { useCallback, useMemo, useState } from "react";
-import { useFormContext, useFormState, useWatch } from "react-hook-form";
+import { useCallback, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { PoolItemInfo } from "#/components/PoolItemInfo";
 import { TokenAmountInputs } from "#/components/TokenAmountInputs";
 import { useSelectedPool } from "#/hooks/useSelectedPool";
@@ -23,47 +21,31 @@ export default function Page() {
   const { data: pools, isLoading: isLoadingPools } = useTokenBuyPools();
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
 
-  const { setValue, control } = useFormContext<FormType>();
-
-  const { isSubmitting } = useFormState({
-    control,
-  });
-
-  const [amounts, referenceTokenAddress] = useWatch({
-    control,
-    name: ["amounts", "referenceTokenAddress"],
-  });
-
-  const referenceAmount = useMemo(() => {
-    if (!referenceTokenAddress || !amounts) return;
-    return amounts[referenceTokenAddress.toLowerCase()];
-  }, [amounts, referenceTokenAddress]);
+  const { setValue } = useFormContext<FormType>();
 
   const selectedPool = useSelectedPool();
 
-  const loadHookInfo = useCallback(async () => {
+  const loadHookInfo = useCallback(() => {
     if (!context?.hookToEdit || !context.account || !isEditHookLoading) return;
-    try {
-      const data = await decodeCalldata(
-        context?.hookToEdit?.hook.callData as `0x${string}`,
-      );
-      if (data) {
-        setValue("poolId", data.poolId);
-        setValue("amounts", data.amounts);
-        setValue("referenceTokenAddress", data.referenceTokenAddress);
-        setIsEditHookLoading(false);
-      }
-    } catch {}
+    const data = decodeCalldata(
+      context?.hookToEdit?.hook.callData as `0x${string}`,
+    );
+    if (data) {
+      setValue("poolId", data.poolId);
+      setValue("amounts", data.amounts);
+      setValue("referenceTokenAddress", data.referenceTokenAddress);
+      setIsEditHookLoading(false);
+    }
   }, [context?.hookToEdit, context?.account, setValue, isEditHookLoading]);
-
-  if (context?.hookToEdit && isEditHookLoading) {
-    loadHookInfo();
-  }
 
   if (!context) return null;
 
   if (!context.account) {
     return <span className="mt-10 text-center">Connect your wallet first</span>;
+  }
+
+  if (context?.account && context?.hookToEdit && isEditHookLoading) {
+    loadHookInfo();
   }
 
   if (!ALL_SUPPORTED_CHAIN_IDS.includes(context.chainId)) {
@@ -98,15 +80,6 @@ export default function Page() {
       {selectedPool && (
         <div className="size-full flex flex-col gap-2">
           <TokenAmountInputs pool={selectedPool} />
-          <Button
-            type="submit"
-            className="my-2 rounded-xl text-lg min-h-[58px]"
-            loading={isSubmitting}
-            disabled={!referenceAmount || referenceAmount <= 0}
-            loadingText="Creating hook..."
-          >
-            Add post-hook
-          </Button>
         </div>
       )}
     </div>

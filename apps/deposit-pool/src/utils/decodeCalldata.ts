@@ -1,24 +1,31 @@
-import { cowShedAbi } from "@bleu/utils/transactionFactory";
-import { decodeFunctionData } from "viem";
 import type { FormType } from "#/types";
+import { hexToNumber } from "viem";
 
-export const decodeCalldata = async (
-  string: `0x${string}`,
-): Promise<FormType> => {
-  const decodedFunctionData = decodeFunctionData({
-    abi: cowShedAbi,
-    data: string,
-  });
+export const decodeCalldata = (string: `0x${string}`): FormType => {
+  const encodedFormData = string.slice(-288);
 
-  if (!decodedFunctionData?.args)
-    throw new Error("error decoding cowShed calldata");
+  const poolId = `0x${encodedFormData.slice(0, 40)}`;
+  const token1 = `0x${encodedFormData.slice(40, 80)}`;
+  const token2 = `0x${encodedFormData.slice(80, 120)}`;
 
-  // const decodedDeposit = decodeFunctionData({
-  //   abi: simplePoolAbi
-  //   data: decodedFunctionData?.args[0].at(-1),
-  // });
+  const amount1 =
+    hexToNumber(`0x${encodedFormData.slice(120, 184)}`) / 10 ** 18;
+  const amount2 =
+    hexToNumber(`0x${encodedFormData.slice(184, 248)}`) / 10 ** 18;
 
-  console.log({ args: decodedFunctionData?.args });
-  const result = {} as FormType;
+  const amounts = {
+    [token1]: amount1,
+    [token2]: amount2,
+  };
+
+  const referenceTokenAddress = `0x${encodedFormData.slice(248, 288)}`;
+
+  const result = {
+    poolId,
+    amounts,
+    referenceTokenAddress,
+  } as FormType;
+  console.log({ result });
+
   return result;
 };
