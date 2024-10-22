@@ -48,7 +48,7 @@ export default function Page() {
 
     const cowShedCall = await cowShedSignature(txs);
     if (!cowShedCall) throw new Error("Error signing hooks");
-    submitHook({
+    await submitHook({
       target: cowShed.getFactoryAddress(),
       callData: cowShedCall,
     });
