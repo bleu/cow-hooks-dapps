@@ -69,7 +69,7 @@ export default function Page() {
     if (!cowShedCall) throw new Error("Error signing hooks");
     const withdrawPct = getValues("withdrawPct");
     const cowShedCallDataWithWithdrawPct =
-      cowShedCall + Number(withdrawPct.toFixed()).toString(16); // adding to facilitate editing the hook
+      cowShedCall + Number(Number(withdrawPct).toFixed()).toString(16); // adding to facilitate editing the hook
     await submitHook({
       target: cowShed.getFactoryAddress(),
       callData: cowShedCallDataWithWithdrawPct,

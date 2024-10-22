@@ -1,6 +1,6 @@
 import {
   type IPool,
-  minimalPoolToPoolState,
+  fetchPoolState,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import {
@@ -15,13 +15,13 @@ export function useGetPoolWithdrawArgs(
   pool?: IPool,
 ): (
   bptAMount: BigNumber,
-) => (ERC20TransferFromArgs | BalancerWithdrawArgs)[] | undefined {
+) => Promise<(ERC20TransferFromArgs | BalancerWithdrawArgs)[] | undefined> {
   const { context, cowShedProxy } = useIFrameContext();
 
   return useCallback(
-    (bptAmount: BigNumber) => {
+    async (bptAmount: BigNumber) => {
       if (!context?.account || !cowShedProxy || !pool) return;
-      const poolState = minimalPoolToPoolState(pool);
+      const poolState = await fetchPoolState(pool.id, context.chainId);
       const bptWalletAmount = bptAmount.gte(pool.userBalance.walletBalance)
         ? pool.userBalance.walletBalance
         : bptAmount;

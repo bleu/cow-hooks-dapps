@@ -1,4 +1,4 @@
-import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
+import { BALANCER_GQL_CLIENT, BalancerChainName } from "@bleu/utils";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { gql } from "graphql-request";
 import useSWR from "swr";
@@ -111,7 +111,7 @@ export function usePools(
     async ([where, chainId]): Promise<IPool[]> => {
       if (!chainId) return [];
       const chainName = BalancerChainName[chainId];
-      return await GQL_CLIENT[chainId]
+      return await BALANCER_GQL_CLIENT[chainId]
         .request<IQuery>(USER_POOLS_QUERY, {
           where: {
             ...where,
