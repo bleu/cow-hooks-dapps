@@ -21,7 +21,10 @@ export const Checkbox = ({
 
   return (
     <div className="flex flex-col items-start justify-start">
-      <div className="flex items-center">
+      <Label
+        htmlFor={name}
+        className="flex items-center hover:text-primary [&>div>span]:hover:bg-primary [&>div>span>span>span]:hover:bg-primary"
+      >
         <div className="relative p-1">
           <Input
             type="checkbox"
@@ -35,8 +38,7 @@ export const Checkbox = ({
             className="sr-only" // This hides the input visually but keeps it accessible
             {...props}
           />
-          <Label
-            htmlFor={name}
+          <span
             style={{
               width: `${radius}px`,
               height: `${radius}px`,
@@ -47,7 +49,7 @@ export const Checkbox = ({
           `}
           >
             <span
-              // It's weird, but tailwind classes don't work for this
+              //tailwind classes don't work for this
               style={{
                 width: `${(radius * 3) / 4}px`,
                 height: `${(radius * 3) / 4}px`,
@@ -69,10 +71,10 @@ export const Checkbox = ({
             `}
               />
             </span>
-          </Label>
+          </span>
         </div>
-        <Label>{label}</Label>
-      </div>
+        <span className="cursor-pointer">{label}</span>
+      </Label>
       {isSelected && isSelectedMessage && (
         <span className="ml-4 pt-1 font-normal text-xs opacity-70">
           <ExclamationTriangleIcon className="w-4 h-4 mr-1 inline" />
