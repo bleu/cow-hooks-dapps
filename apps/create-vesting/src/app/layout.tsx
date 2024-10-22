@@ -16,11 +16,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Head>
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <TokenContextProvider>
-        <RootLayout>
+      <RootLayout>
+        <TokenContextProvider>
           <FormContextProvider>{children}</FormContextProvider>
-        </RootLayout>
-      </TokenContextProvider>
+        </TokenContextProvider>
+      </RootLayout>
     </html>
   );
 }
