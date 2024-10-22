@@ -12,7 +12,7 @@ export const PeriodInput = () => {
       min="0.000000001"
       step="0.000000001"
       max="1000000000000"
-      label="Lock-up Period"
+      label="Vesting Period"
       validation={{ valueAsNumber: true, required: true }}
       onKeyDown={(e) =>
         ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
