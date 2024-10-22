@@ -1,5 +1,12 @@
 "use client";
 
+import { cn } from "@bleu/ui";
+import { formatUnits } from "ethers/lib/utils";
+import { useMemo } from "react";
+import { TokenAmount } from "./TokenAmount";
+import { TokenInfo } from "./TokenInfo";
+import type { IBalance } from "./types";
+import { Spinner } from "./ui/Spinner";
 import {
   Table,
   TableBody,
@@ -7,14 +14,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  cn,
-} from "@bleu/ui";
-import { formatUnits } from "ethers/lib/utils";
-import { useMemo } from "react";
-import { TokenAmount } from "./TokenAmount";
-import { TokenInfo } from "./TokenInfo";
-import type { IBalance } from "./types";
-import { Spinner } from "./ui/Spinner";
+} from "./ui/Table";
 
 // This component expects that labels and balances are in the same order.
 // For example, if labels = ["Pool Balance", "Withdraw Balance"],
@@ -43,7 +43,7 @@ export function BalancesPreview({
 
   return (
     <div className="border border-color-text/25 rounded-2xl">
-      <Table>
+      <Table className="overflow-grow">
         <TableHeader className="[&_tr]:border-b border-color-text/25 dark:[&_tr]:border-b-1">
           <TableRow className="hover:bg-transparent border-color-text/25">
             <TableHead>
