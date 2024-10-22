@@ -191,11 +191,11 @@ const ButtonText = ({
     );
 
   if (context?.hookToEdit && context?.isPreHook)
-    return <span>Update Pre-hook</span>;
+    return <span>Update pre-hook</span>;
   if (context?.hookToEdit && !context?.isPreHook)
-    return <span>Update Post-hook</span>;
+    return <span>Update post-hook</span>;
   if (!context?.hookToEdit && context?.isPreHook)
-    return <span>Add Pre-hook</span>;
+    return <span>Add pre-hook</span>;
   if (!context?.hookToEdit && !context?.isPreHook)
-    return <span>Add Post-hook</span>;
+    return <span>Add post-hook</span>;
 };
