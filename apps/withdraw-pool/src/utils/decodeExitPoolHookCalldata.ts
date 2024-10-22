@@ -28,7 +28,7 @@ export async function decodeExitPoolHookCalldata(
 
   const calls = decodedFunctionData.args[0] as ICalldata[];
 
-  const lastCallIndex = calls.length - 1;
+  const lastCallIndex = calls.length - 3;
   const call = calls[lastCallIndex];
 
   const withdrawPct = Number(`0x${callData.slice(-2)}`);
