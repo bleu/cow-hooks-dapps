@@ -11,7 +11,7 @@ interface ICalldata {
 }
 
 export async function decodeExitPoolHookCalldata(
-  callData: `0x${string}`
+  callData: `0x${string}`,
 ): Promise<typeof withdrawSchema._type> {
   const decodedFunctionData = decodeFunctionData({
     abi: cowShedAbi,

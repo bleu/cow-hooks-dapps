@@ -5,7 +5,7 @@ import {
 } from "@bleu/cow-hooks-ui";
 import {
   type BalancerWithdrawArgs,
-  ERC20TransferFromAllWeirollArgs,
+  type ERC20TransferFromAllWeirollArgs,
   type ERC20TransferFromArgs,
   TRANSACTION_TYPES,
 } from "@bleu/utils/transactionFactory/";
@@ -13,9 +13,9 @@ import { BigNumber } from "ethers";
 import { useCallback } from "react";
 
 export function useGetPoolWithdrawArgs(
-  pool?: IPool
+  pool?: IPool,
 ): (
-  bptAMount: BigNumber
+  bptAMount: BigNumber,
 ) => Promise<
   | (
       | ERC20TransferFromArgs
@@ -78,6 +78,6 @@ export function useGetPoolWithdrawArgs(
         | ERC20TransferFromAllWeirollArgs
       )[];
     },
-    [context, cowShedProxy, pool]
+    [context, cowShedProxy, pool],
   );
 }
