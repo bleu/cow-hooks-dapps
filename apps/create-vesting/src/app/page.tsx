@@ -2,7 +2,6 @@
 
 import {
   ButtonPrimary,
-  ClipBoardButton,
   type HookDappContextAdjusted,
   Info,
   Spinner,
@@ -13,7 +12,10 @@ import { useCallback, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import {
+  ArrowTopRightIcon,
+  ExclamationTriangleIcon,
+} from "@radix-ui/react-icons";
 import { AmountInput } from "#/components/AmountInput";
 import { PeriodInput } from "#/components/PeriodInput";
 import { RecipientInput } from "#/components/RecipientInput";
@@ -153,11 +155,15 @@ const InfoContent = () => {
     <span className="cursor-default">
       To access Vesting Post-hook contract after swap, connect with the
       recipient wallet at{" "}
-      <ClipBoardButton
-        buttonText="llamapay.io/vesting"
-        contentToCopy="https://llamapay.io/vesting"
-        className="flex items-center justify-center gap-1 cursor-pointer"
-      />
+      <a
+        href="https://llamapay.io/vesting"
+        target="_blank"
+        rel="noreferrer"
+        className="text-color-link underline"
+      >
+        llamapay.io/vesting
+        <ArrowTopRightIcon className="size-4 shrink-0 inline" />
+      </a>
     </span>
   );
 };
