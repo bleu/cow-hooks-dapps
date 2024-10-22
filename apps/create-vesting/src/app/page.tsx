@@ -137,9 +137,9 @@ export default function Page() {
           userBalanceFloat={userBalanceFloat}
         />
         <div className="flex flex-col gap-y-2">
-          <VestUserInputCheckbox />
           <VestAllFromSwapCheckbox />
           <VestAllFromAccountCheckbox />
+          <VestUserInputCheckbox />
         </div>
       </div>
       <Info content={<InfoContent />} />
