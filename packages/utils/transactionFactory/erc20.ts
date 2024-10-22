@@ -67,17 +67,17 @@ export class ERC20TransferFromAllWeirollCreator
 
     const tokenWeirollContract = weiroll.Contract.createContract(
       new Contract(token, erc20Abi),
-      CommandFlags.STATICCALL,
+      CommandFlags.STATICCALL
     );
 
     const tokenWeirollContractCall = weiroll.Contract.createContract(
       new Contract(token, erc20Abi),
-      CommandFlags.CALL,
+      CommandFlags.CALL
     );
 
     const amount = planner.add(tokenWeirollContract.balanceOf(from));
 
-    planner.add(tokenWeirollContractCall.transferFrom(from, to, amount));
+    planner.add(tokenWeirollContractCall.transfer(to, amount));
 
     const { commands, state } = planner.plan();
 
