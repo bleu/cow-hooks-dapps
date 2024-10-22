@@ -5,7 +5,6 @@ import {
   type HookDappContextAdjusted,
   Info,
   Spinner,
-  Wrapper,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { useCallback, useState } from "react";
@@ -122,7 +121,7 @@ export default function Page() {
     amount > allAfterSwapFloat;
 
   return (
-    <Wrapper>
+    <div className="flex flex-col flex-wrap w-full flex-grow">
       <div className="flex flex-col flex-grow py-4 gap-4 items-start justify-start text-center">
         <RecipientInput value={recipient} />
         <PeriodInput />
@@ -153,7 +152,7 @@ export default function Page() {
       >
         <ButtonText context={context} isOutOfFunds={isOutOfFunds} />
       </ButtonPrimary>
-    </Wrapper>
+    </div>
   );
 }
 
