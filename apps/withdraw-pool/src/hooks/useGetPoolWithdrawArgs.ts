@@ -5,6 +5,7 @@ import {
 } from "@bleu/cow-hooks-ui";
 import {
   type BalancerWithdrawArgs,
+  ERC20TransferFromAllWeirollArgs,
   type ERC20TransferFromArgs,
   TRANSACTION_TYPES,
 } from "@bleu/utils/transactionFactory/";
@@ -12,10 +13,17 @@ import { BigNumber } from "ethers";
 import { useCallback } from "react";
 
 export function useGetPoolWithdrawArgs(
-  pool?: IPool,
+  pool?: IPool
 ): (
-  bptAMount: BigNumber,
-) => Promise<(ERC20TransferFromArgs | BalancerWithdrawArgs)[] | undefined> {
+  bptAMount: BigNumber
+) => Promise<
+  | (
+      | ERC20TransferFromArgs
+      | BalancerWithdrawArgs
+      | ERC20TransferFromAllWeirollArgs
+    )[]
+  | undefined
+> {
   const { context, cowShedProxy } = useIFrameContext();
 
   return useCallback(
@@ -38,6 +46,20 @@ export function useGetPoolWithdrawArgs(
               amount: BigNumber.from(bptWalletAmount).toBigInt(),
               symbol: pool.symbol,
             };
+
+      const transferFromProxyToUserTokens = pool.allTokens.map((token) => {
+        const tokenAddress = token.address;
+
+        return {
+          type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM_ALL_WEIROLL,
+          token: tokenAddress,
+          from: cowShedProxy,
+          to: context.account,
+          decimals: token.decimals,
+          symbol: token.symbol,
+        } as ERC20TransferFromAllWeirollArgs;
+      });
+
       return [
         transferBptArg,
         {
@@ -49,11 +71,13 @@ export function useGetPoolWithdrawArgs(
           sender: cowShedProxy,
           recipient: context.account,
         },
+        ...transferFromProxyToUserTokens,
       ].filter((arg) => arg) as (
         | ERC20TransferFromArgs
         | BalancerWithdrawArgs
+        | ERC20TransferFromAllWeirollArgs
       )[];
     },
-    [context, cowShedProxy, pool],
+    [context, cowShedProxy, pool]
   );
 }
