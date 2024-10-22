@@ -23,6 +23,7 @@ export const AmountInput = ({
       name="amount"
       type="number"
       step={`0.${"0".repeat(token?.decimals ? token?.decimals - 1 : 8)}1`}
+      max="1000000000000"
       token={token}
       label="Vesting Amount"
       placeholder="0.0"
