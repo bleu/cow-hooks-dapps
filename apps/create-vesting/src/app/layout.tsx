@@ -1,7 +1,7 @@
 "use client";
 
 import "@bleu/cow-hooks-ui/global.css";
-import { RootLayout, Scrollbar } from "@bleu/cow-hooks-ui";
+import { RootLayout } from "@bleu/cow-hooks-ui";
 import Head from "next/head";
 import type * as React from "react";
 import { FormContextProvider } from "#/context/form";
@@ -16,15 +16,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Head>
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <RootLayout>
-        <TokenContextProvider>
-          <body className="bg-transparent">
-            <FormContextProvider>
-              <Scrollbar>{children}</Scrollbar>
-            </FormContextProvider>
-          </body>
-        </TokenContextProvider>
-      </RootLayout>
+      <TokenContextProvider>
+        <RootLayout>
+          <FormContextProvider>{children}</FormContextProvider>
+        </RootLayout>
+      </TokenContextProvider>
     </html>
   );
 }

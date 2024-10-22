@@ -122,7 +122,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col flex-wrap w-full flex-grow">
-      <div className="flex flex-col flex-grow py-4 gap-4 items-start justify-start text-center">
+      <div className="flex flex-col flex-grow gap-4 items-start justify-start text-center">
         <RecipientInput value={recipient} />
         <PeriodInput />
         <AmountInput

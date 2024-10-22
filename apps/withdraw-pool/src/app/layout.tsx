@@ -14,18 +14,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Head>
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <body>
-        <RootLayout>
-          <div
-            className="font-sans overflow-y-auto font-normal h-screen text-color-text p-[16px] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-muted [&::-webkit-scrollbar-thumb]:bg-foreground/15 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:rounded-full"
-            style={{ scrollbarGutter: "stable" }}
-          >
-            <UserPoolContextProvider>
-              <FormContextProvider>{children}</FormContextProvider>
-            </UserPoolContextProvider>
-          </div>
-        </RootLayout>
-      </body>
+      <RootLayout>
+        <UserPoolContextProvider>
+          <FormContextProvider>{children}</FormContextProvider>
+        </UserPoolContextProvider>
+      </RootLayout>
     </html>
   );
 }

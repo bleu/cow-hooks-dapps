@@ -13,13 +13,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Head>
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <body className="bg-transparent">
-        <RootLayout>
-          <div className="font-sans font-normal scrollbar scrollbar-custom h-screen overflow-y-scroll p-[16px] bg-transparent text-color-text">
-            <FormContextProvider>{children}</FormContextProvider>
-          </div>
-        </RootLayout>
-      </body>
+      <RootLayout>
+        <FormContextProvider>{children}</FormContextProvider>
+      </RootLayout>
     </html>
   );
 }
