@@ -85,6 +85,9 @@ export function FormContextProvider({ children }: PropsWithChildren) {
 
       setHookInfo(hookInfo);
       router.push("/signing");
+
+      // Avoid enabling submit button before signing page loads
+      await new Promise((resolve) => setTimeout(resolve, 2000));
     },
     [
       context?.account,

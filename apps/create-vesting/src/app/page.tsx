@@ -9,7 +9,7 @@ import {
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { useCallback, useState } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
+import { useFormContext, useFormState, useWatch } from "react-hook-form";
 
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import {
@@ -30,10 +30,9 @@ import type { CreateVestingFormData } from "#/utils/schema";
 export default function Page() {
   const { context, publicClient } = useIFrameContext();
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
-
   const { token } = useTokenContext();
-
   const { control, setValue } = useFormContext<CreateVestingFormData>();
+  const { isSubmitting } = useFormState({ control });
 
   const vestUserInput = useWatch({ control, name: "vestUserInput" });
   const vestAllFromSwap = useWatch({ control, name: "vestAllFromSwap" });
@@ -145,7 +144,12 @@ export default function Page() {
       <Info content={<InfoContent />} />
       <ButtonPrimary
         type="submit"
-        disabled={isOutOfFunds || !recipient || (!amount && vestUserInput)}
+        disabled={
+          isOutOfFunds ||
+          !recipient ||
+          (!amount && vestUserInput) ||
+          isSubmitting
+        }
       >
         <ButtonText context={context} isOutOfFunds={isOutOfFunds} />
       </ButtonPrimary>
