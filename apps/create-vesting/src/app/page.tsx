@@ -143,7 +143,10 @@ export default function Page() {
         </div>
       </div>
       <Info content={<InfoContent />} />
-      <ButtonPrimary type="submit" disabled={isOutOfFunds}>
+      <ButtonPrimary
+        type="submit"
+        disabled={isOutOfFunds || !recipient || (!amount && vestUserInput)}
+      >
         <ButtonText context={context} isOutOfFunds={isOutOfFunds} />
       </ButtonPrimary>
     </Wrapper>
