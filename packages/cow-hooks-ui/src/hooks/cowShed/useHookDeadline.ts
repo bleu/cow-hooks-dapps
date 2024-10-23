@@ -11,7 +11,7 @@ export function useHookDeadline({
     const validToOnTimezone = context?.orderParams?.validTo || 0;
     const validToTimestamp = validToOnTimezone + now.getTimezoneOffset() * 60;
     const currentTimestamp = new Date().getTime() / 1000;
-    const oneHourAfter = BigInt(currentTimestamp.toFixed() + 60 * 60);
+    const oneHourAfter = Number(currentTimestamp.toFixed()) + 60 * 60;
 
     if (validToTimestamp < oneHourAfter) return BigInt(oneHourAfter);
     return BigInt(validToTimestamp);
