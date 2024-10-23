@@ -88,7 +88,7 @@ export default function Page() {
         PoolItemInfo={PoolItemInfo}
         selectedPool={selectedPool}
       />
-      <PoolForm poolId={poolId} />
+      <PoolForm selectedPool={selectedPool} />
     </div>
   );
 }

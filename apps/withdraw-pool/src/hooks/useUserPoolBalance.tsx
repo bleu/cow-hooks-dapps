@@ -21,8 +21,8 @@ interface IQuery {
     totalShares: `${number}`;
   };
   userBalance: {
-    totalBalance: `${number}`;
-    totalBalanceUsd: number;
+    walletBalance: `${number}`;
+    walletBalanceUsd: number;
   };
   poolTokens: {
     id: `0x${string}`;
@@ -50,8 +50,8 @@ export const POOL_QUERY = gql`
         totalShares
       }
       userBalance {
-        totalBalance
-        totalBalanceUsd
+        walletBalance
+        walletBalanceUsd
       }
       poolTokens {
         id
@@ -85,7 +85,7 @@ async function fetchUserPoolBalance(
     throw new Error("Pool not found");
   }
   const userBpt = parseUnits(
-    result.pool.userBalance.totalBalance.toString(),
+    result.pool.userBalance.walletBalance.toString(),
     result.pool.decimals,
   );
   const totalBpt = parseUnits(

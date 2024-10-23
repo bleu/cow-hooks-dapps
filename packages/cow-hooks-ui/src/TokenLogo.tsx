@@ -2,7 +2,7 @@
 
 import { cowTokenList } from "@bleu/utils";
 import Image from "next/image";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { Token } from "@uniswap/sdk-core";
@@ -84,28 +84,32 @@ export const TokenLogo = ({
   };
 
   return (
-    <div
-      style={{
-        width: `${width}px`,
-        height: `${height}px`,
-        position: "relative",
-      }}
-    >
-      <Image
-        className={className}
-        width={Number(width)}
-        height={Number(height)}
-        quality={quality}
-        alt={alt || ""}
-        style={{ visibility }}
-        src={imagesSrc[index] as string}
-        onError={onError}
-        onLoadingComplete={() => {
-          setReveal(true);
-          setTokenLogoSrcIndex(token.address, index);
+    <Suspense fallback={<div style={{ width, height }} />}>
+      <div
+        style={{
+          width: `${width}px`,
+          height: `${height}px`,
+          position: "relative",
+          borderRadius: "50%",
+          overflow: "hidden",
         }}
-        unoptimized
-      />
-    </div>
+      >
+        <Image
+          className={className}
+          quality={quality}
+          layout="fill"
+          objectFit="cover"
+          alt={alt || ""}
+          style={{ visibility }}
+          src={imagesSrc[index] as string}
+          onError={onError}
+          onLoadingComplete={() => {
+            setReveal(true);
+            setTokenLogoSrcIndex(token.address, index);
+          }}
+          unoptimized
+        />
+      </div>
+    </Suspense>
   );
 };
