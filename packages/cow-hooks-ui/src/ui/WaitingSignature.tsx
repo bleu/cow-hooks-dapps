@@ -21,7 +21,6 @@ export function WaitingSignature({
     revalidateOnMount: true,
     revalidateOnReconnect: false,
     shouldRetryOnError: false,
-    onError: (_error) => {},
   });
 
   const { reset } = useFormContext();
