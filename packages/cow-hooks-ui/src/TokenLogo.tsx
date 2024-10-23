@@ -2,7 +2,7 @@
 
 import { cowTokenList } from "@bleu/utils";
 import Image from "next/image";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { Token } from "@uniswap/sdk-core";
@@ -23,17 +23,17 @@ const tokenUrlRoot =
 
 export const cowprotocolTokenLogoUrl = (
   address?: string,
-  chainId?: SupportedChainId,
+  chainId?: SupportedChainId
 ) => `${tokenUrlRoot}/${chainId}/${address}/logo.png`;
 
 export const cowTokenListLogoUrl = (
   address?: string,
-  chainId?: SupportedChainId,
+  chainId?: SupportedChainId
 ) => {
   return cowTokenList.find(
     (token) =>
       token.chainId === chainId &&
-      token.address.toLowerCase() === address?.toLowerCase(),
+      token.address.toLowerCase() === address?.toLowerCase()
   )?.logoURI;
 };
 
@@ -46,7 +46,7 @@ const chainIdToName: Record<SupportedChainId, string> = {
 
 export function trustTokenLogoUrl(
   address?: string,
-  chainId?: SupportedChainId,
+  chainId?: SupportedChainId
 ): string {
   return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainIdToName[chainId || 1]}/assets/${address}/logo.png`;
 }
@@ -84,30 +84,32 @@ export const TokenLogo = ({
   };
 
   return (
-    <div
-      style={{
-        width: `${width}px`,
-        height: `${height}px`,
-        position: "relative",
-        borderRadius: "50%",
-        overflow: "hidden",
-      }}
-    >
-      <Image
-        className={className}
-        quality={quality}
-        layout="fill"
-        objectFit="cover"
-        alt={alt || ""}
-        style={{ visibility }}
-        src={imagesSrc[index] as string}
-        onError={onError}
-        onLoadingComplete={() => {
-          setReveal(true);
-          setTokenLogoSrcIndex(token.address, index);
+    <Suspense fallback={<div style={{ width, height }} />}>
+      <div
+        style={{
+          width: `${width}px`,
+          height: `${height}px`,
+          position: "relative",
+          borderRadius: "50%",
+          overflow: "hidden",
         }}
-        unoptimized
-      />
-    </div>
+      >
+        <Image
+          className={className}
+          quality={quality}
+          layout="fill"
+          objectFit="cover"
+          alt={alt || ""}
+          style={{ visibility }}
+          src={imagesSrc[index] as string}
+          onError={onError}
+          onLoadingComplete={() => {
+            setReveal(true);
+            setTokenLogoSrcIndex(token.address, index);
+          }}
+          unoptimized
+        />
+      </div>
+    </Suspense>
   );
 };
