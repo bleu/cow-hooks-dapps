@@ -34,6 +34,7 @@ interface IQuery {
       totalBalance: string;
       walletBalance: string;
       totalBalanceUsd: number;
+      walletBalanceUsd: number;
       stakedBalances: {
         balance: string;
         stakingId: string;
@@ -86,6 +87,7 @@ const USER_POOLS_QUERY = gql`
         totalBalance
         walletBalance
         totalBalanceUsd
+        walletBalanceUsd
         stakedBalances {
           balance
           stakingId
@@ -133,7 +135,10 @@ export function usePools(
                 pool.decimals,
               ),
               stakedBalances: pool.userBalance.stakedBalances.map((staked) => ({
-                balance: Number(staked.balance).toFixed(pool.decimals),
+                balance: parseUnits(
+                  Number(staked.balance).toFixed(pool.decimals),
+                  pool.decimals,
+                ),
                 stakingId: staked.stakingId,
               })),
             },
