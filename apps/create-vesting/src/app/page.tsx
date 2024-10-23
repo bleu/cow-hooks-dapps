@@ -23,7 +23,7 @@ export default function Page() {
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
   const { token } = useTokenContext();
   const { control, setValue } = useFormContext<CreateVestingFormData>();
-  const { isSubmitting } = useFormState({ control });
+  const { isSubmitting, isSubmitSuccessful } = useFormState({ control });
 
   const vestUserInput = useWatch({ control, name: "vestUserInput" });
   const vestAllFromSwap = useWatch({ control, name: "vestAllFromSwap" });
@@ -121,7 +121,13 @@ export default function Page() {
     amount > allAfterSwapFloat;
 
   const buttonDisabled =
-    isOutOfFunds || !recipient || (!amount && vestUserInput) || isSubmitting;
+    isOutOfFunds ||
+    !recipient ||
+    (!amount && vestUserInput) ||
+    isSubmitting ||
+    isSubmitSuccessful;
+
+  const isBuildingHook = isSubmitting || isSubmitSuccessful;
 
   return (
     <div className="flex flex-col flex-wrap w-full flex-grow gap-4 mb-[-16px]">
@@ -147,6 +153,7 @@ export default function Page() {
       <Button
         context={context}
         isOutOfFunds={isOutOfFunds}
+        isBuildingHook={isBuildingHook}
         disabled={buttonDisabled}
       />
     </div>

@@ -6,6 +6,7 @@ import useSWR from "swr";
 import type { SignatureStepsProps } from "../types";
 import { Spinner } from "./Spinner";
 import { InfoTooltip } from "./TooltipBase";
+import { useFormContext } from "react-hook-form";
 
 export function WaitingSignature({
   callback,
@@ -23,6 +24,7 @@ export function WaitingSignature({
     onError: (_error) => {},
   });
 
+  const { reset } = useFormContext();
   const router = useRouter();
 
   return (
@@ -50,7 +52,13 @@ export function WaitingSignature({
             >
               Try again
             </Button>
-            <Button type="button" onClick={router.back}>
+            <Button
+              type="button"
+              onClick={() => {
+                reset(undefined, { keepValues: true });
+                router.back();
+              }}
+            >
               Back
             </Button>
           </div>
