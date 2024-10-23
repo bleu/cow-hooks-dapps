@@ -2,11 +2,11 @@
 
 import { Button } from "@bleu/ui";
 import { useRouter } from "next/navigation";
+import { useFormContext } from "react-hook-form";
 import useSWR from "swr";
 import type { SignatureStepsProps } from "../types";
 import { Spinner } from "./Spinner";
 import { InfoTooltip } from "./TooltipBase";
-import { useFormContext } from "react-hook-form";
 
 export function WaitingSignature({
   callback,

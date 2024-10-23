@@ -6,6 +6,8 @@ import { useFormContext, useFormState, useWatch } from "react-hook-form";
 
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import { AmountInput } from "#/components/AmountInput";
+import { Button } from "#/components/Button";
+import { InfoContent } from "#/components/InfoContent";
 import { PeriodInput } from "#/components/PeriodInput";
 import { RecipientInput } from "#/components/RecipientInput";
 import { VestAllFromAccountCheckbox } from "#/components/VestAllFromAccountCheckbox";
@@ -15,8 +17,6 @@ import { useTokenContext } from "#/context/token";
 import { useFormatVariables } from "#/hooks/useFormatVariables";
 import { decodeCalldata } from "#/utils/decodeCalldata";
 import type { CreateVestingFormData } from "#/utils/schema";
-import { Button } from "#/components/Button";
-import { InfoContent } from "#/components/InfoContent";
 
 export default function Page() {
   const { context, publicClient } = useIFrameContext();
