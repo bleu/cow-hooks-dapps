@@ -96,15 +96,23 @@ export default function Page() {
     );
 
   if (!context.account)
-    return <span className="mt-10 text-center">Connect your wallet first</span>;
-
-  if (!context?.orderParams?.buyTokenAddress)
     return (
-      <span className="mt-10 text-center">Provide a buy amount in swap</span>
+      <span className="block w-full mt-10 text-center">
+        Connect your wallet first
+      </span>
+    );
+
+  if (!context?.orderParams?.buyAmount || !context?.orderParams?.buyAmount)
+    return (
+      <span className="block w-full mt-10 text-center">
+        Provide a buy token and amount in swap
+      </span>
     );
 
   if (!ALL_SUPPORTED_CHAIN_IDS.includes(context.chainId)) {
-    return <span className="mt-10 text-center">Unsupported chain</span>;
+    return (
+      <span className="block w-full mt-10 text-center">Unsupported chain</span>
+    );
   }
 
   const amountPreview = vestAllFromSwap
@@ -122,7 +130,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col flex-wrap w-full flex-grow">
-      <div className="flex flex-col flex-grow gap-4 items-start justify-start text-center">
+      <div className="w-full flex flex-col flex-grow gap-4 items-start justify-start text-center">
         <RecipientInput value={recipient} />
         <PeriodInput />
         <AmountInput
