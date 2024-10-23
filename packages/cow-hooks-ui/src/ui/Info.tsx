@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export const Info = ({ content }: { content: string | ReactNode }) => {
   return (
-    <div className="flex flex-row justify-between bg-color-info-bg text-color-info-text items-center rounded-xl px-5 py-2 text-sm gap-5">
+    <div className="flex flex-row justify-between bg-color-info-bg/15 text-color-info-text items-center rounded-xl px-5 py-2 text-sm gap-5">
       <div>
         <svg
           xmlns="http://www.w3.org/2000/svg"

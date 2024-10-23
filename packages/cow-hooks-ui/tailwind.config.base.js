@@ -78,7 +78,7 @@ module.exports = {
           "rgb(var(--cow-color-success-text) / <alpha-value>)",
 
         "color-info": "rgb(var(--cow-color-info) / <alpha-value>)",
-        "color-info-bg": "rgb(var(--cow-color-info-bg) / 0.15)",
+        "color-info-bg": "rgb(var(--cow-color-info-bg) / <alpha-value>)",
         "color-info-text": "rgb(var(--cow-color-info-text) / <alpha-value>)",
 
         "color-alert": "rgb(var(--cow-color-alert) / <alpha-value>)",
@@ -168,6 +168,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('preline/plugin'),
-],
+  plugins: [require("preline/plugin")],
 };
