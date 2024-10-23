@@ -1,4 +1,4 @@
-import { IPool, Spinner, useIFrameContext } from "@bleu/cow-hooks-ui";
+import { type IPool, Spinner, useIFrameContext } from "@bleu/cow-hooks-ui";
 import { Suspense } from "react";
 import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
 import { PoolBalancesPreview } from "./PoolBalancePreview";

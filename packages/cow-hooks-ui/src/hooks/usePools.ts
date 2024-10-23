@@ -104,7 +104,7 @@ interface IGetPoolsWhere {
 export function usePools(
   where: IGetPoolsWhere,
   chainId?: SupportedChainId,
-  orderBy?: string
+  orderBy?: string,
 ) {
   return useSWR(
     [where, chainId],
@@ -126,11 +126,11 @@ export function usePools(
               ...pool.userBalance,
               walletBalance: parseUnits(
                 Number(pool.userBalance.walletBalance).toFixed(pool.decimals),
-                pool.decimals
+                pool.decimals,
               ),
               totalBalance: parseUnits(
                 Number(pool.userBalance.totalBalance).toFixed(pool.decimals),
-                pool.decimals
+                pool.decimals,
               ),
               stakedBalances: pool.userBalance.stakedBalances.map((staked) => ({
                 balance: Number(staked.balance).toFixed(pool.decimals),
@@ -141,7 +141,7 @@ export function usePools(
               ...pool.dynamicData,
               totalShares: parseUnits(
                 Number(pool.dynamicData.totalShares).toFixed(pool.decimals),
-                pool.decimals
+                pool.decimals,
               ),
             },
           }));
@@ -150,6 +150,6 @@ export function usePools(
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-    }
+    },
   );
 }
