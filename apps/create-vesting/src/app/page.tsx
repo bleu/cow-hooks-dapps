@@ -1,20 +1,10 @@
 "use client";
 
-import {
-  ButtonPrimary,
-  type HookDappContextAdjusted,
-  Info,
-  Spinner,
-  useIFrameContext,
-} from "@bleu/cow-hooks-ui";
+import { Info, Spinner, useIFrameContext } from "@bleu/cow-hooks-ui";
 import { useCallback, useState } from "react";
 import { useFormContext, useFormState, useWatch } from "react-hook-form";
 
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import {
-  ArrowTopRightIcon,
-  ExclamationTriangleIcon,
-} from "@radix-ui/react-icons";
 import { AmountInput } from "#/components/AmountInput";
 import { PeriodInput } from "#/components/PeriodInput";
 import { RecipientInput } from "#/components/RecipientInput";
@@ -25,6 +15,8 @@ import { useTokenContext } from "#/context/token";
 import { useFormatVariables } from "#/hooks/useFormatVariables";
 import { decodeCalldata } from "#/utils/decodeCalldata";
 import type { CreateVestingFormData } from "#/utils/schema";
+import { Button } from "#/components/Button";
+import { InfoContent } from "#/components/InfoContent";
 
 export default function Page() {
   const { context, publicClient } = useIFrameContext();
@@ -128,6 +120,9 @@ export default function Page() {
     !!allAfterSwapFloat &&
     amount > allAfterSwapFloat;
 
+  const buttonDisabled =
+    isOutOfFunds || !recipient || (!amount && vestUserInput) || isSubmitting;
+
   return (
     <div className="flex flex-col flex-wrap w-full flex-grow">
       <div className="w-full flex flex-col flex-grow gap-4 items-start justify-start text-center">
@@ -149,60 +144,11 @@ export default function Page() {
         </div>
       </div>
       <Info content={<InfoContent />} />
-      <ButtonPrimary
-        type="submit"
-        disabled={
-          isOutOfFunds ||
-          !recipient ||
-          (!amount && vestUserInput) ||
-          isSubmitting
-        }
-      >
-        <ButtonText context={context} isOutOfFunds={isOutOfFunds} />
-      </ButtonPrimary>
+      <Button
+        context={context}
+        isOutOfFunds={isOutOfFunds}
+        disabled={buttonDisabled}
+      />
     </div>
   );
 }
-
-const InfoContent = () => {
-  return (
-    <span className="cursor-default">
-      To access Vesting Post-hook contract after swap, connect with the
-      recipient wallet at{" "}
-      <a
-        href="https://llamapay.io/vesting"
-        target="_blank"
-        rel="noreferrer"
-        className="text-color-link underline"
-      >
-        llamapay.io/vesting
-        <ArrowTopRightIcon className="size-4 shrink-0 inline" />
-      </a>
-    </span>
-  );
-};
-
-const ButtonText = ({
-  context,
-  isOutOfFunds,
-}: {
-  context: HookDappContextAdjusted;
-  isOutOfFunds: boolean;
-}) => {
-  if (isOutOfFunds)
-    return (
-      <span className="flex items-center justify-center gap-2">
-        <ExclamationTriangleIcon className="w-6 h-6" />
-        You won't have enough funds
-      </span>
-    );
-
-  if (context?.hookToEdit && context?.isPreHook)
-    return <span>Update pre-hook</span>;
-  if (context?.hookToEdit && !context?.isPreHook)
-    return <span>Update post-hook</span>;
-  if (!context?.hookToEdit && context?.isPreHook)
-    return <span>Add pre-hook</span>;
-  if (!context?.hookToEdit && !context?.isPreHook)
-    return <span>Add post-hook</span>;
-};
