@@ -31,7 +31,7 @@ export default function Page() {
 
     try {
       const data = await decodeExitPoolHookCalldata(
-        context?.hookToEdit?.hook.callData as `0x${string}`,
+        context?.hookToEdit?.hook.callData as `0x${string}`
       );
       setValue("poolId", data.poolId);
       setValue("withdrawPct", data.withdrawPct);
@@ -42,7 +42,7 @@ export default function Page() {
 
   const selectedPool = useMemo(() => {
     return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
+      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
     );
   }, [pools, poolId]);
 
@@ -88,7 +88,7 @@ export default function Page() {
         PoolItemInfo={PoolItemInfo}
         selectedPool={selectedPool}
       />
-      <PoolForm poolId={poolId} />
+      <PoolForm selectedPool={selectedPool} />
     </div>
   );
 }
