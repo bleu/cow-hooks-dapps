@@ -23,17 +23,17 @@ const tokenUrlRoot =
 
 export const cowprotocolTokenLogoUrl = (
   address?: string,
-  chainId?: SupportedChainId,
+  chainId?: SupportedChainId
 ) => `${tokenUrlRoot}/${chainId}/${address}/logo.png`;
 
 export const cowTokenListLogoUrl = (
   address?: string,
-  chainId?: SupportedChainId,
+  chainId?: SupportedChainId
 ) => {
   return cowTokenList.find(
     (token) =>
       token.chainId === chainId &&
-      token.address.toLowerCase() === address?.toLowerCase(),
+      token.address.toLowerCase() === address?.toLowerCase()
   )?.logoURI;
 };
 
@@ -46,7 +46,7 @@ const chainIdToName: Record<SupportedChainId, string> = {
 
 export function trustTokenLogoUrl(
   address?: string,
-  chainId?: SupportedChainId,
+  chainId?: SupportedChainId
 ): string {
   return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainIdToName[chainId || 1]}/assets/${address}/logo.png`;
 }
@@ -89,13 +89,15 @@ export const TokenLogo = ({
         width: `${width}px`,
         height: `${height}px`,
         position: "relative",
+        borderRadius: "50%",
+        overflow: "hidden",
       }}
     >
       <Image
         className={className}
-        width={Number(width)}
-        height={Number(height)}
         quality={quality}
+        layout="fill"
+        objectFit="cover"
         alt={alt || ""}
         style={{ visibility }}
         src={imagesSrc[index] as string}
