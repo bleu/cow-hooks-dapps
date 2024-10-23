@@ -124,7 +124,7 @@ export default function Page() {
     isOutOfFunds || !recipient || (!amount && vestUserInput) || isSubmitting;
 
   return (
-    <div className="flex flex-col flex-wrap w-full flex-grow">
+    <div className="flex flex-col flex-wrap w-full flex-grow gap-4 mb-[-16px]">
       <div className="w-full flex flex-col flex-grow gap-4 items-start justify-start text-center">
         <RecipientInput value={recipient} />
         <PeriodInput />
