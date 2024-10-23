@@ -48,7 +48,7 @@ export default function Page() {
 
     const cowShedCall = await cowShedSignature(txs);
     if (!cowShedCall) throw new Error("Error signing hooks");
-    submitHook({
+    await submitHook({
       target: cowShed.getFactoryAddress(),
       callData: cowShedCall,
     });
@@ -96,7 +96,7 @@ export default function Page() {
       ...permitSteps,
       {
         label: "Approve hooks",
-        description: "Approve proxy to execute the hooks in behalf of you",
+        description: "Approve proxy to execute the hooks on your behalf",
         id: "approve-hooks",
         callback: cowShedCallback,
       },

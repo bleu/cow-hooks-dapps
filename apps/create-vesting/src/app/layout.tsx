@@ -18,13 +18,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </Head>
       <RootLayout>
         <TokenContextProvider>
-          <body className="bg-transparent">
-            <FormContextProvider>
-              <div className="font-sans font-normal scrollbar-w-1 scrollbar scrollbar-thumb-color-paper-darkest scrollbar-track-color-paper-darker h-screen overflow-y-scroll">
-                {children}
-              </div>
-            </FormContextProvider>
-          </body>
+          <FormContextProvider>{children}</FormContextProvider>
         </TokenContextProvider>
       </RootLayout>
     </html>

@@ -2,6 +2,7 @@
 
 import { Button } from "@bleu/ui";
 import { useRouter } from "next/navigation";
+import { useFormContext } from "react-hook-form";
 import useSWR from "swr";
 import type { SignatureStepsProps } from "../types";
 import { Spinner } from "./Spinner";
@@ -23,6 +24,7 @@ export function WaitingSignature({
     onError: (_error) => {},
   });
 
+  const { reset } = useFormContext();
   const router = useRouter();
 
   return (
@@ -50,7 +52,13 @@ export function WaitingSignature({
             >
               Try again
             </Button>
-            <Button type="button" onClick={router.back}>
+            <Button
+              type="button"
+              onClick={() => {
+                reset(undefined, { keepValues: true });
+                router.back();
+              }}
+            >
               Back
             </Button>
           </div>

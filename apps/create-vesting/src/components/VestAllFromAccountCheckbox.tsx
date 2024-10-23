@@ -8,7 +8,7 @@ export const VestAllFromAccountCheckbox = () => {
     <Checkbox
       name="vestAllFromAccount"
       label="Use all your tokens after swap"
-      isSelectedMessage="The token buy amount may vary after the order due to price changes."
+      isSelectedMessage="The token buy amount may vary due to price changes."
       onSelectSideEffect={() => {
         setValue("amount", undefined);
         setValue("vestUserInput", false);
