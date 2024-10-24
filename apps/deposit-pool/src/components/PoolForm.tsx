@@ -52,7 +52,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
   }, [poolBalances, tokenPrices, amounts]);
 
   const updateTokenAmounts = useCallback(
-    (amount: number, address: Address) => {
+    (amount: string, address: Address) => {
       if (!poolBalances || !tokenPrices || !pool) return;
 
       const proportionalAmounts = calculateProportionalTokenAmounts({
@@ -67,9 +67,11 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
         if (address.toLowerCase() === tokenAmountAddress) continue;
 
         const tokenAmountKey = `amounts.${tokenAmountAddress}` as const;
-        const calculatedAmount = Number(
-          formatUnits(tokenAmount.rawAmount, tokenAmount.decimals)
+        const calculatedAmount = formatUnits(
+          tokenAmount.rawAmount,
+          tokenAmount.decimals
         );
+
         setValue(tokenAmountKey, calculatedAmount);
       }
 
@@ -88,9 +90,9 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
     );
 
   return (
-    <div className="flex flex-col gap-2">
-      <Label className="block text-sm">Add liquidity</Label>
-      <div className="flex flex-col gap-2 bg-muted text-muted-foreground rounded-xl p-2">
+    <div className="flex flex-col w-full items-center gap-1">
+      <Label className="block text-md mt-1">Add liquidity</Label>
+      <div className="flex flex-col gap-2">
         {poolBalances.map((poolBalance, index) => (
           <TokenAmountInput
             key={poolBalance.token.address}
@@ -100,7 +102,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
           />
         ))}
       </div>
-      <div className="flex flex-row justify-between border border-muted px-5 py-2 mb-3 rounded-xl text-md">
+      <div className="flex w-full flex-row justify-between border border-muted px-5 py-2 mb-3 rounded-xl text-md">
         <span>Total</span>
         <span className="text-right">
           ${totalUsd >= 0 ? formatNumber(totalUsd, 2) : "0"}
@@ -108,9 +110,9 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
       </div>
       <Button
         type="submit"
-        className="my-2 rounded-xl text-lg min-h-[58px] font-semibold"
+        className="my-2 rounded-xl text-lg min-h-[58px] font-semibold w-full"
         loading={isSubmitting}
-        disabled={!referenceAmount || referenceAmount <= 0}
+        disabled={!referenceAmount || referenceAmount === "0"}
         loadingText="Creating hook..."
       >
         {context?.hookToEdit ? "Update post-hook" : "Add post-hook"}

@@ -24,7 +24,7 @@ export function FormContextProvider({ children }: PropsWithChildren) {
 
   const selectedPool = useMemo(
     () => pools?.find((pool) => pool.id === poolId),
-    [pools, poolId],
+    [pools, poolId]
   );
 
   const getHookInfo = useGetHookInfo(selectedPool);
@@ -34,9 +34,9 @@ export function FormContextProvider({ children }: PropsWithChildren) {
       const hookInfo = await getHookInfo(data);
       if (!hookInfo) return;
       setHookInfo(hookInfo);
-      await router.push("/signing");
+      router.push("/signing");
     },
-    [getHookInfo, setHookInfo, router],
+    [getHookInfo, setHookInfo, router]
   );
 
   return (

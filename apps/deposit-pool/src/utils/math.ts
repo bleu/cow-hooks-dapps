@@ -18,11 +18,11 @@ export function calculateProportionalTokenAmounts({
   poolBalances: IBalance[];
   pool: IPool;
   tokenAddress: Address;
-  tokenAmount: number;
+  tokenAmount: string;
 }) {
   const referenceToken = poolBalances.find(
     (balance) =>
-      balance.token.address.toLowerCase() === tokenAddress.toLowerCase(),
+      balance.token.address.toLowerCase() === tokenAddress.toLowerCase()
   );
 
   if (!referenceToken) {
@@ -34,13 +34,13 @@ export function calculateProportionalTokenAmounts({
       address: pool.address,
       totalShares: formatUnits(
         BigInt(pool.dynamicData.totalShares.toString()),
-        pool.decimals,
+        pool.decimals
       ) as `${number}`,
       tokens: poolBalances.map((balance) => ({
         address: balance.token.address.toLowerCase() as Address,
         balance: formatUnits(
           BigInt(balance.balance.toString()),
-          balance.token.decimals,
+          balance.token.decimals
         ) as `${number}`,
         decimals: balance.token.decimals,
       })),
@@ -48,10 +48,7 @@ export function calculateProportionalTokenAmounts({
     {
       address: referenceToken.token.address.toLowerCase() as Address,
       decimals: referenceToken.token.decimals,
-      rawAmount: parseUnits(
-        tokenAmount.toFixed(referenceToken.token.decimals),
-        referenceToken.token.decimals,
-      ),
-    },
+      rawAmount: parseUnits(tokenAmount, referenceToken.token.decimals),
+    }
   );
 }

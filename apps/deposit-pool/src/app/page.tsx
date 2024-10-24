@@ -75,10 +75,10 @@ export default function Page() {
         PoolItemInfo={PoolItemInfo}
         pools={pools || []}
         selectedPool={selectedPool}
-        isCheckDetailsCentered={false}
+        isCheckDetailsCentered={true}
       />
       {selectedPool && (
-        <div className="mt-2">
+        <div className="flex flex-col justify-center mt-2 w-full">
           <PoolForm pool={selectedPool} />
         </div>
       )}
