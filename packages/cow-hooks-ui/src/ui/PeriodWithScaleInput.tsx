@@ -11,7 +11,7 @@ import {
 import { InfoTooltip } from "./TooltipBase";
 
 interface IPeriodWithScaleInput extends HTMLProps<HTMLInputElement> {
-  periodScaleOptions: string[];
+  periodScaleOptions: readonly string[];
   namePeriodValue: string;
   namePeriodScale: string;
   label?: string;
@@ -73,22 +73,24 @@ export function PeriodWithScaleInput({
               <ChevronDownIcon className="h-4 w-4" />
             </div>
           </PopoverTrigger>
-          <PopoverContent className="flex flex-col absolute gap-1 top-[-44px] left-[-58px] origin-top-left bg-color-paper-darkest p-2 rounded-xl border-none">
-            {periodScaleOptions.map((periodScale) => {
-              return (
-                <button
-                  key={periodScale}
-                  type="button"
-                  className="w-[100px] h-8 p-2.5 flex justify-start items-center rounded-xl hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]"
-                  onClick={() => {
-                    setOpen(false);
-                    setValue(namePeriodScale, periodScale);
-                  }}
-                >
-                  {period > 1 ? `${periodScale}s` : periodScale}
-                </button>
-              );
-            })}
+          <PopoverContent asChild={true} className="p-0">
+            <div className="flex flex-col absolute w-fit h-fit p-2 top-[-44px] left-[-58px] gap-1 origin-top-left bg-color-paper-darker rounded-xl border-none shadow-cow shadow-black/15">
+              {periodScaleOptions.map((periodScale) => {
+                return (
+                  <button
+                    key={periodScale}
+                    type="button"
+                    className="w-[100px] h-8 p-2.5 flex justify-start items-center rounded-xl hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]"
+                    onClick={() => {
+                      setOpen(false);
+                      setValue(namePeriodScale, periodScale);
+                    }}
+                  >
+                    {period > 1 ? `${periodScale}s` : periodScale}
+                  </button>
+                );
+              })}
+            </div>
           </PopoverContent>
         </Popover>
       </div>

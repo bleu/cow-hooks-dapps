@@ -9,13 +9,13 @@ export const PeriodInput = () => {
       namePeriodValue="period"
       namePeriodScale="periodScale"
       type="number"
-      min="0.000000001"
-      step="0.000000001"
+      min="1"
+      step="1"
       max="1000000000000"
       label="Vesting Period"
       validation={{ valueAsNumber: true, required: true }}
       onKeyDown={(e) =>
-        ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
+        ["e", "E", "+", "-", ".", ","].includes(e.key) && e.preventDefault()
       }
     />
   );
