@@ -78,21 +78,22 @@ export default function Page() {
     isEditHookLoading,
   ]);
 
-  if (context?.hookToEdit && isEditHookLoading) {
-    loadHookInfo();
+  if (!context || (context?.hookToEdit && isEditHookLoading)) {
+    if (context?.hookToEdit && isEditHookLoading) loadHookInfo();
     return (
       <div className="flex items-center justify-center w-full h-full bg-transparent text-color-text-paper">
-        <Spinner size="lg" style={{ color: "gray" }} />
+        <Spinner
+          size="lg"
+          style={{
+            width: "25px",
+            height: "25px",
+            color: "gray",
+            animation: "spin 2s linear infinite",
+          }}
+        />
       </div>
     );
   }
-
-  if (!context)
-    return (
-      <div className="flex items-center justify-center w-full h-full bg-transparent text-color-text-paper">
-        <Spinner size="lg" style={{ color: "gray" }} />
-      </div>
-    );
 
   if (!context.account)
     return (
