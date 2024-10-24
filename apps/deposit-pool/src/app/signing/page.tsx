@@ -1,7 +1,5 @@
 "use client";
 
-import type { FormType } from "#/types";
-import { encodeFormData } from "#/utils/encodeFormData";
 import {
   SignatureSteps,
   WaitingSignature,
@@ -18,6 +16,8 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import type { Address } from "viem";
+import type { FormType } from "#/types";
+import { encodeFormData } from "#/utils/encodeFormData";
 
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -127,7 +127,7 @@ export default function Page() {
       ...permitSteps,
       {
         label: "Approve and add pre-hook",
-        description: "Approve proxy to execute the hook in behalf of you",
+        description: "Approve proxy to execute the hook on your behalf",
         id: "approve-hooks",
         callback: cowShedCallback,
       },

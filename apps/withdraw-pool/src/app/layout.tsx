@@ -1,6 +1,6 @@
 "use client";
 
-import { IFrameContextProvider, Scrollbar } from "@bleu/cow-hooks-ui";
+import { RootLayout } from "@bleu/cow-hooks-ui";
 import { UserPoolContextProvider } from "#/context/userPools";
 import "@bleu/cow-hooks-ui/global.css";
 import Head from "next/head";
@@ -14,15 +14,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Head>
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <body>
-        <IFrameContextProvider>
-          <Scrollbar>
-            <UserPoolContextProvider>
-              <FormContextProvider>{children}</FormContextProvider>
-            </UserPoolContextProvider>
-          </Scrollbar>
-        </IFrameContextProvider>
-      </body>
+      <RootLayout>
+        <UserPoolContextProvider>
+          <FormContextProvider>{children}</FormContextProvider>
+        </UserPoolContextProvider>
+      </RootLayout>
     </html>
   );
 }

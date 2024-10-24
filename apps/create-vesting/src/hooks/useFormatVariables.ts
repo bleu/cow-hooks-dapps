@@ -13,7 +13,7 @@ export const useFormatVariables = ({
 
   const userBalanceFloat = useMemo(
     () =>
-      userBalance && tokenDecimals
+      userBalance !== undefined && tokenDecimals
         ? Number(userBalance) / 10 ** Number(tokenDecimals)
         : undefined,
     [userBalance, tokenDecimals],
@@ -21,7 +21,7 @@ export const useFormatVariables = ({
 
   const swapAmountFloat = useMemo(
     () =>
-      context?.orderParams?.buyAmount && tokenDecimals
+      context?.orderParams?.buyAmount !== undefined && tokenDecimals
         ? Number(context?.orderParams?.buyAmount) / 10 ** Number(tokenDecimals)
         : undefined,
     [context?.orderParams?.buyAmount, tokenDecimals],
@@ -29,7 +29,7 @@ export const useFormatVariables = ({
 
   const allAfterSwapFloat = useMemo(
     () =>
-      userBalanceFloat && swapAmountFloat
+      userBalanceFloat !== undefined && swapAmountFloat !== undefined
         ? userBalanceFloat + swapAmountFloat
         : undefined,
     [userBalanceFloat, swapAmountFloat],
@@ -37,7 +37,7 @@ export const useFormatVariables = ({
 
   const formattedUserBalance = useMemo(
     () =>
-      userBalanceFloat
+      userBalanceFloat !== undefined
         ? formatNumber(userBalanceFloat, 6, "decimal", "standard", 0.000001)
         : "",
     [userBalanceFloat],
@@ -45,7 +45,7 @@ export const useFormatVariables = ({
 
   const formattedSwapAmount = useMemo(
     () =>
-      swapAmountFloat
+      swapAmountFloat !== undefined
         ? formatNumber(swapAmountFloat, 6, "decimal", "standard", 0.000001)
         : "",
     [swapAmountFloat],
@@ -53,7 +53,7 @@ export const useFormatVariables = ({
 
   const formattedAllAfterSwap = useMemo(
     () =>
-      allAfterSwapFloat
+      allAfterSwapFloat !== undefined
         ? formatNumber(allAfterSwapFloat, 6, "decimal", "standard", 0.000001)
         : "",
     [allAfterSwapFloat],

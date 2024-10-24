@@ -7,7 +7,7 @@ import {
 import {
   type IHooksInfo,
   type IPool,
-  minimalPoolToPoolState,
+  fetchPoolState,
   useIFrameContext,
   useTokensAllowances,
 } from "@bleu/cow-hooks-ui";
@@ -89,7 +89,7 @@ export function useGetHookInfo(pool?: IPool) {
     async (params: FormType) => {
       if (!pool || !context || !context.account || !cowShedProxy)
         throw new Error("Missing context");
-      const poolState = minimalPoolToPoolState(pool);
+      const poolState = await fetchPoolState(pool.id, context.chainId);
 
       const referenceTokenDecimals = pool.allTokens.find(
         (token) =>

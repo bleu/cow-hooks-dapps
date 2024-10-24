@@ -1,20 +1,13 @@
 "use client";
 
-import {
-  ButtonPrimary,
-  ClipBoardButton,
-  type HookDappContextAdjusted,
-  Info,
-  Spinner,
-  Wrapper,
-  useIFrameContext,
-} from "@bleu/cow-hooks-ui";
+import { Info, Spinner, useIFrameContext } from "@bleu/cow-hooks-ui";
 import { useCallback, useState } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
+import { useFormContext, useFormState, useWatch } from "react-hook-form";
 
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { AmountInput } from "#/components/AmountInput";
+import { Button } from "#/components/Button";
+import { InfoContent } from "#/components/InfoContent";
 import { PeriodInput } from "#/components/PeriodInput";
 import { RecipientInput } from "#/components/RecipientInput";
 import { VestAllFromAccountCheckbox } from "#/components/VestAllFromAccountCheckbox";
@@ -23,19 +16,20 @@ import { VestUserInputCheckbox } from "#/components/VestUserInputCheckbox";
 import { useTokenContext } from "#/context/token";
 import { useFormatVariables } from "#/hooks/useFormatVariables";
 import { decodeCalldata } from "#/utils/decodeCalldata";
+import type { CreateVestingFormData } from "#/utils/schema";
 
 export default function Page() {
   const { context, publicClient } = useIFrameContext();
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
-
   const { token } = useTokenContext();
-
-  const { control, setValue } = useFormContext();
+  const { control, setValue } = useFormContext<CreateVestingFormData>();
+  const { isSubmitting, isSubmitSuccessful } = useFormState({ control });
 
   const vestUserInput = useWatch({ control, name: "vestUserInput" });
   const vestAllFromSwap = useWatch({ control, name: "vestAllFromSwap" });
   const vestAllFromAccount = useWatch({ control, name: "vestAllFromAccount" });
   const amount = useWatch({ control, name: "amount" });
+  const recipient = useWatch({ control, name: "recipient" });
 
   const {
     userBalanceFloat,
@@ -94,15 +88,23 @@ export default function Page() {
     );
 
   if (!context.account)
-    return <span className="mt-10 text-center">Connect your wallet first</span>;
-
-  if (!context?.orderParams?.buyTokenAddress)
     return (
-      <span className="mt-10 text-center">Provide a buy token in swap</span>
+      <span className="block w-full mt-10 text-center">
+        Connect your wallet first
+      </span>
+    );
+
+  if (!context?.orderParams?.buyAmount || !context?.orderParams?.buyAmount)
+    return (
+      <span className="block w-full mt-10 text-center">
+        Provide a buy token and amount in swap
+      </span>
     );
 
   if (!ALL_SUPPORTED_CHAIN_IDS.includes(context.chainId)) {
-    return <span className="mt-10 text-center">Unsupported chain</span>;
+    return (
+      <span className="block w-full mt-10 text-center">Unsupported chain</span>
+    );
   }
 
   const amountPreview = vestAllFromSwap
@@ -118,9 +120,18 @@ export default function Page() {
     !!allAfterSwapFloat &&
     amount > allAfterSwapFloat;
 
+  const buttonDisabled =
+    isOutOfFunds ||
+    !recipient ||
+    (!amount && vestUserInput) ||
+    isSubmitting ||
+    isSubmitSuccessful;
+
+  const isBuildingHook = isSubmitting || isSubmitSuccessful;
+
   return (
-    <Wrapper>
-      <div className="flex flex-col flex-grow py-4 gap-4 items-start justify-start text-center">
+    <div className="flex flex-col flex-wrap w-full flex-grow gap-4 mb-[-16px]">
+      <div className="w-full flex flex-col flex-grow gap-4 items-start justify-start text-center">
         <RecipientInput />
         <PeriodInput />
         <AmountInput
@@ -133,51 +144,18 @@ export default function Page() {
           userBalanceFloat={userBalanceFloat}
         />
         <div className="flex flex-col gap-y-2">
-          <VestUserInputCheckbox />
           <VestAllFromSwapCheckbox />
           <VestAllFromAccountCheckbox />
+          <VestUserInputCheckbox />
         </div>
       </div>
       <Info content={<InfoContent />} />
-      <ButtonPrimary type="submit" disabled={isOutOfFunds}>
-        <ButtonText context={context} isOutOfFunds={isOutOfFunds} />
-      </ButtonPrimary>
-    </Wrapper>
+      <Button
+        context={context}
+        isOutOfFunds={isOutOfFunds}
+        isBuildingHook={isBuildingHook}
+        disabled={buttonDisabled}
+      />
+    </div>
   );
 }
-
-const InfoContent = () => {
-  return (
-    <span className="cursor-default">
-      To access Vesting Post-hook contract after swap, connect with the
-      recipient wallet at{" "}
-      <ClipBoardButton
-        buttonText="llamapay.io/vesting"
-        contentToCopy="https://llamapay.io/vesting"
-        className="flex items-center justify-center gap-1 cursor-pointer"
-      />
-    </span>
-  );
-};
-
-const ButtonText = ({
-  context,
-  isOutOfFunds,
-}: { context: HookDappContextAdjusted; isOutOfFunds: boolean }) => {
-  if (isOutOfFunds)
-    return (
-      <span className="flex items-center justify-center gap-2">
-        <ExclamationTriangleIcon className="w-6 h-6" />
-        You won't have enough funds
-      </span>
-    );
-
-  if (context?.hookToEdit && context?.isPreHook)
-    return <span>Update Pre-hook</span>;
-  if (context?.hookToEdit && !context?.isPreHook)
-    return <span>Update Post-hook</span>;
-  if (!context?.hookToEdit && context?.isPreHook)
-    return <span>Add Pre-hook</span>;
-  if (!context?.hookToEdit && !context?.isPreHook)
-    return <span>Add Post-hook</span>;
-};

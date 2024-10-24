@@ -41,7 +41,7 @@ export function getSingleBalancerGaugeArgs({
       from: cowShedProxy,
       to: cowShedProxy,
       amount: amountToWithdraw.toBigInt(),
-      symbol: "pool stacked", // TODO: get symbol from token
+      symbol: "pool staked", // TODO: get symbol from token
     },
     {
       gaugeAddress,
@@ -86,7 +86,7 @@ export function useGetBalancerGaugeArgs(
               stackedBalanceAlreadyWithdraw,
             ),
             maxBptToWithdraw: BigNumber.from(stakedBalance.balance),
-            gaugeAddress: poolData.address,
+            gaugeAddress: stakedBalance.stakingId as Address,
             context,
             cowShedProxy,
           });

@@ -52,7 +52,7 @@ export function PeriodWithScaleInput({
           {extraLabelElement}
         </div>
       )}
-      <div className="flex items-center justify-start h-12 px-1 py-2.5 bg-color-paper-darker rounded-xl">
+      <div className="flex items-center justify-start h-12 p-2 bg-color-paper-darker rounded-xl">
         <input
           className={cn(
             "outline-none text-left w-36 max-h-10 px-2.5 py-0 border-none rounded-l-xl text-base text-color-text-paper bg-inherit [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
@@ -62,9 +62,9 @@ export function PeriodWithScaleInput({
           {...props}
         />
         <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger className="px-1.5">
+          <PopoverTrigger className="p-0 [outline:none]">
             <div
-              className="w-[100px] h-8 p-2.5 flex items-center justify-between rounded-xl text-color-text-paper bg-color-paper hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out"
+              className="w-[100px] h-8 p-2.5 flex items-center justify-between rounded-xl text-color-text-paper bg-color-paper hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]"
               onClick={() => setOpen(true)}
             >
               <span className="m-0 p-0 min-h-fit">
@@ -73,13 +73,13 @@ export function PeriodWithScaleInput({
               <ChevronDownIcon className="h-4 w-4" />
             </div>
           </PopoverTrigger>
-          <PopoverContent className="flex flex-col relative top-[-44px] left-[0px] w-[120px] bg-color-paper-darkest px-[10px] py-[8px] rounded-xl border-none">
+          <PopoverContent className="flex flex-col absolute gap-1 top-[-44px] left-[-58px] origin-top-left bg-color-paper-darkest p-2 rounded-xl border-none">
             {periodScaleOptions.map((periodScale) => {
               return (
                 <button
                   key={periodScale}
                   type="button"
-                  className="w-[100px] h-8 p-2.5 flex justify-start items-center rounded-xl hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out"
+                  className="w-[100px] h-8 p-2.5 flex justify-start items-center rounded-xl hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]"
                   onClick={() => {
                     setOpen(false);
                     setValue(namePeriodScale, periodScale);

@@ -1,7 +1,5 @@
-import { type Address, type PublicClient, decodeFunctionData } from "viem";
-import { cowAmmAbi } from "./abis/cowAmmAbi";
+import { decodeFunctionData } from "viem";
 import { cowShedAbi } from "./abis/cowShedAbi";
-import { getPctFromValue } from "./math";
 import type { withdrawSchema } from "./schema";
 
 interface ICalldata {
@@ -13,13 +11,11 @@ interface ICalldata {
 }
 
 export async function decodeExitPoolHookCalldata(
-  string: `0x${string}`,
-  publicClient: PublicClient,
-  user: Address,
+  callData: `0x${string}`,
 ): Promise<typeof withdrawSchema._type> {
   const decodedFunctionData = decodeFunctionData({
     abi: cowShedAbi,
-    data: string,
+    data: callData,
   });
 
   if (decodedFunctionData.functionName !== "executeHooks") {
@@ -32,34 +28,10 @@ export async function decodeExitPoolHookCalldata(
 
   const calls = decodedFunctionData.args[0] as ICalldata[];
 
-  const lastCallIndex = calls.length - 1;
+  const lastCallIndex = calls.length - 3;
   const call = calls[lastCallIndex];
 
-  const decodedCoWAmmCallData = decodeFunctionData({
-    abi: cowAmmAbi,
-    data: call.callData as `0x${string}`,
-  });
-
-  const poolAddress = call.target;
-
-  if (decodedCoWAmmCallData.functionName !== "exitPool") {
-    throw new Error("Invalid decoded function name");
-  }
-
-  if (!decodedCoWAmmCallData.args?.length) {
-    throw new Error("Invalid decoded args name");
-  }
-
-  const bptAmountToExit = decodedCoWAmmCallData.args[0] as bigint;
-
-  const bptUserPoolBalance = (await publicClient.readContract({
-    address: poolAddress as Address,
-    abi: cowAmmAbi,
-    functionName: "balanceOf",
-    args: [user],
-  })) as bigint;
-
-  const withdrawPct = getPctFromValue(bptAmountToExit, bptUserPoolBalance);
+  const withdrawPct = Number(`0x${callData.slice(-2)}`);
 
   return {
     poolId: call.target,

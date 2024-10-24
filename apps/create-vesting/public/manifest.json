@@ -18,22 +18,22 @@
     }
   ],
   "orientation": "portrait",
-  "name": "Create Vesting",
-  "short_name": "Create Vesting",
+  "name": "Create LlamaPay Vesting",
+  "short_name": "Create LlamaPay Vesting",
   "start_url": ".",
   "theme_color": "#ffffff",
   "cow_hook_dapp": {
-    "id": "9da82fb07aa925c1a83fd0a97957d03a8787c6bd115e247784f97fcedb243bf7",
-    "name": "Create Vesting",
+    "id": "a316488cecc23fde8c39d3e748e0cb12bd4d18305826d36576d4bba74bd97baf",
+    "name": "Create LlamaPay Vesting",
     "descriptionShort": "Create a LlamaPay vesting contract",
-    "description": "Create Vesting is a powerful hook designed to streamline the process of setting up a LlamaPay vesting contract right after your swap.",
+    "description": "This hook allows you to easily set up vesting contracts with LlamaPay. Enter the recipient’s address or ENS name, then choose how much to transfer: the token buy will be automatically detected by the hook and the contracts will be linked to your LlamaPay dashboard for seamless tracking.",
     "version": "0.0.1",
-    "website": "https://github.com/bleu/cow-hooks-dapps",
-    "image": "http://127.0.0.1:3000/llama-pay-icon.png",
-    "walletCompatibility": ["EOA", "Smart contract"],
+    "website": "https://llamapay.io/vesting",
+    "image": "https://cow-hooks-dapps-create-vesting.vercel.app/llama-pay-icon.png",
+    "walletCompatibility": ["EOA"],
     "conditions": {
       "position": "post",
-      "smartContractWalletSupported": true
+      "smartContractWalletSupported": false
     }
   }
 }

@@ -69,7 +69,7 @@ export default function Page() {
   }
 
   return (
-    <div className="w-full flex flex-col gap-1 py-1 px-4">
+    <div className="w-full flex flex-col py-1 px-4">
       <PoolsDropdownMenu
         onSelect={(pool: IPool) => setValue("poolId", pool.id)}
         PoolItemInfo={PoolItemInfo}
@@ -78,7 +78,7 @@ export default function Page() {
         isCheckDetailsCentered={false}
       />
       {selectedPool && (
-        <div className="size-full flex flex-col gap-2">
+        <div className="size-full flex flex-col gap-2 mt-2">
           <TokenAmountInputs pool={selectedPool} />
         </div>
       )}

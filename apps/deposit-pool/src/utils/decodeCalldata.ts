@@ -1,5 +1,5 @@
-import type { FormType } from "#/types";
 import { hexToNumber } from "viem";
+import type { FormType } from "#/types";
 
 export const decodeCalldata = (string: `0x${string}`): FormType => {
   const encodedFormData = string.slice(-288);
@@ -25,7 +25,6 @@ export const decodeCalldata = (string: `0x${string}`): FormType => {
     amounts,
     referenceTokenAddress,
   } as FormType;
-  console.log({ result });
 
   return result;
 };

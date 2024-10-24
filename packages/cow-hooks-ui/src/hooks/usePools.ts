@@ -1,4 +1,4 @@
-import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
+import { BALANCER_GQL_CLIENT, BalancerChainName } from "@bleu/utils";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { gql } from "graphql-request";
 import useSWR from "swr";
@@ -34,6 +34,7 @@ interface IQuery {
       totalBalance: string;
       walletBalance: string;
       totalBalanceUsd: number;
+      walletBalanceUsd: number;
       stakedBalances: {
         balance: string;
         stakingId: string;
@@ -86,6 +87,7 @@ const USER_POOLS_QUERY = gql`
         totalBalance
         walletBalance
         totalBalanceUsd
+        walletBalanceUsd
         stakedBalances {
           balance
           stakingId
@@ -111,7 +113,7 @@ export function usePools(
     async ([where, chainId]): Promise<IPool[]> => {
       if (!chainId) return [];
       const chainName = BalancerChainName[chainId];
-      return await GQL_CLIENT[chainId]
+      return await BALANCER_GQL_CLIENT[chainId]
         .request<IQuery>(USER_POOLS_QUERY, {
           where: {
             ...where,
@@ -125,22 +127,25 @@ export function usePools(
             userBalance: {
               ...pool.userBalance,
               walletBalance: parseUnits(
-                pool.userBalance.walletBalance,
+                Number(pool.userBalance.walletBalance).toFixed(pool.decimals),
                 pool.decimals,
               ),
               totalBalance: parseUnits(
-                pool.userBalance.totalBalance,
+                Number(pool.userBalance.totalBalance).toFixed(pool.decimals),
                 pool.decimals,
               ),
               stakedBalances: pool.userBalance.stakedBalances.map((staked) => ({
-                balance: parseUnits(staked.balance, pool.decimals),
+                balance: parseUnits(
+                  Number(staked.balance).toFixed(pool.decimals),
+                  pool.decimals,
+                ),
                 stakingId: staked.stakingId,
               })),
             },
             dynamicData: {
               ...pool.dynamicData,
               totalShares: parseUnits(
-                pool.dynamicData.totalShares,
+                Number(pool.dynamicData.totalShares).toFixed(pool.decimals),
                 pool.decimals,
               ),
             },

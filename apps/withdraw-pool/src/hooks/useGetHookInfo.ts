@@ -6,34 +6,35 @@ import {
 import { useCallback } from "react";
 import type { IHooksInfo } from "#/types";
 import { multiplyValueByPct } from "#/utils/math";
-import { useGetBalancerGaugeArgs } from "./useGetBalancerGaugeArgs";
+// import { useGetBalancerGaugeArgs } from "./useGetBalancerGaugeArgs";
 import { useGetPoolWithdrawArgs } from "./useGetPoolWithdrawArgs";
 
 export function useGetHookInfo(pool?: IPool) {
   const getPoolWithdrawArgs = useGetPoolWithdrawArgs(pool);
-  const getBalancerGaugeArgs = useGetBalancerGaugeArgs(pool);
+  // Removed gauge related code
+  // const getBalancerGaugeArgs = useGetBalancerGaugeArgs(pool);
 
   return useCallback(
     async (withdrawPct: number): Promise<IHooksInfo | undefined> => {
       if (!pool) return;
 
       const bptAmount = multiplyValueByPct(
-        pool.userBalance.totalBalance,
+        pool.userBalance.walletBalance,
         withdrawPct,
       );
-      const balancerGaugeArgs = getBalancerGaugeArgs(bptAmount);
-      const poolWithdrawArgs = getPoolWithdrawArgs(bptAmount);
+      // const balancerGaugeArgs = getBalancerGaugeArgs(bptAmount);
+      const poolWithdrawArgs = await getPoolWithdrawArgs(bptAmount);
       if (!poolWithdrawArgs) return;
 
-      const argsArray = [...balancerGaugeArgs, ...poolWithdrawArgs];
+      // const argsArray = [...balancerGaugeArgs, ...poolWithdrawArgs];
 
       const txs = await Promise.all(
-        argsArray.map((arg) => {
+        poolWithdrawArgs.map((arg) => {
           return TransactionFactory.createRawTx(arg.type, arg);
         }),
       );
 
-      const permitData = argsArray
+      const permitData = poolWithdrawArgs
         .filter((arg) => arg.type === TRANSACTION_TYPES.ERC20_TRANSFER_FROM)
         .map((arg) => {
           return {
@@ -47,6 +48,6 @@ export function useGetHookInfo(pool?: IPool) {
         permitData: permitData,
       };
     },
-    [getPoolWithdrawArgs, getBalancerGaugeArgs, pool],
+    [getPoolWithdrawArgs, pool],
   );
 }

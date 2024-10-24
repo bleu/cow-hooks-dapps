@@ -7,7 +7,7 @@ export function SubmitButton({ poolId }: { poolId?: string }) {
   const { control } = useFormContext();
   const { context } = useIFrameContext();
 
-  const { isSubmitting } = useFormState({ control });
+  const { isSubmitting, isSubmitSuccessful } = useFormState({ control });
 
   const withdrawPct = useWatch({ control, name: "withdrawPct" });
   const buttonProps = useMemo(() => {
@@ -27,7 +27,7 @@ export function SubmitButton({ poolId }: { poolId?: string }) {
         type="submit"
         className="my-2 w-full rounded-2xl text-lg h-[58px]"
         disabled={buttonProps.disabled}
-        loading={isSubmitting}
+        loading={isSubmitting || isSubmitSuccessful}
         loadingText="Creating hook..."
       >
         {buttonProps.message}

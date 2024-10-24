@@ -2,10 +2,11 @@
 
 import { cowTokenList } from "@bleu/utils";
 import Image from "next/image";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { Token } from "@uniswap/sdk-core";
+import { useTokenLogoContext } from "./context/tokenLogo";
 
 type ImageAttributes = React.DetailedHTMLProps<
   React.ImgHTMLAttributes<HTMLImageElement>,
@@ -60,7 +61,8 @@ export const TokenLogo = ({
   className,
   quality,
 }: ImageFallbackProps) => {
-  const [index, setIndex] = useState(0);
+  const { getTokenLogoSrcIndex, setTokenLogoSrcIndex } = useTokenLogoContext();
+  const [index, setIndex] = useState(getTokenLogoSrcIndex(token.address));
 
   const [reveal, setReveal] = useState(false);
   const visibility = reveal ? "visible" : "hidden";
@@ -82,25 +84,32 @@ export const TokenLogo = ({
   };
 
   return (
-    <div
-      style={{
-        width: `${width}px`,
-        height: `${height}px`,
-        position: "relative",
-      }}
-    >
-      <Image
-        className={className}
-        width={Number(width)}
-        height={Number(height)}
-        quality={quality}
-        alt={alt || ""}
-        style={{ visibility }}
-        src={imagesSrc[index] || FALLBACK_SRC}
-        onError={onError}
-        onLoadingComplete={() => setReveal(true)}
-        unoptimized
-      />
-    </div>
+    <Suspense fallback={<div style={{ width, height }} />}>
+      <div
+        style={{
+          width: `${width}px`,
+          height: `${height}px`,
+          position: "relative",
+          borderRadius: "50%",
+          overflow: "hidden",
+        }}
+      >
+        <Image
+          className={className}
+          quality={quality}
+          layout="fill"
+          objectFit="cover"
+          alt={alt || ""}
+          style={{ visibility }}
+          src={imagesSrc[index] as string}
+          onError={onError}
+          onLoadingComplete={() => {
+            setReveal(true);
+            setTokenLogoSrcIndex(token.address, index);
+          }}
+          unoptimized
+        />
+      </div>
+    </Suspense>
   );
 };

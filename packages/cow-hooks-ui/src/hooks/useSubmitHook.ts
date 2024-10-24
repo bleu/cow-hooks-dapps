@@ -31,6 +31,11 @@ export function useSubmitHook({
           data: hook.callData as `0x${string}`,
         })
         .catch(() => {
+          console.error("Failed to estimated hook gas", {
+            chainId: context.chainId,
+            calldata: hook.callData,
+            target: hook.target,
+          });
           throw new Error("Failed to estimate hook gas");
         });
 

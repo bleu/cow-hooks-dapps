@@ -65,43 +65,17 @@ export function useHandleTokenAllowance({
         account,
       );
 
-      try {
-        const [permitInfo, nonce] = await Promise.all([
-          getTokenPermitInfo({
-            spender,
-            tokenAddress,
-            chainId,
-            provider: jsonRpcProvider,
-          }),
-          eip2162Utils.getTokenNonce(tokenAddress, account),
-        ]);
-
-        if (!permitInfo || !checkIsPermitInfo(permitInfo)) {
-          await handleTokenApprove({
-            signer,
-            spender,
-            tokenAddress,
-            amount: maxUint256,
-          });
-          return;
-        }
-
-        const hook = await generatePermitHook({
-          chainId,
-          inputToken: {
-            address: tokenAddress,
-            name: tokenName,
-          },
+      const [permitInfo, nonce] = await Promise.all([
+        getTokenPermitInfo({
           spender,
+          tokenAddress,
+          chainId,
           provider: jsonRpcProvider,
-          permitInfo,
-          eip2162Utils: eip2162Utils,
-          account,
-          nonce,
-        });
-        if (!hook) throw new Error("Couldn't build permit");
-        return hook;
-      } catch (_error) {
+        }),
+        eip2162Utils.getTokenNonce(tokenAddress, account),
+      ]).catch(() => [undefined, undefined]);
+
+      if (!permitInfo || !checkIsPermitInfo(permitInfo)) {
         await handleTokenApprove({
           signer,
           spender,
@@ -110,6 +84,22 @@ export function useHandleTokenAllowance({
         });
         return;
       }
+
+      const hook = await generatePermitHook({
+        chainId,
+        inputToken: {
+          address: tokenAddress,
+          name: tokenName,
+        },
+        spender,
+        provider: jsonRpcProvider,
+        permitInfo,
+        eip2162Utils: eip2162Utils,
+        account,
+        nonce,
+      });
+      if (!hook) throw new Error("User rejected permit");
+      return hook;
     },
     [jsonRpcProvider, context, publicClient, spender, signer, web3Provider],
   );

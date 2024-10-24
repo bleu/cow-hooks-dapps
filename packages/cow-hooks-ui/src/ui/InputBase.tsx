@@ -28,7 +28,7 @@ export const Input = React.forwardRef<HTMLInputElement, IInput>(
     className,
     ...props
   }: IInput) => {
-    const { register, control, setValue } = useFormContext();
+    const { register, control } = useFormContext();
 
     const { errors } = useFormState({ control });
 
@@ -53,7 +53,6 @@ export const Input = React.forwardRef<HTMLInputElement, IInput>(
         <InputPrimitive
           {...props}
           {...register(name, validation)}
-          onChange={(e) => setValue(name, e.target.value.trim())}
           className={cn(
             "w-full shadow-none rounded-md placeholder:opacity-50 border border-border",
             className,

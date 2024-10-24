@@ -65,6 +65,7 @@ export interface IPool {
     totalBalance: BigNumberish;
     walletBalance: BigNumberish;
     totalBalanceUsd: number;
+    walletBalanceUsd: number;
     stakedBalances: {
       balance: BigNumberish;
       stakingId: string;

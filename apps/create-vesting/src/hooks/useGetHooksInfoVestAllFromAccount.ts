@@ -23,7 +23,9 @@ export const useGetHooksInfoVestAllFromAccount = () => {
 
       if (!context?.account || !cowShedProxy) return;
 
-      const periodInSeconds = period * scaleToSecondsMapping[periodScale];
+      const periodInSeconds = Math.ceil(
+        period * scaleToSecondsMapping[periodScale],
+      );
       const tokenAddress = token.address as Address;
       const tokenSymbol = token.symbol ?? "";
 

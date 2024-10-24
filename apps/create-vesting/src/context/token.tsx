@@ -41,7 +41,7 @@ export function TokenContextProvider({ children }: PropsWithChildren) {
             tokenSymbol,
           ) as TokenWithBalance)
         : undefined;
-    if (!token || !userBalance) return;
+    if (!token || userBalance === undefined) return;
     token.userBalance = userBalance;
     return token;
   }, [context?.chainId, tokenAddress, tokenDecimals, tokenSymbol, userBalance]);

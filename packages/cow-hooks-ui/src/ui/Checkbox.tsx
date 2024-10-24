@@ -1,4 +1,4 @@
-import { Input, Label } from "@bleu/ui";
+import { Input, Label, cn } from "@bleu/ui";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { useFormContext, useWatch } from "react-hook-form";
 
@@ -7,7 +7,7 @@ export const Checkbox = ({
   label,
   isSelectedMessage,
   onSelectSideEffect,
-  radius = 14,
+  radius = 7,
   ...props
 }: {
   name: string;
@@ -19,9 +19,17 @@ export const Checkbox = ({
   const { register, control } = useFormContext();
   const isSelected = useWatch({ control, name });
 
+  const center = radius;
+  const secondRadius = (radius * 3) / 4;
+  const thirdRadius = (radius * 3) / 8;
+  const viewBoxSize = radius * 2;
+
   return (
     <div className="flex flex-col items-start justify-start">
-      <div className="flex items-center">
+      <Label
+        htmlFor={name}
+        className="flex items-center hover:text-primary [&>div>svg>circle#circle1]:hover:fill-primary [&>div>svg>circle#circle3]:hover:fill-primary"
+      >
         <div className="relative p-1">
           <Input
             type="checkbox"
@@ -35,47 +43,43 @@ export const Checkbox = ({
             className="sr-only" // This hides the input visually but keeps it accessible
             {...props}
           />
-          <Label
-            htmlFor={name}
-            style={{
-              width: `${radius}px`,
-              height: `${radius}px`,
-            }}
-            className={`
-            flex items-center justify-center rounded-full border-none cursor-pointer
-            bg-color-primary-lighter hover:bg-color-primary [&>span>span]:hover:bg-color-primary
-          `}
+          <svg
+            width={viewBoxSize}
+            height={viewBoxSize}
+            viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
+            className="overflow-visible"
           >
-            <span
-              // It's weird, but tailwind classes don't work for this
-              style={{
-                width: `${(radius * 3) / 4}px`,
-                height: `${(radius * 3) / 4}px`,
-              }}
-              className={`
-              flex items-center justify-center rounded-full bg-color-paper
-              transition-opacity duration-200 ease-in-out
-            `}
-            >
-              <span
-                style={{
-                  width: `${(radius * 3) / 8}px`,
-                  height: `${(radius * 3) / 8}px`,
-                }}
-                className={`
-              block rounded-full bg-color-primary-lighter
-              transition-opacity duration-200 ease-in-out
-              ${isSelected ? "opacity-100" : "opacity-0"}
-            `}
-              />
-            </span>
-          </Label>
+            <title>rounded-checkbox</title>
+            <circle
+              id="circle1"
+              cx={center}
+              cy={center}
+              r={radius}
+              className="fill-color-primary-lighter transition-opacity"
+            />
+            <circle
+              id="circle2"
+              cx={center}
+              cy={center}
+              r={secondRadius}
+              className="fill-color-paper transition-opacity"
+            />
+            <circle
+              id="circle3"
+              cx={center}
+              cy={center}
+              r={thirdRadius}
+              className={cn("fill-color-primary-lighter transition-opacity", {
+                "opacity-0": !isSelected,
+              })}
+            />
+          </svg>
         </div>
-        <Label>{label}</Label>
-      </div>
+        <span className="cursor-pointer">{label}</span>
+      </Label>
       {isSelected && isSelectedMessage && (
-        <span className="flex items-center ml-4 pt-1 font-normal text-xs opacity-70">
-          <ExclamationTriangleIcon className="w-4 h-4 mr-1" />
+        <span className="ml-4 pt-1 font-normal text-xs opacity-70">
+          <ExclamationTriangleIcon className="w-4 h-4 mr-1 inline" />
           {isSelectedMessage}
         </span>
       )}

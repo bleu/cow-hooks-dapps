@@ -1,5 +1,4 @@
 "use client";
-
 import { cn } from "@bleu/ui";
 import { BalancerChainName } from "@bleu/utils";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -51,22 +50,19 @@ export function PoolsDropdownMenu({
   }, [selectedPool]);
 
   return (
-    <div className="flex flex-col items-center gap-2 py-2">
+    <div className="flex w-full flex-col items-center gap-2">
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger
-          className={cn(
-            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm text-foreground group",
-            selectedPool
-              ? "bg-muted shadow-sm text-foreground hover:bg-primary hover:text-primary-foreground"
-              : "bg-primary text-primary-foreground hover:bg-color-primary-lighter",
-          )}
+          className={
+            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-muted shadow-sm text-foreground group hover:bg-primary hover:text-primary-foreground"
+          }
           onClick={() => setOpen(true)}
         >
           {selectedPool ? <PoolLogo pool={selectedPool} /> : "Select a pool"}
           <ChevronDownIcon className="size-4" />
         </Dialog.Trigger>
         <Dialog.Portal>
-          <Dialog.Content className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] border bg-background p-[15px] w-screen h-screen bg-background border-none flex flex-col gap-2">
+          <Dialog.Content className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] border p-[15px] w-screen h-screen bg-background border-none flex flex-col gap-2">
             <div className="flex items-center gap-2">
               <Dialog.Close className="cursor-pointer hover:opacity-50">
                 <ArrowLeftIcon className="size-5" />
@@ -83,7 +79,7 @@ export function PoolsDropdownMenu({
               value={search}
             >
               <CommandInput
-                className="bg-muted mb-2 rounded-xl placeholder:text-muted-foreground/50 text-md px-2 py-2 mb-5"
+                className="bg-muted rounded-xl placeholder:text-muted-foreground/50 text-md px-2 py-2 mb-5"
                 placeholder="Search name or paste address"
               />
               <div className="w-full h-[1px] bg-muted my-1" />

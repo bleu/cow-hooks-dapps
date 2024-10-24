@@ -4,7 +4,7 @@ import { gql } from "graphql-request";
 import useSWR from "swr";
 
 import type { IBalance } from "@bleu/cow-hooks-ui";
-import { BalancerChainName, GQL_CLIENT } from "@bleu/utils";
+import { BALANCER_GQL_CLIENT, BalancerChainName } from "@bleu/utils";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import type { Address } from "viem";
@@ -21,8 +21,8 @@ interface IQuery {
     totalShares: `${number}`;
   };
   userBalance: {
-    totalBalance: `${number}`;
-    totalBalanceUsd: number;
+    walletBalance: `${number}`;
+    walletBalanceUsd: number;
   };
   poolTokens: {
     id: `0x${string}`;
@@ -50,8 +50,8 @@ export const POOL_QUERY = gql`
         totalShares
       }
       userBalance {
-        totalBalance
-        totalBalanceUsd
+        walletBalance
+        walletBalanceUsd
       }
       poolTokens {
         id
@@ -74,7 +74,7 @@ async function fetchUserPoolBalance(
 ): Promise<IBalance[]> {
   if (!user || !chainId || !poolId) return [];
   const chainName = BalancerChainName[chainId];
-  const result = await GQL_CLIENT[chainId].request<{
+  const result = await BALANCER_GQL_CLIENT[chainId].request<{
     pool: IQuery;
   }>(POOL_QUERY, {
     id: poolId,
@@ -85,7 +85,7 @@ async function fetchUserPoolBalance(
     throw new Error("Pool not found");
   }
   const userBpt = parseUnits(
-    result.pool.userBalance.totalBalance.toString(),
+    result.pool.userBalance.walletBalance.toString(),
     result.pool.decimals,
   );
   const totalBpt = parseUnits(
