@@ -90,6 +90,7 @@ export default function Page() {
           callback: async () => {
             await permitCallback(permit);
           },
+          tooltipText: permit.tokenAddress,
         };
       }) || [];
     return [
