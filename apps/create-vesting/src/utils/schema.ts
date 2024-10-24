@@ -1,7 +1,13 @@
 import { isAddress } from "viem";
 import { z } from "zod";
 
-export const periodScaleOptions = ["Day", "Week", "Month"];
+export const periodScaleOptions = [
+  "Minute",
+  "Hour",
+  "Day",
+  "Week",
+  "Month",
+] as const;
 
 const isValidRecipient = (recipient: string) => {
   // better ENS validation is performed on form submit
@@ -17,7 +23,7 @@ export const createVestingSchema = z
     period: z
       .number({ message: "Invalid period" })
       .gt(0, "Period must be greater than 0"),
-    periodScale: z.enum(["Day", "Week", "Month"]),
+    periodScale: z.enum(periodScaleOptions),
     amount: z
       .number({ message: "Invalid amount" })
       .gt(0, "Amount must be greater than 0")

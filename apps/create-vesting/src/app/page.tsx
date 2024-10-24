@@ -30,6 +30,7 @@ export default function Page() {
   const vestAllFromAccount = useWatch({ control, name: "vestAllFromAccount" });
   const amount = useWatch({ control, name: "amount" });
   const recipient = useWatch({ control, name: "recipient" });
+  const period = useWatch({ control, name: "period" });
 
   const {
     userBalanceFloat,
@@ -63,6 +64,7 @@ export default function Page() {
         setValue("vestAllFromAccount", data.vestAllFromAccount);
         setValue("recipient", data.recipient);
         setValue("period", data.period);
+        setValue("periodScale", data.periodScale);
         setValue("amount", data.amount);
         setIsEditHookLoading(false);
       }
@@ -78,6 +80,11 @@ export default function Page() {
 
   if (context?.hookToEdit && isEditHookLoading) {
     loadHookInfo();
+    return (
+      <div className="flex items-center justify-center w-full h-full bg-transparent text-color-text-paper">
+        <Spinner size="lg" style={{ color: "gray" }} />
+      </div>
+    );
   }
 
   if (!context)
@@ -97,7 +104,7 @@ export default function Page() {
   if (!context?.orderParams?.buyAmount || !context?.orderParams?.buyAmount)
     return (
       <span className="block w-full mt-10 text-center">
-        Provide a buy token and amount in swap
+        Please specify your swap order first
       </span>
     );
 
@@ -123,6 +130,7 @@ export default function Page() {
   const buttonDisabled =
     isOutOfFunds ||
     !recipient ||
+    !period ||
     (!amount && vestUserInput) ||
     isSubmitting ||
     isSubmitSuccessful;
@@ -130,7 +138,7 @@ export default function Page() {
   const isBuildingHook = isSubmitting || isSubmitSuccessful;
 
   return (
-    <div className="flex flex-col flex-wrap w-full flex-grow gap-4 mb-[-16px]">
+    <div className="flex flex-col flex-wrap w-full flex-grow gap-4">
       <div className="w-full flex flex-col flex-grow gap-4 items-start justify-start text-center">
         <RecipientInput />
         <PeriodInput />
@@ -142,8 +150,9 @@ export default function Page() {
           amountPreviewFullDecimals={amountPreviewFullDecimals}
           formattedUserBalance={formattedUserBalance}
           userBalanceFloat={userBalanceFloat}
+          shouldEnableMaxSelector={vestUserInput}
         />
-        <div className="flex flex-col gap-y-2">
+        <div className="w-full flex flex-col gap-y-2">
           <VestAllFromSwapCheckbox />
           <VestAllFromAccountCheckbox />
           <VestUserInputCheckbox />
@@ -155,6 +164,7 @@ export default function Page() {
         isOutOfFunds={isOutOfFunds}
         isBuildingHook={isBuildingHook}
         disabled={buttonDisabled}
+        tokenSymbol={token?.symbol}
       />
     </div>
   );

@@ -9,6 +9,7 @@ export const AmountInput = ({
   amountPreviewFullDecimals,
   formattedUserBalance,
   userBalanceFloat,
+  shouldEnableMaxSelector,
 }: {
   token: Token | undefined;
   vestAllFromSwap: boolean;
@@ -17,11 +18,13 @@ export const AmountInput = ({
   amountPreviewFullDecimals: string | undefined;
   formattedUserBalance: string | undefined;
   userBalanceFloat: number | undefined;
+  shouldEnableMaxSelector: boolean;
 }) => {
   return (
     <TokenAmountInput
       name="amount"
       type="number"
+      inputMode="decimal"
       step={`0.${"0".repeat(token?.decimals ? token?.decimals - 1 : 8)}1`}
       max="1000000000000"
       token={token}
@@ -33,6 +36,7 @@ export const AmountInput = ({
       disabledValueFullDecimals={amountPreviewFullDecimals}
       userBalance={formattedUserBalance}
       userBalanceFullDecimals={String(userBalanceFloat)}
+      shouldEnableMaxSelector={shouldEnableMaxSelector}
       validation={{
         setValueAs: (v) => (v === "" ? undefined : Number(v)),
         required: !(vestAllFromAccount || vestAllFromSwap),

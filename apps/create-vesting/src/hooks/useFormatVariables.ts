@@ -38,7 +38,7 @@ export const useFormatVariables = ({
   const formattedUserBalance = useMemo(
     () =>
       userBalanceFloat !== undefined
-        ? formatNumber(userBalanceFloat, 6, "decimal", "standard", 0.000001)
+        ? formatNumber(userBalanceFloat, 4, "decimal", "standard", 0.0001)
         : "",
     [userBalanceFloat],
   );
@@ -46,7 +46,7 @@ export const useFormatVariables = ({
   const formattedSwapAmount = useMemo(
     () =>
       swapAmountFloat !== undefined
-        ? formatNumber(swapAmountFloat, 6, "decimal", "standard", 0.000001)
+        ? formatNumber(swapAmountFloat, 4, "decimal", "standard", 0.0001)
         : "",
     [swapAmountFloat],
   );
