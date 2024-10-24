@@ -10,11 +10,11 @@ import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import { useCallback, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { PoolItemInfo } from "#/components/PoolItemInfo";
-import { TokenAmountInputs } from "#/components/TokenAmountInputs";
 import { useSelectedPool } from "#/hooks/useSelectedPool";
 import { useTokenBuyPools } from "#/hooks/useTokenBuyPools";
 import type { FormType } from "#/types";
 import { decodeCalldata } from "#/utils/decodeCalldata";
+import { PoolForm } from "#/components/PoolForm";
 
 export default function Page() {
   const { context } = useIFrameContext();
@@ -28,7 +28,7 @@ export default function Page() {
   const loadHookInfo = useCallback(() => {
     if (!context?.hookToEdit || !context.account || !isEditHookLoading) return;
     const data = decodeCalldata(
-      context?.hookToEdit?.hook.callData as `0x${string}`,
+      context?.hookToEdit?.hook.callData as `0x${string}`
     );
     if (data) {
       setValue("poolId", data.poolId);
@@ -78,8 +78,8 @@ export default function Page() {
         isCheckDetailsCentered={false}
       />
       {selectedPool && (
-        <div className="size-full flex flex-col gap-2 mt-2">
-          <TokenAmountInputs pool={selectedPool} />
+        <div className="mt-2">
+          <PoolForm pool={selectedPool} />
         </div>
       )}
     </div>
