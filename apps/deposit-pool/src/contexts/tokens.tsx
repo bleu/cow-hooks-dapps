@@ -20,7 +20,7 @@ interface TokenWithBalance extends Token {
 }
 
 type TokenContextType = {
-  tokens: Record<string, TokenWithBalance | undefined> | undefined;
+  tokens: Record<string, TokenWithBalance> | undefined;
 };
 
 export const TokenContext = createContext({} as TokenContextType);

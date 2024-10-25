@@ -1,5 +1,10 @@
-import { type IPool, Spinner, useIFrameContext } from "@bleu/cow-hooks-ui";
-import { Button, Label, formatNumber } from "@bleu/ui";
+import {
+  ButtonPrimary,
+  type IPool,
+  Spinner,
+  useIFrameContext,
+} from "@bleu/cow-hooks-ui";
+import { Label, formatNumber } from "@bleu/ui";
 import { useCallback, useMemo } from "react";
 import { useFormContext, useFormState, useWatch } from "react-hook-form";
 import { type Address, formatUnits } from "viem";
@@ -7,10 +12,13 @@ import { usePoolBalance } from "#/hooks/usePoolBalance";
 import type { FormType } from "#/types";
 import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
 import { TokenAmountInput } from "./TokenAmountInput";
+import { useTokenContext } from "#/contexts/tokens";
 
 export function PoolForm({ pool }: { pool: IPool | undefined }) {
   const { context } = useIFrameContext();
   const { control, setValue } = useFormContext<FormType>();
+
+  const { tokens } = useTokenContext();
 
   const { data: poolBalances, isLoading: isBalanceLoading } = usePoolBalance({
     poolId: pool?.id,
@@ -21,9 +29,10 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
     control,
   });
 
-  const [amounts, referenceTokenAddress] = useWatch({
+  const amounts = useWatch({ control, name: "amounts" });
+  const referenceTokenAddress = useWatch({
     control,
-    name: ["amounts", "referenceTokenAddress"],
+    name: "referenceTokenAddress",
   });
 
   const referenceAmount = useMemo(() => {
@@ -89,6 +98,37 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
       <span className="mt-10 text-center">Error loading pool balances</span>
     );
 
+  const addressToken1 = poolBalances[0].token.address.toLowerCase();
+  const isInsufficientToken1 =
+    tokens && poolBalances?.[0] && amounts
+      ? tokens[addressToken1].balanceAfterSwap <
+        Number(amounts?.[addressToken1])
+      : false;
+
+  const addressToken2 = poolBalances[1].token.address.toLowerCase();
+  const isInsufficientToken2 =
+    tokens && poolBalances?.[0] && amounts
+      ? tokens[addressToken2].balanceAfterSwap <
+        Number(amounts?.[addressToken2])
+      : false;
+
+  const shouldDisableButton =
+    !referenceAmount ||
+    referenceAmount === "0" ||
+    isSubmitting ||
+    isInsufficientToken1 ||
+    isInsufficientToken2;
+
+  const ButtonMessage = () => {
+    if (isInsufficientToken1)
+      return `Insufficient ${tokens ? tokens[addressToken1].symbol : ""} balance`;
+    if (isInsufficientToken2)
+      return `Insufficient ${tokens ? tokens[addressToken1].symbol : ""} balance`;
+    if (isSubmitting) return "Creating hook...";
+    if (context?.hookToEdit) return "Update post-hook";
+    return "Add post-hook";
+  };
+
   return (
     <div className="flex flex-col w-full items-center gap-1">
       <Label className="block text-md mt-1">Add liquidity</Label>
@@ -108,15 +148,9 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
           ${totalUsd >= 0 ? formatNumber(totalUsd, 2) : "0"}
         </span>
       </div>
-      <Button
-        type="submit"
-        className="my-2 rounded-xl text-lg min-h-[58px] font-semibold w-full"
-        loading={isSubmitting}
-        disabled={!referenceAmount || referenceAmount === "0"}
-        loadingText="Creating hook..."
-      >
-        {context?.hookToEdit ? "Update post-hook" : "Add post-hook"}
-      </Button>
+      <ButtonPrimary type="submit" disabled={shouldDisableButton}>
+        <ButtonMessage />
+      </ButtonPrimary>
     </div>
   );
 }
