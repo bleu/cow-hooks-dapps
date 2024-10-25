@@ -87,7 +87,7 @@ export default function Page() {
         pools={pools || []}
         PoolItemInfo={PoolItemInfo}
         selectedPool={selectedPool}
-        tooltipText="Withdraw of staked or too low liquidity are not supported"
+        tooltipText="Withdraw of staked liquidity or pool with low user balance are not supported"
       />
       <PoolForm selectedPool={selectedPool} />
     </div>
