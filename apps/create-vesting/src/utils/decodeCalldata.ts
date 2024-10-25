@@ -5,7 +5,24 @@ import {
 } from "@bleu/utils/transactionFactory";
 import { type DecodeFunctionDataReturnType, decodeFunctionData } from "viem";
 import { scaleToSecondsMapping } from "./scaleToSecondsMapping";
-import type { CreateVestingFormData } from "./schema";
+import { type CreateVestingFormData, periodScaleOptions } from "./schema";
+
+function recoverPeriodFieldFromSeconds(periodInSeconds: number) {
+  let largestScaleThatFitsValue: (typeof periodScaleOptions)[number] =
+    periodScaleOptions[0];
+  for (const scale of periodScaleOptions) {
+    if (periodInSeconds % scaleToSecondsMapping[scale] === 0) {
+      largestScaleThatFitsValue = scale;
+    } else {
+      break;
+    }
+  }
+
+  return {
+    period: periodInSeconds / scaleToSecondsMapping[largestScaleThatFitsValue],
+    periodScale: largestScaleThatFitsValue,
+  };
+}
 
 export const decodeCalldata = async (
   string: `0x${string}`,
@@ -55,10 +72,15 @@ const decodeVestFromUserInput = (
   const args = createVestingData.args;
   if (!args) throw new Error("decode has no args");
 
+  const { period, periodScale } = recoverPeriodFieldFromSeconds(
+    //@ts-ignore
+    Number(args[3]),
+  );
+
   result.recipient = args[1] as string;
   result.amount = Number(args[2]) / 10 ** tokenDecimals;
-  result.period = Number(args[3]) / scaleToSecondsMapping.Day;
-  result.periodScale = "Day";
+  result.period = period;
+  result.periodScale = periodScale;
   result.vestUserInput = true;
   result.vestAllFromSwap = false;
   result.vestAllFromAccount = false;
@@ -87,12 +109,16 @@ const decodeVestAllFromSwap = (
   if (args[1].length !== 4)
     throw new Error("type of vesting was vestAllFromAccount");
 
+  const { period, periodScale } = recoverPeriodFieldFromSeconds(
+    //@ts-ignore
+    Number.parseInt(args[1][3]),
+  );
+
   //@ts-ignore
   result.recipient = `0x${args[1][2].slice(-40)}` as string;
   result.amount = undefined;
-  //@ts-ignore
-  result.period = Number.parseInt(args[1][3]) / scaleToSecondsMapping.Day;
-  result.periodScale = "Day";
+  result.period = period;
+  result.periodScale = periodScale;
   result.vestUserInput = false;
   result.vestAllFromSwap = true;
   result.vestAllFromAccount = false;
@@ -116,12 +142,17 @@ const decodeVestAllFromAccount = (
   //@ts-ignore
   if (args[1].length !== 6) throw new Error("Unknown type of transaction");
 
+  const { period, periodScale } = recoverPeriodFieldFromSeconds(
+    //@ts-ignore
+    Number.parseInt(args[1][4]),
+  );
+
   //@ts-ignore
   result.recipient = `0x${args[1][3].slice(-40)}` as string;
   result.amount = undefined;
   //@ts-ignore
-  result.period = Number.parseInt(args[1][4]) / scaleToSecondsMapping.Day;
-  result.periodScale = "Day";
+  result.period = period;
+  result.periodScale = periodScale;
   result.vestUserInput = false;
   result.vestAllFromSwap = false;
   result.vestAllFromAccount = true;
