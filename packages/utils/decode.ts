@@ -1,6 +1,6 @@
+import { withdrawSchema } from "./schema";
+import { cowShedAbi } from "./transactionFactory/abis/cowShedAbi";
 import { decodeFunctionData } from "viem";
-import { cowShedAbi } from "./abis/cowShedAbi";
-import type { withdrawSchema } from "./schema";
 
 interface ICalldata {
   allowFailures: boolean;
@@ -11,7 +11,7 @@ interface ICalldata {
 }
 
 export async function decodeExitPoolHookCalldata(
-  callData: `0x${string}`,
+  callData: `0x${string}`
 ): Promise<typeof withdrawSchema._type> {
   const decodedFunctionData = decodeFunctionData({
     abi: cowShedAbi,

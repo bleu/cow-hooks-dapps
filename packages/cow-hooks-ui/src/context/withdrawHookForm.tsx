@@ -1,17 +1,25 @@
 "use client";
 
-import { type PropsWithChildren, useCallback, useEffect, useMemo } from "react";
-
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
-import { Form } from "@bleu/ui";
+import { withdrawSchema, WithdrawSchemaType } from "@bleu/utils";
+import { useCallback, useEffect, useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { useIFrameContext } from "./iframe";
+import { useUserPools } from "../hooks/useUserPools";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useForm, useWatch } from "react-hook-form";
-import { useGetHookInfo } from "#/hooks/useGetHookInfo";
-import { type WithdrawSchemaType, withdrawSchema } from "#/utils/schema";
-import { useUserPoolContext } from "./userPools";
+import { Form } from "@bleu/ui";
+import { IHooksInfo, IPool } from "../types";
 
-export function FormContextProvider({ children }: PropsWithChildren) {
+export function WithdrawFormContextProvider({
+  children,
+  getHookInfo,
+}: {
+  children: React.ReactNode;
+  getHookInfo: (
+    selectedPool: IPool,
+    withdrawPct: number
+  ) => Promise<IHooksInfo | undefined>;
+}) {
   const { context, setHookInfo } = useIFrameContext();
 
   const form = useForm<WithdrawSchemaType>({
@@ -24,30 +32,27 @@ export function FormContextProvider({ children }: PropsWithChildren) {
 
   const { control, handleSubmit, setValue } = form;
 
-  const {
-    userPoolSwr: { data: pools },
-  } = useUserPoolContext();
+  const { data: pools } = useUserPools(context?.chainId, context?.account);
 
   const poolId = useWatch({ control, name: "poolId" });
 
   const selectedPool = useMemo(() => {
     return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
+      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
     );
   }, [pools, poolId]);
-
-  const getHooksTransactions = useGetHookInfo(selectedPool);
 
   const router = useRouter();
 
   const onSubmitCallback = useCallback(
     async (data: WithdrawSchemaType) => {
-      const hookInfo = await getHooksTransactions(data.withdrawPct);
+      if (!selectedPool) return;
+      const hookInfo = await getHookInfo(selectedPool, data.withdrawPct);
       if (!hookInfo) return;
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [getHooksTransactions, setHookInfo, router],
+    [getHookInfo, setHookInfo, router]
   );
 
   // biome-ignore lint:

@@ -1,37 +1,33 @@
-import type { IPool } from "@bleu/cow-hooks-ui";
+import type { IHooksInfo, IPool } from "@bleu/cow-hooks-ui";
 import {
   TRANSACTION_TYPES,
   TransactionFactory,
 } from "@bleu/utils/transactionFactory";
 import { useCallback } from "react";
-import type { IHooksInfo } from "#/types";
-import { multiplyValueByPct } from "#/utils/math";
-// import { useGetBalancerGaugeArgs } from "./useGetBalancerGaugeArgs";
 import { useGetPoolWithdrawArgs } from "./useGetPoolWithdrawArgs";
+import { multiplyValueByPct } from "@bleu/utils";
 
-export function useGetHookInfo(pool?: IPool) {
-  const getPoolWithdrawArgs = useGetPoolWithdrawArgs(pool);
-  // Removed gauge related code
-  // const getBalancerGaugeArgs = useGetBalancerGaugeArgs(pool);
+export function useGetHookInfo() {
+  const getPoolWithdrawArgs = useGetPoolWithdrawArgs();
 
   return useCallback(
-    async (withdrawPct: number): Promise<IHooksInfo | undefined> => {
+    async (
+      pool: IPool,
+      withdrawPct: number
+    ): Promise<IHooksInfo | undefined> => {
       if (!pool) return;
 
       const bptAmount = multiplyValueByPct(
         pool.userBalance.walletBalance,
-        withdrawPct,
+        withdrawPct
       );
-      // const balancerGaugeArgs = getBalancerGaugeArgs(bptAmount);
-      const poolWithdrawArgs = await getPoolWithdrawArgs(bptAmount);
+      const poolWithdrawArgs = await getPoolWithdrawArgs(pool, bptAmount);
       if (!poolWithdrawArgs) return;
-
-      // const argsArray = [...balancerGaugeArgs, ...poolWithdrawArgs];
 
       const txs = await Promise.all(
         poolWithdrawArgs.map((arg) => {
           return TransactionFactory.createRawTx(arg.type, arg);
-        }),
+        })
       );
 
       const permitData = poolWithdrawArgs
@@ -48,6 +44,6 @@ export function useGetHookInfo(pool?: IPool) {
         permitData: permitData,
       };
     },
-    [getPoolWithdrawArgs, pool],
+    [getPoolWithdrawArgs]
   );
 }

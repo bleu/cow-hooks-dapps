@@ -1,4 +1,4 @@
-import type { IPool } from "@bleu/cow-hooks-ui";
+import { IPool } from "../types";
 import { formatNumber } from "@bleu/ui";
 
 export function PoolItemInfo({ pool }: { pool: IPool }) {

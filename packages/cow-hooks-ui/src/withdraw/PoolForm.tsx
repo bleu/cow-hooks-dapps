@@ -1,9 +1,11 @@
-import { type IPool, Spinner, useIFrameContext } from "@bleu/cow-hooks-ui";
 import { Suspense } from "react";
-import { useUserPoolBalance } from "#/hooks/useUserPoolBalance";
 import { PoolBalancesPreview } from "./PoolBalancePreview";
 import { SubmitButton } from "./SubmitButton";
 import { WithdrawPctSlider } from "./WithdrawPctSlider";
+import { useIFrameContext } from "../context/iframe";
+import { IPool } from "../types";
+import { Spinner } from "../ui/Spinner";
+import { useUserPoolBalance } from "../hooks/useUserPoolBalance";
 
 export function PoolForm({ selectedPool }: { selectedPool?: IPool }) {
   const { context } = useIFrameContext();

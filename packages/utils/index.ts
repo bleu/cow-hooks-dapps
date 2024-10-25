@@ -3,6 +3,9 @@ export * from "./addressUtils";
 export * from "./chainInfo";
 export * from "./cowExplorer";
 export * from "./balancerApi";
+export * from "./math";
+export * from "./schema";
+export * from "./decode";
 
 export { default as parseFixed } from "./parseFixed";
 
@@ -177,8 +180,8 @@ const networksNamesOnBalancer = [
 
 export const networksOnBalancer = Object.fromEntries(
   Object.entries(networkIdEnumMap).filter(([key]) =>
-    networksNamesOnBalancer.includes(key),
-  ),
+    networksNamesOnBalancer.includes(key)
+  )
 );
 
 export function networkFor(key?: string | number) {
@@ -198,7 +201,7 @@ export function networkIdFor(name?: string) {
 
 export function unsafeNetworkIdFor(name: string) {
   return Object.keys(networkIdEnumMap).find(
-    (key) => networkIdEnumMap[key as keyof typeof networkIdEnumMap] === name,
+    (key) => networkIdEnumMap[key as keyof typeof networkIdEnumMap] === name
   );
 }
 

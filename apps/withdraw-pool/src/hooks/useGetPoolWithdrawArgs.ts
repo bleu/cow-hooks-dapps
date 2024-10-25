@@ -12,10 +12,9 @@ import {
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
 
-export function useGetPoolWithdrawArgs(
-  pool?: IPool,
-): (
-  bptAMount: BigNumber,
+export function useGetPoolWithdrawArgs(): (
+  pool: IPool,
+  bptAMount: BigNumber
 ) => Promise<
   | (
       | ERC20TransferFromArgs
@@ -27,7 +26,7 @@ export function useGetPoolWithdrawArgs(
   const { context, cowShedProxy } = useIFrameContext();
 
   return useCallback(
-    async (bptAmount: BigNumber) => {
+    async (pool: IPool, bptAmount: BigNumber) => {
       if (!context?.account || !cowShedProxy || !pool) return;
       const poolState = await fetchPoolState(pool.id, context.chainId);
       const bptWalletAmount = bptAmount.gte(pool.userBalance.walletBalance)
@@ -78,6 +77,6 @@ export function useGetPoolWithdrawArgs(
         | ERC20TransferFromAllWeirollArgs
       )[];
     },
-    [context, cowShedProxy, pool],
+    [context, cowShedProxy]
   );
 }
