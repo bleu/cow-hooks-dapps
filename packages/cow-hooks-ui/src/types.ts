@@ -62,9 +62,7 @@ export interface IPool {
   allTokens: IToken[];
 
   userBalance: {
-    totalBalance: BigNumberish;
     walletBalance: BigNumberish;
-    totalBalanceUsd: number;
     walletBalanceUsd: number;
     stakedBalances: {
       balance: BigNumberish;

@@ -126,7 +126,6 @@ export function useUserPoolBalance({
     () => fetchUserPoolBalance(chainId, poolId, user),
     {
       revalidateOnFocus: false,
-      revalidateOnReconnect: false,
     },
   );
 }
