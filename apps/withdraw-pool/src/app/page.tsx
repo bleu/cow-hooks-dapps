@@ -75,7 +75,7 @@ export default function Page() {
   if (!pools || pools.length === 0) {
     return (
       <span className="mt-10 text-center">
-        You don't have liquidity in a CoW AMM pool
+        You don't have unstaked liquidity in a CoW AMM pool
       </span>
     );
   }
@@ -87,6 +87,7 @@ export default function Page() {
         pools={pools || []}
         PoolItemInfo={PoolItemInfo}
         selectedPool={selectedPool}
+        tooltipText="Withdraw of staked liquidity or pool with low user balance are not supported"
       />
       <PoolForm selectedPool={selectedPool} />
     </div>

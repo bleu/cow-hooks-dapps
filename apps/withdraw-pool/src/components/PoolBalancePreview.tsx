@@ -26,7 +26,7 @@ export function PoolBalancesPreview({
 
   const { withdrawPct } = useWatch({ control });
 
-  const _withdrawBalance = useMemo(() => {
+  const withdrawBalance = useMemo(() => {
     if (!poolBalances || !withdrawPct) return [];
     return poolBalances.map((poolBalance) => ({
       ...poolBalance,
@@ -55,7 +55,7 @@ export function PoolBalancesPreview({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {poolBalances.map((balance, _index) => {
+          {poolBalances.map((balance, index) => {
             return (
               <TableRow
                 className="hover:bg-transparent border-none"
@@ -81,7 +81,7 @@ export function PoolBalancesPreview({
                     token={balance.token}
                     balance={Number(
                       formatUnits(
-                        BigInt(balance.balance.toString()),
+                        BigInt(withdrawBalance[index].balance.toString()),
                         balance.token.decimals,
                       ),
                     )}
