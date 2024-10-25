@@ -16,22 +16,10 @@ import type { Address } from "viem";
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [permitTxs, setPermitTxs] = useState<BaseTransaction[]>([]);
-  const {
-    actions,
-    hookInfo,
-    cowShed,
-    signer,
-    context,
-    publicClient,
-    cowShedProxy,
-  } = useIFrameContext();
+  const { hookInfo, cowShed, signer, context, cowShedProxy } =
+    useIFrameContext();
 
-  const submitHook = useSubmitHook({
-    actions,
-    context,
-    publicClient,
-    recipientOverride: hookInfo?.recipientOverride,
-  });
+  const submitHook = useSubmitHook(hookInfo?.recipientOverride);
   const cowShedSignature = useCowShedSignature({
     cowShed,
     signer,
