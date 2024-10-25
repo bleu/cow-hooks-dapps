@@ -1,13 +1,10 @@
-import {
-  type IBalance,
-  TokenLogoWithWeight,
-  useReadTokenContract,
-} from "@bleu/cow-hooks-ui";
-import { Button, Input, cn, formatNumber } from "@bleu/ui";
+import { type IBalance, TokenLogoWithWeight } from "@bleu/cow-hooks-ui";
+import { Button, Input, formatNumber } from "@bleu/ui";
 import { useCallback, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { type Address, formatUnits } from "viem";
+import type { Address } from "viem";
 import type { FormType } from "#/types";
+import { useTokenContext } from "#/contexts/tokens";
 
 export function TokenAmountInput({
   poolBalance,
@@ -25,6 +22,8 @@ export function TokenAmountInput({
     name: `amounts.${poolBalance.token.address.toLowerCase()}`,
   });
 
+  const { tokens } = useTokenContext();
+
   const amountUsd = useMemo(() => {
     if (!amount || !tokenPrice) return 0;
 
@@ -40,86 +39,72 @@ export function TokenAmountInput({
     [updateTokenAmounts, poolBalance.token.address],
   );
 
-  const tokenInfo = useReadTokenContract({
-    tokenAddress: poolBalance.token.address as Address,
-  });
+  const tokenInfo = tokens
+    ? tokens[poolBalance.token.address.toLowerCase()]
+    : undefined;
 
   return (
-    <div className="grid grid-cols-3 w-full gap-2 bg-muted text-muted-foreground rounded-xl p-3">
-      <TokenLogoWithWeight
-        token={poolBalance.token}
-        weight={poolBalance.weight}
-        className="text-lg"
-      />
-      <Input
-        className="bg-transparent col-span-2 border-transparent text-xl text-right placeholder:text-foreground/50 pr-0 pl-2 truncate ..."
-        type="number"
-        placeholder="0.0"
-        {...register(`amounts.${poolBalance.token.address.toLowerCase()}`, {
-          onChange: (e) => {
-            onChange(e.target.value);
-          },
-        })}
-        onKeyDown={(e) => {
-          if (
-            ["Enter", "-", "e", "E", "+", "ArrowUp", "ArrowDown"].includes(
-              e.key,
+    <div className="grid grid-rows-[2.5rem,2rem] grid-cols-2 h-24 w-full bg-muted text-muted-foreground rounded-xl p-3">
+      <div className="flex items-center justify-start">
+        <TokenLogoWithWeight
+          token={poolBalance.token}
+          weight={poolBalance.weight}
+          className="text-lg h-10"
+        />
+      </div>
+      <div className="flex items-center justify-end">
+        <Input
+          className="flex bg-transparent items-center col-span-2 border-none text-xl text-right placeholder:text-foreground/50 p-0 truncate ..."
+          type="number"
+          placeholder="0.0"
+          {...register(`amounts.${poolBalance.token.address.toLowerCase()}`, {
+            onChange: (e) => {
+              onChange(e.target.value);
+            },
+          })}
+          onKeyDown={(e) => {
+            if (
+              ["Enter", "-", "e", "E", "+", "ArrowUp", "ArrowDown"].includes(
+                e.key,
+              )
             )
-          )
-            e.preventDefault();
-        }}
-        onWheel={(e) => {
-          // @ts-ignore
-          e.target.blur();
-        }}
-        step={`0.${"0".repeat(poolBalance?.token?.decimals - 1)}1`}
-      />
-      <div>
+              e.preventDefault();
+          }}
+          onWheel={(e) => {
+            // @ts-ignore
+            e.target.blur();
+          }}
+          step={`0.${"0".repeat(poolBalance?.token?.decimals - 1)}1`}
+        />
+      </div>
+      <div className="flex items-center justify-start">
         {tokenInfo && (
           <div className="flex gap-1">
-            <span
-              className={cn("text-xs font-normal", !tokenInfo && "sr-only")}
-            >
-              Balance{" "}
-              {tokenInfo &&
-                formatNumber(
-                  formatUnits(
-                    tokenInfo.userBalance || BigInt(0),
-                    tokenInfo.tokenDecimals || 18,
-                  ),
-                )}
+            <span className="ml-1 text-xs font-normal opacity-70">
+              Balance: {tokenInfo ? tokenInfo.balanceNowFormatted : undefined}
             </span>
-            {tokenInfo.userBalance &&
-              tokenInfo.tokenDecimals &&
-              formatUnits(tokenInfo.userBalance, tokenInfo.tokenDecimals) !==
-                amount && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="rounded-sm text-xs py-0 px-1 bg-background text-foreground/50 hover:bg-primary hover:text-primary-foreground h-fit"
-                  onClick={() => {
-                    if (!tokenInfo.userBalance || !tokenInfo.tokenDecimals)
-                      return;
-                    const maxValue = formatUnits(
-                      tokenInfo.userBalance,
-                      tokenInfo.tokenDecimals,
-                    );
-                    setValue(
-                      `amounts.${poolBalance.token.address.toLowerCase()}`,
-                      maxValue,
-                    );
-                    onChange(maxValue);
-                  }}
-                >
-                  Max
-                </Button>
-              )}
+            <Button
+              type="button"
+              variant="ghost"
+              className="rounded-sm text-xs py-0 px-1 bg-background text-foreground/50 hover:bg-primary hover:text-primary-foreground h-fit inline"
+              onClick={() => {
+                setValue(
+                  `amounts.${poolBalance.token.address.toLowerCase()}`,
+                  String(tokenInfo.balanceNow),
+                );
+                onChange(String(tokenInfo.balanceNow));
+              }}
+            >
+              Max
+            </Button>
           </div>
         )}
       </div>
-      <span className="text-xs text-right font-normal col-span-2">
-        ${amountUsd && amountUsd >= 0 ? formatNumber(amountUsd, 2) : "0"}
-      </span>
+      <div className="flex items-center justify-end">
+        <span className="text-xs text-right font-normal pr-0">
+          ${amountUsd && amountUsd >= 0 ? formatNumber(amountUsd, 2) : "0"}
+        </span>
+      </div>
     </div>
   );
 }
