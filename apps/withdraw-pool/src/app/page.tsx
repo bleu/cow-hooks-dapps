@@ -1,7 +1,7 @@
 "use client";
 
-import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 import { WithdrawFormContextProvider } from "@bleu/cow-hooks-ui";
+import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 import { PageWrapped } from "./components/PageWrapped";
 
 export default function Page() {

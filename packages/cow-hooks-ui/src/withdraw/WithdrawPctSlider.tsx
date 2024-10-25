@@ -1,9 +1,9 @@
 "use client";
 
-import { Input } from "../ui/InputBase";
 import { Button, Label, cn } from "@bleu/ui";
-import { withdrawSchema } from "@bleu/utils";
+import type { withdrawSchema } from "@bleu/utils";
 import { useFormContext, useWatch } from "react-hook-form";
+import { Input } from "../ui/InputBase";
 
 export function WithdrawPctSlider() {
   const form = useFormContext<typeof withdrawSchema._type>();
@@ -23,7 +23,7 @@ export function WithdrawPctSlider() {
             variant="ghost"
             className={cn(
               "rounded-2xl text-xs py-1 bg-accent text-accent-foreground opacity-50 hover:opacity-100 h-fit",
-              withdrawPct.toString() === pct.toString() ? "opacity-100" : ""
+              withdrawPct.toString() === pct.toString() ? "opacity-100" : "",
             )}
             onClick={() => setValue("withdrawPct", pct)}
           >

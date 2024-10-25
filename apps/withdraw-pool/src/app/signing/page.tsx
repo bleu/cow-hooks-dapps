@@ -11,7 +11,7 @@ import {
   useHandleTokenAllowance,
   useSubmitHook,
 } from "@bleu/cow-hooks-ui";
-import { WithdrawSchemaType } from "@bleu/utils";
+import type { WithdrawSchemaType } from "@bleu/utils";
 import { BigNumber, type BigNumberish } from "ethers";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -75,7 +75,7 @@ export default function Page() {
     }) => {
       const permitData = await handleTokenAllowance(
         BigNumber.from(permit.amount),
-        permit.tokenAddress as Address
+        permit.tokenAddress as Address,
       );
 
       if (permitData) {
@@ -90,7 +90,7 @@ export default function Page() {
       }
       setCurrentStepIndex((prev) => prev + 1);
     },
-    [handleTokenAllowance]
+    [handleTokenAllowance],
   );
 
   const steps = useMemo(() => {

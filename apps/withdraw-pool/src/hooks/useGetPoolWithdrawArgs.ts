@@ -14,7 +14,7 @@ import { useCallback } from "react";
 
 export function useGetPoolWithdrawArgs(): (
   pool: IPool,
-  bptAMount: BigNumber
+  bptAMount: BigNumber,
 ) => Promise<
   | (
       | ERC20TransferFromArgs
@@ -77,6 +77,6 @@ export function useGetPoolWithdrawArgs(): (
         | ERC20TransferFromAllWeirollArgs
       )[];
     },
-    [context, cowShedProxy]
+    [context, cowShedProxy],
   );
 }

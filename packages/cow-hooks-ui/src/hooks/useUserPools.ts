@@ -8,10 +8,10 @@ export function useUserPools(chainId?: SupportedChainId, user?: Address) {
   const useSwrData = usePools(
     { poolTypeIn: ["COW_AMM"], userAddress: user },
     chainId,
-    "userbalanceUsd"
+    "userbalanceUsd",
   );
   const data = useSwrData.data?.filter((pool) =>
-    BigNumber.from(pool.userBalance.walletBalance).gt(BigNumber.from("10"))
+    BigNumber.from(pool.userBalance.walletBalance).gt(BigNumber.from("10")),
   );
   return { ...useSwrData, data };
 }

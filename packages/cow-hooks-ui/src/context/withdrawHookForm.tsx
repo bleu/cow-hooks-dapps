@@ -1,14 +1,14 @@
 "use client";
 
-import { withdrawSchema, WithdrawSchemaType } from "@bleu/utils";
-import { useCallback, useEffect, useMemo } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { useIFrameContext } from "./iframe";
-import { useUserPools } from "../hooks/useUserPools";
+import { Form } from "@bleu/ui";
+import { type WithdrawSchemaType, withdrawSchema } from "@bleu/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { Form } from "@bleu/ui";
-import { IHooksInfo, IPool } from "../types";
+import { useCallback, useEffect, useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { useUserPools } from "../hooks/useUserPools";
+import type { IHooksInfo, IPool } from "../types";
+import { useIFrameContext } from "./iframe";
 
 export function WithdrawFormContextProvider({
   children,
@@ -17,7 +17,7 @@ export function WithdrawFormContextProvider({
   children: React.ReactNode;
   getHookInfo: (
     selectedPool: IPool,
-    withdrawPct: number
+    withdrawPct: number,
   ) => Promise<IHooksInfo | undefined>;
 }) {
   const { context, setHookInfo } = useIFrameContext();
@@ -38,7 +38,7 @@ export function WithdrawFormContextProvider({
 
   const selectedPool = useMemo(() => {
     return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
+      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
     );
   }, [pools, poolId]);
 
@@ -52,7 +52,7 @@ export function WithdrawFormContextProvider({
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [getHookInfo, setHookInfo, router]
+    [getHookInfo, setHookInfo, router, selectedPool],
   );
 
   // biome-ignore lint:

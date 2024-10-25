@@ -1,10 +1,12 @@
 "use client";
 
+import { multiplyValueByPct } from "@bleu/utils";
 import { useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { formatUnits } from "viem";
-import { IBalance } from "../types";
-import { multiplyValueByPct } from "@bleu/utils";
+import { TokenAmount } from "../TokenAmount";
+import { TokenInfo } from "../TokenInfo";
+import type { IBalance } from "../types";
 import {
   Table,
   TableBody,
@@ -14,8 +16,6 @@ import {
   TableRow,
 } from "../ui/Table";
 import { InfoTooltip } from "../ui/TooltipBase";
-import { TokenInfo } from "../TokenInfo";
-import { TokenAmount } from "../TokenAmount";
 
 export function PoolBalancesPreview({
   poolBalances,
@@ -70,8 +70,8 @@ export function PoolBalancesPreview({
                     balance={Number(
                       formatUnits(
                         BigInt(balance.balance.toString()),
-                        balance.token.decimals
-                      )
+                        balance.token.decimals,
+                      ),
                     )}
                     fiatValue={balance.fiatAmount}
                   />
@@ -82,8 +82,8 @@ export function PoolBalancesPreview({
                     balance={Number(
                       formatUnits(
                         BigInt(withdrawBalance[index].balance.toString()),
-                        balance.token.decimals
-                      )
+                        balance.token.decimals,
+                      ),
                     )}
                     fiatValue={balance.fiatAmount}
                     className="font-semibold"

@@ -1,11 +1,11 @@
 import { Suspense } from "react";
+import { useIFrameContext } from "../context/iframe";
+import { useUserPoolBalance } from "../hooks/useUserPoolBalance";
+import type { IPool } from "../types";
+import { Spinner } from "../ui/Spinner";
 import { PoolBalancesPreview } from "./PoolBalancePreview";
 import { SubmitButton } from "./SubmitButton";
 import { WithdrawPctSlider } from "./WithdrawPctSlider";
-import { useIFrameContext } from "../context/iframe";
-import { IPool } from "../types";
-import { Spinner } from "../ui/Spinner";
-import { useUserPoolBalance } from "../hooks/useUserPoolBalance";
 
 export function PoolForm({ selectedPool }: { selectedPool?: IPool }) {
   const { context } = useIFrameContext();
