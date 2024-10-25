@@ -37,7 +37,7 @@ export function TokenAmountInput({
         updateTokenAmounts(amount, poolBalance.token.address as Address);
       }
     },
-    [updateTokenAmounts, poolBalance.token.address]
+    [updateTokenAmounts, poolBalance.token.address],
   );
 
   const tokenInfo = useReadTokenContract({
@@ -52,7 +52,7 @@ export function TokenAmountInput({
         className="text-lg"
       />
       <Input
-        className="bg-transparent col-span-2 border-transparent text-xl text-right placeholder:text-foreground/50 px-0"
+        className="bg-transparent col-span-2 border-transparent text-xl text-right placeholder:text-foreground/50 pr-0 pl-2 truncate ..."
         type="number"
         placeholder="0.0"
         {...register(`amounts.${poolBalance.token.address.toLowerCase()}`, {
@@ -63,7 +63,7 @@ export function TokenAmountInput({
         onKeyDown={(e) => {
           if (
             ["Enter", "-", "e", "E", "+", "ArrowUp", "ArrowDown"].includes(
-              e.key
+              e.key,
             )
           )
             e.preventDefault();
@@ -85,8 +85,8 @@ export function TokenAmountInput({
                 formatNumber(
                   formatUnits(
                     tokenInfo.userBalance || BigInt(0),
-                    tokenInfo.tokenDecimals || 18
-                  )
+                    tokenInfo.tokenDecimals || 18,
+                  ),
                 )}
             </span>
             {tokenInfo.userBalance &&
@@ -102,11 +102,11 @@ export function TokenAmountInput({
                       return;
                     const maxValue = formatUnits(
                       tokenInfo.userBalance,
-                      tokenInfo.tokenDecimals
+                      tokenInfo.tokenDecimals,
                     );
                     setValue(
                       `amounts.${poolBalance.token.address.toLowerCase()}`,
-                      maxValue
+                      maxValue,
                     );
                     onChange(maxValue);
                   }}

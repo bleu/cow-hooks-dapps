@@ -9,6 +9,7 @@ export const useReadTokenContract = ({
   tokenAddress: Address | undefined;
 }) => {
   const { publicClient, context } = useIFrameContext();
+  const tokenAddressLowerCase = tokenAddress?.toLowerCase();
 
   const readTokenContract = useCallback(
     async (address: Address) => {
@@ -55,7 +56,7 @@ export const useReadTokenContract = ({
     data: tokenData,
     isLoading: isLoadingToken,
     error: errorToken,
-  } = useSWR(tokenAddress ? tokenAddress : null, readTokenContract, {
+  } = useSWR(tokenAddressLowerCase, readTokenContract, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     refreshWhenOffline: false,

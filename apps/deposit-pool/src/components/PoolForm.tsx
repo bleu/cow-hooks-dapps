@@ -1,11 +1,11 @@
-import { usePoolBalance } from "#/hooks/usePoolBalance";
-import { FormType } from "#/types";
-import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
-import { IPool, Spinner, useIFrameContext } from "@bleu/cow-hooks-ui";
-import { Button, formatNumber, Label } from "@bleu/ui";
+import { type IPool, Spinner, useIFrameContext } from "@bleu/cow-hooks-ui";
+import { Button, Label, formatNumber } from "@bleu/ui";
 import { useCallback, useMemo } from "react";
 import { useFormContext, useFormState, useWatch } from "react-hook-form";
-import { Address, formatUnits } from "viem";
+import { type Address, formatUnits } from "viem";
+import { usePoolBalance } from "#/hooks/usePoolBalance";
+import type { FormType } from "#/types";
+import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
 import { TokenAmountInput } from "./TokenAmountInput";
 
 export function PoolForm({ pool }: { pool: IPool | undefined }) {
@@ -33,7 +33,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
 
   const tokenPrices = useMemo(
     () => poolBalances?.map((poolBalance) => getTokenPrice(poolBalance)),
-    [poolBalances]
+    [poolBalances],
   );
 
   const totalUsd = useMemo(() => {
@@ -69,7 +69,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
         const tokenAmountKey = `amounts.${tokenAmountAddress}` as const;
         const calculatedAmount = formatUnits(
           tokenAmount.rawAmount,
-          tokenAmount.decimals
+          tokenAmount.decimals,
         );
 
         setValue(tokenAmountKey, calculatedAmount);
@@ -77,7 +77,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
 
       setValue("referenceTokenAddress", address);
     },
-    [poolBalances, tokenPrices, pool, setValue]
+    [poolBalances, tokenPrices, pool, setValue],
   );
 
   if (!context) return null;
