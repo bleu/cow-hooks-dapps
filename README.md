@@ -109,7 +109,7 @@ cd my-custom-hook
 - You can deploy to any platform of your choice (Vercel, Netlify, AWS, etc.)
 - Test your deployed hook by adding it to CoW Swap using the deployed URL
 
-The library used to integrate CoW Swap with the hooks dApps is the [@cowprotocol/hook-dapp-lib](https://github.com/cowprotocol/cowswap/blob/develop/libs/hook-dapp-lib/README.md). You can use the apps in this repo as examples.
+The library used to integrate CoW Swap with the hooks dApps is [@cowprotocol/hook-dapp-lib](https://github.com/cowprotocol/cowswap/blob/develop/libs/hook-dapp-lib/README.md). You can check its usage in this repo apps as examples.
 
 ## 📚 Documentation
 
