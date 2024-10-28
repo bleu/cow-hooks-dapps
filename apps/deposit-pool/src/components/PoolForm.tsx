@@ -8,14 +8,14 @@ import { Label, formatNumber } from "@bleu/ui";
 import { useCallback, useEffect, useMemo } from "react";
 import { useFormContext, useFormState, useWatch } from "react-hook-form";
 import { type Address, formatUnits } from "viem";
+import { useTokenContext } from "#/contexts/tokens";
 import { usePoolBalance } from "#/hooks/usePoolBalance";
 import type { FormType } from "#/types";
 import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
-import { TokenAmountInput } from "./TokenAmountInput";
-import { useTokenContext } from "#/contexts/tokens";
-import { AmountFromSwapCheckbox } from "./AmountFromSwapCheckbox";
 import { AmountFromAccountCheckbox } from "./AmountFromAccountCheckbox";
+import { AmountFromSwapCheckbox } from "./AmountFromSwapCheckbox";
 import { AmountFromUserInputCheckbox } from "./AmountFromUserInputCheckbox";
+import { TokenAmountInput } from "./TokenAmountInput";
 
 export function PoolForm({ pool }: { pool: IPool | undefined }) {
   const { context } = useIFrameContext();

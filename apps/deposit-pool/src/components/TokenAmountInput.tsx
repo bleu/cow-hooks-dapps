@@ -3,8 +3,8 @@ import { Button, Input, formatNumber } from "@bleu/ui";
 import { useCallback, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
-import type { FormType } from "#/types";
 import { useTokenContext } from "#/contexts/tokens";
+import type { FormType } from "#/types";
 import { constraintStringToBeNumeric } from "#/utils/constraintStringToBeNumeric";
 
 export function TokenAmountInput({
