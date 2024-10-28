@@ -25,6 +25,7 @@ export interface ITokenAmountInput
   userBalance?: string | undefined;
   userBalanceFullDecimals?: string | undefined;
   shouldEnableMaxSelector?: boolean;
+  shouldDisplayApprox?: boolean;
 }
 
 export function TokenAmountInput({
@@ -42,6 +43,7 @@ export function TokenAmountInput({
   userBalance,
   userBalanceFullDecimals,
   shouldEnableMaxSelector,
+  shouldDisplayApprox,
   ...props
 }: ITokenAmountInput) {
   const { register, control, setValue } = useFormContext();
@@ -77,7 +79,8 @@ export function TokenAmountInput({
               title={disabledValueFullDecimals}
               className="outline-none text-right p-0 m-0 border-none text-xl text-color-text-paper bg-inherit placeholder:opacity-70 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-default"
             >
-              ≈ {disabledValue}
+              {shouldDisplayApprox && "≈ "}
+              {disabledValue}
             </span>
           ) : (
             <Input

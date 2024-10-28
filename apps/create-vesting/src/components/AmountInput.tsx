@@ -1,4 +1,4 @@
-import { TokenAmountInput } from "@bleu/cow-hooks-ui";
+import { TokenAmountInput, useIFrameContext } from "@bleu/cow-hooks-ui";
 import type { Token } from "@uniswap/sdk-core";
 
 export const AmountInput = ({
@@ -20,6 +20,8 @@ export const AmountInput = ({
   userBalanceFloat: number | undefined;
   shouldEnableMaxSelector: boolean;
 }) => {
+  const { context } = useIFrameContext();
+
   return (
     <TokenAmountInput
       name="amount"
@@ -37,6 +39,10 @@ export const AmountInput = ({
       userBalance={formattedUserBalance}
       userBalanceFullDecimals={String(userBalanceFloat)}
       shouldEnableMaxSelector={shouldEnableMaxSelector}
+      shouldDisplayApprox={
+        //@ts-ignore
+        context?.orderParams.kind === "sell"
+      }
       validation={{
         setValueAs: (v) => (v === "" ? undefined : Number(v)),
         required: !(vestAllFromAccount || vestAllFromSwap),
