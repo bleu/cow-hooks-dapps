@@ -5,7 +5,7 @@ import {
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { Label, formatNumber } from "@bleu/ui";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useFormContext, useFormState, useWatch } from "react-hook-form";
 import { type Address, formatUnits } from "viem";
 import { usePoolBalance } from "#/hooks/usePoolBalance";
@@ -13,6 +13,9 @@ import type { FormType } from "#/types";
 import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
 import { TokenAmountInput } from "./TokenAmountInput";
 import { useTokenContext } from "#/contexts/tokens";
+import { AmountFromSwapCheckbox } from "./AmountFromSwapCheckbox";
+import { AmountFromAccountCheckbox } from "./AmountFromAccountCheckbox";
+import { AmountFromUserInputCheckbox } from "./AmountFromUserInputCheckbox";
 
 export function PoolForm({ pool }: { pool: IPool | undefined }) {
   const { context } = useIFrameContext();
@@ -33,6 +36,14 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
   const referenceTokenAddress = useWatch({
     control,
     name: "referenceTokenAddress",
+  });
+  const amountFromSwap = useWatch({
+    control,
+    name: "amountFromSwap",
+  });
+  const amountFromAccount = useWatch({
+    control,
+    name: "amountFromAccount",
   });
 
   const referenceAmount = useMemo(() => {
@@ -80,7 +91,6 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
           tokenAmount.rawAmount,
           tokenAmount.decimals,
         );
-
         setValue(tokenAmountKey, calculatedAmount);
       }
 
@@ -89,7 +99,45 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
     [poolBalances, tokenPrices, pool, setValue],
   );
 
+  useEffect(() => {
+    if (tokens && context?.orderParams) {
+      const address =
+        context.orderParams.buyTokenAddress.toLowerCase() as Address;
+
+      if (amountFromSwap) {
+        const newAmount = (
+          tokens[context.orderParams.buyTokenAddress.toLowerCase()]
+            .balanceAfterSwap -
+          tokens[context.orderParams.buyTokenAddress.toLowerCase()].balanceNow
+        ).toString();
+        setValue(`amounts.${address}`, newAmount);
+        updateTokenAmounts(newAmount, address);
+      }
+
+      if (amountFromAccount) {
+        const newAmount =
+          tokens[
+            context.orderParams.buyTokenAddress.toLowerCase()
+          ].balanceAfterSwap.toString();
+        setValue(`amounts.${address}`, newAmount);
+        updateTokenAmounts(newAmount, address);
+      }
+    }
+  }, [
+    tokens,
+    context?.orderParams,
+    amountFromAccount,
+    amountFromSwap,
+    setValue,
+    updateTokenAmounts,
+  ]);
+
   if (!context) return null;
+
+  if (!context?.orderParams)
+    return <span>Please specify your order first</span>;
+
+  if (!tokens) return <Spinner size="xl" />;
 
   if (isBalanceLoading) return <Spinner size="xl" />;
 
@@ -147,6 +195,11 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
         <span className="text-right">
           ${totalUsd >= 0 ? formatNumber(totalUsd, 2) : "0"}
         </span>
+      </div>
+      <div className="w-full flex flex-col gap-y-2 mb-3">
+        <AmountFromSwapCheckbox />
+        <AmountFromAccountCheckbox />
+        <AmountFromUserInputCheckbox />
       </div>
       <ButtonPrimary type="submit" disabled={shouldDisableButton}>
         <ButtonMessage />

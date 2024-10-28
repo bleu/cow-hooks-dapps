@@ -5,13 +5,13 @@ export const formatTokenBalance = (
   tokenDecimals: number,
   swapAmount: string | null,
 ) => {
-  const balanceNowFloat = Number(balance) / 10 ** Number(tokenDecimals);
+  const balanceNowFloat = Number(balance) / 10 ** tokenDecimals;
   const swapAmountFloat =
-    swapAmount !== null ? Number(swapAmount) / 10 ** Number(tokenDecimals) : 0;
+    swapAmount !== null ? Number(swapAmount) / 10 ** tokenDecimals : 0;
   const balanceAfterSwapFloat = balanceNowFloat + swapAmountFloat;
 
   const balanceNowFormatted = formatNumber(
-    balanceAfterSwapFloat,
+    balanceNowFloat,
     4,
     "decimal",
     "standard",

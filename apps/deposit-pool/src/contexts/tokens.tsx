@@ -88,12 +88,13 @@ export function TokenContextProvider({ children }: PropsWithChildren) {
       !tokenAddress2
     )
       return;
+
     if (!tokenDecimals1 || !tokenDecimals2) return tokens;
     const token1Balances = formatTokenBalance(
       userBalance1,
       tokenDecimals1,
       context.orderParams.buyTokenAddress.toLowerCase() ===
-        context.account.toLowerCase()
+        tokenAddress1.toLowerCase()
         ? context.orderParams.buyAmount
         : null,
     );
@@ -101,7 +102,7 @@ export function TokenContextProvider({ children }: PropsWithChildren) {
       userBalance2,
       tokenDecimals2,
       context.orderParams.buyTokenAddress.toLowerCase() ===
-        context.account.toLowerCase()
+        tokenAddress2.toLowerCase()
         ? context.orderParams.buyAmount
         : null,
     );

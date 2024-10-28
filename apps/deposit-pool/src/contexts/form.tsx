@@ -12,7 +12,13 @@ import type { FormType } from "#/types";
 
 export function FormContextProvider({ children }: PropsWithChildren) {
   const { setHookInfo } = useIFrameContext();
-  const form = useForm<FormType>({});
+  const form = useForm<FormType>({
+    defaultValues: {
+      amountFromSwap: true,
+      amountFromAccount: false,
+      amountFromUserInput: false,
+    },
+  });
 
   const { handleSubmit, control } = form;
 

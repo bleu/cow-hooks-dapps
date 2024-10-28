@@ -5,6 +5,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
 import type { FormType } from "#/types";
 import { useTokenContext } from "#/contexts/tokens";
+import { constraintStringToBeNumeric } from "#/utils/constraintStringToBeNumeric";
 
 export function TokenAmountInput({
   poolBalance,
@@ -21,6 +22,14 @@ export function TokenAmountInput({
     control,
     name: `amounts.${poolBalance.token.address.toLowerCase()}`,
   });
+  const amountFromSwap = useWatch({
+    control,
+    name: "amountFromSwap",
+  });
+  const amountFromAccount = useWatch({
+    control,
+    name: "amountFromAccount",
+  });
 
   const { tokens } = useTokenContext();
 
@@ -33,7 +42,10 @@ export function TokenAmountInput({
   const onChange = useCallback(
     (amount: string) => {
       if (updateTokenAmounts) {
-        updateTokenAmounts(amount, poolBalance.token.address as Address);
+        updateTokenAmounts(
+          constraintStringToBeNumeric(amount),
+          poolBalance.token.address as Address,
+        );
       }
     },
     [updateTokenAmounts, poolBalance.token.address],
@@ -54,22 +66,21 @@ export function TokenAmountInput({
       </div>
       <div className="flex items-center justify-end">
         <Input
-          className="flex bg-transparent items-center col-span-2 border-none text-xl text-right placeholder:text-foreground/50 p-0 truncate ..."
-          type="number"
+          className="flex bg-transparent items-center col-span-2 border-none text-xl text-right placeholder:text-foreground/50 p-0 truncate disabled:opacity-100 disabled:cursor-default"
+          type="text"
           placeholder="0.0"
+          autoComplete="off"
+          disabled={amountFromSwap || amountFromAccount}
+          title={amount}
           {...register(`amounts.${poolBalance.token.address.toLowerCase()}`, {
             onChange: (e) => {
               onChange(e.target.value);
+              setValue(
+                `amounts.${poolBalance.token.address.toLowerCase()}`,
+                constraintStringToBeNumeric(e.target.value),
+              );
             },
           })}
-          onKeyDown={(e) => {
-            if (
-              ["Enter", "-", "e", "E", "+", "ArrowUp", "ArrowDown"].includes(
-                e.key,
-              )
-            )
-              e.preventDefault();
-          }}
           onWheel={(e) => {
             // @ts-ignore
             e.target.blur();
