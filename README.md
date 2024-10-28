@@ -93,36 +93,23 @@ Want to create your own hook? Follow these steps to add a new hook dApp to the m
 1. Create a new project in the apps directory:
 
 ```bash
-bashCopycd apps
+cd apps
 mkdir my-custom-hook
 cd my-custom-hook
 ```
 
-2. Copy the basic package.json structure from one of the existing apps, making sure to update:
+2. Copy the basic package.json structure from one of the existing apps, making sure to update name, description and version.
 
-```json
-{
-  "name": "@cow-hooks-dapps/my-custom-hook",
-  "description": "Your hook description",
-  "version": "0.1.0"
-  // ... rest of the configuration
-}
-```
+3. Feel free to reuse any components from the packages workspace.
 
-3. Feel free to reuse any components from the packages workspace - that's what it's there for! The shared components can save you time and ensure consistency across hooks.
-4. Implement your hook logic following the existing patterns in other apps (remember providing a manifest.json in the app public folder with the hook informations).
+4. Implement your hook logic (remember providing a manifest.json in the app public folder with the hook informations).
+
 5. Deploy your hook:
 
 - You can deploy to any platform of your choice (Vercel, Netlify, AWS, etc.)
-- Make sure your deployment URL is HTTPS-enabled
 - Test your deployed hook by adding it to CoW Swap using the deployed URL
 
-Remember to:
-
-- Keep your hook focused on a single, clear purpose
-- Maintain good error handling and user feedback
-- Test thoroughly with different token combinations
-- Document any special requirements or configurations
+The library used to integrate CoW Swap with the hooks dApps is the [@cowprotocol/hook-dapp-lib](https://github.com/cowprotocol/cowswap/blob/develop/libs/hook-dapp-lib/README.md). You can use the apps in this repo as examples.
 
 ## 📚 Documentation
 
