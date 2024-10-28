@@ -78,7 +78,7 @@ export const Checkbox = ({
         <span className="cursor-pointer">{label}</span>
       </Label>
       {isSelected && isSelectedMessage && (
-        <span className="w-full text-center mt-1 py-1 rounded-xl font-normal text-xs bg-color-warning/15 text-color-warning-text">
+        <span className="w-full text-center mt-1 py-1 rounded-xl font-normal text-xs bg-color-alert-bg/15 text-color-alert-text">
           <ExclamationTriangleIcon className="w-4 h-4 mr-1 inline" />
           {isSelectedMessage}
         </span>
