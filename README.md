@@ -6,7 +6,7 @@ A collaborative project between Bleu and CoW Protocol teams to enhance CoW Swap 
 
 CoW Hooks dApps is a collection of applications that integrate with CoW Swap's new hooks feature, allowing users to perform additional actions before or after token swaps. This monorepo contains implementations for various hooks that extend CoW Swap's functionality, making complex DeFi operations more streamlined and efficient.
 
-## 🔥 Features
+## 🔥 Hooks dApps
 
 Currently implemented hooks:
 
