@@ -18,7 +18,7 @@ import type { FormType } from "#/types";
 import { decodeCalldata } from "#/utils/decodeCalldata";
 
 export default function Page() {
-  const { context } = useIFrameContext();
+  const { context, publicClient } = useIFrameContext();
   const { data: pools, isLoading: isLoadingPools } = useTokenBuyPools();
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
 
@@ -29,10 +29,17 @@ export default function Page() {
 
   const selectedPool = useSelectedPool();
 
-  const loadHookInfo = useCallback(() => {
-    if (!context?.hookToEdit || !context.account || !isEditHookLoading) return;
-    const data = decodeCalldata(
+  const loadHookInfo = useCallback(async () => {
+    if (
+      !context?.hookToEdit ||
+      !context.account ||
+      !isEditHookLoading ||
+      !publicClient
+    )
+      return;
+    const data = await decodeCalldata(
       context?.hookToEdit?.hook.callData as `0x${string}`,
+      publicClient,
     );
     if (data) {
       setValue("poolId", data.poolId);
@@ -40,7 +47,13 @@ export default function Page() {
       setValue("referenceTokenAddress", data.referenceTokenAddress);
       setIsEditHookLoading(false);
     }
-  }, [context?.hookToEdit, context?.account, setValue, isEditHookLoading]);
+  }, [
+    context?.hookToEdit,
+    context?.account,
+    setValue,
+    isEditHookLoading,
+    publicClient,
+  ]);
 
   if (!context) return null;
 
