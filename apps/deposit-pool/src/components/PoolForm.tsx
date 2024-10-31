@@ -53,7 +53,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
 
   const tokenPrices = useMemo(
     () => poolBalances?.map((poolBalance) => getTokenPrice(poolBalance)),
-    [poolBalances],
+    [poolBalances]
   );
 
   const totalUsd = useMemo(() => {
@@ -89,14 +89,14 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
         const tokenAmountKey = `amounts.${tokenAmountAddress}` as const;
         const calculatedAmount = formatUnits(
           tokenAmount.rawAmount,
-          tokenAmount.decimals,
+          tokenAmount.decimals
         );
         setValue(tokenAmountKey, calculatedAmount);
       }
 
       setValue("referenceTokenAddress", address);
     },
-    [poolBalances, tokenPrices, pool, setValue],
+    [poolBalances, tokenPrices, pool, setValue]
   );
 
   useEffect(() => {
@@ -178,7 +178,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
   };
 
   return (
-    <div className="flex flex-col w-full items-center gap-1">
+    <div className="flex flex-col w-full gap-1">
       <Label className="block text-md mt-1">Add liquidity</Label>
       <div className="flex flex-col gap-2">
         {poolBalances.map((poolBalance, index) => (

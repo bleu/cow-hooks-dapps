@@ -28,7 +28,7 @@ export default function Page() {
   const loadHookInfo = useCallback(() => {
     if (!context?.hookToEdit || !context.account || !isEditHookLoading) return;
     const data = decodeCalldata(
-      context?.hookToEdit?.hook.callData as `0x${string}`,
+      context?.hookToEdit?.hook.callData as `0x${string}`
     );
     if (data) {
       setValue("poolId", data.poolId);
@@ -75,7 +75,7 @@ export default function Page() {
         PoolItemInfo={PoolItemInfo}
         pools={pools || []}
         selectedPool={selectedPool}
-        isCheckDetailsCentered={true}
+        isCheckDetailsCentered={false}
       />
       {selectedPool && (
         <div className="flex flex-col justify-center mt-2 w-full">
