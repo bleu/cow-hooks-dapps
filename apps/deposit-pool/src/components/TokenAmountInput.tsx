@@ -61,7 +61,7 @@ export function TokenAmountInput({
         <TokenLogoWithWeight
           token={poolBalance.token}
           weight={poolBalance.weight}
-          className="text-lg h-10"
+          className="text-md xsm:text-lg h-10"
         />
       </div>
       <div className="flex items-center justify-end">
@@ -90,7 +90,7 @@ export function TokenAmountInput({
       </div>
       <div className="flex items-center justify-start">
         {tokenBalanceAfterSwap && (
-          <div className="flex gap-1">
+          <div className="flex gap-1 items-center">
             <span className="ml-1 text-xs font-normal opacity-70">
               Balance: {formatNumber(tokenBalanceAfterSwap)}
             </span>

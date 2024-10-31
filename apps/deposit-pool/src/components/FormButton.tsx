@@ -59,8 +59,11 @@ export function FormButton({ poolBalances }: { poolBalances: IBalance[] }) {
   }, [insufficientTokenSymbols, isSubmitting, referenceAmount]);
 
   const ButtonMessage = () => {
-    if (insufficientTokenSymbols.length) {
-      return `Insufficient balance for ${insufficientTokenSymbols.join(", ")}`;
+    if (insufficientTokenSymbols.length === 1) {
+      return `Insufficient balance for ${insufficientTokenSymbols[0]}`;
+    }
+    if (insufficientTokenSymbols.length > 1) {
+      return "Insufficient balance for multiple tokens";
     }
     if (isSubmitting) return "Creating hook...";
     if (context?.hookToEdit) return "Update post-hook";

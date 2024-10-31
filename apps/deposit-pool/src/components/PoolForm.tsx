@@ -154,9 +154,9 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
         </span>
       </div>
       <div className="w-full flex flex-col gap-y-2 mb-3">
+        <AmountFromUserInputCheckbox />
         <AmountFromSwapCheckbox />
         <AmountFromAccountCheckbox />
-        <AmountFromUserInputCheckbox />
       </div>
       <Info content={<InfoContent />} />
       <FormButton poolBalances={poolBalances} />

@@ -14,9 +14,9 @@ export function FormContextProvider({ children }: PropsWithChildren) {
   const { setHookInfo } = useIFrameContext();
   const form = useForm<FormType>({
     defaultValues: {
-      amountFromSwap: true,
+      amountFromSwap: false,
       amountFromAccount: false,
-      amountFromUserInput: false,
+      amountFromUserInput: true,
     },
   });
 
