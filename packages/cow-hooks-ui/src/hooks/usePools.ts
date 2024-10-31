@@ -123,7 +123,7 @@ export function usePools(
             userBalance: {
               ...pool.userBalance,
               walletBalance: parseUnits(
-                Number(pool.userBalance.walletBalance).toFixed(pool.decimals),
+                pool.userBalance.walletBalance,
                 pool.decimals,
               ),
               stakedBalances: pool.userBalance.stakedBalances.map((staked) => ({
