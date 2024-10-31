@@ -4,7 +4,13 @@ import { useCallback } from "react";
 import { useIFrameContext } from "../context/iframe";
 import { useEstimateGas } from "./useEstimateGas";
 
-export function useSubmitHook(recipientOverride?: string) {
+export function useSubmitHook({
+  recipientOverride,
+  defaultGasLimit,
+}: {
+  recipientOverride?: string;
+  defaultGasLimit?: bigint;
+}) {
   const { context, actions } = useIFrameContext();
   const estimateGas = useEstimateGas();
   return useCallback(
@@ -17,6 +23,7 @@ export function useSubmitHook(recipientOverride?: string) {
           calldata: hook.callData,
           target: hook.target,
         });
+        if (defaultGasLimit) return defaultGasLimit;
         throw new Error("Failed to estimated hook gas");
       });
 
@@ -41,6 +48,6 @@ export function useSubmitHook(recipientOverride?: string) {
 
       actions.addHook({ hook: hookWithGasLimit, recipientOverride });
     },
-    [actions, context, recipientOverride, estimateGas],
+    [actions, context, recipientOverride, estimateGas, defaultGasLimit],
   );
 }

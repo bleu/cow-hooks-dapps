@@ -26,7 +26,7 @@ export default function Page() {
     useIFrameContext();
   const [account, setAccount] = useState<string>();
   const router = useRouter();
-  const submitHook = useSubmitHook();
+  const submitHook = useSubmitHook({ defaultGasLimit: BigInt(450000) });
   const cowShedSignature = useCowShedSignature({
     cowShed,
     signer,
