@@ -1,6 +1,6 @@
 import {
-  Info,
   type IPool,
+  Info,
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
@@ -9,16 +9,16 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { type Address, formatUnits } from "viem";
 import { usePoolBalance } from "#/hooks/usePoolBalance";
+import { useSwapAmount } from "#/hooks/useSwapAmount";
+import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
 import type { FormType } from "#/types";
 import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
 import { AmountFromAccountCheckbox } from "./AmountFromAccountCheckbox";
 import { AmountFromSwapCheckbox } from "./AmountFromSwapCheckbox";
 import { AmountFromUserInputCheckbox } from "./AmountFromUserInputCheckbox";
-import { TokenAmountInput } from "./TokenAmountInput";
-import { useSwapAmount } from "#/hooks/useSwapAmount";
-import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
 import { FormButton } from "./FormButton";
 import { InfoContent } from "./InfoContent";
+import { TokenAmountInput } from "./TokenAmountInput";
 
 export function PoolForm({ pool }: { pool: IPool | undefined }) {
   const { context } = useIFrameContext();
@@ -26,7 +26,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
 
   const { buyAmount } = useSwapAmount();
   const buyAmountAfterSwap = useTokenBalanceAfterSwap(
-    context?.orderParams?.buyTokenAddress as Address
+    context?.orderParams?.buyTokenAddress as Address,
   );
 
   const { data: poolBalances, isLoading: isBalanceLoading } = usePoolBalance({
@@ -46,7 +46,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
 
   const tokenPrices = useMemo(
     () => poolBalances?.map((poolBalance) => getTokenPrice(poolBalance)),
-    [poolBalances]
+    [poolBalances],
   );
 
   const totalUsd = useMemo(() => {
@@ -82,14 +82,14 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
         const tokenAmountKey = `amounts.${tokenAmountAddress}` as const;
         const calculatedAmount = formatUnits(
           tokenAmount.rawAmount,
-          tokenAmount.decimals
+          tokenAmount.decimals,
         );
         setValue(tokenAmountKey, calculatedAmount);
       }
 
       setValue("referenceTokenAddress", address);
     },
-    [poolBalances, tokenPrices, pool, setValue]
+    [poolBalances, tokenPrices, pool, setValue],
   );
 
   useEffect(() => {
@@ -116,7 +116,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
     }
   }, [
     context?.orderParams,
-    amountFromSwap,
+    amountFromAccount,
     setValue,
     updateTokenAmounts,
     buyAmountAfterSwap,

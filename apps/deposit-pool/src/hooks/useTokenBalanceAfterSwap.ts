@@ -1,8 +1,8 @@
-import { Address, formatUnits, parseUnits } from "viem";
-import { useSwapAmount } from "./useSwapAmount";
 import { useIFrameContext, useReadTokenContract } from "@bleu/cow-hooks-ui";
 import { useMemo } from "react";
+import { type Address, formatUnits } from "viem";
 import { updateTokenBalanceAfterSwap } from "#/utils/math";
+import { useSwapAmount } from "./useSwapAmount";
 
 export function useTokenBalanceAfterSwap(address: string) {
   const { context } = useIFrameContext();
@@ -16,7 +16,7 @@ export function useTokenBalanceAfterSwap(address: string) {
     return updateTokenBalanceAfterSwap({
       userBalance: formatUnits(
         userBalance || BigInt(0),
-        tokenDecimals
+        tokenDecimals,
       ) as `${number}`,
       tokenAddress: address as Address,
       tokenDecimals: tokenDecimals,
@@ -25,5 +25,5 @@ export function useTokenBalanceAfterSwap(address: string) {
       tokenBuyAddress: context?.orderParams?.buyTokenAddress as Address,
       tokenSellAddress: context?.orderParams?.sellTokenAddress as Address,
     });
-  }, [buyAmount, sellAmount, tokenDecimals, userBalance]);
+  }, [buyAmount, sellAmount, tokenDecimals, userBalance, context, address]);
 }

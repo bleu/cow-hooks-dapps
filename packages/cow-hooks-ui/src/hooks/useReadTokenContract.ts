@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import useSWR from "swr";
-import { type Address, erc20Abi, PublicClient, zeroAddress } from "viem";
+import { type Address, type PublicClient, erc20Abi, zeroAddress } from "viem";
 import { useIFrameContext } from "../context/iframe";
 
 export const useReadTokenContract = ({
@@ -16,7 +16,7 @@ export const useReadTokenContract = ({
       if (!publicClient || !context?.account) return;
       return readTokenContract(address, publicClient, context?.account);
     },
-    [publicClient, context?.account]
+    [publicClient, context?.account],
   );
 
   const {
@@ -49,7 +49,7 @@ export const useReadTokenContract = ({
 export const readTokenContract = async (
   address: Address,
   publicClient: PublicClient,
-  account: Address
+  account: Address,
 ) => {
   const tokenContract = {
     address: address,

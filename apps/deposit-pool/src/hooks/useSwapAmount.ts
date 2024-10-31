@@ -17,7 +17,7 @@ export function useSwapAmount() {
     if (!context?.orderParams?.buyAmount || !tokenBuyDecimals) return;
     return formatUnits(
       BigInt(context.orderParams.buyAmount),
-      tokenBuyDecimals
+      tokenBuyDecimals,
     ) as `${number}`;
   }, [context?.orderParams?.buyAmount, tokenBuyDecimals]);
 
@@ -25,7 +25,7 @@ export function useSwapAmount() {
     if (!context?.orderParams?.sellAmount || !tokenSellDecimals) return;
     return formatUnits(
       BigInt(context.orderParams.sellAmount),
-      tokenSellDecimals
+      tokenSellDecimals,
     ) as `${number}`;
   }, [context?.orderParams?.sellAmount, tokenSellDecimals]);
 

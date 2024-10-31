@@ -1,18 +1,22 @@
-import { useTokensAfterSwap } from "#/hooks/useTokensAfterSwap";
-import { FormType } from "#/types";
-import { ButtonPrimary, IBalance, useIFrameContext } from "@bleu/cow-hooks-ui";
+import {
+  ButtonPrimary,
+  type IBalance,
+  useIFrameContext,
+} from "@bleu/cow-hooks-ui";
 import { useMemo } from "react";
 import { useFormContext, useFormState, useWatch } from "react-hook-form";
-import { Address } from "viem";
+import type { Address } from "viem";
+import { useTokensAfterSwap } from "#/hooks/useTokensAfterSwap";
+import type { FormType } from "#/types";
 
 export function FormButton({ poolBalances }: { poolBalances: IBalance[] }) {
   const { context } = useIFrameContext();
   const tokenAddresses = useMemo(
     () =>
       poolBalances.map(
-        (poolBalance) => poolBalance.token.address.toLowerCase() as Address
+        (poolBalance) => poolBalance.token.address.toLowerCase() as Address,
       ),
-    [poolBalances]
+    [poolBalances],
   );
   const poolTokens = useTokensAfterSwap(tokenAddresses);
 
