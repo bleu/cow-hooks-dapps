@@ -86,7 +86,7 @@ export function TokenAmountInput({
             <Input
               className={cn(
                 "outline-none text-right p-0 m-0 h-min border-none rounded-none text-xl text-color-text-paper bg-inherit placeholder:opacity-70 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
-                className
+                className,
               )}
               {...register(name, validation)}
               {...props}
