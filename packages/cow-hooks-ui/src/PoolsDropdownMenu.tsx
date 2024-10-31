@@ -19,6 +19,7 @@ import {
   CommandItem,
   CommandList,
 } from "./ui/Command";
+import { InfoTooltip } from "./ui/TooltipBase";
 
 export function PoolsDropdownMenu({
   onSelect,
@@ -26,12 +27,14 @@ export function PoolsDropdownMenu({
   PoolItemInfo,
   selectedPool,
   isCheckDetailsCentered = true,
+  tooltipText,
 }: {
   onSelect: (pool: IPool) => void;
   pools: IPool[];
   PoolItemInfo: React.ComponentType<{ pool: IPool }>;
   selectedPool?: IPool;
   isCheckDetailsCentered: boolean;
+  tooltipText?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -52,22 +55,25 @@ export function PoolsDropdownMenu({
   return (
     <div className="flex w-full flex-col items-center gap-2">
       <Dialog.Root open={open} onOpenChange={setOpen}>
-        <Dialog.Trigger
-          className={
-            "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-muted shadow-sm text-foreground group hover:bg-primary hover:text-primary-foreground"
-          }
-          onClick={() => setOpen(true)}
-        >
-          {selectedPool ? <PoolLogo pool={selectedPool} /> : "Select a pool"}
-          <ChevronDownIcon className="size-4" />
-        </Dialog.Trigger>
+        <div className="flex flex-row gap-1 w-full justify-between">
+          <Dialog.Trigger
+            className={
+              "w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-muted shadow-sm text-foreground group hover:bg-primary hover:text-primary-foreground"
+            }
+            onClick={() => setOpen(true)}
+          >
+            {selectedPool ? <PoolLogo pool={selectedPool} /> : "Select a pool"}
+            <ChevronDownIcon className="size-4" />
+          </Dialog.Trigger>
+        </div>
         <Dialog.Portal>
           <Dialog.Content className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] border p-[15px] w-screen h-screen bg-background border-none flex flex-col gap-2">
             <div className="flex items-center gap-2">
               <Dialog.Close className="cursor-pointer hover:opacity-50">
                 <ArrowLeftIcon className="size-5" />
               </Dialog.Close>
-              <span>Select a pool</span>
+              <Dialog.Title>Select a pool</Dialog.Title>
+              {tooltipText && <InfoTooltip text={tooltipText} />}
             </div>
             <Command
               filter={(value: string, search: string) => {

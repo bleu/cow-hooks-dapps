@@ -22,6 +22,9 @@ module.exports = {
       borderWidth: {
         1: "1px",
       },
+      boxShadow: {
+        cow: "0px 0px 5px 0.5px rgba(0,0,0,0.01)",
+      },
       screens: {
         xsm: "420px",
       },

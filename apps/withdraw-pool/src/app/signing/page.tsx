@@ -21,23 +21,12 @@ import type { WithdrawSchemaType } from "#/utils/schema";
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [permitTxs, setPermitTxs] = useState<BaseTransaction[]>([]);
-  const {
-    actions,
-    hookInfo,
-    cowShed,
-    signer,
-    context,
-    publicClient,
-    cowShedProxy,
-  } = useIFrameContext();
+  const { hookInfo, cowShed, signer, context, cowShedProxy } =
+    useIFrameContext();
   const { getValues } = useFormContext<WithdrawSchemaType>();
   const [account, setAccount] = useState<string>();
   const router = useRouter();
-  const submitHook = useSubmitHook({
-    actions,
-    context,
-    publicClient,
-  });
+  const submitHook = useSubmitHook();
   const cowShedSignature = useCowShedSignature({
     cowShed,
     signer,
@@ -68,8 +57,10 @@ export default function Page() {
     const cowShedCall = await cowShedSignature(txs);
     if (!cowShedCall) throw new Error("Error signing hooks");
     const withdrawPct = getValues("withdrawPct");
-    const cowShedCallDataWithWithdrawPct =
-      cowShedCall + Number(Number(withdrawPct).toFixed()).toString(16); // adding to facilitate editing the hook
+    const withdrawPctHex = Number(Number(withdrawPct).toFixed())
+      .toString(16)
+      .padStart(4, "0");
+    const cowShedCallDataWithWithdrawPct = cowShedCall + withdrawPctHex; // adding to facilitate editing the hook
     await submitHook({
       target: cowShed.getFactoryAddress(),
       callData: cowShedCallDataWithWithdrawPct,

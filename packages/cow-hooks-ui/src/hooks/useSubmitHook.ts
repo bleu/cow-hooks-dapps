@@ -1,43 +1,24 @@
-import { COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS } from "@cowprotocol/cow-sdk";
-import type { CoWHookDappActions, CowHook } from "@cowprotocol/hook-dapp-lib";
+import type { CowHook } from "@cowprotocol/hook-dapp-lib";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
-import type { Address, PublicClient } from "viem";
-import type { HookDappContextAdjusted } from "../types";
+import { useIFrameContext } from "../context/iframe";
+import { useEstimateGas } from "./useEstimateGas";
 
-export function useSubmitHook({
-  actions,
-  context,
-  publicClient,
-  recipientOverride,
-}: {
-  actions: CoWHookDappActions | undefined;
-  context: HookDappContextAdjusted | undefined;
-  publicClient: PublicClient | undefined;
-  recipientOverride?: string;
-}) {
+export function useSubmitHook(recipientOverride?: string) {
+  const { context, actions } = useIFrameContext();
+  const estimateGas = useEstimateGas();
   return useCallback(
     async (hook: Omit<CowHook, "gasLimit" | "dappId">) => {
-      if (!context || !actions || !publicClient)
-        throw new Error("Missing context");
+      if (!context || !actions) throw new Error("Missing context");
 
-      const estimatedGas = await publicClient
-        .estimateGas({
-          account: COW_PROTOCOL_SETTLEMENT_CONTRACT_ADDRESS[
-            context.chainId
-          ] as `0x${string}`,
-          to: hook.target as Address,
-          value: BigInt(0),
-          data: hook.callData as `0x${string}`,
-        })
-        .catch(() => {
-          console.error("Failed to estimated hook gas", {
-            chainId: context.chainId,
-            calldata: hook.callData,
-            target: hook.target,
-          });
-          throw new Error("Failed to estimate hook gas");
+      const estimatedGas = await estimateGas(hook).catch(() => {
+        console.error("Failed to estimated hook gas", {
+          chainId: context.chainId,
+          calldata: hook.callData,
+          target: hook.target,
         });
+        throw new Error("Failed to estimated hook gas");
+      });
 
       const gasLimit = BigNumber.from(estimatedGas)
         .mul(120)
@@ -60,6 +41,6 @@ export function useSubmitHook({
 
       actions.addHook({ hook: hookWithGasLimit, recipientOverride });
     },
-    [actions, context, recipientOverride, publicClient],
+    [actions, context, recipientOverride, estimateGas],
   );
 }

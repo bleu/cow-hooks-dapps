@@ -37,14 +37,18 @@ function SignatureStep({
 }) {
   return (
     <div className="flex flex-col items-center h-full">
-      <div className="flex flex-row items-center gap-2 py-2">
+      <div className="flex flex-row items-center gap-2 py-2 w-52">
         <div className="inline-flex items-center justify-center w-6 h-6 border-1 border-primary rounded-full">
           <span className="text-xs w-full text-center">{stepIndex + 1}</span>
         </div>
-        <span className="text-sm">{step.label}</span>
-        {stepIndex < currentStepIndex && (
-          <CheckIcon className="size-5 text-primary-foreground bg-primary rounded-full" />
-        )}
+        <div className="w-40 flex items-center justify-center">
+          <span className="text-sm">{step.label}</span>
+        </div>
+        <div className="w-5 flex items-center justify-center">
+          {stepIndex < currentStepIndex && (
+            <CheckIcon className="size-5 text-primary-foreground bg-primary rounded-full" />
+          )}
+        </div>
       </div>
       {stepIndex !== lastIndex && <div className="h-full w-[1px] bg-primary" />}
     </div>

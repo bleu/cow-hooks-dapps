@@ -145,20 +145,8 @@ importers:
         specifier: ^5.5.1
         version: 5.5.1(encoding@0.1.13)(ethers@5.7.2)
       '@cowprotocol/hook-dapp-lib':
-        specifier: 1.1.0-RC0
-        version: 1.1.0-RC0
-      '@fortawesome/fontawesome-svg-core':
-        specifier: ^6.6.0
-        version: 6.6.0
-      '@fortawesome/free-regular-svg-icons':
-        specifier: ^6.6.0
-        version: 6.6.0
-      '@fortawesome/free-solid-svg-icons':
-        specifier: ^6.6.0
-        version: 6.6.0
-      '@fortawesome/react-fontawesome':
-        specifier: ^0.2.2
-        version: 0.2.2(@fortawesome/fontawesome-svg-core@6.6.0)(react@19.0.0-rc-e4953922-20240919)
+        specifier: 1.2.0
+        version: 1.2.0
       '@hookform/resolvers':
         specifier: 3.9.0
         version: 3.9.0(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))
@@ -1084,6 +1072,9 @@ packages:
 
   '@cowprotocol/hook-dapp-lib@1.1.0-RC0':
     resolution: {integrity: sha512-LfwdK1XWLgZapZoEmFbOvO6LCvr4RsNsedvCvnqdp6kfqSuZEuvcnNz+mSJ3SF5IY7yLtUhSBDzldXPyxaNr/A==}
+
+  '@cowprotocol/hook-dapp-lib@1.2.0':
+    resolution: {integrity: sha512-GdPhYc74Vwq2A/lZa849zncK/H9/0ZsLnk2ZvRDhgpoH6gqYktTZDqqtHhnXlvpb+oBx1MYQiZqYcxccs/M+oA==}
 
   '@cowprotocol/iframe-transport@1.0.0':
     resolution: {integrity: sha512-tQJno9m1ywUs2aNekvQoMG6qzrNgNamo5tO1bctQQh2+81OMQYTjw8N5L7mQMIFzbRRphcJubg5ciy9LFAo7PA==}
@@ -6893,6 +6884,10 @@ snapshots:
       - encoding
 
   '@cowprotocol/hook-dapp-lib@1.1.0-RC0':
+    dependencies:
+      '@cowprotocol/iframe-transport': 1.0.0
+
+  '@cowprotocol/hook-dapp-lib@1.2.0':
     dependencies:
       '@cowprotocol/iframe-transport': 1.0.0
 

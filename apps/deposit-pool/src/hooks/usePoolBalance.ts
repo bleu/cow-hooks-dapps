@@ -24,7 +24,7 @@ interface IQuery {
     totalBalance: `${number}`;
     totalBalanceUsd: number;
   };
-  poolTokens: {
+  allTokens: {
     id: `0x${string}`;
     address: Address;
     name: string;
@@ -53,7 +53,7 @@ export const POOL_QUERY = gql`
         totalBalance
         totalBalanceUsd
       }
-      poolTokens {
+      allTokens {
         id
         address
         name
@@ -83,7 +83,7 @@ async function fetchPoolBalance(
     throw new Error("Pool not found");
   }
 
-  const balances = result.pool.poolTokens.map((token) => {
+  const balances = result.pool.allTokens.map((token) => {
     const balanceTotal = parseUnits(token.balance.toString(), token.decimals);
 
     return {
