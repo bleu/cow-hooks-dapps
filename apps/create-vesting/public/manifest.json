@@ -33,7 +33,7 @@
     "walletCompatibility": ["EOA"],
     "conditions": {
       "position": "post",
-      "smartContractWalletSupported": false
+      "walletCompatibility": ["EOA"]
     }
   }
 }

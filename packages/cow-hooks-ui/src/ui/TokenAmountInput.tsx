@@ -93,21 +93,21 @@ export function TokenAmountInput({
             />
           )}
           {userBalance && token?.symbol && shouldEnableMaxSelector && (
-            <div className="flex items-center">
+            <span>
               <button
                 type="button"
-                className="inline text-color-text-paper bg-color-paper p-1 mr-1 opacity-100 rounded-md text-xs hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]"
+                className="inline text-color-text-paper bg-color-paper px-1 mr-1 opacity-100 rounded-md text-xs hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]"
                 onClick={() => setValue(name, Number(userBalanceFullDecimals))}
               >
                 MAX
               </button>
               <span
                 title={userBalanceFullDecimals}
-                className="opacity-40 text-xs cursor-default"
+                className="opacity-40 text-xs cursor-default text-right"
               >
                 Balance: {userBalance} {token?.symbol}
               </span>
-            </div>
+            </span>
           )}
           {userBalance && token?.symbol && !shouldEnableMaxSelector && (
             <span
