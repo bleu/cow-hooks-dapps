@@ -6,15 +6,7 @@ export const ButtonPrimary: React.FC<
 > = ({ children, disabled = false, ...props }) => (
   <button
     className={cn(
-      "flex flex-row flex-wrap w-full items-center justify-center text-sm font-semibold border-none shadow-none rounded-2xl relative min-h-[58px] xsm:text-lg",
-      {
-        "bg-color-primary text-color-button-text transition-colors duration-200 ease-in-out focus:shadow-none focus:transform-none focus:bg-color-primary-lighter hover:shadow-none hover:transform-none hover:bg-color-primary-lighter active:shadow-none active:transform-none active:bg-color-primary-lighter":
-          !disabled,
-      },
-      {
-        "border-transparent outline-none cursor-auto shadow-none bg-color-paper-darker text-color-button-text-disabled":
-          disabled,
-      },
+      "flex flex-row flex-wrap w-full items-center justify-center text-sm font-semibold border-none shadow-none rounded-2xl relative min-h-[58px] xsm:text-lg disabled:border-transparent bg-color-primary text-color-button-text transition-colors duration-200 ease-in-out focus:shadow-none focus:transform-none focus:bg-color-primary-lighter hover:shadow-none hover:transform-none hover:bg-color-primary-lighter active:shadow-none active:transform-none active:bg-color-primary-lighter disabled:outline-none disabled:cursor-auto disabled:shadow-none disabled:bg-color-paper-darker disabled:text-color-button-text-disabled mb-4"
     )}
     disabled={disabled}
     {...props}
