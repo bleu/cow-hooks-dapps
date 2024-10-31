@@ -14,7 +14,7 @@ import {
 import { BigNumber, type BigNumberish } from "ethers";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
 import type { FormType } from "#/types";
 import { encodeFormData } from "#/utils/encodeFormData";
@@ -36,8 +36,8 @@ export default function Page() {
     spender: cowShedProxy,
   });
 
-  const { getValues } = useFormContext<FormType>();
-  const encodedFormData = encodeFormData(getValues());
+  const { control } = useFormContext<FormType>();
+  const values = useWatch({ control });
 
   useEffect(() => {
     if (!account && context?.account) {
@@ -60,18 +60,13 @@ export default function Page() {
     const cowShedCall = await cowShedSignature(txs);
     if (!cowShedCall) throw new Error("Error signing hooks");
 
+    const encodedFormData = encodeFormData(values as FormType);
+
     await submitHook({
       target: cowShed.getFactoryAddress(),
       callData: cowShedCall + encodedFormData,
     });
-  }, [
-    cowShedSignature,
-    submitHook,
-    hookInfo,
-    permitTxs,
-    cowShed,
-    encodedFormData,
-  ]);
+  }, [cowShedSignature, submitHook, hookInfo, permitTxs, cowShed, values]);
 
   const permitCallback = useCallback(
     async (permit: {

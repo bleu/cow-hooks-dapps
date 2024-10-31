@@ -31,14 +31,14 @@ export default function Page() {
 
   const loadHookInfo = useCallback(async () => {
     if (
-      !context?.hookToEdit ||
+      !context?.hookToEdit?.hook.callData ||
       !context.account ||
       !isEditHookLoading ||
       !publicClient
     )
       return;
     const data = await decodeCalldata(
-      context?.hookToEdit?.hook.callData as `0x${string}`,
+      context?.hookToEdit.hook.callData as `0x${string}`,
       publicClient,
     );
     if (data) {

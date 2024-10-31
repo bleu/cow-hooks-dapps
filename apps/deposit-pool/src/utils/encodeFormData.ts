@@ -13,8 +13,8 @@ function processAmount(amount: string | number) {
 export function encodeFormData(data: FormType): string {
   const { poolId, amounts, referenceTokenAddress } = data;
 
-  const keys = Object.keys(amounts);
-  const values = Object.values(amounts);
+  const keys = Object.keys(amounts || {});
+  const values = Object.values(amounts || {});
 
   const encodedPoolId = remove0x(poolId); // size = 40
   const encodedToken1 = remove0x(keys[0]); // size = 40

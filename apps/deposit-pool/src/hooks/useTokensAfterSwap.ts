@@ -15,10 +15,10 @@ export function useTokensAfterSwap(
     if (!buyAmount || !sellAmount || !context?.orderParams)
       return balancesBeforeSwap;
 
-    return Object.keys(balancesBeforeSwap).reduce(
+    return Object.keys(balancesBeforeSwap || {}).reduce(
       (acc, token, _index) => {
-        // biome-ignore lint:
-        if (!balancesBeforeSwap[token]) return { ...acc };
+        const tokenBalance = balancesBeforeSwap[token];
+        if (!tokenBalance) return acc;
         return {
           // biome-ignore lint:
           ...acc,
