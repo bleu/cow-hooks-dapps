@@ -1,4 +1,9 @@
-import { type IPool, Spinner, useIFrameContext } from "@bleu/cow-hooks-ui";
+import {
+  Info,
+  type IPool,
+  Spinner,
+  useIFrameContext,
+} from "@bleu/cow-hooks-ui";
 import { Label, formatNumber } from "@bleu/ui";
 import { useCallback, useEffect, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
@@ -13,6 +18,7 @@ import { TokenAmountInput } from "./TokenAmountInput";
 import { useSwapAmount } from "#/hooks/useSwapAmount";
 import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
 import { FormButton } from "./FormButton";
+import { InfoContent } from "./InfoContent";
 
 export function PoolForm({ pool }: { pool: IPool | undefined }) {
   const { context } = useIFrameContext();
@@ -152,6 +158,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
         <AmountFromAccountCheckbox />
         <AmountFromUserInputCheckbox />
       </div>
+      <Info content={<InfoContent />} />
       <FormButton poolBalances={poolBalances} />
     </div>
   );

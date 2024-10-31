@@ -63,7 +63,11 @@ export function FormButton({ poolBalances }: { poolBalances: IBalance[] }) {
     return "Add post-hook";
   };
   return (
-    <ButtonPrimary type="submit" disabled={shouldDisableButton}>
+    <ButtonPrimary
+      className="mt-3"
+      type="submit"
+      disabled={shouldDisableButton}
+    >
       <ButtonMessage />
     </ButtonPrimary>
   );
