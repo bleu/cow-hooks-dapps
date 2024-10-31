@@ -18,7 +18,7 @@
     }
   ],
   "orientation": "portrait",
-  "name": "Create LlamaPay Vesting Hook",
+  "name": "Create LlamaPay Vesting",
   "short_name": "Create LlamaPay Vesting",
   "start_url": ".",
   "theme_color": "#ffffff",

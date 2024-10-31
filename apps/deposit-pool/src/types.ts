@@ -8,6 +8,9 @@ export interface SignatureStepsProps {
 
 export type FormType = {
   poolId: string;
-  amounts: Record<string, number>;
+  amounts: Record<string, string>;
   referenceTokenAddress: string;
+  amountFromUserInput: boolean;
+  amountFromSwap: boolean;
+  amountFromAccount: boolean;
 };

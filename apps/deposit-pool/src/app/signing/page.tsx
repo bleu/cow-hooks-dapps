@@ -14,7 +14,10 @@ import {
 import { BigNumber, type BigNumberish } from "ethers";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useFormContext } from "react-hook-form";
 import type { Address } from "viem";
+import type { FormType } from "#/types";
+import { encodeFormData } from "#/utils/encodeFormData";
 
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -23,7 +26,7 @@ export default function Page() {
     useIFrameContext();
   const [account, setAccount] = useState<string>();
   const router = useRouter();
-  const submitHook = useSubmitHook();
+  const submitHook = useSubmitHook({ defaultGasLimit: BigInt(450000) });
   const cowShedSignature = useCowShedSignature({
     cowShed,
     signer,
@@ -32,6 +35,9 @@ export default function Page() {
   const handleTokenAllowance = useHandleTokenAllowance({
     spender: cowShedProxy,
   });
+
+  const { getValues } = useFormContext<FormType>();
+  const encodedFormData = encodeFormData(getValues());
 
   useEffect(() => {
     if (!account && context?.account) {
@@ -53,11 +59,19 @@ export default function Page() {
     const txs = [...permitTxs, ...hookInfo.txs];
     const cowShedCall = await cowShedSignature(txs);
     if (!cowShedCall) throw new Error("Error signing hooks");
+
     await submitHook({
       target: cowShed.getFactoryAddress(),
-      callData: cowShedCall,
+      callData: cowShedCall + encodedFormData,
     });
-  }, [cowShedSignature, submitHook, hookInfo, permitTxs, cowShed]);
+  }, [
+    cowShedSignature,
+    submitHook,
+    hookInfo,
+    permitTxs,
+    cowShed,
+    encodedFormData,
+  ]);
 
   const permitCallback = useCallback(
     async (permit: {

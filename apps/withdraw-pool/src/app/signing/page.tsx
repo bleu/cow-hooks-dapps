@@ -26,7 +26,7 @@ export default function Page() {
   const { getValues } = useFormContext<WithdrawSchemaType>();
   const [account, setAccount] = useState<string>();
   const router = useRouter();
-  const submitHook = useSubmitHook();
+  const submitHook = useSubmitHook({});
   const cowShedSignature = useCowShedSignature({
     cowShed,
     signer,

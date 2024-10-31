@@ -7,8 +7,7 @@ export function PoolItemInfo({ pool }: { pool: IPool }) {
 
   return (
     <i className="text-xs">
-      TVL: ${formatNumber(pool.dynamicData.totalLiquidity, 2)} - Volume (24h): $
-      {formatNumber(pool.dynamicData.totalLiquidity, 2)} - APR:{" "}
+      TVL: ${formatNumber(pool.dynamicData.totalLiquidity, 2)} - APR:{" "}
       {formatNumber(aprSumPct, 2)}%
     </i>
   );

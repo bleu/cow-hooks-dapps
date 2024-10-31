@@ -87,6 +87,7 @@ export default function Page() {
         pools={pools || []}
         PoolItemInfo={PoolItemInfo}
         selectedPool={selectedPool}
+        isCheckDetailsCentered
         tooltipText="Withdraw of staked liquidity or pool with low user balance are not supported"
       />
       <PoolForm selectedPool={selectedPool} />

@@ -1,6 +1,6 @@
 "use client";
 
-import { type PropsWithChildren, useCallback, useEffect, useMemo } from "react";
+import { type PropsWithChildren, useCallback, useMemo } from "react";
 
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { Form } from "@bleu/ui";
@@ -11,10 +11,16 @@ import { useTokenBuyPools } from "#/hooks/useTokenBuyPools";
 import type { FormType } from "#/types";
 
 export function FormContextProvider({ children }: PropsWithChildren) {
-  const { context, setHookInfo } = useIFrameContext();
-  const form = useForm<FormType>({});
+  const { setHookInfo } = useIFrameContext();
+  const form = useForm<FormType>({
+    defaultValues: {
+      amountFromSwap: false,
+      amountFromAccount: false,
+      amountFromUserInput: true,
+    },
+  });
 
-  const { handleSubmit, setValue, control } = form;
+  const { handleSubmit, control } = form;
 
   const router = useRouter();
 
@@ -34,15 +40,10 @@ export function FormContextProvider({ children }: PropsWithChildren) {
       const hookInfo = await getHookInfo(data);
       if (!hookInfo) return;
       setHookInfo(hookInfo);
-      await router.push("/signing");
+      router.push("/signing");
     },
     [getHookInfo, setHookInfo, router],
   );
-
-  // biome-ignore lint:
-  useEffect(() => {
-    setValue("poolId", "");
-  }, [context?.account]);
 
   return (
     <Form
