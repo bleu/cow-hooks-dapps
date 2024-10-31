@@ -1,14 +1,8 @@
-import {
-  ButtonPrimary,
-  type IPool,
-  Spinner,
-  useIFrameContext,
-} from "@bleu/cow-hooks-ui";
+import { type IPool, Spinner, useIFrameContext } from "@bleu/cow-hooks-ui";
 import { Label, formatNumber } from "@bleu/ui";
 import { useCallback, useEffect, useMemo } from "react";
-import { useFormContext, useFormState, useWatch } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import { type Address, formatUnits } from "viem";
-import { useTokenContext } from "#/contexts/tokens";
 import { usePoolBalance } from "#/hooks/usePoolBalance";
 import type { FormType } from "#/types";
 import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
@@ -16,27 +10,25 @@ import { AmountFromAccountCheckbox } from "./AmountFromAccountCheckbox";
 import { AmountFromSwapCheckbox } from "./AmountFromSwapCheckbox";
 import { AmountFromUserInputCheckbox } from "./AmountFromUserInputCheckbox";
 import { TokenAmountInput } from "./TokenAmountInput";
+import { useSwapAmount } from "#/hooks/useSwapAmount";
+import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
+import { FormButton } from "./FormButton";
 
 export function PoolForm({ pool }: { pool: IPool | undefined }) {
   const { context } = useIFrameContext();
   const { control, setValue } = useFormContext<FormType>();
 
-  const { tokens } = useTokenContext();
+  const { buyAmount } = useSwapAmount();
+  const buyAmountAfterSwap = useTokenBalanceAfterSwap(
+    context?.orderParams?.buyTokenAddress as Address
+  );
 
   const { data: poolBalances, isLoading: isBalanceLoading } = usePoolBalance({
     poolId: pool?.id,
     chainId: context?.chainId,
   });
 
-  const { isSubmitting } = useFormState({
-    control,
-  });
-
   const amounts = useWatch({ control, name: "amounts" });
-  const referenceTokenAddress = useWatch({
-    control,
-    name: "referenceTokenAddress",
-  });
   const amountFromSwap = useWatch({
     control,
     name: "amountFromSwap",
@@ -45,11 +37,6 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
     control,
     name: "amountFromAccount",
   });
-
-  const referenceAmount = useMemo(() => {
-    if (!referenceTokenAddress || !amounts) return;
-    return amounts[referenceTokenAddress.toLowerCase()];
-  }, [amounts, referenceTokenAddress]);
 
   const tokenPrices = useMemo(
     () => poolBalances?.map((poolBalance) => getTokenPrice(poolBalance)),
@@ -100,36 +87,33 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
   );
 
   useEffect(() => {
-    if (tokens && context?.orderParams) {
+    if (amountFromSwap && context?.orderParams && buyAmount) {
       const address =
         context.orderParams.buyTokenAddress.toLowerCase() as Address;
-
-      if (amountFromSwap) {
-        const newAmount = (
-          tokens[context.orderParams.buyTokenAddress.toLowerCase()]
-            .balanceAfterSwap -
-          tokens[context.orderParams.buyTokenAddress.toLowerCase()].balanceNow
-        ).toString();
-        setValue(`amounts.${address}`, newAmount);
-        updateTokenAmounts(newAmount, address);
-      }
-
-      if (amountFromAccount) {
-        const newAmount =
-          tokens[
-            context.orderParams.buyTokenAddress.toLowerCase()
-          ].balanceAfterSwap.toString();
-        setValue(`amounts.${address}`, newAmount);
-        updateTokenAmounts(newAmount, address);
-      }
+      setValue(`amounts.${address}`, buyAmount);
+      updateTokenAmounts(buyAmount, address);
     }
   }, [
-    tokens,
     context?.orderParams,
-    amountFromAccount,
     amountFromSwap,
     setValue,
     updateTokenAmounts,
+    buyAmount,
+  ]);
+
+  useEffect(() => {
+    if (amountFromAccount && context?.orderParams && buyAmountAfterSwap) {
+      const address =
+        context.orderParams.buyTokenAddress.toLowerCase() as Address;
+      setValue(`amounts.${address}`, buyAmountAfterSwap);
+      updateTokenAmounts(buyAmountAfterSwap, address);
+    }
+  }, [
+    context?.orderParams,
+    amountFromSwap,
+    setValue,
+    updateTokenAmounts,
+    buyAmountAfterSwap,
   ]);
 
   if (!context) return null;
@@ -137,45 +121,12 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
   if (!context?.orderParams)
     return <span>Please specify your order first</span>;
 
-  if (!tokens) return <Spinner size="xl" />;
-
   if (isBalanceLoading) return <Spinner size="xl" />;
 
   if (!poolBalances || !poolBalances.length)
     return (
       <span className="mt-10 text-center">Error loading pool balances</span>
     );
-
-  const addressToken1 = poolBalances[0].token.address.toLowerCase();
-  const isInsufficientToken1 =
-    tokens && poolBalances?.[0] && amounts
-      ? tokens[addressToken1].balanceAfterSwap <
-        Number(amounts?.[addressToken1])
-      : false;
-
-  const addressToken2 = poolBalances[1].token.address.toLowerCase();
-  const isInsufficientToken2 =
-    tokens && poolBalances?.[0] && amounts
-      ? tokens[addressToken2].balanceAfterSwap <
-        Number(amounts?.[addressToken2])
-      : false;
-
-  const shouldDisableButton =
-    !referenceAmount ||
-    referenceAmount === "0" ||
-    isSubmitting ||
-    isInsufficientToken1 ||
-    isInsufficientToken2;
-
-  const ButtonMessage = () => {
-    if (isInsufficientToken1)
-      return `Insufficient ${tokens ? tokens[addressToken1].symbol : ""} balance`;
-    if (isInsufficientToken2)
-      return `Insufficient ${tokens ? tokens[addressToken1].symbol : ""} balance`;
-    if (isSubmitting) return "Creating hook...";
-    if (context?.hookToEdit) return "Update post-hook";
-    return "Add post-hook";
-  };
 
   return (
     <div className="flex flex-col w-full gap-1">
@@ -201,9 +152,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
         <AmountFromAccountCheckbox />
         <AmountFromUserInputCheckbox />
       </div>
-      <ButtonPrimary type="submit" disabled={shouldDisableButton}>
-        <ButtonMessage />
-      </ButtonPrimary>
+      <FormButton poolBalances={poolBalances} />
     </div>
   );
 }

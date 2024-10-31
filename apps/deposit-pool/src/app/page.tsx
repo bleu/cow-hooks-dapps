@@ -6,7 +6,7 @@ import {
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
-import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
+import { Address, ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import { useCallback, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
@@ -15,6 +15,8 @@ import { useSelectedPool } from "#/hooks/useSelectedPool";
 import { useTokenBuyPools } from "#/hooks/useTokenBuyPools";
 import type { FormType } from "#/types";
 import { decodeCalldata } from "#/utils/decodeCalldata";
+import { useSwapAmount } from "#/hooks/useSwapAmount";
+import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
 
 export default function Page() {
   const { context } = useIFrameContext();
@@ -22,6 +24,9 @@ export default function Page() {
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
 
   const { setValue } = useFormContext<FormType>();
+  const sellTokenAmountAfterSwap = useTokenBalanceAfterSwap(
+    context?.orderParams?.sellTokenAddress as Address
+  );
 
   const selectedPool = useSelectedPool();
 
@@ -64,6 +69,14 @@ export default function Page() {
     return (
       <div className="w-full text-center mt-10 p-2">
         <span>Please specify your swap order before proceeding</span>
+      </div>
+    );
+  }
+
+  if (Number(sellTokenAmountAfterSwap) <= 0) {
+    return (
+      <div className="w-full text-center mt-10 p-2">
+        <span>Insufficient sell token amount</span>
       </div>
     );
   }

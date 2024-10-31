@@ -3,9 +3,9 @@ import { Button, Input, formatNumber } from "@bleu/ui";
 import { useCallback, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
-import { useTokenContext } from "#/contexts/tokens";
 import type { FormType } from "#/types";
 import { constraintStringToBeNumeric } from "#/utils/constraintStringToBeNumeric";
+import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
 
 export function TokenAmountInput({
   poolBalance,
@@ -31,7 +31,9 @@ export function TokenAmountInput({
     name: "amountFromAccount",
   });
 
-  const { tokens } = useTokenContext();
+  const tokenBalanceAfterSwap = useTokenBalanceAfterSwap(
+    poolBalance.token.address
+  );
 
   const amountUsd = useMemo(() => {
     if (!amount || !tokenPrice) return 0;
@@ -44,16 +46,14 @@ export function TokenAmountInput({
       if (updateTokenAmounts) {
         updateTokenAmounts(
           constraintStringToBeNumeric(amount),
-          poolBalance.token.address as Address,
+          poolBalance.token.address as Address
         );
       }
     },
-    [updateTokenAmounts, poolBalance.token.address],
+    [updateTokenAmounts, poolBalance.token.address]
   );
 
-  const tokenInfo = tokens
-    ? tokens[poolBalance.token.address.toLowerCase()]
-    : undefined;
+  const disabled = amountFromSwap || amountFromAccount;
 
   return (
     <div className="grid grid-rows-[2.5rem,2rem] grid-cols-2 h-24 w-full bg-muted text-muted-foreground rounded-xl p-3">
@@ -66,18 +66,18 @@ export function TokenAmountInput({
       </div>
       <div className="flex items-center justify-end">
         <Input
-          className="flex bg-transparent items-center col-span-2 border-none text-xl text-right placeholder:text-foreground/50 p-0 truncate disabled:opacity-100 disabled:cursor-default"
+          className="flex bg-transparent items-center col-span-2 border-none text-xl text-right placeholder:text-foreground/50 p-0 truncate disabled:text-foreground/50 disabled:opacity-100 disabled:cursor-default"
           type="text"
           placeholder="0.0"
           autoComplete="off"
-          disabled={amountFromSwap || amountFromAccount}
+          disabled={disabled}
           title={amount}
           {...register(`amounts.${poolBalance.token.address.toLowerCase()}`, {
             onChange: (e) => {
               onChange(e.target.value);
               setValue(
                 `amounts.${poolBalance.token.address.toLowerCase()}`,
-                constraintStringToBeNumeric(e.target.value),
+                constraintStringToBeNumeric(e.target.value)
               );
             },
           })}
@@ -89,25 +89,27 @@ export function TokenAmountInput({
         />
       </div>
       <div className="flex items-center justify-start">
-        {tokenInfo && (
+        {tokenBalanceAfterSwap && (
           <div className="flex gap-1">
             <span className="ml-1 text-xs font-normal opacity-70">
-              Balance: {tokenInfo ? tokenInfo.balanceNowFormatted : undefined}
+              Balance: {formatNumber(tokenBalanceAfterSwap)}
             </span>
-            <Button
-              type="button"
-              variant="ghost"
-              className="rounded-sm text-xs py-0 px-1 bg-background text-foreground/50 hover:bg-primary hover:text-primary-foreground h-fit inline"
-              onClick={() => {
-                setValue(
-                  `amounts.${poolBalance.token.address.toLowerCase()}`,
-                  String(tokenInfo.balanceNow),
-                );
-                onChange(String(tokenInfo.balanceNow));
-              }}
-            >
-              Max
-            </Button>
+            {!disabled && (
+              <Button
+                type="button"
+                variant="ghost"
+                className="rounded-sm text-xs py-0 px-1 bg-background text-foreground/50 hover:bg-primary hover:text-primary-foreground h-fit inline"
+                onClick={() => {
+                  setValue(
+                    `amounts.${poolBalance.token.address.toLowerCase()}`,
+                    tokenBalanceAfterSwap
+                  );
+                  onChange(tokenBalanceAfterSwap);
+                }}
+              >
+                Max
+              </Button>
+            )}
           </div>
         )}
       </div>

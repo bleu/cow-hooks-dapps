@@ -1,0 +1,52 @@
+import { readTokenContract, useIFrameContext } from "@bleu/cow-hooks-ui";
+import { useCallback, useEffect, useState } from "react";
+import { Address, formatUnits } from "viem";
+
+export function useTokens(tokens: Address[]) {
+  const { context, publicClient } = useIFrameContext();
+  const [tokensBalance, setTokensBalance] = useState<
+    Record<string, { balance: `${number}`; decimals: number; symbol: string }>
+  >({});
+
+  const updateTokensInfo = useCallback(async () => {
+    if (!context?.account || !publicClient) return;
+    const tokenReadInfo = await Promise.all(
+      tokens.map((token) => {
+        return readTokenContract(
+          token,
+          publicClient,
+          context.account as Address
+        );
+      })
+    );
+
+    const newTokensBalance = tokenReadInfo.reduce(
+      (acc, tokenInfo, index) => {
+        if (!tokenInfo.decimals.result) return { ...acc };
+        return {
+          ...acc,
+          [tokens[index]]: {
+            balance: formatUnits(
+              tokenInfo?.balance?.result || BigInt(0),
+              tokenInfo.decimals.result
+            ) as `${number}`,
+            decimals: tokenInfo.decimals.result,
+            symbol: tokenInfo.symbol.result || "",
+          },
+        };
+      },
+      {} as Record<
+        string,
+        { balance: `${number}`; decimals: number; symbol: string }
+      >
+    );
+
+    setTokensBalance(newTokensBalance);
+  }, [context?.account, publicClient, tokens]);
+
+  useEffect(() => {
+    updateTokensInfo();
+  }, [updateTokensInfo]);
+
+  return tokensBalance;
+}

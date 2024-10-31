@@ -22,7 +22,7 @@ export function calculateProportionalTokenAmounts({
 }) {
   const referenceToken = poolBalances.find(
     (balance) =>
-      balance.token.address.toLowerCase() === tokenAddress.toLowerCase(),
+      balance.token.address.toLowerCase() === tokenAddress.toLowerCase()
   );
 
   if (!referenceToken) {
@@ -34,13 +34,13 @@ export function calculateProportionalTokenAmounts({
       address: pool.address,
       totalShares: formatUnits(
         BigInt(pool.dynamicData.totalShares.toString()),
-        pool.decimals,
+        pool.decimals
       ) as `${number}`,
       tokens: poolBalances.map((balance) => ({
         address: balance.token.address.toLowerCase() as Address,
         balance: formatUnits(
           BigInt(balance.balance.toString()),
-          balance.token.decimals,
+          balance.token.decimals
         ) as `${number}`,
         decimals: balance.token.decimals,
       })),
@@ -49,6 +49,48 @@ export function calculateProportionalTokenAmounts({
       address: referenceToken.token.address.toLowerCase() as Address,
       decimals: referenceToken.token.decimals,
       rawAmount: parseUnits(tokenAmount, referenceToken.token.decimals),
-    },
+    }
   );
+}
+
+export function updateTokenBalanceAfterSwap({
+  userBalance,
+  tokenAddress,
+  tokenDecimals,
+  sellAmount,
+  buyAmount,
+  tokenBuyAddress,
+  tokenSellAddress,
+}: {
+  userBalance: `${number}`;
+  tokenAddress: Address;
+  tokenDecimals: number;
+  sellAmount: `${number}`;
+  buyAmount: `${number}`;
+  tokenBuyAddress: Address;
+  tokenSellAddress: Address;
+}): `${number}` {
+  const balance = parseUnits(userBalance, tokenDecimals) || BigInt(0);
+
+  if (
+    tokenAddress.toLowerCase() === tokenSellAddress.toLowerCase() &&
+    sellAmount
+  ) {
+    return formatUnits(
+      balance - parseUnits(sellAmount, tokenDecimals),
+      tokenDecimals
+    ) as `${number}`;
+  }
+
+  if (
+    tokenAddress.toLowerCase() === tokenBuyAddress.toLowerCase() &&
+    buyAmount
+  ) {
+    return formatUnits(
+      balance + parseUnits(buyAmount, tokenDecimals),
+      tokenDecimals
+    ) as `${number}`;
+  }
+
+  return formatUnits(balance, tokenDecimals) as `${number}`;
 }
