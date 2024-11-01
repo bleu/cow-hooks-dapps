@@ -157,27 +157,22 @@ export function useGetHookInfo(pool?: IPool) {
     if (!pool || !context?.account || !cowShedProxy)
       throw new Error("Missing context");
 
-    const weirollTransferFromProxyArgs = pool.allTokens.map((token) => {
-      const tokenAddress = token.address.toLowerCase();
-      return {
-        type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM_ALL_WEIROLL,
-        token: tokenAddress as Address,
-        from: cowShedProxy,
-        to: context.account,
-        symbol: token.symbol,
-      } as ERC20TransferFromAllWeirollArgs;
-    });
-
-    return Promise.all(
-      weirollTransferFromProxyArgs.map((arg) => {
-        return TransactionFactory.createRawTx(arg.type, arg);
-      }),
+    const weirollTransferFromProxyArgs = {
+      type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM_ALL_WEIROLL,
+      token: pool.address as Address,
+      from: cowShedProxy,
+      to: context.account,
+      symbol: pool.symbol,
+    } as ERC20TransferFromAllWeirollArgs;
+    return TransactionFactory.createRawTx(
+      weirollTransferFromProxyArgs.type,
+      weirollTransferFromProxyArgs,
     );
   }, [context?.account, cowShedProxy, pool]);
 
   return useCallback(
     async (args: FormType): Promise<IHooksInfo> => {
-      const [permitData, poolDepositTxs] = await Promise.all([
+      const [permitData, poolDepositTxs, transferTx] = await Promise.all([
         getPermitData(args),
         getPoolDepositTxs(args),
         getWeirollTransferFromProxyToUserTxs(),
@@ -185,7 +180,7 @@ export function useGetHookInfo(pool?: IPool) {
 
       return {
         permitData: permitData || [],
-        txs: [...poolDepositTxs],
+        txs: [...poolDepositTxs, transferTx],
       };
     },
     [getPermitData, getPoolDepositTxs, getWeirollTransferFromProxyToUserTxs],
