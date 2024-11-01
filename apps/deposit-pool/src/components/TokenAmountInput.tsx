@@ -92,7 +92,7 @@ export function TokenAmountInput({
         {tokenBalanceAfterSwap && (
           <div className="flex gap-1 items-center">
             <span className="ml-1 text-xs font-normal opacity-70">
-              Balance: {formatNumber(tokenBalanceAfterSwap)}
+              Balance: {formatNumber(tokenBalanceAfterSwap, 4)}
             </span>
             {!disabled && (
               <Button
