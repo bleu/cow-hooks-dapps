@@ -7,7 +7,7 @@ export const AmountFromUserInputCheckbox = () => {
   return (
     <Checkbox
       name="amountFromUserInput"
-      label="Input vesting amount manually"
+      label="Input deposit amount manually"
       onSelectSideEffect={() => {
         setValue("amountFromSwap", false);
         setValue("amountFromAccount", false);
