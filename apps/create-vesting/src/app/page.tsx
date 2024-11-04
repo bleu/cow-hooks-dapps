@@ -151,7 +151,9 @@ export default function Page() {
           amountPreviewFullDecimals={amountPreviewFullDecimals}
           formattedUserBalance={formattedUserBalance}
           userBalanceFloat={userBalanceFloat}
-          shouldEnableMaxSelector={vestUserInput && amount !== userBalanceFloat}
+          shouldEnableMaxSelector={
+            vestUserInput && amount !== userBalanceFloat && !!userBalanceFloat
+          }
         />
         <div className="w-full flex flex-col gap-y-2">
           <VestAllFromSwapCheckbox />
