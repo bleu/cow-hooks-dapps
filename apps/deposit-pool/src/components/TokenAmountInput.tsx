@@ -56,7 +56,7 @@ export function TokenAmountInput({
   const disabled = amountFromSwap || amountFromAccount;
 
   return (
-    <div className="grid grid-rows-[2.5rem,2rem] grid-cols-2 h-24 w-full bg-muted text-muted-foreground rounded-xl p-3">
+    <div className="grid grid-rows-[2.5rem,2rem] grid-cols-2 min-h-24 w-full bg-muted text-muted-foreground rounded-xl p-3">
       <div className="flex items-center justify-start">
         <TokenLogoWithWeight
           token={poolBalance.token}
@@ -66,7 +66,7 @@ export function TokenAmountInput({
       </div>
       <div className="flex items-center justify-end">
         <Input
-          className="flex bg-transparent items-center col-span-2 border-none text-xl text-right placeholder:text-foreground/50 p-0 truncate disabled:text-foreground/50 disabled:opacity-100 disabled:cursor-default"
+          className="flex bg-transparent items-center col-span-2 border-none text-xl text-right placeholder:text-foreground/50 p-0 truncate disabled:text-foreground/50 disabled:opacity-100 disabled:cursor-default font-semibold"
           type="text"
           placeholder="0.0"
           autoComplete="off"
