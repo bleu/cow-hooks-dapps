@@ -69,6 +69,19 @@ export default function Page() {
     return <span className="mt-10 text-center">Unsupported chain</span>;
   }
 
+  if (
+    !context?.orderParams?.buyTokenAddress ||
+    !context?.orderParams?.buyTokenAddress ||
+    !context?.orderParams?.sellAmount ||
+    !context?.orderParams?.buyAmount
+  ) {
+    return (
+      <div className="w-full text-center mt-10 p-2">
+        <span>Please specify your swap order before proceeding</span>
+      </div>
+    );
+  }
+
   if (isLoadingPools || sellTokenAmountAfterSwap === undefined) {
     return (
       <div className="text-center mt-10 p-2">
@@ -77,15 +90,7 @@ export default function Page() {
     );
   }
 
-  if (!context?.orderParams?.buyTokenAddress) {
-    return (
-      <div className="w-full text-center mt-10 p-2">
-        <span>Please specify your swap order before proceeding</span>
-      </div>
-    );
-  }
-
-  if (Number(sellTokenAmountAfterSwap) <= 0) {
+  if (Number(sellTokenAmountAfterSwap) < 0) {
     return (
       <div className="w-full text-center mt-10 p-2">
         <span>Insufficient sell token amount</span>
