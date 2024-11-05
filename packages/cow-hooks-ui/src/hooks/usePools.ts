@@ -127,14 +127,17 @@ export function usePools(
                 pool.decimals,
               ),
               stakedBalances: pool.userBalance.stakedBalances.map((staked) => ({
-                balance: parseUnits(staked.balance, pool.decimals),
+                balance: parseUnits(
+                  Number(staked.balance).toFixed(pool.decimals),
+                  pool.decimals,
+                ),
                 stakingId: staked.stakingId,
               })),
             },
             dynamicData: {
               ...pool.dynamicData,
               totalShares: parseUnits(
-                pool.dynamicData.totalShares,
+                Number(pool.dynamicData.totalShares).toFixed(pool.decimals),
                 pool.decimals,
               ),
             },

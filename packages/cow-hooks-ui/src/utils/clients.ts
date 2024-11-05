@@ -17,6 +17,6 @@ export const publicClientMapping = {
   }),
   [SupportedChainId.SEPOLIA]: createPublicClient({
     chain: sepolia,
-    transport: http(),
+    transport: http("https://ethereum-sepolia-rpc.publicnode.com"),
   }),
 };

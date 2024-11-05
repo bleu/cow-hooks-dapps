@@ -25,6 +25,7 @@ export interface ITokenAmountInput
   userBalance?: string | undefined;
   userBalanceFullDecimals?: string | undefined;
   shouldEnableMaxSelector?: boolean;
+  shouldDisplayApprox?: boolean;
 }
 
 export function TokenAmountInput({
@@ -42,6 +43,7 @@ export function TokenAmountInput({
   userBalance,
   userBalanceFullDecimals,
   shouldEnableMaxSelector,
+  shouldDisplayApprox,
   ...props
 }: ITokenAmountInput) {
   const { register, control, setValue } = useFormContext();
@@ -60,7 +62,7 @@ export function TokenAmountInput({
           {extraLabelElement}
         </div>
       )}
-      <div className="flex items-center justify-between w-full h-20 py-4 px-6 bg-color-paper-darker rounded-xl">
+      <div className="flex items-center justify-between w-full min-h-24 py-4 px-6 bg-color-paper-darker rounded-xl">
         <div className="rounded-xl text-color-text-paper bg-color-paper cursor-default">
           {token && (
             <div className="min-w-30 w-fit h-12 px-4 flex items-center justify-center gap-2">
@@ -75,14 +77,15 @@ export function TokenAmountInput({
           {disabled ? (
             <span
               title={disabledValueFullDecimals}
-              className="outline-none text-right p-0 m-0 border-none text-xl text-color-text-paper bg-inherit placeholder:opacity-70 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-default"
+              className="outline-none text-right p-0 m-0 border-none text-xl text-color-text-paper bg-inherit placeholder:opacity-70 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none cursor-default font-semibold"
             >
-              ≈ {disabledValue}
+              {shouldDisplayApprox && "≈ "}
+              {disabledValue}
             </span>
           ) : (
             <Input
               className={cn(
-                "outline-none text-right p-0 m-0 h-min border-none rounded-none text-xl text-color-text-paper bg-inherit placeholder:opacity-70 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
+                "outline-none text-right p-0 m-0 h-min border-none rounded-none text-xl text-color-text-paper bg-inherit placeholder:opacity-70 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none font-semibold",
                 className,
               )}
               {...register(name, validation)}
@@ -90,21 +93,21 @@ export function TokenAmountInput({
             />
           )}
           {userBalance && token?.symbol && shouldEnableMaxSelector && (
-            <div className="flex items-center">
+            <span className="font-normal">
               <button
                 type="button"
-                className="inline text-color-text-paper bg-color-paper p-1 mr-1 opacity-100 rounded-md text-xs hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]"
+                className="inline text-color-text-paper bg-color-paper px-1 mr-1 opacity-100 rounded-md text-xs hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]"
                 onClick={() => setValue(name, Number(userBalanceFullDecimals))}
               >
                 MAX
               </button>
               <span
                 title={userBalanceFullDecimals}
-                className="opacity-40 text-xs cursor-default"
+                className="opacity-40 text-xs cursor-default text-right"
               >
                 Balance: {userBalance} {token?.symbol}
               </span>
-            </div>
+            </span>
           )}
           {userBalance && token?.symbol && !shouldEnableMaxSelector && (
             <span

@@ -1,4 +1,5 @@
 "use client";
+import { cn } from "@bleu/ui";
 import { BalancerChainName } from "@bleu/utils";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
@@ -25,12 +26,14 @@ export function PoolsDropdownMenu({
   pools,
   PoolItemInfo,
   selectedPool,
+  isCheckDetailsCentered = true,
   tooltipText,
 }: {
   onSelect: (pool: IPool) => void;
   pools: IPool[];
   PoolItemInfo: React.ComponentType<{ pool: IPool }>;
   selectedPool?: IPool;
+  isCheckDetailsCentered: boolean;
   tooltipText?: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -64,7 +67,7 @@ export function PoolsDropdownMenu({
           </Dialog.Trigger>
         </div>
         <Dialog.Portal>
-          <Dialog.Content className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] border bg-background p-[15px] w-screen h-screen bg-background border-none flex flex-col gap-2">
+          <Dialog.Content className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] border p-[15px] w-screen h-screen bg-background border-none flex flex-col gap-2">
             <div className="flex items-center gap-2">
               <Dialog.Close className="cursor-pointer hover:opacity-50">
                 <ArrowLeftIcon className="size-5" />
@@ -82,7 +85,7 @@ export function PoolsDropdownMenu({
               value={search}
             >
               <CommandInput
-                className="bg-muted mb-2 rounded-xl placeholder:text-muted-foreground/50 text-md px-2 py-2 mb-5"
+                className="bg-muted rounded-xl placeholder:text-muted-foreground/50 text-md px-2 py-2 mb-5"
                 placeholder="Search name or paste address"
               />
               <div className="w-full h-[1px] bg-muted my-1" />
@@ -112,7 +115,10 @@ export function PoolsDropdownMenu({
         </Dialog.Portal>
         {poolLink && (
           <a
-            className="inline-flex items-center transition-colors text-primary underline-offset-4 hover:underline justify-start p-0 px-1 m-0 text-xs h-fit w-fit"
+            className={cn(
+              "inline-flex justify-start transition-colors text-primary underline-offset-4 hover:underline p-0 m-0 text-xs h-fit w-full",
+              { "justify-center": isCheckDetailsCentered },
+            )}
             href={poolLink}
             target="_blank"
             rel="noreferrer"

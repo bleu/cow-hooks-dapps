@@ -19,7 +19,9 @@ export default function Page() {
   const { hookInfo, cowShed, signer, context, cowShedProxy } =
     useIFrameContext();
 
-  const submitHook = useSubmitHook(hookInfo?.recipientOverride);
+  const submitHook = useSubmitHook({
+    recipientOverride: hookInfo?.recipientOverride,
+  });
   const cowShedSignature = useCowShedSignature({
     cowShed,
     signer,

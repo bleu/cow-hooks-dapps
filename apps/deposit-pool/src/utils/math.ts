@@ -18,7 +18,7 @@ export function calculateProportionalTokenAmounts({
   poolBalances: IBalance[];
   pool: IPool;
   tokenAddress: Address;
-  tokenAmount: number;
+  tokenAmount: string;
 }) {
   const referenceToken = poolBalances.find(
     (balance) =>
@@ -48,10 +48,49 @@ export function calculateProportionalTokenAmounts({
     {
       address: referenceToken.token.address.toLowerCase() as Address,
       decimals: referenceToken.token.decimals,
-      rawAmount: parseUnits(
-        tokenAmount.toString(),
-        referenceToken.token.decimals,
-      ),
+      rawAmount: parseUnits(tokenAmount, referenceToken.token.decimals),
     },
   );
+}
+
+export function updateTokenBalanceAfterSwap({
+  userBalance,
+  tokenAddress,
+  tokenDecimals,
+  sellAmount,
+  buyAmount,
+  tokenBuyAddress,
+  tokenSellAddress,
+}: {
+  userBalance: `${number}`;
+  tokenAddress: Address;
+  tokenDecimals: number;
+  sellAmount: `${number}`;
+  buyAmount: `${number}`;
+  tokenBuyAddress: Address;
+  tokenSellAddress: Address;
+}): `${number}` {
+  const balance = parseUnits(userBalance, tokenDecimals) || BigInt(0);
+
+  if (
+    tokenAddress.toLowerCase() === tokenSellAddress.toLowerCase() &&
+    sellAmount
+  ) {
+    return formatUnits(
+      balance - parseUnits(sellAmount, tokenDecimals),
+      tokenDecimals,
+    ) as `${number}`;
+  }
+
+  if (
+    tokenAddress.toLowerCase() === tokenBuyAddress.toLowerCase() &&
+    buyAmount
+  ) {
+    return formatUnits(
+      balance + parseUnits(buyAmount, tokenDecimals),
+      tokenDecimals,
+    ) as `${number}`;
+  }
+
+  return formatUnits(balance, tokenDecimals) as `${number}`;
 }
