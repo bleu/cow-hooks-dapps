@@ -55,8 +55,13 @@ export function TokenAmountInput({
 
   const disabled = amountFromSwap || amountFromAccount;
 
+  const buttonDisabled =
+    disabled ||
+    Number(tokenBalanceAfterSwap) <= 0 ||
+    amount === tokenBalanceAfterSwap;
+
   return (
-    <div className="grid grid-rows-[2.5rem,2rem] grid-cols-2 min-h-24 w-full bg-muted text-muted-foreground rounded-xl p-3">
+    <div className="grid grid-cols-2 min-h-24 w-full bg-muted text-muted-foreground rounded-xl p-3">
       <div className="flex items-center justify-start">
         <TokenLogoWithWeight
           token={poolBalance.token}
@@ -66,7 +71,7 @@ export function TokenAmountInput({
       </div>
       <div className="flex items-center justify-end">
         <Input
-          className="flex bg-transparent items-center col-span-2 border-none text-xl text-right placeholder:text-foreground/50 p-0 truncate disabled:text-foreground/50 disabled:opacity-100 disabled:cursor-default font-semibold"
+          className="flex bg-transparent items-center border-none text-xl text-right placeholder:text-foreground/50 p-0 truncate disabled:text-foreground/50 disabled:opacity-100 disabled:cursor-default font-semibold"
           type="text"
           placeholder="0.0"
           autoComplete="off"
@@ -88,35 +93,37 @@ export function TokenAmountInput({
           step={`0.${"0".repeat(poolBalance?.token?.decimals - 1)}1`}
         />
       </div>
-      <div className="flex items-center justify-start">
-        {tokenBalanceAfterSwap && (
-          <div className="flex gap-1 items-center">
-            <span className="ml-1 text-xs font-normal opacity-70">
-              Balance: {formatNumber(tokenBalanceAfterSwap, 4)}
+      <div className="flex items-center justify-between col-span-2">
+        <div className="flex items-center justify-start">
+          {tokenBalanceAfterSwap && (
+            <span>
+              <span className="ml-1 text-xs font-normal opacity-70">
+                Balance: {formatNumber(tokenBalanceAfterSwap, 4)}
+              </span>
+              {!buttonDisabled && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="ml-1 rounded-sm text-xs py-0 px-1 bg-background text-foreground/50 hover:bg-primary hover:text-primary-foreground h-fit inline"
+                  onClick={() => {
+                    setValue(
+                      `amounts.${poolBalance.token.address.toLowerCase()}`,
+                      tokenBalanceAfterSwap,
+                    );
+                    onChange(tokenBalanceAfterSwap);
+                  }}
+                >
+                  Max
+                </Button>
+              )}
             </span>
-            {!disabled && (
-              <Button
-                type="button"
-                variant="ghost"
-                className="rounded-sm text-xs py-0 px-1 bg-background text-foreground/50 hover:bg-primary hover:text-primary-foreground h-fit inline"
-                onClick={() => {
-                  setValue(
-                    `amounts.${poolBalance.token.address.toLowerCase()}`,
-                    tokenBalanceAfterSwap,
-                  );
-                  onChange(tokenBalanceAfterSwap);
-                }}
-              >
-                Max
-              </Button>
-            )}
-          </div>
-        )}
-      </div>
-      <div className="flex items-center justify-end">
-        <span className="text-xs text-right font-normal pr-0">
-          ${amountUsd && amountUsd >= 0 ? formatNumber(amountUsd, 2) : "0"}
-        </span>
+          )}
+        </div>
+        <div className="flex items-center justify-end">
+          <span className="text-xs text-right font-normal pr-0">
+            ${amountUsd && amountUsd >= 0 ? formatNumber(amountUsd, 2) : "0"}
+          </span>
+        </div>
       </div>
     </div>
   );

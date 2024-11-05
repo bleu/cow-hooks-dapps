@@ -18,8 +18,8 @@ export function TokenLogoWithWeight({
         className,
       )}
     >
-      <div>{weight * 100}%</div>
-      <div className="hidden xsm:flex">
+      <div className="hidden xsm:flex">{weight * 100}%</div>
+      <div>
         <TokenLogo token={token} width={20} height={20} />
       </div>
       <span>{token.symbol}</span>
