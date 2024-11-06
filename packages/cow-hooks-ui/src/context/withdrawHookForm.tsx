@@ -13,12 +13,14 @@ import { useIFrameContext } from "./iframe";
 export function WithdrawFormContextProvider({
   children,
   getHookInfo,
+  poolTypeIn,
 }: {
   children: React.ReactNode;
   getHookInfo: (
     selectedPool: IPool,
-    withdrawPct: number,
+    withdrawPct: number
   ) => Promise<IHooksInfo | undefined>;
+  poolTypeIn: "COW_AMM" | "WEIGHTED";
 }) {
   const { context, setHookInfo } = useIFrameContext();
 
@@ -32,13 +34,13 @@ export function WithdrawFormContextProvider({
 
   const { control, handleSubmit, setValue } = form;
 
-  const { data: pools } = useUserPools(context?.chainId, context?.account);
+  const { data: pools } = useUserPools(poolTypeIn);
 
   const poolId = useWatch({ control, name: "poolId" });
 
   const selectedPool = useMemo(() => {
     return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
+      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
     );
   }, [pools, poolId]);
 
@@ -47,12 +49,15 @@ export function WithdrawFormContextProvider({
   const onSubmitCallback = useCallback(
     async (data: WithdrawSchemaType) => {
       if (!selectedPool) return;
+      console.log({ selectedPool });
       const hookInfo = await getHookInfo(selectedPool, data.withdrawPct);
+      console.log({ hookInfo });
       if (!hookInfo) return;
+      console.log("oi");
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [getHookInfo, setHookInfo, router, selectedPool],
+    [getHookInfo, setHookInfo, router, selectedPool]
   );
 
   // biome-ignore lint:

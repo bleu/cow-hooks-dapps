@@ -13,21 +13,23 @@ export function useGetHookInfo() {
   return useCallback(
     async (
       pool: IPool,
-      withdrawPct: number,
+      withdrawPct: number
     ): Promise<IHooksInfo | undefined> => {
       if (!pool) return;
 
       const bptAmount = multiplyValueByPct(
         pool.userBalance.walletBalance,
-        withdrawPct,
+        withdrawPct
       );
+      console.log({ bptAmount });
       const poolWithdrawArgs = await getPoolWithdrawArgs(pool, bptAmount);
+      console.log({ poolWithdrawArgs });
       if (!poolWithdrawArgs) return;
 
       const txs = await Promise.all(
         poolWithdrawArgs.map((arg) => {
           return TransactionFactory.createRawTx(arg.type, arg);
-        }),
+        })
       );
 
       const permitData = poolWithdrawArgs
@@ -44,6 +46,6 @@ export function useGetHookInfo() {
         permitData: permitData,
       };
     },
-    [getPoolWithdrawArgs],
+    [getPoolWithdrawArgs]
   );
 }
