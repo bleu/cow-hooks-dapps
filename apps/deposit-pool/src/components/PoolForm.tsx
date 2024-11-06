@@ -12,6 +12,7 @@ import { usePoolBalance } from "#/hooks/usePoolBalance";
 import { useSwapAmount } from "#/hooks/useSwapAmount";
 import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
 import type { FormType } from "#/types";
+import { formDefaultValues } from "#/utils/formDefaultValues";
 import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
 import { AmountFromAccountCheckbox } from "./AmountFromAccountCheckbox";
 import { AmountFromSwapCheckbox } from "./AmountFromSwapCheckbox";
@@ -22,7 +23,7 @@ import { TokenAmountInput } from "./TokenAmountInput";
 
 export function PoolForm({ pool }: { pool: IPool | undefined }) {
   const { context } = useIFrameContext();
-  const { control, setValue } = useFormContext<FormType>();
+  const { control, setValue, reset } = useFormContext<FormType>();
 
   const { buyAmount } = useSwapAmount();
   const buyAmountAfterSwap = useTokenBalanceAfterSwap(
@@ -43,6 +44,10 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
     control,
     name: "amountFromAccount",
   });
+
+  useEffect(() => {
+    reset({ ...formDefaultValues, poolId: pool?.id });
+  }, [reset, pool]);
 
   const tokenPrices = useMemo(
     () => poolBalances?.map((poolBalance) => getTokenPrice(poolBalance)),
