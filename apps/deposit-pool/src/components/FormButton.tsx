@@ -60,7 +60,7 @@ export function FormButton({ poolBalances }: { poolBalances: IBalance[] }) {
 
   const ButtonMessage = () => {
     if (insufficientTokenSymbols.length === 1) {
-      return `Insufficient balance for ${insufficientTokenSymbols[0]}`;
+      return `Insufficient ${insufficientTokenSymbols[0]} balance`;
     }
     if (insufficientTokenSymbols.length > 1) {
       return "Insufficient balance for multiple tokens";

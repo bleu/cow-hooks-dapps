@@ -77,7 +77,7 @@ export default function Page() {
   ) {
     return (
       <div className="w-full text-center mt-10 p-2">
-        <span>Please specify your swap order before proceeding</span>
+        <span>Please specify your swap order first</span>
       </div>
     );
   }
