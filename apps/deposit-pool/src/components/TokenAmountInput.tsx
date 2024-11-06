@@ -98,7 +98,14 @@ export function TokenAmountInput({
           {tokenBalanceAfterSwap && (
             <span>
               <span className="ml-1 text-xs font-normal opacity-70">
-                Balance: {formatNumber(tokenBalanceAfterSwap, 4)}
+                Balance:{" "}
+                {formatNumber(
+                  tokenBalanceAfterSwap,
+                  4,
+                  "decimal",
+                  "standard",
+                  0.0001,
+                )}
               </span>
               {!buttonDisabled && (
                 <Button
