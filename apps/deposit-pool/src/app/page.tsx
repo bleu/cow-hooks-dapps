@@ -22,7 +22,7 @@ export default function Page() {
   const { data: pools, isLoading: isLoadingPools } = useTokenBuyPools();
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
 
-  const { setValue } = useFormContext<FormType>();
+  const { setValue, reset } = useFormContext<FormType>();
   const sellTokenAmountAfterSwap = useTokenBalanceAfterSwap(
     context?.orderParams?.sellTokenAddress as Address,
   );
@@ -42,15 +42,13 @@ export default function Page() {
       publicClient,
     );
     if (data) {
-      setValue("poolId", data.poolId);
-      setValue("amounts", data.amounts);
-      setValue("referenceTokenAddress", data.referenceTokenAddress);
+      reset(data);
       setIsEditHookLoading(false);
     }
   }, [
     context?.hookToEdit,
     context?.account,
-    setValue,
+    reset,
     isEditHookLoading,
     publicClient,
   ]);

@@ -10,6 +10,19 @@ function processAmount(amount: string | number) {
     .padStart(64, "0");
 }
 
+function processSelectedOption(data: FormType) {
+  if (data.amountFromUserInput) {
+    return "01";
+  }
+  if (data.amountFromAccount) {
+    return "02";
+  }
+  if (data.amountFromSwap) {
+    return "03";
+  }
+  return "00";
+}
+
 export function encodeFormData(data: FormType): string {
   const { poolId, amounts, referenceTokenAddress } = data;
 
@@ -25,6 +38,8 @@ export function encodeFormData(data: FormType): string {
 
   const encodedReferenceTokenAddress = remove0x(referenceTokenAddress); // size = 40
 
+  const optionSelected = processSelectedOption(data); // size = 2
+
   // total size = 288
   const result =
     encodedPoolId +
@@ -32,7 +47,8 @@ export function encodeFormData(data: FormType): string {
     encodedToken2 +
     encodedAmount1 +
     encodedAmount2 +
-    encodedReferenceTokenAddress;
+    encodedReferenceTokenAddress +
+    optionSelected;
 
   return result;
 }

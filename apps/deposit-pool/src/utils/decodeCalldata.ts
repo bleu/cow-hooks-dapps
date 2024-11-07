@@ -7,11 +7,39 @@ import {
 } from "viem";
 import type { FormType } from "#/types";
 
+export const decodeSelectedOption = (
+  option: string,
+): Pick<
+  FormType,
+  "amountFromAccount" | "amountFromSwap" | "amountFromUserInput"
+> => {
+  switch (option) {
+    case "2":
+      return {
+        amountFromAccount: true,
+        amountFromSwap: false,
+        amountFromUserInput: false,
+      };
+    case "3":
+      return {
+        amountFromAccount: false,
+        amountFromSwap: true,
+        amountFromUserInput: false,
+      };
+    default:
+      return {
+        amountFromAccount: false,
+        amountFromSwap: false,
+        amountFromUserInput: true,
+      };
+  }
+};
+
 export const decodeCalldata = async (
   string: `0x${string}`,
   publicClient: PublicClient,
 ): Promise<FormType> => {
-  const encodedFormData = string.slice(-288);
+  const encodedFormData = string.slice(-290);
 
   const poolId = `0x${encodedFormData.slice(0, 40)}`;
   const token1 = `0x${encodedFormData.slice(40, 80)}`;
@@ -49,13 +77,13 @@ export const decodeCalldata = async (
 
   const referenceTokenAddress = `0x${encodedFormData.slice(248, 288)}`;
 
+  const optionSelected = decodeSelectedOption(encodedFormData[289]);
+
   const result = {
     poolId,
     amounts,
     referenceTokenAddress,
-    amountFromAccount: false,
-    amountFromSwap: false,
-    amountFromUserInput: true,
+    ...optionSelected,
   } as FormType;
 
   return result;
