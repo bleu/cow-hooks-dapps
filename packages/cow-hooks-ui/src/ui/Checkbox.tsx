@@ -1,4 +1,4 @@
-import { Input, Label, cn } from "@bleu/ui";
+import { Input, Label, cn } from "@bleu.builders/ui";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { useFormContext, useWatch } from "react-hook-form";
 

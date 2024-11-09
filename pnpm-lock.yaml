@@ -41,15 +41,15 @@ importers:
 
   apps/claim-vesting:
     dependencies:
+      '@bleu.builders/ui':
+        specifier: 0.1.133
+        version: 0.1.133(@types/react-dom@18.3.0)(@types/react@18.3.11)(mapbox-gl@1.13.3)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))(react-router-dom@6.26.2(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)(webpack@5.95.0)
       '@bleu/cow-hooks-ui':
         specifier: workspace:*
         version: link:../../packages/cow-hooks-ui
       '@bleu/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
-      '@bleu/ui':
-        specifier: 0.1.131
-        version: 0.1.131(@types/react-dom@18.3.0)(@types/react@18.3.11)(mapbox-gl@1.13.3)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))(react-router-dom@6.26.2(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)(webpack@5.95.0)
       '@cowprotocol/cow-sdk':
         specifier: ^5.5.1
         version: 5.5.1(encoding@0.1.13)(ethers@6.13.3)
@@ -129,15 +129,15 @@ importers:
 
   apps/create-vesting:
     dependencies:
+      '@bleu.builders/ui':
+        specifier: 0.1.133
+        version: 0.1.133(@types/react-dom@18.3.0)(@types/react@18.3.11)(mapbox-gl@1.13.3)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))(react-router-dom@6.26.2(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)(webpack@5.95.0)
       '@bleu/cow-hooks-ui':
         specifier: workspace:*
         version: link:../../packages/cow-hooks-ui
       '@bleu/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
-      '@bleu/ui':
-        specifier: 0.1.131
-        version: 0.1.131(@types/react-dom@18.3.0)(@types/react@18.3.11)(mapbox-gl@1.13.3)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))(react-router-dom@6.26.2(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)(webpack@5.95.0)
       '@bleu/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -238,15 +238,15 @@ importers:
       '@balancer/sdk':
         specifier: 0.26.1
         version: 0.26.1(typescript@5.6.2)(zod@3.23.8)
+      '@bleu.builders/ui':
+        specifier: 0.1.133
+        version: 0.1.133(@types/react-dom@18.3.0)(@types/react@18.3.11)(mapbox-gl@1.13.3)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))(react-router-dom@6.26.2(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)(webpack@5.95.0)
       '@bleu/cow-hooks-ui':
         specifier: workspace:*
         version: link:../../packages/cow-hooks-ui
       '@bleu/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
-      '@bleu/ui':
-        specifier: 0.1.131
-        version: 0.1.131(@types/react-dom@18.3.0)(@types/react@18.3.11)(mapbox-gl@1.13.3)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))(react-router-dom@6.26.2(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)(webpack@5.95.0)
       '@bleu/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -380,15 +380,15 @@ importers:
       '@balancer/sdk':
         specifier: 0.26.1
         version: 0.26.1(typescript@5.6.2)(zod@3.23.8)
+      '@bleu.builders/ui':
+        specifier: 0.1.133
+        version: 0.1.133(@types/react-dom@18.3.0)(@types/react@18.3.11)(mapbox-gl@1.13.3)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))(react-router-dom@6.26.2(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)(webpack@5.95.0)
       '@bleu/cow-hooks-ui':
         specifier: workspace:*
         version: link:../../packages/cow-hooks-ui
       '@bleu/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
-      '@bleu/ui':
-        specifier: 0.1.131
-        version: 0.1.131(@types/react-dom@18.3.0)(@types/react@18.3.11)(mapbox-gl@1.13.3)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))(react-router-dom@6.26.2(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)(webpack@5.95.0)
       '@bleu/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -525,12 +525,12 @@ importers:
       '@balancer/sdk':
         specifier: 0.26.1
         version: 0.26.1(typescript@5.6.2)(zod@3.23.8)
+      '@bleu.builders/ui':
+        specifier: 0.1.133
+        version: 0.1.133(@types/react-dom@18.3.0)(@types/react@18.3.11)(mapbox-gl@1.13.3)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))(react-router-dom@6.26.2(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)(webpack@5.95.0)
       '@bleu/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
-      '@bleu/ui':
-        specifier: 0.1.131
-        version: 0.1.131(@types/react-dom@18.3.0)(@types/react@18.3.11)(mapbox-gl@1.13.3)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))(react-router-dom@6.26.2(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)(webpack@5.95.0)
       '@bleu/utils':
         specifier: workspace:*
         version: link:../utils
@@ -630,7 +630,7 @@ importers:
         version: 10.4.20(postcss@8.4.47)
       next:
         specifier: 15.0.0-rc.0
-        version: 15.0.0-rc.0(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)
+        version: 15.0.0-rc.0(babel-plugin-react-compiler@0.0.0-experimental-6067d4e-20240923)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)
       postcss:
         specifier: ^8.4.47
         version: 8.4.47
@@ -970,8 +970,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@bleu/ui@0.1.131':
-    resolution: {integrity: sha512-mKCuUlw2QmIeS88/bVRZSftMmEq8i4L2mPLByS2oWrLemx4xwjHkHAq6VbKPzEVrV3cxBPVXqCM/jgjOt5fWbA==, tarball: https://npm.pkg.github.com/download/@bleu/ui/0.1.131/5f6721fa77e44f84fa271344c9aa27d708c9832c}
+  '@bleu.builders/ui@0.1.133':
+    resolution: {integrity: sha512-Jzatw1zYV54j1y5bYQ1sqoFPQg/9ymK2rPhk/Fhv6SFQ9no4uq5VJiE325aK3TieS8Uh9scEj68vJ/4j0bXKyA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: '>=18'
@@ -5261,6 +5261,7 @@ packages:
 
   react-beautiful-dnd@13.1.1:
     resolution: {integrity: sha512-0Lvs4tq2VcrEjEgDXHjT98r+63drkKEgqyxdA7qD3mvKwga6a5SscbdLPO2IExotU1jW8L0Ksdl0Cj2AF67nPQ==}
+    deprecated: 'react-beautiful-dnd is now deprecated. Context and options: https://github.com/atlassian/react-beautiful-dnd/issues/2672'
     peerDependencies:
       react: ^16.8.5 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.5 || ^17.0.0 || ^18.0.0
@@ -6661,7 +6662,7 @@ snapshots:
   '@biomejs/cli-win32-x64@1.9.2':
     optional: true
 
-  '@bleu/ui@0.1.131(@types/react-dom@18.3.0)(@types/react@18.3.11)(mapbox-gl@1.13.3)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))(react-router-dom@6.26.2(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)(webpack@5.95.0)':
+  '@bleu.builders/ui@0.1.133(@types/react-dom@18.3.0)(@types/react@18.3.11)(mapbox-gl@1.13.3)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react-hook-form@7.53.0(react@19.0.0-rc-e4953922-20240919))(react-router-dom@6.26.2(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)(webpack@5.95.0)':
     dependencies:
       '@radix-ui/react-accordion': 1.2.1(@types/react-dom@18.3.0)(@types/react@18.3.11)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)
       '@radix-ui/react-alert-dialog': 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.11)(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919)
@@ -11417,32 +11418,6 @@ snapshots:
       '@next/swc-win32-ia32-msvc': 15.0.0-rc.0
       '@next/swc-win32-x64-msvc': 15.0.0-rc.0
       babel-plugin-react-compiler: 0.0.0-experimental-6067d4e-20240923
-      sharp: 0.33.5
-    transitivePeerDependencies:
-      - '@babel/core'
-      - babel-plugin-macros
-
-  next@15.0.0-rc.0(react-dom@19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919))(react@19.0.0-rc-e4953922-20240919):
-    dependencies:
-      '@next/env': 15.0.0-rc.0
-      '@swc/helpers': 0.5.11
-      busboy: 1.6.0
-      caniuse-lite: 1.0.30001666
-      graceful-fs: 4.2.11
-      postcss: 8.4.31
-      react: 19.0.0-rc-e4953922-20240919
-      react-dom: 19.0.0-rc-e4953922-20240919(react@19.0.0-rc-e4953922-20240919)
-      styled-jsx: 5.1.3(react@19.0.0-rc-e4953922-20240919)
-    optionalDependencies:
-      '@next/swc-darwin-arm64': 15.0.0-rc.0
-      '@next/swc-darwin-x64': 15.0.0-rc.0
-      '@next/swc-linux-arm64-gnu': 15.0.0-rc.0
-      '@next/swc-linux-arm64-musl': 15.0.0-rc.0
-      '@next/swc-linux-x64-gnu': 15.0.0-rc.0
-      '@next/swc-linux-x64-musl': 15.0.0-rc.0
-      '@next/swc-win32-arm64-msvc': 15.0.0-rc.0
-      '@next/swc-win32-ia32-msvc': 15.0.0-rc.0
-      '@next/swc-win32-x64-msvc': 15.0.0-rc.0
       sharp: 0.33.5
     transitivePeerDependencies:
       - '@babel/core'

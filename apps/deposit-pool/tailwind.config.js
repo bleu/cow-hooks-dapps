@@ -7,8 +7,8 @@ module.exports = {
   important: true,
   content: [
     "./src/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@bleu/ui/dist/**/*",
-    "../../node_modules/@bleu/ui/dist/**/*",
+    "./node_modules/@bleu.builders/ui/dist/**/*",
+    "../../node_modules/@bleu.builders/ui/dist/**/*",
     "../../packages/cow-hooks-ui/src/**/*.{js,ts,jsx,tsx}",
     "../../packages/cow-hooks-ui/node_modules/tailwind-scrollbar/**/*",
   ],

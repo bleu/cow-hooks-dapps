@@ -1,4 +1,4 @@
-import { Input, Label, cn } from "@bleu/ui";
+import { Input, Label, cn } from "@bleu.builders/ui";
 import type { Token } from "@uniswap/sdk-core";
 import type { HTMLProps } from "react";
 import {
@@ -86,7 +86,7 @@ export function TokenAmountInput({
             <Input
               className={cn(
                 "outline-none font-semibold text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-right p-0 m-0 h-min border-none rounded-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none truncate",
-                className,
+                className
               )}
               {...register(name, validation)}
               {...props}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@bleu/ui";
+import { Button } from "@bleu.builders/ui";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import useSWR from "swr";

@@ -7,7 +7,7 @@
     "@1inch/permit-signed-approvals-utils": "1.5.2",
     "@balancer/sdk": "0.26.1",
     "@bleu/tsconfig": "workspace:*",
-    "@bleu/ui": "0.1.131",
+    "@bleu.builders/ui": "0.1.133",
     "@bleu/utils": "workspace:*",
     "@cowprotocol/contracts": "1.6.0",
     "@cowprotocol/cow-sdk": "^5.5.1",

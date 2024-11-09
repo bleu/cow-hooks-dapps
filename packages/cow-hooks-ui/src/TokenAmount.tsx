@@ -1,4 +1,4 @@
-import { cn, formatNumber } from "@bleu/ui";
+import { cn, formatNumber } from "@bleu.builders/ui";
 import type { Token } from "@uniswap/sdk-core";
 
 export function TokenAmount({

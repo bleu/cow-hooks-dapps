@@ -4,7 +4,7 @@ import {
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
-import { Label, formatNumber } from "@bleu/ui";
+import { Label, formatNumber } from "@bleu.builders/ui";
 import { useCallback, useEffect, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { type Address, formatUnits } from "viem";
@@ -27,7 +27,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
 
   const { buyAmount } = useSwapAmount();
   const buyAmountAfterSwap = useTokenBalanceAfterSwap(
-    context?.orderParams?.buyTokenAddress as Address,
+    context?.orderParams?.buyTokenAddress as Address
   );
 
   const { data: poolBalances, isLoading: isBalanceLoading } = usePoolBalance({
@@ -51,7 +51,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
 
   const tokenPrices = useMemo(
     () => poolBalances?.map((poolBalance) => getTokenPrice(poolBalance)),
-    [poolBalances],
+    [poolBalances]
   );
 
   const totalUsd = useMemo(() => {
@@ -87,14 +87,14 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
         const tokenAmountKey = `amounts.${tokenAmountAddress}` as const;
         const calculatedAmount = formatUnits(
           tokenAmount.rawAmount,
-          tokenAmount.decimals,
+          tokenAmount.decimals
         );
         setValue(tokenAmountKey, calculatedAmount);
       }
 
       setValue("referenceTokenAddress", address);
     },
-    [poolBalances, tokenPrices, pool, setValue],
+    [poolBalances, tokenPrices, pool, setValue]
   );
 
   useEffect(() => {

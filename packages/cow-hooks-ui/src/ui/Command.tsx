@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, cn } from "@bleu/ui";
+import { Dialog, DialogContent, cn } from "@bleu.builders/ui";
 import type { DialogProps } from "@radix-ui/react-dialog";
 import { Command as CommandPrimitive } from "cmdk";
 import * as React from "react";
@@ -11,7 +11,7 @@ const Command = React.forwardRef<
     ref={ref}
     className={cn(
       "bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md",
-      className,
+      className
     )}
     {...props}
   />
@@ -74,7 +74,7 @@ const CommandInput = React.forwardRef<
     ref={ref}
     className={cn(
       "placeholder:text-muted-foreground/50 rounded-md border-none bg-transparent py-3 text-sm outline-none ring-0",
-      className,
+      className
     )}
     {...props}
   >
@@ -118,7 +118,7 @@ const CommandGroup = React.forwardRef<
     ref={ref}
     className={cn(
       "text-foreground [&_[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium",
-      className,
+      className
     )}
     {...props}
   />
@@ -146,7 +146,7 @@ const CommandItem = React.forwardRef<
     ref={ref}
     className={cn(
       "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[disabled='true']:pointer-events-none data-[disabled='true']:opacity-50",
-      className,
+      className
     )}
     {...props}
   />
@@ -161,7 +161,7 @@ const CommandShortcut = ({
   <span
     className={cn(
       "text-muted-foreground ml-auto text-xs tracking-widest",
-      className,
+      className
     )}
     {...props}
   />

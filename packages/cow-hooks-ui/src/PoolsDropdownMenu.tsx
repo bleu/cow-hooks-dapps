@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@bleu/ui";
+import { cn } from "@bleu.builders/ui";
 import { BalancerChainName } from "@bleu/utils";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
@@ -117,7 +117,7 @@ export function PoolsDropdownMenu({
           <a
             className={cn(
               "inline-flex justify-start transition-colors text-primary underline-offset-4 hover:underline p-0 m-0 text-xs h-fit w-full",
-              { "justify-center": isCheckDetailsCentered },
+              { "justify-center": isCheckDetailsCentered }
             )}
             href={poolLink}
             target="_blank"
@@ -148,7 +148,7 @@ export function PoolLogo({ pool }: { pool: IPool }) {
               context.chainId,
               token.address,
               token.decimals,
-              token.symbol,
+              token.symbol
             )
           }
           weight={token.weight}

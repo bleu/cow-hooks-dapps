@@ -1,4 +1,10 @@
-import { Label, Popover, PopoverContent, PopoverTrigger, cn } from "@bleu/ui";
+import {
+  Label,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  cn,
+} from "@bleu.builders/ui";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { type HTMLProps, useState } from "react";
 import {
@@ -56,7 +62,7 @@ export function PeriodWithScaleInput({
         <input
           className={cn(
             "outline-none text-left w-36 max-h-10 px-2.5 py-0 border-none rounded-l-xl text-base text-color-text-paper bg-inherit [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
-            className,
+            className
           )}
           {...register(namePeriodValue, validation)}
           {...props}

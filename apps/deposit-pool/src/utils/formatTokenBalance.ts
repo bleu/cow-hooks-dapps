@@ -1,9 +1,9 @@
-import { formatNumber } from "@bleu/ui";
+import { formatNumber } from "@bleu.builders/ui";
 
 export const formatTokenBalance = (
   balance: bigint,
   tokenDecimals: number,
-  swapAmount: string | null,
+  swapAmount: string | null
 ) => {
   const balanceNowFloat = Number(balance) / 10 ** tokenDecimals;
   const swapAmountFloat =
@@ -15,7 +15,7 @@ export const formatTokenBalance = (
     4,
     "decimal",
     "standard",
-    0.0001,
+    0.0001
   );
 
   const balanceAfterSwapFormatted = formatNumber(
@@ -23,7 +23,7 @@ export const formatTokenBalance = (
     4,
     "decimal",
     "standard",
-    0.0001,
+    0.0001
   );
 
   return {

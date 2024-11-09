@@ -11,7 +11,7 @@
   "dependencies": {
     "@bleu/cow-hooks-ui": "workspace:*",
     "@bleu/tsconfig": "workspace:*",
-    "@bleu/ui": "0.1.131",
+    "@bleu.builders/ui": "0.1.133",
     "@bleu/utils": "workspace:*",
     "@cowprotocol/cow-sdk": "^5.5.1",
     "@cowprotocol/hook-dapp-lib": "1.2.0",

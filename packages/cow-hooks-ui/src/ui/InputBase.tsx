@@ -1,4 +1,4 @@
-import { Input as InputPrimitive, Label, cn } from "@bleu/ui";
+import { Input as InputPrimitive, Label, cn } from "@bleu.builders/ui";
 import React, { type HTMLProps } from "react";
 import {
   type FieldError,
@@ -55,7 +55,7 @@ export const Input = React.forwardRef<HTMLInputElement, IInput>(
           {...register(name, validation)}
           className={cn(
             "w-full shadow-none rounded-md placeholder:opacity-50 border border-border",
-            className,
+            className
           )}
         />
 
@@ -66,5 +66,5 @@ export const Input = React.forwardRef<HTMLInputElement, IInput>(
         )}
       </div>
     );
-  },
+  }
 );
