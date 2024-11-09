@@ -2,8 +2,8 @@
 
 import { type PropsWithChildren, useCallback, useEffect, useMemo } from "react";
 
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { Form } from "@bleu.builders/ui";
+import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
@@ -32,7 +32,7 @@ export function FormContextProvider({ children }: PropsWithChildren) {
 
   const selectedPool = useMemo(() => {
     return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
+      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
     );
   }, [pools, poolId]);
 
@@ -47,7 +47,7 @@ export function FormContextProvider({ children }: PropsWithChildren) {
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [getHooksTransactions, setHookInfo, router]
+    [getHooksTransactions, setHookInfo, router],
   );
 
   // biome-ignore lint:

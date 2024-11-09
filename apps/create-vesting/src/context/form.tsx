@@ -2,8 +2,8 @@
 
 import { type PropsWithChildren, useCallback, useMemo } from "react";
 
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { Form } from "@bleu.builders/ui";
+import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -95,12 +95,12 @@ export function FormContextProvider({ children }: PropsWithChildren) {
       getHooksTransactions,
       setError,
       clearErrors,
-    ]
+    ],
   );
 
   const onSubmit = useMemo(
     () => form.handleSubmit(onSubmitCallback),
-    [form, onSubmitCallback]
+    [form, onSubmitCallback],
   );
 
   return (

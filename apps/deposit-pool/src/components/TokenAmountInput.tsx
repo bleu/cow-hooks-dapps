@@ -1,5 +1,5 @@
-import { type IBalance, TokenLogoWithWeight } from "@bleu/cow-hooks-ui";
 import { Button, Input, formatNumber } from "@bleu.builders/ui";
+import { type IBalance, TokenLogoWithWeight } from "@bleu/cow-hooks-ui";
 import { useCallback, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
@@ -32,7 +32,7 @@ export function TokenAmountInput({
   });
 
   const tokenBalanceAfterSwap = useTokenBalanceAfterSwap(
-    poolBalance.token.address
+    poolBalance.token.address,
   );
 
   const amountUsd = useMemo(() => {
@@ -46,11 +46,11 @@ export function TokenAmountInput({
       if (updateTokenAmounts) {
         updateTokenAmounts(
           constraintStringToBeNumeric(amount),
-          poolBalance.token.address as Address
+          poolBalance.token.address as Address,
         );
       }
     },
-    [updateTokenAmounts, poolBalance.token.address]
+    [updateTokenAmounts, poolBalance.token.address],
   );
 
   const disabled = amountFromSwap || amountFromAccount;
@@ -82,7 +82,7 @@ export function TokenAmountInput({
               onChange(e.target.value);
               setValue(
                 `amounts.${poolBalance.token.address.toLowerCase()}`,
-                constraintStringToBeNumeric(e.target.value)
+                constraintStringToBeNumeric(e.target.value),
               );
             },
           })}
@@ -104,7 +104,7 @@ export function TokenAmountInput({
                   4,
                   "decimal",
                   "standard",
-                  0.0001
+                  0.0001,
                 )}
               </span>
               {!buttonDisabled && (
@@ -115,7 +115,7 @@ export function TokenAmountInput({
                   onClick={() => {
                     setValue(
                       `amounts.${poolBalance.token.address.toLowerCase()}`,
-                      tokenBalanceAfterSwap
+                      tokenBalanceAfterSwap,
                     );
                     onChange(tokenBalanceAfterSwap);
                   }}

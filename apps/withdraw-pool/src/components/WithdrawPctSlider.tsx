@@ -1,7 +1,7 @@
 "use client";
 
-import { Input } from "@bleu/cow-hooks-ui";
 import { Button, Label, cn } from "@bleu.builders/ui";
+import { Input } from "@bleu/cow-hooks-ui";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { withdrawSchema } from "#/utils/schema";
 
@@ -23,7 +23,7 @@ export function WithdrawPctSlider() {
             variant="ghost"
             className={cn(
               "rounded-2xl text-xs py-1 bg-accent text-accent-foreground opacity-50 hover:opacity-100 h-fit",
-              withdrawPct.toString() === pct.toString() ? "opacity-100" : ""
+              withdrawPct.toString() === pct.toString() ? "opacity-100" : "",
             )}
             onClick={() => setValue("withdrawPct", pct)}
           >

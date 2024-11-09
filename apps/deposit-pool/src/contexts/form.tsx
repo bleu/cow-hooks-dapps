@@ -2,8 +2,8 @@
 
 import { type PropsWithChildren, useCallback, useMemo } from "react";
 
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { Form } from "@bleu.builders/ui";
+import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
@@ -27,7 +27,7 @@ export function FormContextProvider({ children }: PropsWithChildren) {
 
   const selectedPool = useMemo(
     () => pools?.find((pool) => pool.id === poolId),
-    [pools, poolId]
+    [pools, poolId],
   );
 
   const getHookInfo = useGetHookInfo(selectedPool);
@@ -39,7 +39,7 @@ export function FormContextProvider({ children }: PropsWithChildren) {
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [getHookInfo, setHookInfo, router]
+    [getHookInfo, setHookInfo, router],
   );
 
   return (

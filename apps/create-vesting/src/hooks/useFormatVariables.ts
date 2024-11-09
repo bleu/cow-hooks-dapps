@@ -1,5 +1,5 @@
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { formatNumber } from "@bleu.builders/ui";
+import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { useMemo } from "react";
 
 export const useFormatVariables = ({
@@ -16,7 +16,7 @@ export const useFormatVariables = ({
       userBalance !== undefined && tokenDecimals
         ? Number(userBalance) / 10 ** Number(tokenDecimals)
         : undefined,
-    [userBalance, tokenDecimals]
+    [userBalance, tokenDecimals],
   );
 
   const swapAmountFloat = useMemo(
@@ -24,7 +24,7 @@ export const useFormatVariables = ({
       context?.orderParams?.buyAmount !== undefined && tokenDecimals
         ? Number(context?.orderParams?.buyAmount) / 10 ** Number(tokenDecimals)
         : undefined,
-    [context?.orderParams?.buyAmount, tokenDecimals]
+    [context?.orderParams?.buyAmount, tokenDecimals],
   );
 
   const allAfterSwapFloat = useMemo(
@@ -32,7 +32,7 @@ export const useFormatVariables = ({
       userBalanceFloat !== undefined && swapAmountFloat !== undefined
         ? userBalanceFloat + swapAmountFloat
         : undefined,
-    [userBalanceFloat, swapAmountFloat]
+    [userBalanceFloat, swapAmountFloat],
   );
 
   const formattedUserBalance = useMemo(
@@ -40,7 +40,7 @@ export const useFormatVariables = ({
       userBalanceFloat !== undefined
         ? formatNumber(userBalanceFloat, 4, "decimal", "standard", 0.0001)
         : "",
-    [userBalanceFloat]
+    [userBalanceFloat],
   );
 
   const formattedSwapAmount = useMemo(
@@ -48,7 +48,7 @@ export const useFormatVariables = ({
       swapAmountFloat !== undefined
         ? formatNumber(swapAmountFloat, 4, "decimal", "standard", 0.0001)
         : "",
-    [swapAmountFloat]
+    [swapAmountFloat],
   );
 
   const formattedAllAfterSwap = useMemo(
@@ -56,7 +56,7 @@ export const useFormatVariables = ({
       allAfterSwapFloat !== undefined
         ? formatNumber(allAfterSwapFloat, 6, "decimal", "standard", 0.000001)
         : "",
-    [allAfterSwapFloat]
+    [allAfterSwapFloat],
   );
 
   return {

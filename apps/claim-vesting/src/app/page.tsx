@@ -28,7 +28,7 @@ export default function Page() {
   const { account, chainId } = context || {};
 
   const [typedAddress, setTypedAddress] = useState<string>(
-    context?.hookToEdit?.hook.target || ""
+    context?.hookToEdit?.hook.target || "",
   );
 
   const [debouncedAddress] = useDebounceValue(typedAddress, 300, {
