@@ -105,7 +105,7 @@ export function TokenAmountInput({
                   "decimal",
                   "standard",
                   0.0001,
-                )}
+                ).replace(/\.?0+$/, "")}
               </span>
               {!buttonDisabled && (
                 <Button
