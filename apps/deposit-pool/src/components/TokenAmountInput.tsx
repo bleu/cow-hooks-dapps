@@ -99,13 +99,15 @@ export function TokenAmountInput({
             <span>
               <span className="ml-1 text-xs font-normal opacity-70">
                 Balance:{" "}
-                {formatNumber(
-                  tokenBalanceAfterSwap,
-                  4,
-                  "decimal",
-                  "standard",
-                  0.0001,
-                ).replace(/\.?0+$/, "")}
+                {Number.parseFloat(
+                  formatNumber(
+                    tokenBalanceAfterSwap,
+                    4,
+                    "decimal",
+                    "standard",
+                    0.0001,
+                  ),
+                ).toString()}
               </span>
               {!buttonDisabled && (
                 <Button
