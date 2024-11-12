@@ -53,12 +53,13 @@ export function FormButton({ poolBalances }: { poolBalances: IBalance[] }) {
 
   const shouldDisableButton = useMemo(() => {
     if (insufficientTokenSymbols.length) return true;
-    if (Number(referenceAmount) <= 0) return true;
+    if (Number(referenceAmount || "0") <= 0) return true;
     if (isSubmitting) return true;
     return false;
   }, [insufficientTokenSymbols, isSubmitting, referenceAmount]);
 
   const ButtonMessage = () => {
+    if (Number(referenceAmount || "0") <= 0) return "Enter an amount";
     if (insufficientTokenSymbols.length === 1) {
       return `Insufficient ${insufficientTokenSymbols[0]} balance`;
     }
