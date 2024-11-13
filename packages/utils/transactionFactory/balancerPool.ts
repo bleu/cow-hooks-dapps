@@ -45,7 +45,7 @@ export class BalancerDepositCreator
   async createRawTx(args: BalancerDepositArgs): Promise<BaseTransaction> {
     return addLiquidity.buildCall({
       ...args.query,
-      slippage: Slippage.fromPercentage("0.5"), // same used on the balancer app
+      slippage: Slippage.fromPercentage("1"), // same used on the balancer app
       sender: args.sender,
       chainId: args.chainId,
       recipient: args.recipient,
@@ -77,7 +77,7 @@ export class BalancerWithdrawCreator
     const query = await removeLiquidity.query(removeLiquidityInput, poolState);
     const call = removeLiquidity.buildCall({
       ...query,
-      slippage: Slippage.fromPercentage("0"), // same used on the balancer app
+      slippage: Slippage.fromPercentage("1"), // same used on the balancer app
       sender,
       recipient,
       chainId,
