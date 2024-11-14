@@ -24,6 +24,9 @@ export interface IHooksInfo {
 export interface HookDappContextAdjusted extends HookDappContext {
   account?: Address;
   chainId: SupportedChainId;
+  // Remove this once this is available on @cowprotocol/hook-dapp-lib
+  // account -> token -> balance
+  balancesDiff?: Record<Address, Record<Address, BigNumberish>>;
 }
 
 export interface SignatureStepsProps {

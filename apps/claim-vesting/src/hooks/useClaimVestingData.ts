@@ -1,4 +1,5 @@
 import { formatNumber } from "@bleu.builders/ui";
+import { useReadTokenContract } from "@bleu/cow-hooks-ui";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { useMemo } from "react";
 import { type Address, isAddress } from "viem";
@@ -7,7 +8,6 @@ import { http, createPublicClient } from "viem";
 import { arbitrum, gnosis, mainnet, sepolia } from "viem/chains";
 import { VestingEscrowAbi } from "../abis/VestingEscrowAbi";
 import { useEstimateGasLimit } from "./useEstimateGasLimit";
-import { useReadTokenContract } from "./useReadTokenContract";
 import { useReadVesting } from "./useReadVesting";
 
 interface useClaimVestingDataParams {
@@ -53,11 +53,14 @@ export const useClaimVestingData = ({
     errorVesting,
   } = useReadVesting({ publicClient, debouncedAddress });
 
-  const { tokenSymbol, decimals, isLoadingToken, errorToken } =
-    useReadTokenContract({
-      publicClient,
-      tokenAddress,
-    });
+  const {
+    tokenSymbol,
+    tokenDecimals: decimals,
+    isLoadingToken,
+    errorToken,
+  } = useReadTokenContract({
+    tokenAddress,
+  });
 
   const estimateGasParams =
     recipient && claimableAmountWei
