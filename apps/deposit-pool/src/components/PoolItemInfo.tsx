@@ -6,7 +6,7 @@ export function PoolItemInfo({ pool }: { pool: IPool }) {
     pool.dynamicData.aprItems.reduce((acc, { apr }) => acc + apr, 0) * 100;
 
   return (
-    <div className="flex flex-col gap-1 text-xs">
+    <div className="flex text-left items-start flex-col gap-1 text-xs">
       <i>TVL: ${formatNumber(pool.dynamicData.totalLiquidity, 2)}</i>
       <i>APR: {formatNumber(aprSumPct, 2)}%</i>
     </div>
