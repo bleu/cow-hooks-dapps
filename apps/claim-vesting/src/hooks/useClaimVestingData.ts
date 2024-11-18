@@ -1,30 +1,17 @@
 import { formatNumber } from "@bleu.builders/ui";
 import { useReadTokenContract } from "@bleu/cow-hooks-ui";
-import type { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { useMemo } from "react";
-import { type Address, isAddress } from "viem";
+import { type Address, formatUnits, isAddress } from "viem";
 import { encodeFunctionData } from "viem";
-import { http, createPublicClient } from "viem";
-import { arbitrum, gnosis, mainnet, sepolia } from "viem/chains";
 import { VestingEscrowAbi } from "../abis/VestingEscrowAbi";
 import { useEstimateGasLimit } from "./useEstimateGasLimit";
 import { useReadVesting } from "./useReadVesting";
 
 interface useClaimVestingDataParams {
-  chainId: SupportedChainId | undefined;
   account: string | undefined;
   debouncedAddress: string;
 }
 
-const chainMapping = {
-  [1]: mainnet,
-  [100]: gnosis,
-  [42161]: arbitrum,
-  [11155111]: sepolia,
-};
-
 export const useClaimVestingData = ({
-  chainId,
   account,
   debouncedAddress,
 }: useClaimVestingDataParams): {
@@ -36,22 +23,13 @@ export const useClaimVestingData = ({
   callData: string | undefined;
   gasLimit: string | undefined;
 } => {
-  const publicClient = useMemo(
-    () =>
-      chainId &&
-      createPublicClient({
-        chain: chainMapping[chainId],
-        transport: http(),
-      }),
-    [chainId],
-  );
   const {
     claimableAmountWei,
     recipient,
     tokenAddress,
     isLoadingVesting,
     errorVesting,
-  } = useReadVesting({ publicClient, debouncedAddress });
+  } = useReadVesting({ debouncedAddress });
 
   const {
     tokenSymbol,
@@ -72,7 +50,6 @@ export const useClaimVestingData = ({
         }
       : undefined;
   const { gasLimit, isLoadingGasLimit, errorGasLimit } = useEstimateGasLimit({
-    publicClient,
     estimateGasParams,
     useSWRConfig: {
       revalidateOnFocus: false,
@@ -95,7 +72,7 @@ export const useClaimVestingData = ({
   const formattedClaimableAmount =
     recipient === account && claimableAmountWei && decimals
       ? formatNumber(
-          Number(claimableAmountWei) / 10 ** Number(decimals),
+          formatUnits(claimableAmountWei, Number(decimals)),
           6,
           "decimal",
           "standard",
@@ -105,7 +82,7 @@ export const useClaimVestingData = ({
   const formattedClaimableAmountFullDecimals =
     recipient === account && claimableAmountWei && decimals
       ? formatNumber(
-          Number(claimableAmountWei) / 10 ** Number(decimals),
+          formatUnits(claimableAmountWei, Number(decimals)),
           Number(decimals),
           "decimal",
           "standard",

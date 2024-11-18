@@ -1,16 +1,16 @@
+import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import type { SWRConfiguration } from "swr";
 import useSWR from "swr";
-import type { EstimateContractGasParameters, PublicClient } from "viem";
+import type { EstimateContractGasParameters } from "viem";
 
 export const useEstimateGasLimit = ({
-  publicClient,
   estimateGasParams,
   useSWRConfig,
 }: {
-  publicClient: PublicClient | undefined;
   estimateGasParams: EstimateContractGasParameters | undefined;
   useSWRConfig?: SWRConfiguration;
 }) => {
+  const { publicClient } = useIFrameContext();
   const estimateGasLimit = async (
     estimateGasParams: EstimateContractGasParameters,
   ) => {
