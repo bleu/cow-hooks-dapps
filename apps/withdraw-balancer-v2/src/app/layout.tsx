@@ -1,7 +1,7 @@
 "use client";
 
-import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 import { RootLayout, WithdrawFormContextProvider } from "@bleu/cow-hooks-ui";
+import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 import "@bleu/cow-hooks-ui/global.css";
 import Head from "next/head";
 

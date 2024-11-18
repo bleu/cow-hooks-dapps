@@ -18,7 +18,7 @@ export function WithdrawFormContextProvider({
   children: React.ReactNode;
   getHookInfo: (
     selectedPool: IPool,
-    withdrawPct: number
+    withdrawPct: number,
   ) => Promise<IHooksInfo | undefined>;
   poolTypeIn: "COW_AMM" | "WEIGHTED";
 }) {
@@ -40,7 +40,7 @@ export function WithdrawFormContextProvider({
 
   const selectedPool = useMemo(() => {
     return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
+      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
     );
   }, [pools, poolId]);
 
@@ -49,15 +49,12 @@ export function WithdrawFormContextProvider({
   const onSubmitCallback = useCallback(
     async (data: WithdrawSchemaType) => {
       if (!selectedPool) return;
-      console.log({ selectedPool });
       const hookInfo = await getHookInfo(selectedPool, data.withdrawPct);
-      console.log({ hookInfo });
       if (!hookInfo) return;
-      console.log("oi");
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [getHookInfo, setHookInfo, router, selectedPool]
+    [getHookInfo, setHookInfo, router, selectedPool],
   );
 
   // biome-ignore lint:

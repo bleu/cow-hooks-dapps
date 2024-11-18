@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
-import { usePools } from "./usePools";
 import { useIFrameContext } from "../context/iframe";
+import { usePools } from "./usePools";
 
 export function useUserPools(poolType: "WEIGHTED" | "COW_AMM") {
   const { context } = useIFrameContext();
@@ -12,11 +12,11 @@ export function useUserPools(poolType: "WEIGHTED" | "COW_AMM") {
       protocolVersionIn,
     },
     context?.chainId,
-    "userbalanceUsd"
+    "userbalanceUsd",
   );
 
   const data = useSwrData.data?.filter((pool) =>
-    BigNumber.from(pool.userBalance.walletBalance).gt(BigNumber.from("10"))
+    BigNumber.from(pool.userBalance.walletBalance).gt(BigNumber.from("10")),
   );
 
   return { ...useSwrData, data };
