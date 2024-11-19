@@ -11,13 +11,13 @@ function processAmount(amount: string | number) {
 }
 
 function processSelectedOption(data: FormType) {
-  if (data.amountFromUserInput) {
+  if (data.amountType === "userInput") {
     return "01";
   }
-  if (data.amountFromAccount) {
+  if (data.amountType === "allFromAccount") {
     return "02";
   }
-  if (data.amountFromSwap) {
+  if (data.amountType === "allFromSwap") {
     return "03";
   }
   return "00";
