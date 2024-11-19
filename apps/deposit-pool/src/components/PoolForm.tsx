@@ -14,9 +14,7 @@ import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
 import type { FormType } from "#/types";
 import { formDefaultValues } from "#/utils/formDefaultValues";
 import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
-import { AmountFromAccountCheckbox } from "./AmountFromAccountCheckbox";
-import { AmountFromSwapCheckbox } from "./AmountFromSwapCheckbox";
-import { AmountFromUserInputCheckbox } from "./AmountFromUserInputCheckbox";
+import { AmountTypeCheckbox } from "./AmountTypeCheckbox";
 import { FormButton } from "./FormButton";
 import { InfoContent } from "./InfoContent";
 import { TokenAmountInput } from "./TokenAmountInput";
@@ -35,19 +33,16 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
     chainId: context?.chainId,
   });
 
+  const poolId = useWatch({ control, name: "poolId" });
+
   const amounts = useWatch({ control, name: "amounts" });
-  const amountFromSwap = useWatch({
-    control,
-    name: "amountFromSwap",
-  });
-  const amountFromAccount = useWatch({
-    control,
-    name: "amountFromAccount",
-  });
+  const amountType = useWatch({ control, name: "amountType" });
 
   useEffect(() => {
-    reset({ ...formDefaultValues, poolId: pool?.id });
-  }, [reset, pool]);
+    if (pool?.id.toLowerCase() !== poolId.toLowerCase()) {
+      reset({ ...formDefaultValues, poolId: pool?.id });
+    }
+  }, [reset, pool, poolId]);
 
   const tokenPrices = useMemo(
     () => poolBalances?.map((poolBalance) => getTokenPrice(poolBalance)),
@@ -98,22 +93,17 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
   );
 
   useEffect(() => {
-    if (amountFromSwap && context?.orderParams && buyAmount) {
+    if (amountType === "allFromSwap" && context?.orderParams && buyAmount) {
       const address =
         context.orderParams.buyTokenAddress.toLowerCase() as Address;
       setValue(`amounts.${address}`, buyAmount);
       updateTokenAmounts(buyAmount, address);
     }
-  }, [
-    context?.orderParams,
-    amountFromSwap,
-    setValue,
-    updateTokenAmounts,
-    buyAmount,
-  ]);
-
-  useEffect(() => {
-    if (amountFromAccount && context?.orderParams && buyAmountAfterSwap) {
+    if (
+      amountType === "allFromAccount" &&
+      context?.orderParams &&
+      buyAmountAfterSwap
+    ) {
       const address =
         context.orderParams.buyTokenAddress.toLowerCase() as Address;
       setValue(`amounts.${address}`, buyAmountAfterSwap);
@@ -121,9 +111,10 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
     }
   }, [
     context?.orderParams,
-    amountFromAccount,
+    amountType,
     setValue,
     updateTokenAmounts,
+    buyAmount,
     buyAmountAfterSwap,
   ]);
 
@@ -159,9 +150,18 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
         </span>
       </div>
       <div className="w-full flex flex-col gap-y-2 mb-3">
-        <AmountFromUserInputCheckbox />
-        <AmountFromSwapCheckbox />
-        <AmountFromAccountCheckbox />
+        <AmountTypeCheckbox
+          option="userInput"
+          label="Input deposit amount manually"
+        />
+        <AmountTypeCheckbox
+          option="allFromSwap"
+          label="Use all tokens from swap"
+        />
+        <AmountTypeCheckbox
+          option="allFromAccount"
+          label="Use all your tokens after swap"
+        />
       </div>
       <Info content={<InfoContent />} />
       <FormButton poolBalances={poolBalances} />

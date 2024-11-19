@@ -22,13 +22,10 @@ export function TokenAmountInput({
     control,
     name: `amounts.${poolBalance.token.address.toLowerCase()}`,
   });
-  const amountFromSwap = useWatch({
+
+  const amountType = useWatch({
     control,
-    name: "amountFromSwap",
-  });
-  const amountFromAccount = useWatch({
-    control,
-    name: "amountFromAccount",
+    name: "amountType",
   });
 
   const tokenBalanceAfterSwap = useTokenBalanceAfterSwap(
@@ -53,7 +50,7 @@ export function TokenAmountInput({
     [updateTokenAmounts, poolBalance.token.address],
   );
 
-  const disabled = amountFromSwap || amountFromAccount;
+  const disabled = amountType !== "userInput";
 
   const buttonDisabled =
     disabled ||

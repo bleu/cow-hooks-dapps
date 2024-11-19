@@ -5,33 +5,16 @@ import {
   formatUnits,
   hexToBigInt,
 } from "viem";
-import type { FormType } from "#/types";
+import type { AmountType, FormType } from "#/types";
 
-export const decodeSelectedOption = (
-  option: string,
-): Pick<
-  FormType,
-  "amountFromAccount" | "amountFromSwap" | "amountFromUserInput"
-> => {
+export const decodeSelectedOption = (option: string): AmountType => {
   switch (option) {
     case "2":
-      return {
-        amountFromAccount: true,
-        amountFromSwap: false,
-        amountFromUserInput: false,
-      };
+      return "allFromAccount";
     case "3":
-      return {
-        amountFromAccount: false,
-        amountFromSwap: true,
-        amountFromUserInput: false,
-      };
+      return "allFromSwap";
     default:
-      return {
-        amountFromAccount: false,
-        amountFromSwap: false,
-        amountFromUserInput: true,
-      };
+      return "userInput";
   }
 };
 
@@ -83,7 +66,7 @@ export const decodeCalldata = async (
     poolId,
     amounts,
     referenceTokenAddress,
-    ...optionSelected,
+    amountType: optionSelected,
   } as FormType;
 
   return result;

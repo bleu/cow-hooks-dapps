@@ -6,9 +6,11 @@ import {
   getTokenPermitInfo,
 } from "@cowprotocol/permit-utils";
 import { BigNumber } from "ethers";
+import { useSetAtom } from "jotai";
 import { useCallback } from "react";
 import { type Address, erc20Abi, maxUint256 } from "viem";
 import { useIFrameContext } from "../../context/iframe";
+import { getPermitCacheAtom, storePermitCacheAtom } from "./state";
 import { handleTokenApprove } from "./useHandleTokenApprove";
 
 export function useHandleTokenAllowance({
@@ -18,6 +20,9 @@ export function useHandleTokenAllowance({
 }) {
   const { web3Provider, publicClient, jsonRpcProvider, context, signer } =
     useIFrameContext();
+  const storePermit = useSetAtom(storePermitCacheAtom);
+  const getCachedPermit = useSetAtom(getPermitCacheAtom);
+
   return useCallback(
     async (amount: BigNumber, tokenAddress: Address) => {
       if (
@@ -75,6 +80,18 @@ export function useHandleTokenAllowance({
         eip2162Utils.getTokenNonce(tokenAddress, account),
       ]).catch(() => [undefined, undefined]);
 
+      const cachedPermit = getCachedPermit({
+        chainId: context.chainId,
+        tokenAddress,
+        account: context.account,
+        spender,
+        nonce,
+      });
+
+      if (cachedPermit) {
+        return cachedPermit;
+      }
+
       if (!permitInfo || !checkIsPermitInfo(permitInfo)) {
         await handleTokenApprove({
           signer,
@@ -99,9 +116,26 @@ export function useHandleTokenAllowance({
         nonce,
       });
       if (!hook) throw new Error("User rejected permit");
+      storePermit({
+        chainId,
+        tokenAddress,
+        account,
+        nonce,
+        spender,
+        hookData: hook,
+      });
       return hook;
     },
-    [jsonRpcProvider, context, publicClient, spender, signer, web3Provider],
+    [
+      jsonRpcProvider,
+      context,
+      publicClient,
+      spender,
+      signer,
+      web3Provider,
+      getCachedPermit,
+      storePermit,
+    ],
   );
 }
 
