@@ -6,6 +6,7 @@ import {
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
+import { COW_NATIVE_TOKEN_ADDRESS } from "@bleu/utils";
 import { ALL_SUPPORTED_CHAIN_IDS, type Address } from "@cowprotocol/cow-sdk";
 import { useCallback, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -90,6 +91,17 @@ export default function Page() {
       <div className="w-full text-center mt-10 p-2">
         <span>Please specify your swap order first</span>
       </div>
+    );
+  }
+
+  if (
+    context?.orderParams?.buyTokenAddress.toLowerCase() ===
+    COW_NATIVE_TOKEN_ADDRESS
+  ) {
+    return (
+      <span className="block w-full mt-10 text-center">
+        Deposit native token is not supported
+      </span>
     );
   }
 

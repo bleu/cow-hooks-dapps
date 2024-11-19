@@ -1,6 +1,9 @@
 // data collected from https://github.com/cowprotocol/cowswap/blob/12191b4296708214263445b88b9ddf1aa20f3f78/libs/tokens/src/const/tokensList.json
 // TODO: use codegen to generate the list
 
+export const COW_NATIVE_TOKEN_ADDRESS =
+  "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
+
 const cowSwapTokenList = [
   {
     symbol: "SPELL",

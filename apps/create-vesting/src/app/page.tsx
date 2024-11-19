@@ -4,6 +4,7 @@ import { Info, Spinner, useIFrameContext } from "@bleu/cow-hooks-ui";
 import { useCallback, useState } from "react";
 import { useFormContext, useFormState, useWatch } from "react-hook-form";
 
+import { COW_NATIVE_TOKEN_ADDRESS } from "@bleu/utils";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import { AmountInput } from "#/components/AmountInput";
 import { Button } from "#/components/Button";
@@ -102,7 +103,7 @@ export default function Page() {
       </span>
     );
 
-  if (!context?.orderParams?.buyAmount || !context?.orderParams?.buyAmount)
+  if (!context?.orderParams?.sellAmount || !context?.orderParams?.buyAmount)
     return (
       <span className="block w-full mt-10 text-center">
         Please specify your swap order first
@@ -112,6 +113,17 @@ export default function Page() {
   if (!ALL_SUPPORTED_CHAIN_IDS.includes(context.chainId)) {
     return (
       <span className="block w-full mt-10 text-center">Unsupported chain</span>
+    );
+  }
+
+  if (
+    context?.orderParams?.buyTokenAddress.toLowerCase() ===
+    COW_NATIVE_TOKEN_ADDRESS
+  ) {
+    return (
+      <span className="block w-full mt-10 text-center">
+        Vesting native token is not supported
+      </span>
     );
   }
 
