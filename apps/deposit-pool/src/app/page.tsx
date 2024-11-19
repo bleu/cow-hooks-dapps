@@ -43,7 +43,9 @@ export default function Page() {
       publicClient,
     );
     if (data) {
-      reset(data);
+      reset(data, {
+        keepDefaultValues: false,
+      });
       setIsEditHookLoading(false);
     }
   }, [
