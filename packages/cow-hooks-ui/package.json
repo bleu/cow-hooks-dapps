@@ -6,8 +6,8 @@
   "dependencies": {
     "@1inch/permit-signed-approvals-utils": "1.5.2",
     "@balancer/sdk": "0.26.1",
-    "@bleu/tsconfig": "workspace:*",
     "@bleu.builders/ui": "0.1.133",
+    "@bleu/tsconfig": "workspace:*",
     "@bleu/utils": "workspace:*",
     "@cowprotocol/contracts": "1.6.0",
     "@cowprotocol/cow-sdk": "^5.5.1",
@@ -25,6 +25,7 @@
     "@uniswap/sdk-core": "5.4.0",
     "cmdk": "^1.0.0",
     "graphql-request": "^6.1.0",
+    "jotai": "^2.10.2",
     "preline": "^2.5.1",
     "viem": "2.21.14"
   },
