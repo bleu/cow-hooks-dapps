@@ -9,7 +9,7 @@ import {
 import { COW_NATIVE_TOKEN_ADDRESS } from "@bleu/utils";
 import { ALL_SUPPORTED_CHAIN_IDS, type Address } from "@cowprotocol/cow-sdk";
 import { useCallback, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
 import { PoolItemInfo } from "#/components/PoolItemInfo";
 import { useSelectedPool } from "#/hooks/useSelectedPool";
@@ -23,7 +23,11 @@ export default function Page() {
   const { data: pools, isLoading: isLoadingPools } = useTokenBuyPools();
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
 
-  const { setValue, reset } = useFormContext<FormType>();
+  const { setValue, reset, control } = useFormContext<FormType>();
+  const referenceTokenAddress = useWatch({
+    control,
+    name: "referenceTokenAddress",
+  });
   const sellTokenAmountAfterSwap = useTokenBalanceAfterSwap(
     context?.orderParams?.sellTokenAddress as Address,
   );
@@ -35,7 +39,8 @@ export default function Page() {
       !context?.hookToEdit?.hook.callData ||
       !context.account ||
       !isEditHookLoading ||
-      !publicClient
+      !publicClient ||
+      referenceTokenAddress
     )
       return;
     const data = await decodeCalldata(
@@ -54,6 +59,7 @@ export default function Page() {
     reset,
     isEditHookLoading,
     publicClient,
+    referenceTokenAddress,
   ]);
 
   if (!context)

@@ -41,7 +41,7 @@ export function FormButton({ poolBalances }: { poolBalances: IBalance[] }) {
     return tokenAddresses
       .map((tokenAddress) => {
         const token = poolTokens[tokenAddress];
-        if (!token) return;
+        if (!token || !amounts) return;
         const amount = amounts[tokenAddress];
         if (!amount) return;
         const tokenBalance = Number(token.balance);

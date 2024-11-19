@@ -33,12 +33,16 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
     chainId: context?.chainId,
   });
 
+  const poolId = useWatch({ control, name: "poolId" });
+
   const amounts = useWatch({ control, name: "amounts" });
   const amountType = useWatch({ control, name: "amountType" });
 
   useEffect(() => {
-    reset({ ...formDefaultValues, poolId: pool?.id });
-  }, [reset, pool]);
+    if (pool?.id.toLowerCase() !== poolId.toLowerCase()) {
+      reset({ ...formDefaultValues, poolId: pool?.id });
+    }
+  }, [reset, pool, poolId]);
 
   const tokenPrices = useMemo(
     () => poolBalances?.map((poolBalance) => getTokenPrice(poolBalance)),
