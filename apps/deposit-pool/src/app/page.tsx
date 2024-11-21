@@ -8,7 +8,7 @@ import {
 } from "@bleu/cow-hooks-ui";
 import { COW_NATIVE_TOKEN_ADDRESS } from "@bleu/utils";
 import { ALL_SUPPORTED_CHAIN_IDS, type Address } from "@cowprotocol/cow-sdk";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
 import { PoolItemInfo } from "#/components/PoolItemInfo";
@@ -33,6 +33,18 @@ export default function Page() {
   );
 
   const selectedPool = useSelectedPool();
+
+  const allPools = useMemo(() => {
+    if (!pools && !selectedPool) return [];
+    if (!selectedPool) return pools || [];
+    if (!pools) return [selectedPool];
+    return [...pools, selectedPool].filter((item, index, array) => {
+      return (
+        index ===
+        array.findIndex((obj) => obj.id.toLowerCase() === item.id.toLowerCase())
+      );
+    });
+  }, [pools, selectedPool]);
 
   const loadHookInfo = useCallback(async () => {
     if (
@@ -142,7 +154,7 @@ export default function Page() {
       <PoolsDropdownMenu
         onSelect={(pool: IPool) => setValue("poolId", pool.id)}
         PoolItemInfo={PoolItemInfo}
-        pools={pools || []}
+        pools={allPools}
         selectedPool={selectedPool}
         isCheckDetailsCentered={false}
       />
