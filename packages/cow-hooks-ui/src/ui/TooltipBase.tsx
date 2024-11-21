@@ -12,12 +12,14 @@ export const InfoTooltip = ({
   link,
   variant = "default",
   side = "top",
+  className,
 }: {
   // get type from the InfoTooltip component
   text?: Parameters<typeof Tooltip>[0]["content"];
   link?: string;
   variant?: "default" | "question" | "error";
   side?: "top" | "right" | "bottom" | "left";
+  className?: string;
 }) => {
   if (!text) return null;
 
@@ -38,6 +40,7 @@ export const InfoTooltip = ({
         onFocusCapture={(e) => {
           e.stopPropagation();
         }}
+        className={className}
       >
         {link ? (
           <a href={link} target="_blank" rel="noreferrer">
