@@ -1,5 +1,10 @@
 import { Button, Input, formatNumber } from "@bleu.builders/ui";
-import { type IBalance, TokenLogoWithWeight } from "@bleu/cow-hooks-ui";
+import {
+  type IBalance,
+  InfoTooltip,
+  TokenLogoWithWeight,
+  useIFrameContext,
+} from "@bleu/cow-hooks-ui";
 import { useCallback, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
@@ -16,6 +21,7 @@ export function TokenAmountInput({
   tokenPrice?: number;
   updateTokenAmounts: (amount: string, address: Address) => void;
 }) {
+  const { context } = useIFrameContext();
   const { register, control, setValue } = useFormContext<FormType>();
 
   const amount = useWatch({
@@ -52,10 +58,13 @@ export function TokenAmountInput({
 
   const disabled = amountType !== "userInput";
 
+  const isSellOrder = context?.orderParams?.kind === "sell";
+
   const buttonDisabled =
     disabled ||
     Number(tokenBalanceAfterSwap) <= 0 ||
-    amount === tokenBalanceAfterSwap;
+    amount === tokenBalanceAfterSwap ||
+    isSellOrder;
 
   return (
     <div className="grid grid-cols-2 min-h-24 w-full bg-muted text-muted-foreground rounded-xl p-3">
@@ -93,18 +102,20 @@ export function TokenAmountInput({
       <div className="flex items-center justify-between col-span-2">
         <div className="flex items-center justify-start">
           {tokenBalanceAfterSwap && (
-            <span>
+            <div className="flex items-center">
+              <InfoTooltip
+                className="opacity-70"
+                text="Estimated balance, it might change depending of order and fee update."
+              />
               <span className="ml-1 text-xs font-normal opacity-70">
                 Balance:{" "}
-                {Number.parseFloat(
-                  formatNumber(
-                    tokenBalanceAfterSwap,
-                    4,
-                    "decimal",
-                    "standard",
-                    0.0001,
-                  ),
-                ).toString()}
+                {formatNumber(
+                  tokenBalanceAfterSwap,
+                  4,
+                  "decimal",
+                  "standard",
+                  0.0001,
+                ).replace(/\.?0+$/, "")}
               </span>
               {!buttonDisabled && (
                 <Button
@@ -122,7 +133,7 @@ export function TokenAmountInput({
                   Max
                 </Button>
               )}
-            </span>
+            </div>
           )}
         </div>
         <div className="flex items-center justify-end">
