@@ -9,12 +9,12 @@ import { useForm, useWatch } from "react-hook-form";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 import { useTokenBuyPools } from "#/hooks/useTokenBuyPools";
 import type { FormType } from "#/types";
-import { formDefaultValues } from "#/utils/formDefaultValues";
+// import { formDefaultValues } from "#/utils/formDefaultValues";
 
 export function FormContextProvider({ children }: PropsWithChildren) {
   const { setHookInfo } = useIFrameContext();
   const form = useForm<FormType>({
-    defaultValues: formDefaultValues,
+    // defaultValues: formDefaultValues,
   });
 
   const { handleSubmit, control } = form;

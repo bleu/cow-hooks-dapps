@@ -10,18 +10,18 @@ function processAmount(amount: string | number) {
     .padStart(64, "0");
 }
 
-function processSelectedOption(data: FormType) {
-  if (data.amountType === "userInput") {
-    return "01";
-  }
-  if (data.amountType === "allFromAccount") {
-    return "02";
-  }
-  if (data.amountType === "allFromSwap") {
-    return "03";
-  }
-  return "00";
-}
+// function processSelectedOption(data: FormType) {
+//   if (data.amountType === "userInput") {
+//     return "01";
+//   }
+//   if (data.amountType === "allFromAccount") {
+//     return "02";
+//   }
+//   if (data.amountType === "allFromSwap") {
+//     return "03";
+//   }
+//   return "00";
+// }
 
 export function encodeFormData(data: FormType): string {
   const { poolId, amounts, referenceTokenAddress } = data;
@@ -38,17 +38,17 @@ export function encodeFormData(data: FormType): string {
 
   const encodedReferenceTokenAddress = remove0x(referenceTokenAddress); // size = 40
 
-  const optionSelected = processSelectedOption(data); // size = 2
+  // const optionSelected = processSelectedOption(data); // size = 2
 
   // total size = 288
-  const result =
+  const result = `${
     encodedPoolId +
     encodedToken1 +
     encodedToken2 +
     encodedAmount1 +
     encodedAmount2 +
-    encodedReferenceTokenAddress +
-    optionSelected;
+    encodedReferenceTokenAddress
+  }00`;
 
   return result;
 }

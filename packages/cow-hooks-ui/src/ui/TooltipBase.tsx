@@ -1,6 +1,6 @@
 "use client";
 
-import { Tooltip, TooltipTrigger } from "@bleu.builders/ui";
+import { Tooltip, TooltipTrigger, cn } from "@bleu.builders/ui";
 import {
   ExclamationTriangleIcon,
   InfoCircledIcon,
@@ -40,7 +40,11 @@ export const InfoTooltip = ({
         onFocusCapture={(e) => {
           e.stopPropagation();
         }}
-        className={className}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+        disabled
+        className={cn("cursor-pointer", className)}
       >
         {link ? (
           <a href={link} target="_blank" rel="noreferrer">

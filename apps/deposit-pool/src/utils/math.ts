@@ -20,14 +20,11 @@ export function calculateProportionalTokenAmounts({
   tokenAddress: Address;
   tokenAmount: string;
 }) {
-  const referenceToken = poolBalances.find(
-    (balance) =>
-      balance.token.address.toLowerCase() === tokenAddress.toLowerCase(),
-  );
-
-  if (!referenceToken) {
-    throw new Error("Token not found in pool balances");
-  }
+  const referenceToken =
+    poolBalances.find(
+      (balance) =>
+        balance.token.address.toLowerCase() === tokenAddress.toLowerCase(),
+    ) || poolBalances[0];
 
   return calculateProportionalAmounts(
     {

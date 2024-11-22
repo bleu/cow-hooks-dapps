@@ -9,12 +9,10 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { type Address, formatUnits } from "viem";
 import { usePoolBalance } from "#/hooks/usePoolBalance";
-import { useSwapAmount } from "#/hooks/useSwapAmount";
-import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
 import type { FormType } from "#/types";
 import { formDefaultValues } from "#/utils/formDefaultValues";
 import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
-import { AmountTypeCheckbox } from "./AmountTypeCheckbox";
+// import { AmountTypeCheckbox } from "./AmountTypeCheckbox";
 import { FormButton } from "./FormButton";
 import { InfoContent } from "./InfoContent";
 import { TokenAmountInput } from "./TokenAmountInput";
@@ -23,10 +21,10 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
   const { context } = useIFrameContext();
   const { control, setValue, reset } = useFormContext<FormType>();
 
-  const { buyAmount } = useSwapAmount();
-  const buyAmountAfterSwap = useTokenBalanceAfterSwap(
-    context?.orderParams?.buyTokenAddress as Address,
-  );
+  // const { buyAmount } = useSwapAmount();
+  // const _buyAmountAfterSwap = useTokenBalanceAfterSwap(
+  //   context?.orderParams?.buyTokenAddress as Address,
+  // );
 
   const { data: poolBalances, isLoading: isBalanceLoading } = usePoolBalance({
     poolId: pool?.id,
@@ -36,7 +34,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
   const poolId = useWatch({ control, name: "poolId" });
 
   const amounts = useWatch({ control, name: "amounts" });
-  const amountType = useWatch({ control, name: "amountType" });
+  // const amountType = useWatch({ control, name: "amountType" });
 
   useEffect(() => {
     if (pool?.id.toLowerCase() !== poolId.toLowerCase()) {
@@ -92,31 +90,31 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
     [poolBalances, tokenPrices, pool, setValue],
   );
 
-  useEffect(() => {
-    if (amountType === "allFromSwap" && context?.orderParams && buyAmount) {
-      const address =
-        context.orderParams.buyTokenAddress.toLowerCase() as Address;
-      setValue(`amounts.${address}`, buyAmount);
-      updateTokenAmounts(buyAmount, address);
-    }
-    if (
-      amountType === "allFromAccount" &&
-      context?.orderParams &&
-      buyAmountAfterSwap
-    ) {
-      const address =
-        context.orderParams.buyTokenAddress.toLowerCase() as Address;
-      setValue(`amounts.${address}`, buyAmountAfterSwap);
-      updateTokenAmounts(buyAmountAfterSwap, address);
-    }
-  }, [
-    context?.orderParams,
-    amountType,
-    setValue,
-    updateTokenAmounts,
-    buyAmount,
-    buyAmountAfterSwap,
-  ]);
+  // useEffect(() => {
+  //   if (amountType === "allFromSwap" && context?.orderParams && buyAmount) {
+  //     const address =
+  //       context.orderParams.buyTokenAddress.toLowerCase() as Address;
+  //     setValue(`amounts.${address}`, buyAmount);
+  //     updateTokenAmounts(buyAmount, address);
+  //   }
+  //   if (
+  //     amountType === "allFromAccount" &&
+  //     context?.orderParams &&
+  //     buyAmountAfterSwap
+  //   ) {
+  //     const address =
+  //       context.orderParams.buyTokenAddress.toLowerCase() as Address;
+  //     setValue(`amounts.${address}`, buyAmountAfterSwap);
+  //     updateTokenAmounts(buyAmountAfterSwap, address);
+  //   }
+  // }, [
+  //   context?.orderParams,
+  //   amountType,
+  //   setValue,
+  //   updateTokenAmounts,
+  //   buyAmount,
+  //   buyAmountAfterSwap,
+  // ]);
 
   if (!context) return null;
 
@@ -149,7 +147,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
           ${totalUsd >= 0 ? formatNumber(totalUsd, 2) : "0"}
         </span>
       </div>
-      <div className="w-full flex flex-col gap-y-2 mb-3">
+      {/* <div className="w-full flex flex-col gap-y-2 mb-3">
         <AmountTypeCheckbox
           option="userInput"
           label="Input deposit amount manually"
@@ -157,12 +155,16 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
         <AmountTypeCheckbox
           option="allFromSwap"
           label="Use all tokens from swap"
+          disabled={isBuyTokenNotInPool}
+          tooltip="This option is only available if the buy token is on the pool"
         />
         <AmountTypeCheckbox
           option="allFromAccount"
           label="Use all your tokens after swap"
+          disabled={isBuyTokenNotInPool}
+          tooltip="This option is only available if the buy token is on the pool"
         />
-      </div>
+      </div> */}
       <Info content={<InfoContent />} />
       <FormButton poolBalances={poolBalances} />
     </div>
