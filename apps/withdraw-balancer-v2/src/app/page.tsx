@@ -2,13 +2,13 @@
 
 import {
   type IPool,
-  PoolForm,
   PoolItemInfo,
   PoolsDropdownMenu,
   Spinner,
   useIFrameContext,
-  useUserPools,
 } from "@bleu/cow-hooks-ui";
+import { useUserPools } from "#/hooks/useUserPools";
+import { PoolForm } from "#/components/PoolForm";
 import {
   type WithdrawSchemaType,
   decodeExitPoolHookCalldata,
@@ -16,11 +16,10 @@ import {
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-
 export default function Page() {
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
   const { context } = useIFrameContext();
-  const { data: pools, isLoading: isLoadingPools } = useUserPools("WEIGHTED");
+  const { data: pools, isLoading: isLoadingPools } = useUserPools();
   const { setValue, control } = useFormContext<WithdrawSchemaType>();
 
   const poolId = useWatch({ control, name: "poolId" });

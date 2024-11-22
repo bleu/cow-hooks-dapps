@@ -1,4 +1,4 @@
-import type { IHooksInfo, IPool } from "@bleu/cow-hooks-ui";
+import type { IHooksInfo } from "@bleu/cow-hooks-ui";
 import { multiplyValueByPct } from "@bleu/utils";
 import {
   TRANSACTION_TYPES,
@@ -6,6 +6,7 @@ import {
 } from "@bleu/utils/transactionFactory";
 import { useCallback } from "react";
 import { useGetPoolWithdrawArgs } from "./useGetPoolWithdrawArgs";
+import type { IPool } from "#/types";
 
 export function useGetHookInfo() {
   const getPoolWithdrawArgs = useGetPoolWithdrawArgs();

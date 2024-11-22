@@ -85,7 +85,7 @@ export function PoolBalancesPreview({
                         balance.token.decimals,
                       ),
                     )}
-                    fiatValue={balance.fiatAmount}
+                    fiatValue={withdrawBalance[index].fiatAmount}
                     className="font-semibold"
                   />
                 </TableCell>

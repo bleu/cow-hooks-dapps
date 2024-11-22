@@ -38,7 +38,7 @@ export interface IToken {
   address: Address;
   symbol: string;
   decimals: number;
-  isNested: boolean;
+  isNested?: boolean;
   weight: number;
 }
 
@@ -50,7 +50,7 @@ export interface IPool {
   address: Address;
   type: string;
   protocolVersion: 1 | 2 | 3;
-  dynamicData: {
+  dynamicData?: {
     aprItems: {
       apr: number;
       id: string;
@@ -64,7 +64,7 @@ export interface IPool {
   userBalance: {
     walletBalance: BigNumberish;
     walletBalanceUsd: number;
-    stakedBalances: {
+    stakedBalances?: {
       balance: BigNumberish;
       stakingId: string;
     }[];
