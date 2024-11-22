@@ -2,24 +2,25 @@
   "background_color": "#ffffff",
   "display": "standalone",
   "homepage_url": "https://swap.cow.fi",
-  "description": "CoW hook dapp: Withdraw Liquidity",
+  "description": "CoW hook dapp: Withdraw Uniswap v2 Liquidity",
   "icons": [],
   "orientation": "portrait",
-  "name": "Withdraw Liquidity",
-  "short_name": "Withdraw Liquidity",
+  "name": "Withdraw Uniswap v2 Liquidity",
+  "short_name": "Withdraw Uniswap v2 Liquidity",
   "start_url": ".",
   "theme_color": "#ffffff",
   "cow_hook_dapp": {
-    "id": "5dc71fa5829d976c462bdf37b38b6fd9bbc289252a5a18e61525f8c8a3c775df",
-    "name": "Balancer V2 Withdraw Liquidity",
-    "descriptionShort": "Remove liquidity from a Balancer V2 Weighted pool before the swap",
-    "description": "Reduce or withdraw liquidity from a pool before a token swap integrating the process directly into the transaction flow. By adjusting your liquidity ahead of time, you gain more control over your assets without any extra steps. Optimize your position in a pool, all in one seamless action — no need for multiple transactions or added complexity.",
+    "id": "453074b3f9525c0a88e09decbe69e701e52163560d00e752b1e56175ad1217bb",
+    "name": "Withdraw Uniswap v2 Liquidity",
+    "descriptionShort": "Remove liquidity from a Uniswap v2 Weighted pool before the swap",
+    "description": "Reduce or withdraw Uniswap v2 from a pool before a token swap integrating the process directly into the transaction flow. By adjusting your liquidity ahead of time, you gain more control over your assets without any extra steps. Optimize your position in a pool, all in one seamless action — no need for multiple transactions or added complexity.",
     "version": "0.0.1",
-    "website": "https://balancer.fi/pools?poolTypes=WEIGHTED&protocolVersion=2",
-    "image": "https://cow-hooks-dapps-withdraw-pool.vercel.app/icon.png", // TODO
+    "website": "https://app.uniswap.org/pools/v2",
+    "image": "https://cow-hooks-dapps-withdraw-uniswap-v2.vercel.app/icon.png",
     "conditions": {
       "position": "pre",
-      "walletCompatibility": ["EOA"]
+      "walletCompatibility": ["EOA"],
+      "supportedNetworks":[1,42161]
     }
   }
 }
