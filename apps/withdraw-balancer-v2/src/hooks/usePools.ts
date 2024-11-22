@@ -1,10 +1,10 @@
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
+import useSWR from "swr";
+import type { PublicClient } from "viem";
 import type { IPool } from "#/types";
 import { getUserLpMints } from "#/utils/getUserLpMints";
 import { processMints } from "#/utils/processMints";
 import { readUserBalances } from "#/utils/readUserBalances";
-import type { SupportedChainId } from "@cowprotocol/cow-sdk";
-import useSWR from "swr";
-import type { PublicClient } from "viem";
 
 // Just do this return a IPool[]
 async function getUserPools(

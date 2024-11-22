@@ -1,13 +1,13 @@
-import { Suspense } from "react";
-import { Token } from "@uniswap/sdk-core";
 import {
   type IBalance,
   PoolBalancesPreview,
   Spinner,
   SubmitButton,
-  useIFrameContext,
   WithdrawPctSlider,
+  useIFrameContext,
 } from "@bleu/cow-hooks-ui";
+import { Token } from "@uniswap/sdk-core";
+import { Suspense } from "react";
 import type { IPool } from "#/types";
 
 export function PoolForm({ selectedPool }: { selectedPool?: IPool }) {

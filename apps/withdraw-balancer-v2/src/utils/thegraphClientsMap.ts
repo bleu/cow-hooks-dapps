@@ -1,6 +1,6 @@
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { createClient } from "urql";
 import { cacheExchange, fetchExchange } from "@urql/core";
+import { createClient } from "urql";
 
 const arbitrumClient = createClient({
   url: `https://gateway.thegraph.com/api/${process.env.NEXT_PUBLIC_THEGRAPH_API_KEY}/subgraphs/id/CStW6CSQbHoXsgKuVCrk3uShGA4JX3CAzzv2x9zaGf8w`,

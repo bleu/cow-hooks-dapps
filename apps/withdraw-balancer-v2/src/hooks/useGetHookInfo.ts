@@ -5,8 +5,8 @@ import {
   TransactionFactory,
 } from "@bleu/utils/transactionFactory";
 import { useCallback } from "react";
-import { useGetPoolWithdrawArgs } from "./useGetPoolWithdrawArgs";
 import type { IPool } from "#/types";
+import { useGetPoolWithdrawArgs } from "./useGetPoolWithdrawArgs";
 
 export function useGetHookInfo() {
   const getPoolWithdrawArgs = useGetPoolWithdrawArgs();

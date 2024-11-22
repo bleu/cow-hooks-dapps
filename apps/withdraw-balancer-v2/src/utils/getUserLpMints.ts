@@ -1,6 +1,6 @@
+import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { gql } from "urql";
 import { thegraphClientsMap } from "./thegraphClientsMap";
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
 
 export interface UserLpMintsReturn {
   mints: {

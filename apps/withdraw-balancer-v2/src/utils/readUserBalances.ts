@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { erc20Abi, type Address, type PublicClient } from "viem";
+import { type Address, type PublicClient, erc20Abi } from "viem";
 
 export async function readUserBalances(
   userAddress: string,
