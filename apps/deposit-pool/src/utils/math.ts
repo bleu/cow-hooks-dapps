@@ -20,27 +20,24 @@ export function calculateProportionalTokenAmounts({
   tokenAddress: Address;
   tokenAmount: string;
 }) {
-  const referenceToken = poolBalances.find(
-    (balance) =>
-      balance.token.address.toLowerCase() === tokenAddress.toLowerCase(),
-  );
-
-  if (!referenceToken) {
-    throw new Error("Token not found in pool balances");
-  }
+  const referenceToken =
+    poolBalances.find(
+      (balance) =>
+        balance.token.address.toLowerCase() === tokenAddress.toLowerCase()
+    ) || poolBalances[0];
 
   return calculateProportionalAmounts(
     {
       address: pool.address,
       totalShares: formatUnits(
         BigInt(pool.dynamicData.totalShares.toString()),
-        pool.decimals,
+        pool.decimals
       ) as `${number}`,
       tokens: poolBalances.map((balance) => ({
         address: balance.token.address.toLowerCase() as Address,
         balance: formatUnits(
           BigInt(balance.balance.toString()),
-          balance.token.decimals,
+          balance.token.decimals
         ) as `${number}`,
         decimals: balance.token.decimals,
       })),
@@ -49,7 +46,7 @@ export function calculateProportionalTokenAmounts({
       address: referenceToken.token.address.toLowerCase() as Address,
       decimals: referenceToken.token.decimals,
       rawAmount: parseUnits(tokenAmount, referenceToken.token.decimals),
-    },
+    }
   );
 }
 
@@ -78,7 +75,7 @@ export function updateTokenBalanceAfterSwap({
   ) {
     return formatUnits(
       balance - parseUnits(sellAmount, tokenDecimals),
-      tokenDecimals,
+      tokenDecimals
     ) as `${number}`;
   }
 
@@ -88,7 +85,7 @@ export function updateTokenBalanceAfterSwap({
   ) {
     return formatUnits(
       balance + parseUnits(buyAmount, tokenDecimals),
-      tokenDecimals,
+      tokenDecimals
     ) as `${number}`;
   }
 
