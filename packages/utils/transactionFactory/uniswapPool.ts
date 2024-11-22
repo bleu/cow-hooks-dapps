@@ -1,12 +1,12 @@
 import type { BigNumber } from "ethers";
-import { encodeFunctionData, type Address } from "viem";
+import { type Address, encodeFunctionData } from "viem";
+import { uniswapV2Router02Abi } from "./abis/uniswapV2Router02Abi";
 import type {
   BaseArgs,
   BaseTransaction,
   ITransaction,
   TRANSACTION_TYPES,
 } from "./types";
-import { uniswapV2Router02Abi } from "./abis/uniswapV2Router02Abi";
 
 export interface UniswapWithdrawArgs extends BaseArgs {
   type: TRANSACTION_TYPES.UNISWAP_WITHDRAW;
