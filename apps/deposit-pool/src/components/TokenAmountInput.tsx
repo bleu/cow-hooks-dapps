@@ -8,10 +8,10 @@ import {
 import { useCallback, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
+import { useSwapAmount } from "#/hooks/useSwapAmount";
 import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
 import type { FormType } from "#/types";
 import { constraintStringToBeNumeric } from "#/utils/constraintStringToBeNumeric";
-import { useSwapAmount } from "#/hooks/useSwapAmount";
 
 export function TokenAmountInput({
   poolBalance,
@@ -36,7 +36,7 @@ export function TokenAmountInput({
   // });
 
   const tokenBalanceAfterSwap = useTokenBalanceAfterSwap(
-    poolBalance.token.address
+    poolBalance.token.address,
   );
 
   const isTokenBuy = useMemo(() => {
@@ -59,11 +59,11 @@ export function TokenAmountInput({
       if (updateTokenAmounts) {
         updateTokenAmounts(
           constraintStringToBeNumeric(amount),
-          poolBalance.token.address as Address
+          poolBalance.token.address as Address,
         );
       }
     },
-    [updateTokenAmounts, poolBalance.token.address]
+    [updateTokenAmounts, poolBalance.token.address],
   );
 
   // const disabled = amountType !== "userInput";
@@ -101,7 +101,7 @@ export function TokenAmountInput({
               onChange(e.target.value);
               setValue(
                 `amounts.${poolBalance.token.address.toLowerCase()}`,
-                constraintStringToBeNumeric(e.target.value)
+                constraintStringToBeNumeric(e.target.value),
               );
             },
           })}
@@ -127,7 +127,7 @@ export function TokenAmountInput({
                   4,
                   "decimal",
                   "standard",
-                  0.0001
+                  0.0001,
                 ).replace(/\.?0+$/, "") || "0"}
               </span>
               {!maxButtonDisabled && (
@@ -138,7 +138,7 @@ export function TokenAmountInput({
                   onClick={() => {
                     setValue(
                       `amounts.${poolBalance.token.address.toLowerCase()}`,
-                      tokenBalanceAfterSwap
+                      tokenBalanceAfterSwap,
                     );
                     onChange(tokenBalanceAfterSwap);
                   }}
@@ -154,7 +154,7 @@ export function TokenAmountInput({
                   onClick={() => {
                     setValue(
                       `amounts.${poolBalance.token.address.toLowerCase()}`,
-                      buyAmount
+                      buyAmount,
                     );
                     onChange(buyAmount);
                   }}

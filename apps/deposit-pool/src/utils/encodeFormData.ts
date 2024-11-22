@@ -41,15 +41,14 @@ export function encodeFormData(data: FormType): string {
   // const optionSelected = processSelectedOption(data); // size = 2
 
   // total size = 288
-  const result =
+  const result = `${
     encodedPoolId +
     encodedToken1 +
     encodedToken2 +
     encodedAmount1 +
     encodedAmount2 +
-    encodedReferenceTokenAddress +
-    // optionSelected;
-    "00";
+    encodedReferenceTokenAddress
+  }00`;
 
   return result;
 }

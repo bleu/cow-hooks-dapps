@@ -1,6 +1,6 @@
 "use client";
 
-import { cn, Tooltip, TooltipTrigger } from "@bleu.builders/ui";
+import { Tooltip, TooltipTrigger, cn } from "@bleu.builders/ui";
 import {
   ExclamationTriangleIcon,
   InfoCircledIcon,

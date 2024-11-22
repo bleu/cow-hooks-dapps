@@ -20,7 +20,7 @@ import type { FormType } from "#/types";
 
 export const decodeCalldata = async (
   string: `0x${string}`,
-  publicClient: PublicClient
+  publicClient: PublicClient,
 ): Promise<FormType> => {
   const encodedFormData = string.slice(-290);
 
@@ -61,7 +61,7 @@ export const decodeCalldata = async (
   const referenceTokenAddress = `0x${encodedFormData.slice(248, 288)}`;
 
   // const optionSelected = decodeSelectedOption(encodedFormData[289]);
-  const optionSelected = "userInput";
+  const _optionSelected = "userInput";
 
   const result = {
     poolId,

@@ -9,8 +9,6 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { type Address, formatUnits } from "viem";
 import { usePoolBalance } from "#/hooks/usePoolBalance";
-import { useSwapAmount } from "#/hooks/useSwapAmount";
-import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
 import type { FormType } from "#/types";
 import { formDefaultValues } from "#/utils/formDefaultValues";
 import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
@@ -23,10 +21,10 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
   const { context } = useIFrameContext();
   const { control, setValue, reset } = useFormContext<FormType>();
 
-  const { buyAmount } = useSwapAmount();
-  const buyAmountAfterSwap = useTokenBalanceAfterSwap(
-    context?.orderParams?.buyTokenAddress as Address
-  );
+  // const { buyAmount } = useSwapAmount();
+  // const _buyAmountAfterSwap = useTokenBalanceAfterSwap(
+  //   context?.orderParams?.buyTokenAddress as Address,
+  // );
 
   const { data: poolBalances, isLoading: isBalanceLoading } = usePoolBalance({
     poolId: pool?.id,
@@ -46,7 +44,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
 
   const tokenPrices = useMemo(
     () => poolBalances?.map((poolBalance) => getTokenPrice(poolBalance)),
-    [poolBalances]
+    [poolBalances],
   );
 
   const totalUsd = useMemo(() => {
@@ -82,14 +80,14 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
         const tokenAmountKey = `amounts.${tokenAmountAddress}` as const;
         const calculatedAmount = formatUnits(
           tokenAmount.rawAmount,
-          tokenAmount.decimals
+          tokenAmount.decimals,
         );
         setValue(tokenAmountKey, calculatedAmount);
       }
 
       setValue("referenceTokenAddress", address);
     },
-    [poolBalances, tokenPrices, pool, setValue]
+    [poolBalances, tokenPrices, pool, setValue],
   );
 
   // useEffect(() => {
