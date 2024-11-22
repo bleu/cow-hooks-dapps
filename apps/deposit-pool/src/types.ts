@@ -6,11 +6,11 @@ export interface SignatureStepsProps {
   tooltipText?: string;
 }
 
-export type AmountType = "userInput" | "allFromSwap" | "allFromAccount";
+// export type AmountType = "userInput" | "allFromSwap" | "allFromAccount";
 
 export type FormType = {
   poolId: string;
   amounts: Record<string, string>;
   referenceTokenAddress: string;
-  amountType: AmountType;
+  // amountType: AmountType;
 };

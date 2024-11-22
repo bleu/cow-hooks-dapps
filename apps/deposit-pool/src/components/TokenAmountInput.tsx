@@ -11,6 +11,7 @@ import type { Address } from "viem";
 import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
 import type { FormType } from "#/types";
 import { constraintStringToBeNumeric } from "#/utils/constraintStringToBeNumeric";
+import { useSwapAmount } from "#/hooks/useSwapAmount";
 
 export function TokenAmountInput({
   poolBalance,
@@ -29,14 +30,23 @@ export function TokenAmountInput({
     name: `amounts.${poolBalance.token.address.toLowerCase()}`,
   });
 
-  const amountType = useWatch({
-    control,
-    name: "amountType",
-  });
+  // const amountType = useWatch({
+  //   control,
+  //   name: "amountType",
+  // });
 
   const tokenBalanceAfterSwap = useTokenBalanceAfterSwap(
-    poolBalance.token.address,
+    poolBalance.token.address
   );
+
+  const isTokenBuy = useMemo(() => {
+    return (
+      context?.orderParams?.buyTokenAddress.toLowerCase() ===
+      poolBalance.token.address.toLowerCase()
+    );
+  }, [context?.orderParams?.buyTokenAddress, poolBalance.token.address]);
+
+  const { buyAmount } = useSwapAmount();
 
   const amountUsd = useMemo(() => {
     if (!amount || !tokenPrice) return 0;
@@ -49,22 +59,25 @@ export function TokenAmountInput({
       if (updateTokenAmounts) {
         updateTokenAmounts(
           constraintStringToBeNumeric(amount),
-          poolBalance.token.address as Address,
+          poolBalance.token.address as Address
         );
       }
     },
-    [updateTokenAmounts, poolBalance.token.address],
+    [updateTokenAmounts, poolBalance.token.address]
   );
 
-  const disabled = amountType !== "userInput";
+  // const disabled = amountType !== "userInput";
 
-  const isSellOrder = context?.orderParams?.kind === "sell";
+  const maxButtonDisabled = useMemo(() => {
+    return (
+      // disabled ||
+      Number(tokenBalanceAfterSwap) <= 0 || amount === tokenBalanceAfterSwap
+    );
+  }, [tokenBalanceAfterSwap, amount]);
 
-  const buttonDisabled =
-    disabled ||
-    Number(tokenBalanceAfterSwap) <= 0 ||
-    amount === tokenBalanceAfterSwap ||
-    isSellOrder;
+  const buyAmountDisabled = useMemo(() => {
+    return !isTokenBuy || Number(buyAmount) <= 0 || amount === buyAmount;
+  }, [isTokenBuy, buyAmount, amount]);
 
   return (
     <div className="grid grid-cols-2 min-h-24 w-full bg-muted text-muted-foreground rounded-xl p-3">
@@ -81,14 +94,14 @@ export function TokenAmountInput({
           type="text"
           placeholder="0.0"
           autoComplete="off"
-          disabled={disabled}
+          // disabled={disabled}
           title={amount}
           {...register(`amounts.${poolBalance.token.address.toLowerCase()}`, {
             onChange: (e) => {
               onChange(e.target.value);
               setValue(
                 `amounts.${poolBalance.token.address.toLowerCase()}`,
-                constraintStringToBeNumeric(e.target.value),
+                constraintStringToBeNumeric(e.target.value)
               );
             },
           })}
@@ -114,10 +127,10 @@ export function TokenAmountInput({
                   4,
                   "decimal",
                   "standard",
-                  0.0001,
-                ).replace(/\.?0+$/, "")}
+                  0.0001
+                ).replace(/\.?0+$/, "") || "0"}
               </span>
-              {!buttonDisabled && (
+              {!maxButtonDisabled && (
                 <Button
                   type="button"
                   variant="ghost"
@@ -125,12 +138,28 @@ export function TokenAmountInput({
                   onClick={() => {
                     setValue(
                       `amounts.${poolBalance.token.address.toLowerCase()}`,
-                      tokenBalanceAfterSwap,
+                      tokenBalanceAfterSwap
                     );
                     onChange(tokenBalanceAfterSwap);
                   }}
                 >
                   Max
+                </Button>
+              )}
+              {!buyAmountDisabled && buyAmount && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="ml-1 rounded-sm text-xs py-0 px-1 bg-background text-foreground/50 hover:bg-primary hover:text-primary-foreground h-fit inline"
+                  onClick={() => {
+                    setValue(
+                      `amounts.${poolBalance.token.address.toLowerCase()}`,
+                      buyAmount
+                    );
+                    onChange(buyAmount);
+                  }}
+                >
+                  Buy amount
                 </Button>
               )}
             </div>
