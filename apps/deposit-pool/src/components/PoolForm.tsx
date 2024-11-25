@@ -5,12 +5,12 @@ import {
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { type Address, formatUnits } from "viem";
 import { usePoolBalance } from "#/hooks/usePoolBalance";
 import type { FormType } from "#/types";
-import { formDefaultValues } from "#/utils/formDefaultValues";
+// import { formDefaultValues } from "#/utils/formDefaultValues";
 import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
 // import { AmountTypeCheckbox } from "./AmountTypeCheckbox";
 import { FormButton } from "./FormButton";
@@ -19,7 +19,7 @@ import { TokenAmountInput } from "./TokenAmountInput";
 
 export function PoolForm({ pool }: { pool: IPool | undefined }) {
   const { context } = useIFrameContext();
-  const { control, setValue, reset } = useFormContext<FormType>();
+  const { control, setValue } = useFormContext<FormType>();
 
   // const { buyAmount } = useSwapAmount();
   // const _buyAmountAfterSwap = useTokenBalanceAfterSwap(
@@ -31,16 +31,16 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
     chainId: context?.chainId,
   });
 
-  const poolId = useWatch({ control, name: "poolId" });
+  // const poolId = useWatch({ control, name: "poolId" });
 
   const amounts = useWatch({ control, name: "amounts" });
   // const amountType = useWatch({ control, name: "amountType" });
 
-  useEffect(() => {
-    if (pool?.id.toLowerCase() !== poolId.toLowerCase()) {
-      reset({ ...formDefaultValues, poolId: pool?.id });
-    }
-  }, [reset, pool, poolId]);
+  // useEffect(() => {
+  //   if (pool?.id.toLowerCase() !== poolId.toLowerCase()) {
+  //     reset({ ...formDefaultValues, poolId: pool?.id });
+  //   }
+  // }, [reset, pool, poolId]);
 
   const tokenPrices = useMemo(
     () => poolBalances?.map((poolBalance) => getTokenPrice(poolBalance)),
