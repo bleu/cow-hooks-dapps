@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import { Tooltip, TooltipTrigger, cn } from "@bleu.builders/ui";
 import {
   ExclamationTriangleIcon,
   InfoCircledIcon,
   QuestionMarkCircledIcon,
 } from "@radix-ui/react-icons";
+import { useState } from "react";
 
 export const InfoTooltip = ({
   text,
@@ -77,7 +77,7 @@ export const InfoTooltip = ({
         type="button"
         className={cn(
           "cursor-pointer hover:text-primary touch-manipulation",
-          className
+          className,
         )}
       >
         {link ? (
