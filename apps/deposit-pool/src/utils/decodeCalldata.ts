@@ -49,14 +49,10 @@ export const decodeCalldata = async (
 
   const referenceTokenAddress = `0x${encodedFormData.slice(248, 288)}`;
 
-  // const optionSelected = decodeSelectedOption(encodedFormData[289]);
-  const _optionSelected = "userInput";
-
   const result = {
     poolId,
     amounts,
     referenceTokenAddress,
-    // amountType: optionSelected,
   } as FormType;
 
   return result;

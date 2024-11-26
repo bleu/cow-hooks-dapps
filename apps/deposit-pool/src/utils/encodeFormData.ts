@@ -1,20 +1,22 @@
+import type { BigNumberish } from "ethers";
 import type { FormType } from "#/types";
 
 function remove0x(v: string): string {
   return v.slice(2);
 }
 
-function processAmount(amount: string | number) {
-  return BigInt(Number(amount) * 10 ** 18)
-    .toString(16)
-    .padStart(64, "0");
+function processAmount(amount: BigNumberish) {
+  return amount.toString(16).padStart(64, "0");
 }
 
-export function encodeFormData(data: FormType): string {
-  const { poolId, amounts, referenceTokenAddress } = data;
+export function encodeFormData(
+  data: FormType,
+  parsedAmounts: Record<string, bigint>,
+): string {
+  const { poolId, referenceTokenAddress } = data;
 
-  const keys = Object.keys(amounts || {});
-  const values = Object.values(amounts || {});
+  const keys = Object.keys(parsedAmounts || {});
+  const values = Object.values(parsedAmounts || {});
 
   const encodedPoolId = remove0x(poolId); // size = 40
   const encodedToken1 = remove0x(keys[0]); // size = 40
