@@ -6,7 +6,7 @@ import {
   InfoCircledIcon,
   QuestionMarkCircledIcon,
 } from "@radix-ui/react-icons";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const InfoTooltip = ({
   text,
@@ -22,6 +22,35 @@ export const InfoTooltip = ({
   className?: string;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const tooltipRef = useRef<HTMLButtonElement | null>(null);
+  const preventClose = useRef(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (preventClose.current) {
+        preventClose.current = false;
+        return;
+      }
+
+      const target = event.target as Node;
+      if (tooltipRef.current?.contains(target)) {
+        return;
+      }
+
+      setIsOpen(false);
+    };
+
+    // Handle both mouse and touch events
+    document.addEventListener("mousedown", handleClickOutside, true);
+    document.addEventListener("touchstart", handleClickOutside, true);
+    document.addEventListener("click", handleClickOutside, true);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside, true);
+      document.removeEventListener("touchstart", handleClickOutside, true);
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  }, []);
 
   if (!text) return null;
 
@@ -36,29 +65,12 @@ export const InfoTooltip = ({
     }
   }
 
-  const handleTouch = (e: React.TouchEvent) => {
+  const handleClick = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
-    setIsOpen(true);
-    // Auto-hide tooltip after 1.5 seconds on mobile
-    setTimeout(() => setIsOpen(false), 1500);
-  };
-
-  const handleClick = (e: React.MouseEvent) => {
-    // For desktop clicks, toggle the tooltip
-    setIsOpen(!isOpen);
-    // Prevent click from bubbling up
     e.stopPropagation();
+    preventClose.current = true;
+    setIsOpen(true);
   };
-
-  // Close tooltip when clicking outside
-  const handleOutsideClick = () => {
-    setIsOpen(false);
-  };
-
-  // Add event listener for outside clicks
-  if (typeof window !== "undefined") {
-    window.addEventListener("click", handleOutsideClick);
-  }
 
   return (
     <Tooltip
@@ -69,14 +81,17 @@ export const InfoTooltip = ({
       className="bg-color-paper-darker text-color-text touch-none rounded-xl"
     >
       <TooltipTrigger
-        onFocusCapture={(e) => {
+        ref={tooltipRef}
+        type="button"
+        onMouseDownCapture={handleClick}
+        onTouchStartCapture={handleClick}
+        onClickCapture={(e) => {
+          e.preventDefault();
           e.stopPropagation();
         }}
-        onTouchStart={handleTouch}
-        onClick={handleClick}
-        type="button"
         className={cn(
-          "cursor-pointer hover:text-primary touch-manipulation",
+          "cursor-pointer hover:text-primary",
+          isOpen ? "text-primary" : "",
           className,
         )}
       >
@@ -85,6 +100,14 @@ export const InfoTooltip = ({
             href={link}
             target="_blank"
             rel="noreferrer"
+            onMouseDownCapture={(e) => {
+              e.stopPropagation();
+              preventClose.current = true;
+            }}
+            onTouchStartCapture={(e) => {
+              e.stopPropagation();
+              preventClose.current = true;
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             <Icon />
