@@ -30,11 +30,6 @@ export function TokenAmountInput({
     name: `amounts.${poolBalance.token.address.toLowerCase()}`,
   });
 
-  // const amountType = useWatch({
-  //   control,
-  //   name: "amountType",
-  // });
-
   const tokenBalanceAfterSwap = useTokenBalanceAfterSwap(
     poolBalance.token.address,
   );
@@ -66,11 +61,8 @@ export function TokenAmountInput({
     [updateTokenAmounts, poolBalance.token.address],
   );
 
-  // const disabled = amountType !== "userInput";
-
   const maxButtonDisabled = useMemo(() => {
     return (
-      // disabled ||
       Number(tokenBalanceAfterSwap) <= 0 || amount === tokenBalanceAfterSwap
     );
   }, [tokenBalanceAfterSwap, amount]);
@@ -94,7 +86,6 @@ export function TokenAmountInput({
           type="text"
           placeholder="0.0"
           autoComplete="off"
-          // disabled={disabled}
           title={amount}
           {...register(`amounts.${poolBalance.token.address.toLowerCase()}`, {
             onChange: (e) => {

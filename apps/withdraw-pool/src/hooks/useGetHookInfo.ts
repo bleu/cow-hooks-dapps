@@ -6,13 +6,10 @@ import {
 import { useCallback } from "react";
 import type { IHooksInfo } from "#/types";
 import { multiplyValueByPct } from "#/utils/math";
-// import { useGetBalancerGaugeArgs } from "./useGetBalancerGaugeArgs";
 import { useGetPoolWithdrawArgs } from "./useGetPoolWithdrawArgs";
 
 export function useGetHookInfo(pool?: IPool) {
   const getPoolWithdrawArgs = useGetPoolWithdrawArgs(pool);
-  // Removed gauge related code
-  // const getBalancerGaugeArgs = useGetBalancerGaugeArgs(pool);
 
   return useCallback(
     async (withdrawPct: number): Promise<IHooksInfo | undefined> => {
@@ -22,11 +19,8 @@ export function useGetHookInfo(pool?: IPool) {
         pool.userBalance.walletBalance,
         withdrawPct,
       );
-      // const balancerGaugeArgs = getBalancerGaugeArgs(bptAmount);
       const poolWithdrawArgs = await getPoolWithdrawArgs(bptAmount);
       if (!poolWithdrawArgs) return;
-
-      // const argsArray = [...balancerGaugeArgs, ...poolWithdrawArgs];
 
       const txs = await Promise.all(
         poolWithdrawArgs.map((arg) => {

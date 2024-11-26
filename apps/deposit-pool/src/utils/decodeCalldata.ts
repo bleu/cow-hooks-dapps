@@ -7,17 +7,6 @@ import {
 } from "viem";
 import type { FormType } from "#/types";
 
-// export const decodeSelectedOption = (option: string): AmountType => {
-//   switch (option) {
-//     case "2":
-//       return "allFromAccount";
-//     case "3":
-//       return "allFromSwap";
-//     default:
-//       return "userInput";
-//   }
-// };
-
 export const decodeCalldata = async (
   string: `0x${string}`,
   publicClient: PublicClient,
