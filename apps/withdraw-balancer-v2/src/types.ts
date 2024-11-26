@@ -1,6 +1,14 @@
 import type { BigNumber, BigNumberish } from "ethers";
 import type { Address } from "viem";
 
+export interface TokenData {
+  chainId: number;
+  address: string;
+  name: string;
+  decimals: number;
+  symbol: string;
+}
+
 export interface IToken {
   address: Address;
   symbol: string;
