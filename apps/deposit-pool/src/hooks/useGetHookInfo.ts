@@ -50,7 +50,6 @@ export function useGetHookInfo(pool?: IPool) {
 
       if (!tokenAllowances) return defaultPermitData;
 
-      // Check needed allowance with 5% buffer
       const amountsWithBuffer = pool.allTokens.map((token) => {
         const tokenAddress = token.address.toLowerCase();
         const amount = params.amounts[tokenAddress];
