@@ -10,9 +10,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { type Address, formatUnits } from "viem";
 import { usePoolBalance } from "#/hooks/usePoolBalance";
 import type { FormType } from "#/types";
-// import { formDefaultValues } from "#/utils/formDefaultValues";
 import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
-// import { AmountTypeCheckbox } from "./AmountTypeCheckbox";
 import { FormButton } from "./FormButton";
 import { InfoContent } from "./InfoContent";
 import { TokenAmountInput } from "./TokenAmountInput";
@@ -21,26 +19,12 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
   const { context } = useIFrameContext();
   const { control, setValue } = useFormContext<FormType>();
 
-  // const { buyAmount } = useSwapAmount();
-  // const _buyAmountAfterSwap = useTokenBalanceAfterSwap(
-  //   context?.orderParams?.buyTokenAddress as Address,
-  // );
-
   const { data: poolBalances, isLoading: isBalanceLoading } = usePoolBalance({
     poolId: pool?.id,
     chainId: context?.chainId,
   });
 
-  // const poolId = useWatch({ control, name: "poolId" });
-
   const amounts = useWatch({ control, name: "amounts" });
-  // const amountType = useWatch({ control, name: "amountType" });
-
-  // useEffect(() => {
-  //   if (pool?.id.toLowerCase() !== poolId.toLowerCase()) {
-  //     reset({ ...formDefaultValues, poolId: pool?.id });
-  //   }
-  // }, [reset, pool, poolId]);
 
   const tokenPrices = useMemo(
     () => poolBalances?.map((poolBalance) => getTokenPrice(poolBalance)),
@@ -89,32 +73,6 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
     },
     [poolBalances, tokenPrices, pool, setValue],
   );
-
-  // useEffect(() => {
-  //   if (amountType === "allFromSwap" && context?.orderParams && buyAmount) {
-  //     const address =
-  //       context.orderParams.buyTokenAddress.toLowerCase() as Address;
-  //     setValue(`amounts.${address}`, buyAmount);
-  //     updateTokenAmounts(buyAmount, address);
-  //   }
-  //   if (
-  //     amountType === "allFromAccount" &&
-  //     context?.orderParams &&
-  //     buyAmountAfterSwap
-  //   ) {
-  //     const address =
-  //       context.orderParams.buyTokenAddress.toLowerCase() as Address;
-  //     setValue(`amounts.${address}`, buyAmountAfterSwap);
-  //     updateTokenAmounts(buyAmountAfterSwap, address);
-  //   }
-  // }, [
-  //   context?.orderParams,
-  //   amountType,
-  //   setValue,
-  //   updateTokenAmounts,
-  //   buyAmount,
-  //   buyAmountAfterSwap,
-  // ]);
 
   if (!context) return null;
 

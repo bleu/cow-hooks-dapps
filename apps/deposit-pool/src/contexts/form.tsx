@@ -9,13 +9,10 @@ import { useForm } from "react-hook-form";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 import { useSelectedPool } from "#/hooks/useSelectedPool";
 import type { FormType } from "#/types";
-// import { formDefaultValues } from "#/utils/formDefaultValues";
 
 export function FormContextProvider({ children }: PropsWithChildren) {
   const { setHookInfo } = useIFrameContext();
-  const form = useForm<FormType>({
-    // defaultValues: formDefaultValues,
-  });
+  const form = useForm<FormType>({});
 
   const { handleSubmit } = form;
 
