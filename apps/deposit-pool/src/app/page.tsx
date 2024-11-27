@@ -12,15 +12,15 @@ import { useCallback, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
 import { PoolItemInfo } from "#/components/PoolItemInfo";
+import { useCowAmmPools } from "#/hooks/useCowAmmPools";
 import { useSelectedPool } from "#/hooks/useSelectedPool";
 import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
-import { useTokenBuyPools } from "#/hooks/useTokenBuyPools";
 import type { FormType } from "#/types";
 import { decodeCalldata } from "#/utils/decodeCalldata";
 
 export default function Page() {
   const { context, publicClient } = useIFrameContext();
-  const { data: pools, isLoading: isLoadingPools } = useTokenBuyPools();
+  const { data: pools, isLoading: isLoadingPools } = useCowAmmPools();
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
 
   const { setValue, reset, control } = useFormContext<FormType>();

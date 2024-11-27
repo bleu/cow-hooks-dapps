@@ -6,7 +6,7 @@ import { useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { useWatch } from "react-hook-form";
 import { type Address, parseUnits } from "viem";
-import { useTokenBuyPools } from "#/hooks/useTokenBuyPools";
+import { useCowAmmPools } from "#/hooks/useCowAmmPools";
 import { selectedPoolAtom } from "../states/selectedPool";
 
 interface IQuery {
@@ -123,7 +123,7 @@ export async function fetchPool(id?: string, chainId?: SupportedChainId) {
 export function SelectedPoolUpdater() {
   const { context } = useIFrameContext();
 
-  const { data: pools } = useTokenBuyPools();
+  const { data: pools } = useCowAmmPools();
   const poolId = useWatch({ name: "poolId" });
   const setSelectedPool = useSetAtom(selectedPoolAtom);
 
