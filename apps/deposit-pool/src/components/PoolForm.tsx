@@ -102,27 +102,12 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
       <div className="flex w-full flex-row justify-between border border-muted px-5 py-2 mb-3 rounded-xl text-md">
         <span>Total</span>
         <span className="text-right">
-          ${totalUsd >= 0 ? formatNumber(totalUsd, 2) : "0"}
+          $
+          {totalUsd >= 0
+            ? formatNumber(totalUsd, 2, "decimal", "standard", 0.01)
+            : "0"}
         </span>
       </div>
-      {/* <div className="w-full flex flex-col gap-y-2 mb-3">
-        <AmountTypeCheckbox
-          option="userInput"
-          label="Input deposit amount manually"
-        />
-        <AmountTypeCheckbox
-          option="allFromSwap"
-          label="Use all tokens from swap"
-          disabled={isBuyTokenNotInPool}
-          tooltip="This option is only available if the buy token is on the pool"
-        />
-        <AmountTypeCheckbox
-          option="allFromAccount"
-          label="Use all your tokens after swap"
-          disabled={isBuyTokenNotInPool}
-          tooltip="This option is only available if the buy token is on the pool"
-        />
-      </div> */}
       <Info content={<InfoContent />} />
       <FormButton poolBalances={poolBalances} />
     </div>

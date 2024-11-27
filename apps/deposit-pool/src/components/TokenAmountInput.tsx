@@ -158,7 +158,10 @@ export function TokenAmountInput({
         </div>
         <div className="flex items-center justify-end">
           <span className="text-xs text-right font-normal pr-0">
-            ${amountUsd && amountUsd >= 0 ? formatNumber(amountUsd, 2) : "0"}
+            $
+            {amountUsd && amountUsd >= 0
+              ? formatNumber(amountUsd, 2, "decimal", "standard", 0.01)
+              : "0"}
           </span>
         </div>
       </div>
