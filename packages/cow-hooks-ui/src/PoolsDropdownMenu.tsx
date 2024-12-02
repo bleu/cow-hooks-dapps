@@ -9,6 +9,8 @@ import {
 } from "@radix-ui/react-icons";
 import { Token } from "@uniswap/sdk-core";
 import { useMemo, useState } from "react";
+import useSWR from "swr";
+import { type Address, isAddress } from "viem";
 import { TokenLogoWithWeight } from "./TokenLogoWithWeight";
 import { useIFrameContext } from "./context/iframe";
 import type { IPool } from "./types";
@@ -19,10 +21,8 @@ import {
   CommandItem,
   CommandList,
 } from "./ui/Command";
-import { InfoTooltip } from "./ui/TooltipBase";
-import useSWR from "swr";
 import { Spinner } from "./ui/Spinner";
-import { type Address, isAddress } from "viem";
+import { InfoTooltip } from "./ui/TooltipBase";
 
 export function PoolsDropdownMenu({
   onSelect,
