@@ -33,7 +33,6 @@ export async function getTokensPrices(
 
   const tokensPrices: Record<string, number> = {};
   pricesData.forEach((priceData, idx) => {
-    // const priceData = pricesData[idx];
     if (!priceData) {
       tokensPrices[addresses[idx]] = 0;
     } else {

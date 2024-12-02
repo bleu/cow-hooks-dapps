@@ -16,6 +16,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
 import { useUserPools } from "#/hooks/useUserPools";
+import { useFetchNewPool } from "#/utils/fetchNewPool";
 
 const ALL_SUPPORTED_CHAIN_IDS = [
   SupportedChainId.MAINNET,
@@ -58,6 +59,8 @@ export default function Page() {
     loadHookInfo();
   }, [loadHookInfo, poolId]);
 
+  const fetchNewPool = useFetchNewPool();
+
   if (!context) return null;
 
   if (!context.account) {
@@ -76,14 +79,6 @@ export default function Page() {
     );
   }
 
-  if (!pools || pools.length === 0) {
-    return (
-      <span className="mt-10 text-center">
-        You don't have unstaked liquidity in a CoW AMM pool
-      </span>
-    );
-  }
-
   return (
     <div className="w-full flex flex-col gap-1 items-center">
       <PoolsDropdownMenu
@@ -93,6 +88,7 @@ export default function Page() {
         selectedPool={selectedPool}
         isCheckDetailsCentered
         tooltipText="Withdraw of staked liquidity or pool with low user balance are not supported"
+        fetchNewPool={fetchNewPool}
       />
       <PoolForm selectedPool={selectedPool} />
     </div>

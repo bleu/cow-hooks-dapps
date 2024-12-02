@@ -8,7 +8,7 @@ import {
 } from "@bleu/utils/transactionFactory/";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
-import type { IPool } from "#/types";
+import type { IPool } from "@bleu/cow-hooks-ui";
 import { uniswapRouterMap } from "#/utils/uniswapRouterMap";
 
 export function useGetPoolWithdrawArgs(): (
@@ -25,7 +25,7 @@ export function useGetPoolWithdrawArgs(): (
       if (!context?.account || !cowShedProxy || !pool) return;
 
       const bptWalletAmount = bptAmount.gte(pool.userBalance.walletBalance)
-        ? pool.userBalance.walletBalance
+        ? BigNumber.from(pool.userBalance.walletBalance)
         : bptAmount;
 
       const transferBptArg = bptWalletAmount.eq(BigNumber.from("0"))

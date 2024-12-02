@@ -20,6 +20,8 @@ import {
   CommandList,
 } from "./ui/Command";
 import { InfoTooltip } from "./ui/TooltipBase";
+import useSWR, { type SWRConfiguration, type SWRResponse } from "swr";
+import { Spinner } from "./ui/Spinner";
 
 export function PoolsDropdownMenu({
   onSelect,
@@ -28,6 +30,9 @@ export function PoolsDropdownMenu({
   selectedPool,
   isCheckDetailsCentered = true,
   tooltipText,
+  fetchNewPool = (_address: string) => {
+    return useSWR<IPool>(null);
+  },
 }: {
   onSelect: (pool: IPool) => void;
   pools: IPool[];
@@ -35,9 +40,14 @@ export function PoolsDropdownMenu({
   selectedPool?: IPool;
   isCheckDetailsCentered: boolean;
   tooltipText?: string;
+  fetchNewPool: (
+    address: string,
+    SWRConfigurarion?: SWRConfiguration,
+  ) => SWRResponse<IPool>;
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [typedAddress, setTypedAddress] = useState("");
 
   const poolLink = useMemo(() => {
     if (!selectedPool) return;
@@ -51,6 +61,47 @@ export function PoolsDropdownMenu({
         : "https://balancer.fi/pools";
     return `${baseUrl}/${chainName}/cow/${selectedPool?.id.toLowerCase()}`;
   }, [selectedPool]);
+
+  const {
+    data: newPool,
+    isLoading: isLoadingNewPool,
+    error: errorNewPool,
+  } = fetchNewPool(typedAddress, {
+    revalidateOnFocus: false,
+    onSuccess: (data: IPool) => {
+      // Append new pool on the list (avoid repeating or 0-balance pools)
+      if (
+        !pools.map((pool) => pool.address).includes(data.address) &&
+        !(data.userBalance.walletBalance.toString() === "0")
+      )
+        pools.push(data);
+    },
+  });
+
+  const CommandEmptyContent = () => {
+    if (isLoadingNewPool)
+      return (
+        <div className="flex flex-col items-center justify-center gap-2">
+          <Spinner size="lg" />
+          <span>Loading new pool</span>
+        </div>
+      );
+    if (errorNewPool)
+      return <span className="text-destructive">Error loading new pool.</span>;
+
+    if (newPool?.userBalance.walletBalance.toString() === "0")
+      return (
+        <span className="text-destructive">
+          You don't have any LP tokens on this pool
+        </span>
+      );
+    return (
+      <>
+        <p>No results found.</p>
+        <p>Try placing your LP token address on the search bar.</p>
+      </>
+    );
+  };
 
   return (
     <div className="flex w-full flex-col items-center gap-2">
@@ -87,17 +138,21 @@ export function PoolsDropdownMenu({
               <CommandInput
                 className="bg-muted rounded-xl placeholder:text-muted-foreground/50 text-md px-2 py-2 mb-5"
                 placeholder="Search name or paste address"
+                onValueChange={(e) => setTypedAddress(e)}
               />
               <div className="w-full h-[1px] bg-muted my-1" />
               <CommandList className="overflow-y-auto">
-                <CommandEmpty>No results found</CommandEmpty>
-                {pools?.map((pool) => (
+                <CommandEmpty>
+                  <CommandEmptyContent />
+                </CommandEmpty>
+                {pools.map((pool) => (
                   <CommandItem
                     key={pool.id}
                     value={
                       pool?.symbol +
                       (pool?.allTokens.map((token) => token.symbol).join("") ||
-                        "")
+                        "") +
+                      (pool?.address || "")
                     }
                     onSelect={() => {
                       setOpen(false);

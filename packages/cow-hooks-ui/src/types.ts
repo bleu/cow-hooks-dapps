@@ -40,6 +40,8 @@ export interface IToken {
   decimals: number;
   isNested?: boolean;
   weight: number;
+  userBalance?: BigNumberish;
+  userBalanceUsd?: number;
 }
 
 export interface IPool {

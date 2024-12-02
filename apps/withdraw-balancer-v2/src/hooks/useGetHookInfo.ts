@@ -5,7 +5,7 @@ import {
   TransactionFactory,
 } from "@bleu/utils/transactionFactory";
 import { useCallback } from "react";
-import type { IPool } from "#/types";
+import type { IPool } from "@bleu/cow-hooks-ui";
 import { useGetPoolWithdrawArgs } from "./useGetPoolWithdrawArgs";
 
 export function useGetHookInfo() {
