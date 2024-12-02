@@ -1,8 +1,8 @@
 import type { IPool } from "@bleu/cow-hooks-ui";
+import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import type { Address, PublicClient } from "viem";
 import { getTokensInfo } from "#/utils/getTokensInfo";
 import { readPairData } from "#/utils/readPairsData";
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { storeExtraTokens } from "#/utils/storage";
 
 async function fetchNewPool({

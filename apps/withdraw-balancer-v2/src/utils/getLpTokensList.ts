@@ -1,5 +1,5 @@
-import type { RawTokenData } from "#/types";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
+import type { RawTokenData } from "#/types";
 import { getExtraTokens } from "./storage";
 
 interface TokenData extends Omit<RawTokenData, "extensions"> {

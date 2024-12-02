@@ -1,7 +1,7 @@
+import type { IPool } from "@bleu/cow-hooks-ui";
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import useSWR from "swr";
 import type { Address, PublicClient } from "viem";
-import type { IPool } from "@bleu/cow-hooks-ui";
 import { getLpTokensList } from "#/utils/getLpTokensList";
 import { getTokensInfo } from "#/utils/getTokensInfo";
 import { getTokensList } from "#/utils/getTokensList";

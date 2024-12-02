@@ -15,8 +15,8 @@ import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
-import { useUserPools } from "#/hooks/useUserPools";
 import { useFetchNewPoolCallback } from "#/hooks/useFetchNewPoolCallback";
+import { useUserPools } from "#/hooks/useUserPools";
 
 const ALL_SUPPORTED_CHAIN_IDS = [
   SupportedChainId.MAINNET,

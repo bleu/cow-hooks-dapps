@@ -1,5 +1,5 @@
-import type { RawTokenData } from "#/types";
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
+import type { RawTokenData } from "#/types";
 import { combineTokenLists } from "./combineTokenLists";
 
 // Constants
