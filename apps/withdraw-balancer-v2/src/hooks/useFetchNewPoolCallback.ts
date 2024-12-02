@@ -42,16 +42,20 @@ async function fetchNewPool({
     );
 
   try {
-    storeExtraTokens([
-      {
-        chainId,
-        address: poolAddress,
-        name: `Uniswap V2 ${token0.symbol}/${token1.symbol}`,
-        symbol: lpToken.symbol,
-        decimals: 18, // UniV2 are always 18 decimals
-        extensions: { tokens: lpToken.tokens.join(",") },
-      },
-    ]);
+    storeExtraTokens(
+      [
+        {
+          chainId,
+          address: poolAddress,
+          name: `Uniswap V2 ${token0.symbol}/${token1.symbol}`,
+          symbol: lpToken.symbol,
+          decimals: 18, // UniV2 are always 18 decimals
+          extensions: { tokens: lpToken.tokens.join(",") },
+        },
+      ],
+      chainId,
+      account,
+    );
   } catch (e) {
     console.error("Error caching new LP token:", e);
   }

@@ -15,7 +15,7 @@ async function getUserPools(
 ): Promise<IPool[]> {
   // Get lists of tokens
   const [allLpTokens, allTokens] = await Promise.all([
-    getLpTokensList(),
+    getLpTokensList(chainId, ownerAddress),
     getTokensList(chainId),
   ]);
 
@@ -103,7 +103,8 @@ async function getUserPools(
         },
       };
     })
-    .filter((pool) => pool !== undefined);
+    .filter((pool) => pool !== undefined)
+    .filter((pool) => pool.userBalance.walletBalance.toString() !== "0");
 
   return userPools;
 }

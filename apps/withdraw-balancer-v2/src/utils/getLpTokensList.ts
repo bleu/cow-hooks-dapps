@@ -1,11 +1,15 @@
 import type { RawTokenData } from "#/types";
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { getExtraTokens } from "./storage";
 
 interface TokenData extends Omit<RawTokenData, "extensions"> {
   tokens: string[];
 }
 
-export async function getLpTokensList(): Promise<TokenData[]> {
+export async function getLpTokensList(
+  chainId: SupportedChainId,
+  account: string,
+): Promise<TokenData[]> {
   try {
     const response = await fetch(
       "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/lp-tokens/uniswapv2.json",
@@ -17,7 +21,7 @@ export async function getLpTokensList(): Promise<TokenData[]> {
 
     const data: { tokens: RawTokenData[] } = await response.json();
 
-    const cachedLpTokens = getExtraTokens();
+    const cachedLpTokens = getExtraTokens(chainId, account);
 
     // Transform the tokens array
     const allLpTokens: TokenData[] = {
