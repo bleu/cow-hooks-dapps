@@ -20,8 +20,9 @@ import {
   CommandList,
 } from "./ui/Command";
 import { InfoTooltip } from "./ui/TooltipBase";
-import useSWR, { type SWRConfiguration, type SWRResponse } from "swr";
+import useSWR from "swr";
 import { Spinner } from "./ui/Spinner";
+import { type Address, isAddress } from "viem";
 
 export function PoolsDropdownMenu({
   onSelect,
@@ -30,9 +31,8 @@ export function PoolsDropdownMenu({
   selectedPool,
   isCheckDetailsCentered = true,
   tooltipText,
-  fetchNewPool = (_address: string) => {
-    return useSWR<IPool>(null);
-  },
+  fetchNewPoolCallback,
+  // fetchNewPoolCallback = (_address: string) => undefined;
 }: {
   onSelect: (pool: IPool) => void;
   pools: IPool[];
@@ -40,10 +40,7 @@ export function PoolsDropdownMenu({
   selectedPool?: IPool;
   isCheckDetailsCentered: boolean;
   tooltipText?: string;
-  fetchNewPool: (
-    address: string,
-    SWRConfigurarion?: SWRConfiguration,
-  ) => SWRResponse<IPool>;
+  fetchNewPoolCallback?: (poolAddress: Address) => Promise<IPool>;
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -62,11 +59,7 @@ export function PoolsDropdownMenu({
     return `${baseUrl}/${chainName}/cow/${selectedPool?.id.toLowerCase()}`;
   }, [selectedPool]);
 
-  const {
-    data: newPool,
-    isLoading: isLoadingNewPool,
-    error: errorNewPool,
-  } = fetchNewPool(typedAddress, {
+  const swrConfig = {
     revalidateOnFocus: false,
     onSuccess: (data: IPool) => {
       // Append new pool on the list (avoid repeating or 0-balance pools)
@@ -76,7 +69,19 @@ export function PoolsDropdownMenu({
       )
         pools.push(data);
     },
-  });
+  };
+
+  const {
+    data: newPool,
+    isLoading: isLoadingNewPool,
+    error: errorNewPool,
+  } = fetchNewPoolCallback
+    ? useSWR<IPool>(
+        isAddress(typedAddress) ? typedAddress : null,
+        fetchNewPoolCallback,
+        swrConfig,
+      )
+    : { data: undefined, isLoading: undefined, error: undefined };
 
   const CommandEmptyContent = () => {
     if (isLoadingNewPool)

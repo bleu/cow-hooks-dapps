@@ -1,13 +1,11 @@
 import type { IPool } from "@bleu/cow-hooks-ui";
-import { isAddress, type Address, type PublicClient } from "viem";
-import useSWR, { type SWRConfiguration } from "swr";
+import type { Address, PublicClient } from "viem";
 import { getTokensInfo } from "#/utils/getTokensInfo";
 import { readPairData } from "#/utils/readPairsData";
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
-import { useCallback } from "react";
-import { storeExtraTokens } from "./storage";
+import { storeExtraTokens } from "#/utils/storage";
 
-export async function fetchNewPool({
+async function fetchNewPool({
   chainId,
   account,
   poolAddress,
@@ -97,34 +95,21 @@ export async function fetchNewPool({
   };
 }
 
-export function useFetchNewPool() {
+export function useFetchNewPoolCallback() {
   const { context, publicClient } = useIFrameContext();
+  const { account, chainId } = context ?? {
+    account: undefined,
+    chainId: undefined,
+  };
 
-  return useCallback(
-    (poolAddress: string | undefined, SWRConfiguration?: SWRConfiguration) => {
-      const shouldFetch = Boolean(
-        context?.account &&
-          context?.chainId &&
-          publicClient &&
-          poolAddress &&
-          isAddress(poolAddress),
-      );
-      // console.log(,publicClient);
-      return useSWR<IPool>(
-        shouldFetch
-          ? {
-              //@ts-ignore: 'shouldFetch' is guranteeing chainId
-              chainId: context.chainId,
-              //@ts-ignore: 'shouldFetch' is guranteeing account
-              account: context.account,
-              poolAddress,
-              client: publicClient,
-            }
-          : null,
-        fetchNewPool,
-        SWRConfiguration || { revalidateOnFocus: false },
-      );
-    },
-    [context, publicClient],
-  );
+  if (!account || !chainId || !publicClient) return;
+
+  return async (poolAddress: Address) => {
+    return await fetchNewPool({
+      chainId,
+      account,
+      poolAddress,
+      client: publicClient,
+    });
+  };
 }

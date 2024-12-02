@@ -16,7 +16,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
 import { useUserPools } from "#/hooks/useUserPools";
-import { useFetchNewPool } from "#/utils/fetchNewPool";
+import { useFetchNewPoolCallback } from "#/hooks/useFetchNewPoolCallback";
 
 const ALL_SUPPORTED_CHAIN_IDS = [
   SupportedChainId.MAINNET,
@@ -59,7 +59,7 @@ export default function Page() {
     loadHookInfo();
   }, [loadHookInfo, poolId]);
 
-  const fetchNewPool = useFetchNewPool();
+  const fetchNewPoolCallback = useFetchNewPoolCallback();
 
   if (!context) return null;
 
@@ -88,7 +88,7 @@ export default function Page() {
         selectedPool={selectedPool}
         isCheckDetailsCentered
         tooltipText="Withdraw of staked liquidity or pool with low user balance are not supported"
-        fetchNewPool={fetchNewPool}
+        fetchNewPoolCallback={fetchNewPoolCallback}
       />
       <PoolForm selectedPool={selectedPool} />
     </div>
