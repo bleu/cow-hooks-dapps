@@ -1,7 +1,7 @@
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { HookDappContext } from "@cowprotocol/hook-dapp-lib";
 import type { Token } from "@uniswap/sdk-core";
-import type { BigNumberish } from "ethers";
+import type { BigNumber, BigNumberish } from "ethers";
 import type { Address } from "viem";
 
 export interface BaseTransaction {
@@ -42,6 +42,7 @@ export interface IToken {
   weight: number;
   userBalance?: BigNumberish;
   userBalanceUsd?: number;
+  reserve?: BigNumber;
 }
 
 export interface IPool {
@@ -52,6 +53,7 @@ export interface IPool {
   address: Address;
   type: string;
   protocolVersion: 1 | 2 | 3;
+  totalSupply?: BigNumber;
   dynamicData?: {
     aprItems: {
       apr: number;

@@ -16,6 +16,7 @@ export async function readPairsData(
   userAddress: string,
   pairAddresses: string[],
   client: PublicClient,
+  balancesDiff: Record<string, string>,
 ): Promise<PairData[]> {
   try {
     // Create multicall for each piece of data we want to fetch
@@ -69,11 +70,16 @@ export async function readPairsData(
         totalSupplyResult,
       ] = results.slice(i, i + callsPerPair);
 
+      const tokenBalanceDiff = balancesDiff?.[pairAddress.toLowerCase()] || "0";
+
       pairsData.push({
         address: pairAddress,
-        userBalance: BigNumber.from(
-          balanceResult.status === "success" ? balanceResult.result : "0",
-        ),
+        userBalance:
+          balanceResult.status === "success"
+            ? BigNumber.from(balanceResult.result).add(
+                tokenBalanceDiff ? BigNumber.from(tokenBalanceDiff) : "0",
+              )
+            : BigNumber.from("0"),
         price0CumulativeLast: BigNumber.from(
           price0Result.status === "success" ? price0Result.result : "0",
         ),
@@ -120,6 +126,7 @@ export async function readPairData(
   userAddress: string,
   pairAddress: string,
   client: PublicClient,
+  balancesDiff: Record<string, string>,
 ) {
   try {
     const calls = [
@@ -183,11 +190,16 @@ export async function readPairData(
       symbol,
     ] = results;
 
+    const tokenBalanceDiff = balancesDiff?.[pairAddress.toLowerCase()] || "0";
+
     return {
       address: pairAddress,
-      userBalance: BigNumber.from(
-        balanceResult.status === "success" ? balanceResult.result : "0",
-      ),
+      userBalance:
+        balanceResult.status === "success"
+          ? BigNumber.from(balanceResult.result).add(
+              tokenBalanceDiff ? BigNumber.from(tokenBalanceDiff) : "0",
+            )
+          : BigNumber.from("0"),
       price0CumulativeLast: BigNumber.from(
         price0Result.status === "success" ? price0Result.result : "0",
       ),

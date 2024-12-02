@@ -89,6 +89,16 @@ const USER_POOLS_QUERY = gql`
           stakingId
         }
       }
+      poolTokens {
+      id
+      address
+      name
+      decimals
+      symbol
+      balance
+      balanceUSD
+      weight
+      }
     }
   }
 `;
@@ -119,6 +129,7 @@ export function usePools(
           orderBy,
         })
         .then((result) => {
+          console.log("QUERY RESULT", result.pools);
           return result.pools.map((pool) => ({
             ...pool,
             userBalance: {

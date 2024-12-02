@@ -8,6 +8,8 @@ export function useUserPools() {
     context?.chainId,
     context?.orderParams?.sellTokenAddress,
     publicClient,
+    //@ts-ignore
+    context?.balancesDiff as Record<string, Record<string, string>>,
   );
 
   const data = useSwrData.data;

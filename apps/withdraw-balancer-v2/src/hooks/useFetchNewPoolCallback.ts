@@ -10,14 +10,21 @@ async function fetchNewPool({
   account,
   poolAddress,
   client,
+  balancesDiff,
 }: {
   chainId: number;
   account: string;
   poolAddress: Address;
   client: PublicClient;
+  balancesDiff: Record<string, string>;
 }): Promise<IPool> {
   // Get lists of tokens
-  const lpToken = await readPairData(account, poolAddress, client);
+  const lpToken = await readPairData(
+    account,
+    poolAddress,
+    client,
+    balancesDiff,
+  );
 
   // Read possibly missing tokens on chain and add price Usd
   const tokens = await getTokensInfo(lpToken.tokens, [], chainId, client);
@@ -74,6 +81,7 @@ async function fetchNewPool({
     address: lpToken.address as Address,
     type: "Uniswap v2",
     protocolVersion: 2 as const,
+    totalSupply: lpToken.totalSupply,
     allTokens: [
       {
         address: token0.address as Address,
@@ -81,6 +89,7 @@ async function fetchNewPool({
         decimals: token0.decimals,
         userBalance: userBalance0,
         userBalanceUsd: userBalanceUsd0,
+        reserve: lpToken.reserve0,
         weight: 0.5,
       },
       {
@@ -89,6 +98,7 @@ async function fetchNewPool({
         decimals: token1.decimals,
         userBalance: userBalance1,
         userBalanceUsd: userBalanceUsd1,
+        reserve: lpToken.reserve1,
         weight: 0.5,
       },
     ],
@@ -101,12 +111,17 @@ async function fetchNewPool({
 
 export function useFetchNewPoolCallback() {
   const { context, publicClient } = useIFrameContext();
-  const { account, chainId } = context ?? {
+  //@ts-ignore
+  const { account, chainId, balancesDiff } = context ?? {
     account: undefined,
     chainId: undefined,
+    balancesDiff: undefined,
   };
 
-  if (!account || !chainId || !publicClient) return;
+  if (!account || !chainId || !publicClient || balancesDiff === undefined)
+    return;
+
+  const userBalancesDiff = balancesDiff[account.toLowerCase()] ?? {};
 
   return async (poolAddress: Address) => {
     return await fetchNewPool({
@@ -114,6 +129,7 @@ export function useFetchNewPoolCallback() {
       account,
       poolAddress,
       client: publicClient,
+      balancesDiff: userBalancesDiff as Record<string, string>,
     });
   };
 }

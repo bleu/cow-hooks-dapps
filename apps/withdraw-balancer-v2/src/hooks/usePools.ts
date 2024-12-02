@@ -12,6 +12,7 @@ async function getUserPools(
   chainId: SupportedChainId,
   token: string,
   client: PublicClient,
+  balancesDiff: Record<string, string>,
 ): Promise<IPool[]> {
   // Get lists of tokens
   const [allLpTokens, allTokens] = await Promise.all([
@@ -36,6 +37,7 @@ async function getUserPools(
     ownerAddress,
     lpTokens.map((lpToken) => lpToken.address),
     client,
+    balancesDiff,
   );
 
   // Add on-chain info to pairs (amount of LPs)
@@ -79,6 +81,7 @@ async function getUserPools(
         address: lpToken.address as Address,
         type: "Uniswap v2",
         protocolVersion: 2 as const,
+        totalSupply: lpToken.totalSupply,
         allTokens: [
           {
             address: token0.address as Address,
@@ -86,6 +89,7 @@ async function getUserPools(
             decimals: token0.decimals,
             userBalance: userBalance0,
             userBalanceUsd: userBalanceUsd0,
+            reserve: lpToken.reserve0,
             weight: 0.5,
           },
           {
@@ -94,6 +98,7 @@ async function getUserPools(
             decimals: token1.decimals,
             userBalance: userBalance1,
             userBalanceUsd: userBalanceUsd1,
+            reserve: lpToken.reserve1,
             weight: 0.5,
           },
         ],
@@ -114,17 +119,37 @@ export function usePools(
   chainId: SupportedChainId | undefined,
   token: string | undefined,
   client: PublicClient | undefined,
+  balancesDiff: Record<string, Record<string, string>>,
 ) {
   return useSWR(
-    [ownerAddress, chainId, token, client],
-    async ([ownerAddress, chainId, token, client]): Promise<IPool[]> => {
-      if (!ownerAddress || !chainId || !token || !client) return [];
+    [ownerAddress, chainId, token, client, balancesDiff],
+    async ([ownerAddress, chainId, token, client, balancesDiff]): Promise<
+      IPool[]
+    > => {
+      if (
+        !ownerAddress ||
+        !chainId ||
+        !token ||
+        !client ||
+        balancesDiff === undefined
+      )
+        return [];
       if (
         chainId !== SupportedChainId.MAINNET &&
         chainId !== SupportedChainId.ARBITRUM_ONE
       )
         throw new Error("Unsupported chain");
-      return await getUserPools(ownerAddress, chainId, token, client);
+
+      //@ts-ignore
+      const userBalancesDiff = balancesDiff[ownerAddress.toLowerCase()] ?? {};
+
+      return await getUserPools(
+        ownerAddress,
+        chainId,
+        token,
+        client,
+        userBalancesDiff,
+      );
     },
     {
       revalidateOnFocus: false,
