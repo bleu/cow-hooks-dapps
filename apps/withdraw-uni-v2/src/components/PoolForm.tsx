@@ -1,5 +1,6 @@
 import {
   type IBalance,
+  type IPool,
   PoolBalancesPreview,
   Spinner,
   SubmitButton,
@@ -7,8 +8,8 @@ import {
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { Token } from "@uniswap/sdk-core";
+import type { BigNumberish } from "ethers";
 import { Suspense } from "react";
-import type { IPool } from "#/types";
 
 export function PoolForm({ selectedPool }: { selectedPool?: IPool }) {
   const { context } = useIFrameContext();
@@ -22,9 +23,9 @@ export function PoolForm({ selectedPool }: { selectedPool?: IPool }) {
               token.decimals,
               token.symbol,
             ),
-            balance: token.userBalance,
-            fiatAmount: token.userBalanceUsd,
-            weight: token.weight,
+            balance: token.userBalance as BigNumberish,
+            fiatAmount: token.userBalanceUsd as number,
+            weight: token.weight as number,
           };
         })
       : undefined;
