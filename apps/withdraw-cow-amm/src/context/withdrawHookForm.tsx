@@ -1,27 +1,23 @@
 "use client";
 
+import { useIFrameContext } from "@bleu/cow-hooks-ui/src/context/iframe";
+import { useUserPools } from "@bleu/cow-hooks-ui/src/hooks/useUserPools";
 import { Form } from "@bleu/ui";
 import { type WithdrawSchemaType, withdrawSchema } from "@bleu/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { useUserPools } from "../hooks/useUserPools";
-import type { IHooksInfo, IPool } from "../types";
-import { useIFrameContext } from "./iframe";
+import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 
 export function WithdrawFormContextProvider({
   children,
-  getHookInfo,
   poolTypeIn,
 }: {
   children: React.ReactNode;
-  getHookInfo: (
-    selectedPool: IPool,
-    withdrawPct: number,
-  ) => Promise<IHooksInfo | undefined>;
   poolTypeIn: "COW_AMM" | "WEIGHTED";
 }) {
+  const getHookInfo = useGetHookInfo();
   const { context, setHookInfo } = useIFrameContext();
 
   const form = useForm<WithdrawSchemaType>({
