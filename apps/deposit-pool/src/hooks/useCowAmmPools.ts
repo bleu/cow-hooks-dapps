@@ -1,13 +1,13 @@
-import { useIFrameContext, usePools } from "@bleu/cow-hooks-ui";
+import { useIFrameContext, useBalancerPools } from "@bleu/cow-hooks-ui";
 
 export function useCowAmmPools() {
   const { context } = useIFrameContext();
 
-  return usePools(
+  return useBalancerPools(
     {
       poolTypeIn: ["COW_AMM"],
     },
     context?.chainId,
-    "totalLiquidity",
+    "totalLiquidity"
   );
 }

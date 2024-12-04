@@ -1,6 +1,6 @@
 "use client";
 
-import { useUserPools } from "@bleu/cow-hooks-ui/src/hooks/useUserPools";
+import { useBalancerUserPools } from "@bleu/cow-hooks-ui";
 import { type WithdrawSchemaType, withdrawSchema } from "@bleu/utils";
 import { useCallback, useEffect, useMemo } from "react";
 
@@ -31,13 +31,13 @@ export function WithdrawFormContextProvider({
 
   const { control, handleSubmit, setValue } = form;
 
-  const { data: pools } = useUserPools(poolTypeIn);
+  const { data: pools } = useBalancerUserPools(poolTypeIn);
 
   const poolId = useWatch({ control, name: "poolId" });
 
   const selectedPool = useMemo(() => {
     return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
+      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
     );
   }, [pools, poolId]);
 
@@ -51,7 +51,7 @@ export function WithdrawFormContextProvider({
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [getHookInfo, setHookInfo, router, selectedPool],
+    [getHookInfo, setHookInfo, router, selectedPool]
   );
 
   // biome-ignore lint:

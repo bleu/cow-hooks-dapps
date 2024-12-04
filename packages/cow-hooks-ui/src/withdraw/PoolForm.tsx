@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { useIFrameContext } from "../context/iframe";
-import { useUserPoolBalance } from "../hooks/useUserPoolBalance";
+import { useBalancerUserPoolBalance } from "../hooks/useBalancerUserPoolBalance";
 import type { IPool } from "../types";
 import { Spinner } from "../ui/Spinner";
 import { PoolBalancesPreview } from "./PoolBalancePreview";
@@ -9,7 +9,7 @@ import { WithdrawPctSlider } from "./WithdrawPctSlider";
 
 export function PoolForm({ selectedPool }: { selectedPool?: IPool }) {
   const { context } = useIFrameContext();
-  const { data: poolBalances, isLoading } = useUserPoolBalance({
+  const { data: poolBalances, isLoading } = useBalancerUserPoolBalance({
     user: context?.account,
     chainId: context?.chainId,
     poolId: selectedPool?.id,

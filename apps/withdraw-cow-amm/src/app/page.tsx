@@ -7,7 +7,7 @@ import {
   PoolsDropdownMenu,
   Spinner,
   useIFrameContext,
-  useUserPools,
+  useBalancerUserPools,
 } from "@bleu/cow-hooks-ui";
 import {
   type WithdrawSchemaType,
@@ -20,7 +20,8 @@ import { useFormContext, useWatch } from "react-hook-form";
 export default function Page() {
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
   const { context } = useIFrameContext();
-  const { data: pools, isLoading: isLoadingPools } = useUserPools("COW_AMM");
+  const { data: pools, isLoading: isLoadingPools } =
+    useBalancerUserPools("COW_AMM");
 
   const { setValue, control } = useFormContext<WithdrawSchemaType>();
 
@@ -31,7 +32,7 @@ export default function Page() {
 
     try {
       const data = await decodeExitPoolHookCalldata(
-        context?.hookToEdit?.hook.callData as `0x${string}`,
+        context?.hookToEdit?.hook.callData as `0x${string}`
       );
       setValue("poolId", data.poolId);
       setValue("withdrawPct", data.withdrawPct);
@@ -42,7 +43,7 @@ export default function Page() {
 
   const selectedPool = useMemo(() => {
     return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
+      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
     );
   }, [pools, poolId]);
 
