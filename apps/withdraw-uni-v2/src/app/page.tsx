@@ -46,8 +46,11 @@ export default function Page() {
     }
   }, [context?.account, context?.hookToEdit, setValue]);
 
-  const { data: selectedPool, isLoading: isLoadingSelectedPool } =
-    useSelectedPool(poolId);
+  const {
+    data: selectedPool,
+    isLoading: isLoadingSelectedPool,
+    mutate: mutateSelectedPool,
+  } = useSelectedPool(poolId);
 
   useEffect(() => {
     if (poolId) {
@@ -84,7 +87,10 @@ export default function Page() {
   return (
     <div className="w-full flex flex-col gap-1 items-center">
       <PoolsDropdownMenu
-        onSelect={(pool: IPool) => setValue("poolId", pool.id)}
+        onSelect={(pool: IPool) => {
+          setValue("poolId", pool.id);
+          mutateSelectedPool(pool);
+        }}
         pools={pools || []}
         PoolItemInfo={PoolItemInfo}
         selectedPool={selectedPool}

@@ -41,6 +41,7 @@ export function PoolsDropdownMenu({
   tooltipText?: string;
   fetchNewPoolCallback?: (poolAddress: Address) => Promise<IPool>;
 }) {
+  const [fetchedPool, setFetchedPool] = useState<IPool | undefined>();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [typedAddress, setTypedAddress] = useState("");
@@ -61,14 +62,16 @@ export function PoolsDropdownMenu({
   const swrConfig = {
     revalidateOnFocus: false,
     onSuccess: (data: IPool) => {
-      // Append new pool on the list (avoid repeating or 0-balance pools)
+      // Add new pool on the list (avoid repeating or 0-balance pools)
       if (
         !pools.map((pool) => pool.address).includes(data.address) &&
-        !(data.userBalance.walletBalance.toString() === "0")
+        data.userBalance.walletBalance.toString() !== "0"
       )
-        pools.push(data);
+        setFetchedPool(data);
     },
   };
+
+  const allPools = [...pools, fetchedPool].filter((pool) => !!pool);
 
   const {
     data: newPool,
@@ -149,7 +152,7 @@ export function PoolsDropdownMenu({
                 <CommandEmpty>
                   <CommandEmptyContent />
                 </CommandEmpty>
-                {pools.map((pool) => (
+                {allPools.map((pool) => (
                   <CommandItem
                     key={pool.id}
                     value={
