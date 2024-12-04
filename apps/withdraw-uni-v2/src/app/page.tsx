@@ -12,10 +12,11 @@ import {
   decodeExitPoolHookCalldata,
 } from "@bleu/utils";
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
 import { useFetchNewPoolCallback } from "#/hooks/useFetchNewPoolCallback";
+import { useSelectedPool } from "#/hooks/useSelectedPool";
 import { useUserPools } from "#/hooks/useUserPools";
 
 const ALL_SUPPORTED_CHAIN_IDS = [
@@ -45,11 +46,8 @@ export default function Page() {
     }
   }, [context?.account, context?.hookToEdit, setValue]);
 
-  const selectedPool = useMemo(() => {
-    return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
-    );
-  }, [pools, poolId]);
+  const { data: selectedPool, isLoading: isLoadingSelectedPool } =
+    useSelectedPool(poolId);
 
   useEffect(() => {
     if (poolId) {
@@ -71,7 +69,11 @@ export default function Page() {
     return <span className="mt-10 text-center">Unsupported chain</span>;
   }
 
-  if (isLoadingPools || (isEditHookLoading && context.hookToEdit)) {
+  if (
+    isLoadingPools ||
+    (isEditHookLoading && context.hookToEdit) ||
+    isLoadingSelectedPool
+  ) {
     return (
       <div className="text-center mt-10 p-2">
         <Spinner size="xl" />

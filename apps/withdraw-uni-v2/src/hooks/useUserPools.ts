@@ -3,7 +3,7 @@ import { usePools } from "./usePools";
 
 export function useUserPools() {
   const { context, publicClient } = useIFrameContext();
-  const useSwrData = usePools(
+  return usePools(
     context?.account,
     context?.chainId,
     context?.orderParams?.sellTokenAddress,
@@ -11,8 +11,4 @@ export function useUserPools() {
     //@ts-ignore
     context?.balancesDiff as Record<string, Record<string, string>>,
   );
-
-  const data = useSwrData.data;
-
-  return { ...useSwrData, data };
 }

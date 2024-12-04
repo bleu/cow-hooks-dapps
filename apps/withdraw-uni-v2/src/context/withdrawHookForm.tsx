@@ -5,10 +5,10 @@ import { Form } from "@bleu/ui";
 import { type WithdrawSchemaType, withdrawSchema } from "@bleu/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
-import { useUserPools } from "#/hooks/useUserPools";
+import { useSelectedPool } from "#/hooks/useSelectedPool";
 
 export function WithdrawFormContextProvider({
   children,
@@ -28,15 +28,9 @@ export function WithdrawFormContextProvider({
 
   const { control, handleSubmit, setValue } = form;
 
-  const { data: pools } = useUserPools();
-
   const poolId = useWatch({ control, name: "poolId" });
 
-  const selectedPool = useMemo(() => {
-    return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
-    );
-  }, [pools, poolId]);
+  const { data: selectedPool } = useSelectedPool(poolId);
 
   const router = useRouter();
 
@@ -54,7 +48,7 @@ export function WithdrawFormContextProvider({
   // biome-ignore lint:
   useEffect(() => {
     setValue("poolId", "");
-  }, [context?.account]);
+  }, [context?.account, setValue]);
 
   return (
     <Form

@@ -32,7 +32,6 @@ export function PoolsDropdownMenu({
   isCheckDetailsCentered = true,
   tooltipText,
   fetchNewPoolCallback,
-  // fetchNewPoolCallback = (_address: string) => undefined;
 }: {
   onSelect: (pool: IPool) => void;
   pools: IPool[];
