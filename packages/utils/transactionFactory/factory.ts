@@ -24,6 +24,10 @@ import {
   TRANSACTION_TYPES,
 } from "./types";
 import {
+  type UniswapWithdrawArgs,
+  UniswapWithdrawCreator,
+} from "./uniswapPool";
+import {
   type CreateVestingArgs,
   CreateVestingCreator,
   type CreateVestingWeirollProxyArgs,
@@ -45,6 +49,7 @@ export interface TransactionBindings {
   [TRANSACTION_TYPES.CREATE_VESTING]: CreateVestingArgs;
   [TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_PROXY]: CreateVestingWeirollProxyArgs;
   [TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_USER]: CreateVestingWeirollUserArgs;
+  [TRANSACTION_TYPES.UNISWAP_WITHDRAW]: UniswapWithdrawArgs;
 }
 
 const TRANSACTION_CREATORS: {
@@ -65,6 +70,7 @@ const TRANSACTION_CREATORS: {
     CreateVestingWeirollProxyCreator,
   [TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_USER]:
     CreateVestingWeirollUserCreator,
+  [TRANSACTION_TYPES.UNISWAP_WITHDRAW]: UniswapWithdrawCreator,
 };
 
 // This class is intentionally designed with only static members

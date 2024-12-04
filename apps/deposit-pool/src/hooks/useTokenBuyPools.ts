@@ -1,10 +1,10 @@
-import { useIFrameContext, usePools } from "@bleu/cow-hooks-ui";
+import { useBalancerPools, useIFrameContext } from "@bleu/cow-hooks-ui";
 import type { Address } from "viem";
 
 export function useTokenBuyPools() {
   const { context } = useIFrameContext();
 
-  return usePools(
+  return useBalancerPools(
     {
       poolTypeIn: ["COW_AMM"],
       tokensIn: context?.orderParams?.buyTokenAddress
