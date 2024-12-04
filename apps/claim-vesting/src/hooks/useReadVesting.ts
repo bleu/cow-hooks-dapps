@@ -1,15 +1,15 @@
+import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { useCallback } from "react";
 import useSWR from "swr";
-import { type Address, type PublicClient, isAddress } from "viem";
+import { type Address, isAddress } from "viem";
 import { VestingEscrowAbi } from "#/abis/VestingEscrowAbi";
 
 export const useReadVesting = ({
-  publicClient,
   debouncedAddress,
 }: {
-  publicClient: PublicClient | undefined;
   debouncedAddress: string;
 }) => {
+  const { publicClient } = useIFrameContext();
   const readVesting = useCallback(
     async (address: Address) => {
       const vestingContract = {

@@ -1,4 +1,4 @@
-import { cn } from "@bleu/ui";
+import { cn } from "@bleu.builders/ui";
 import type { Token } from "@uniswap/sdk-core";
 import { TokenLogo } from "./TokenLogo";
 
@@ -18,7 +18,7 @@ export function TokenLogoWithWeight({
         className,
       )}
     >
-      <div className="hidden xsm:flex">{weight * 100}%</div>
+      <div className="hidden xsm:flex">{(weight * 100).toFixed()}%</div>
       <div>
         <TokenLogo token={token} width={20} height={20} />
       </div>

@@ -24,6 +24,7 @@ export interface IHooksInfo {
 export interface HookDappContextAdjusted extends HookDappContext {
   account?: Address;
   chainId: SupportedChainId;
+  balancesDiff: Record<string, Record<string, string>>;
 }
 
 export interface SignatureStepsProps {

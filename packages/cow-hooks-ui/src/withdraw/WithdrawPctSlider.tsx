@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Label, cn } from "@bleu/ui";
+import { Button, Label, cn } from "@bleu.builders/ui";
 import type { withdrawSchema } from "@bleu/utils";
 import { useFormContext, useWatch } from "react-hook-form";
 import { Input } from "../ui/InputBase";

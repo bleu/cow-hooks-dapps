@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
+import { useDepositAmounts } from "#/hooks/useDepositAmounts";
 import type { FormType } from "#/types";
 import { encodeFormData } from "#/utils/encodeFormData";
 
@@ -26,7 +27,8 @@ export default function Page() {
     useIFrameContext();
   const [account, setAccount] = useState<string>();
   const router = useRouter();
-  const submitHook = useSubmitHook({ defaultGasLimit: BigInt(450000) });
+  const depositAmountsWithDecimals = useDepositAmounts();
+  const submitHook = useSubmitHook({ defaultGasLimit: BigInt(700000) });
   const cowShedSignature = useCowShedSignature({
     cowShed,
     signer,
@@ -60,13 +62,24 @@ export default function Page() {
     const cowShedCall = await cowShedSignature(txs);
     if (!cowShedCall) throw new Error("Error signing hooks");
 
-    const encodedFormData = encodeFormData(values as FormType);
+    const encodedFormData = encodeFormData(
+      values as FormType,
+      depositAmountsWithDecimals,
+    );
 
     await submitHook({
       target: cowShed.getFactoryAddress(),
       callData: cowShedCall + encodedFormData,
     });
-  }, [cowShedSignature, submitHook, hookInfo, permitTxs, cowShed, values]);
+  }, [
+    cowShedSignature,
+    submitHook,
+    hookInfo,
+    permitTxs,
+    cowShed,
+    values,
+    depositAmountsWithDecimals,
+  ]);
 
   const permitCallback = useCallback(
     async (permit: {

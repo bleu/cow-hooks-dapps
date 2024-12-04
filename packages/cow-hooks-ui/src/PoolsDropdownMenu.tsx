@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@bleu/ui";
+import { cn } from "@bleu.builders/ui";
 import { BalancerChainName } from "@bleu/utils";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
@@ -165,7 +165,9 @@ export function PoolsDropdownMenu({
                     className="group hover:bg-color-paper-darkest hover:text-muted-foreground rounded-md px-2 cursor-pointer flex flex-row gap-1 items-center justify-between"
                   >
                     <PoolLogo pool={pool} />
-                    <PoolItemInfo pool={pool} />
+                    <div className="w-2/5">
+                      <PoolItemInfo pool={pool} />
+                    </div>
                   </CommandItem>
                 ))}
               </CommandList>

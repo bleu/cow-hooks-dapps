@@ -1,8 +1,14 @@
-import { type IBalance, TokenLogoWithWeight } from "@bleu/cow-hooks-ui";
-import { Button, Input, formatNumber } from "@bleu/ui";
+import { Button, Input, formatNumber } from "@bleu.builders/ui";
+import {
+  type IBalance,
+  InfoTooltip,
+  TokenLogoWithWeight,
+  useIFrameContext,
+} from "@bleu/cow-hooks-ui";
 import { useCallback, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
+import { useSwapAmount } from "#/hooks/useSwapAmount";
 import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
 import type { FormType } from "#/types";
 import { constraintStringToBeNumeric } from "#/utils/constraintStringToBeNumeric";
@@ -16,24 +22,26 @@ export function TokenAmountInput({
   tokenPrice?: number;
   updateTokenAmounts: (amount: string, address: Address) => void;
 }) {
+  const { context } = useIFrameContext();
   const { register, control, setValue } = useFormContext<FormType>();
 
   const amount = useWatch({
     control,
     name: `amounts.${poolBalance.token.address.toLowerCase()}`,
   });
-  const amountFromSwap = useWatch({
-    control,
-    name: "amountFromSwap",
-  });
-  const amountFromAccount = useWatch({
-    control,
-    name: "amountFromAccount",
-  });
 
   const tokenBalanceAfterSwap = useTokenBalanceAfterSwap(
     poolBalance.token.address,
   );
+
+  const isTokenBuy = useMemo(() => {
+    return (
+      context?.orderParams?.buyTokenAddress.toLowerCase() ===
+      poolBalance.token.address.toLowerCase()
+    );
+  }, [context?.orderParams?.buyTokenAddress, poolBalance.token.address]);
+
+  const { buyAmount } = useSwapAmount();
 
   const amountUsd = useMemo(() => {
     if (!amount || !tokenPrice) return 0;
@@ -53,12 +61,15 @@ export function TokenAmountInput({
     [updateTokenAmounts, poolBalance.token.address],
   );
 
-  const disabled = amountFromSwap || amountFromAccount;
+  const maxButtonDisabled = useMemo(() => {
+    return (
+      Number(tokenBalanceAfterSwap) <= 0 || amount === tokenBalanceAfterSwap
+    );
+  }, [tokenBalanceAfterSwap, amount]);
 
-  const buttonDisabled =
-    disabled ||
-    Number(tokenBalanceAfterSwap) <= 0 ||
-    amount === tokenBalanceAfterSwap;
+  const buyAmountDisabled = useMemo(() => {
+    return !isTokenBuy || Number(buyAmount) <= 0 || amount === buyAmount;
+  }, [isTokenBuy, buyAmount, amount]);
 
   return (
     <div className="grid grid-cols-2 min-h-24 w-full bg-muted text-muted-foreground rounded-xl p-3">
@@ -75,7 +86,6 @@ export function TokenAmountInput({
           type="text"
           placeholder="0.0"
           autoComplete="off"
-          disabled={disabled}
           title={amount}
           {...register(`amounts.${poolBalance.token.address.toLowerCase()}`, {
             onChange: (e) => {
@@ -96,32 +106,66 @@ export function TokenAmountInput({
       <div className="flex items-center justify-between col-span-2">
         <div className="flex items-center justify-start">
           {tokenBalanceAfterSwap && (
-            <span>
-              <span className="ml-1 text-xs font-normal opacity-70">
-                Balance: {formatNumber(tokenBalanceAfterSwap, 4)}
-              </span>
-              {!buttonDisabled && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="ml-1 rounded-sm text-xs py-0 px-1 bg-background text-foreground/50 hover:bg-primary hover:text-primary-foreground h-fit inline"
-                  onClick={() => {
-                    setValue(
-                      `amounts.${poolBalance.token.address.toLowerCase()}`,
-                      tokenBalanceAfterSwap,
-                    );
-                    onChange(tokenBalanceAfterSwap);
-                  }}
-                >
-                  Max
-                </Button>
-              )}
-            </span>
+            <div className="flex flex-col xsm:flex-row gap-2">
+              <div className="flex items-center">
+                <InfoTooltip
+                  className="opacity-70"
+                  text="Estimated balance, it might change depending of order and fee update."
+                />
+                <span className="ml-1 inline text-xs font-normal opacity-70 w-fit">
+                  Balance:{" "}
+                  {formatNumber(
+                    tokenBalanceAfterSwap,
+                    4,
+                    "decimal",
+                    "standard",
+                    0.0001,
+                  ).replace(/\.?0+$/, "") || "0"}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                {!maxButtonDisabled && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="rounded-sm text-xs py-0 px-1 bg-background text-foreground/50 hover:bg-primary hover:text-primary-foreground h-fit inline"
+                    onClick={() => {
+                      setValue(
+                        `amounts.${poolBalance.token.address.toLowerCase()}`,
+                        tokenBalanceAfterSwap,
+                      );
+                      onChange(tokenBalanceAfterSwap);
+                    }}
+                  >
+                    Max
+                  </Button>
+                )}
+                {!buyAmountDisabled && buyAmount && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="rounded-sm text-xs py-0 px-1 bg-background text-foreground/50 hover:bg-primary hover:text-primary-foreground h-fit inline"
+                    onClick={() => {
+                      setValue(
+                        `amounts.${poolBalance.token.address.toLowerCase()}`,
+                        buyAmount,
+                      );
+                      onChange(buyAmount);
+                    }}
+                  >
+                    Buy amount
+                  </Button>
+                )}
+              </div>
+            </div>
           )}
         </div>
         <div className="flex items-center justify-end">
           <span className="text-xs text-right font-normal pr-0">
-            ${amountUsd && amountUsd >= 0 ? formatNumber(amountUsd, 2) : "0"}
+            $
+            {amountUsd && amountUsd >= 0
+              ? formatNumber(amountUsd, 2, "decimal", "standard", 0.01)
+              : "0"}
           </span>
         </div>
       </div>

@@ -54,7 +54,20 @@ export default function Page() {
     loadHookInfo();
   }, [loadHookInfo, poolId]);
 
-  if (!context) return null;
+  if (!context)
+    return (
+      <div className="text-center mt-10 p-2">
+        <Spinner
+          size="lg"
+          style={{
+            width: "25px",
+            height: "25px",
+            color: "gray",
+            animation: "spin 2s linear infinite",
+          }}
+        />
+      </div>
+    );
 
   if (!context.account) {
     return <span className="mt-10 text-center">Connect your wallet first</span>;
@@ -67,7 +80,15 @@ export default function Page() {
   if (isLoadingPools || (isEditHookLoading && context.hookToEdit)) {
     return (
       <div className="text-center mt-10 p-2">
-        <Spinner size="xl" />
+        <Spinner
+          size="lg"
+          style={{
+            width: "25px",
+            height: "25px",
+            color: "gray",
+            animation: "spin 2s linear infinite",
+          }}
+        />
       </div>
     );
   }

@@ -11,17 +11,20 @@ export function useSubmitHook({
   recipientOverride?: string;
   defaultGasLimit?: bigint;
 }) {
-  const { context, actions } = useIFrameContext();
+  const { context, actions, publicClient } = useIFrameContext();
   const estimateGas = useEstimateGas();
   return useCallback(
     async (hook: Omit<CowHook, "gasLimit" | "dappId">) => {
       if (!context || !actions) throw new Error("Missing context");
 
-      const estimatedGas = await estimateGas(hook).catch(() => {
+      const estimatedGas = await estimateGas(hook).catch(async () => {
+        const currentBlock = await publicClient?.getBlockNumber();
         console.error("Failed to estimated hook gas", {
           chainId: context.chainId,
           calldata: hook.callData,
           target: hook.target,
+          currentTimestamp: Math.floor(new Date().getTime() / 1000),
+          currentBlock,
         });
         if (defaultGasLimit) return defaultGasLimit;
         throw new Error("Failed to estimated hook gas");
@@ -48,6 +51,13 @@ export function useSubmitHook({
 
       actions.addHook({ hook: hookWithGasLimit, recipientOverride });
     },
-    [actions, context, recipientOverride, estimateGas, defaultGasLimit],
+    [
+      actions,
+      context,
+      recipientOverride,
+      estimateGas,
+      defaultGasLimit,
+      publicClient,
+    ],
   );
 }

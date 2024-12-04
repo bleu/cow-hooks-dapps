@@ -11,7 +11,7 @@ export const decodeCalldata = async (
   string: `0x${string}`,
   publicClient: PublicClient,
 ): Promise<FormType> => {
-  const encodedFormData = string.slice(-288);
+  const encodedFormData = string.slice(-290);
 
   const poolId = `0x${encodedFormData.slice(0, 40)}`;
   const token1 = `0x${encodedFormData.slice(40, 80)}`;
@@ -53,9 +53,6 @@ export const decodeCalldata = async (
     poolId,
     amounts,
     referenceTokenAddress,
-    amountFromAccount: false,
-    amountFromSwap: false,
-    amountFromUserInput: true,
   } as FormType;
 
   return result;

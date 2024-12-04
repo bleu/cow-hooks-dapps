@@ -1,4 +1,4 @@
-import { formatNumber } from "@bleu/ui";
+import { formatNumber } from "@bleu.builders/ui";
 import type { IPool } from "../types";
 
 export function PoolItemInfo({ pool }: { pool: IPool }) {

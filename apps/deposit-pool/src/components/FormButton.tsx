@@ -41,7 +41,7 @@ export function FormButton({ poolBalances }: { poolBalances: IBalance[] }) {
     return tokenAddresses
       .map((tokenAddress) => {
         const token = poolTokens[tokenAddress];
-        if (!token) return;
+        if (!token || !amounts) return;
         const amount = amounts[tokenAddress];
         if (!amount) return;
         const tokenBalance = Number(token.balance);
@@ -51,16 +51,25 @@ export function FormButton({ poolBalances }: { poolBalances: IBalance[] }) {
       .filter((symbol) => symbol) as string[];
   }, [amounts, poolTokens, tokenAddresses]);
 
+  const zeroAmount = useMemo(() => {
+    return tokenAddresses
+      .map((tokenAddress) => amounts[tokenAddress])
+      .some((amount) => Number(amount) <= 0);
+  }, [amounts, tokenAddresses]);
+
   const shouldDisableButton = useMemo(() => {
     if (insufficientTokenSymbols.length) return true;
-    if (Number(referenceAmount) <= 0) return true;
+    if (Number(referenceAmount || "0") <= 0) return true;
+    if (zeroAmount) return true;
     if (isSubmitting) return true;
     return false;
-  }, [insufficientTokenSymbols, isSubmitting, referenceAmount]);
+  }, [insufficientTokenSymbols, isSubmitting, referenceAmount, zeroAmount]);
 
-  const ButtonMessage = () => {
+  const buttonMessage = useMemo(() => {
+    if (Number(referenceAmount || "0") <= 0) return "Enter an amount";
+    if (zeroAmount) return "Enter a larger amount";
     if (insufficientTokenSymbols.length === 1) {
-      return `Insufficient balance for ${insufficientTokenSymbols[0]}`;
+      return `Insufficient ${insufficientTokenSymbols[0]} balance`;
     }
     if (insufficientTokenSymbols.length > 1) {
       return "Insufficient balance for multiple tokens";
@@ -68,14 +77,21 @@ export function FormButton({ poolBalances }: { poolBalances: IBalance[] }) {
     if (isSubmitting) return "Creating hook...";
     if (context?.hookToEdit) return "Update post-hook";
     return "Add post-hook";
-  };
+  }, [
+    zeroAmount,
+    insufficientTokenSymbols,
+    isSubmitting,
+    referenceAmount,
+    context?.hookToEdit,
+  ]);
+
   return (
     <ButtonPrimary
       className="mt-3"
       type="submit"
       disabled={shouldDisableButton}
     >
-      <ButtonMessage />
+      {buttonMessage}
     </ButtonPrimary>
   );
 }

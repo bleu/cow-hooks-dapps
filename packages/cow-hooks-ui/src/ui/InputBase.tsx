@@ -1,4 +1,4 @@
-import { Input as InputPrimitive, Label, cn } from "@bleu/ui";
+import { Input as InputPrimitive, Label, cn } from "@bleu.builders/ui";
 import React, { type HTMLProps } from "react";
 import {
   type FieldError,

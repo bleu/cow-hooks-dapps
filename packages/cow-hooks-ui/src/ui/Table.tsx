@@ -1,4 +1,4 @@
-import { cn } from "@bleu/ui";
+import { cn } from "@bleu.builders/ui";
 import * as React from "react";
 
 const Table = React.forwardRef<

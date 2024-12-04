@@ -1,12 +1,8 @@
 "use client";
 
-import { useDebounceValue } from "@bleu/ui";
+import { useDebounceValue } from "@bleu.builders/ui";
 
-import {
-  type CoWHookDappActions,
-  type HookDappContext,
-  initCoWHookDapp,
-} from "@cowprotocol/hook-dapp-lib";
+import type { HookDappContext } from "@cowprotocol/hook-dapp-lib";
 
 import {
   AddressInput,
@@ -14,18 +10,16 @@ import {
   ClaimableAmountContainer,
   ContentWrapper,
   Wrapper,
+  useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { useEffect, useState } from "react";
 
 import { useClaimVestingData } from "../hooks/useClaimVestingData";
 
 export default function Page() {
-  const [actions, setActions] = useState<CoWHookDappActions | null>(null);
-  const [context, setContext] = useState<HookDappContext | null>(null);
+  const { context, actions } = useIFrameContext();
 
   const isDarkMode = context?.isDarkMode;
-
-  const { account, chainId } = context || {};
 
   const [typedAddress, setTypedAddress] = useState<string>(
     context?.hookToEdit?.hook.target || "",
@@ -36,18 +30,8 @@ export default function Page() {
   });
 
   useEffect(() => {
-    const { actions } = initCoWHookDapp({ onContext: setContext });
-    setActions(actions);
-  }, []);
-
-  useEffect(() => {
     setTypedAddress(context?.hookToEdit?.hook.target ?? "");
   }, [context?.hookToEdit?.hook.target]);
-
-  useEffect(() => {
-    const newTheme = isDarkMode ? "dark" : "light";
-    document.documentElement.setAttribute("data-theme", newTheme);
-  }, [isDarkMode]);
 
   const {
     errorMessage,
@@ -57,10 +41,10 @@ export default function Page() {
     loading,
     callData,
     gasLimit,
-  } = useClaimVestingData({ chainId, account, debouncedAddress });
+  } = useClaimVestingData({ account: context?.account, debouncedAddress });
 
   const handleAddHook = () => {
-    if (!actions || !account || !callData || !gasLimit) return;
+    if (!actions || !context?.account || !callData || !gasLimit) return;
     const hook = {
       target: debouncedAddress,
       callData: callData,
@@ -76,7 +60,7 @@ export default function Page() {
 
   return (
     <>
-      {context && account ? (
+      {context?.account ? (
         <Wrapper>
           <ContentWrapper>
             <AddressInput

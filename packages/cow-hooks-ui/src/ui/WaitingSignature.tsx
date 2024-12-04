@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@bleu/ui";
+import { Button } from "@bleu.builders/ui";
 import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import useSWR from "swr";
@@ -43,12 +43,7 @@ export function WaitingSignature({
               ?.trim() || "An error occurred"}
           </span>
           <div className="flex gap-2">
-            <Button
-              type="button"
-              variant="destructive"
-              className="bg-destructive/15 hover:bg-destructive/50"
-              onClick={() => mutate()}
-            >
+            <Button type="button" onClick={() => mutate()}>
               Try again
             </Button>
             <Button

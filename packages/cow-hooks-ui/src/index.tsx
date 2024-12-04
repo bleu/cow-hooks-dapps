@@ -28,3 +28,4 @@ export * from "./TokenLogoWithWeight";
 export * from "./utils/poolDataConverter";
 export * from "./RootLayout";
 export * from "./withdraw";
+export * from "./GlobalError";

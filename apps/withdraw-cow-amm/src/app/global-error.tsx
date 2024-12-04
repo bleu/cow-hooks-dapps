@@ -1,14 +1,10 @@
 "use client";
 
-export default function GlobalError({ error }: { error: Error }) {
+import { GlobalError } from "@bleu/cow-hooks-ui";
+
+export default function GlobalErrorPage({ error }: { error: Error }) {
   /* eslint-disable-next-line no-console */
   console.error(error);
 
-  return (
-    <html lang="en">
-      <body>
-        <h2>Something went wrong!</h2>
-      </body>
-    </html>
-  );
+  return <GlobalError />;
 }

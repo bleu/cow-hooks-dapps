@@ -16,6 +16,7 @@ export function useTokens(tokens: Address[]) {
           token,
           publicClient,
           context.account as Address,
+          context.balancesDiff,
         );
       }),
     );
@@ -44,7 +45,7 @@ export function useTokens(tokens: Address[]) {
     );
 
     setTokensBalance(newTokensBalance);
-  }, [context?.account, publicClient, tokens]);
+  }, [context?.account, publicClient, tokens, context?.balancesDiff]);
 
   useEffect(() => {
     updateTokensInfo();

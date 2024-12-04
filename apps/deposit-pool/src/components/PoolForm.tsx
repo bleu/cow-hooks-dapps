@@ -1,21 +1,16 @@
+import { Label, formatNumber } from "@bleu.builders/ui";
 import {
   type IPool,
   Info,
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
-import { Label, formatNumber } from "@bleu/ui";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { type Address, formatUnits } from "viem";
 import { usePoolBalance } from "#/hooks/usePoolBalance";
-import { useSwapAmount } from "#/hooks/useSwapAmount";
-import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
 import type { FormType } from "#/types";
 import { calculateProportionalTokenAmounts, getTokenPrice } from "#/utils/math";
-import { AmountFromAccountCheckbox } from "./AmountFromAccountCheckbox";
-import { AmountFromSwapCheckbox } from "./AmountFromSwapCheckbox";
-import { AmountFromUserInputCheckbox } from "./AmountFromUserInputCheckbox";
 import { FormButton } from "./FormButton";
 import { InfoContent } from "./InfoContent";
 import { TokenAmountInput } from "./TokenAmountInput";
@@ -24,25 +19,12 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
   const { context } = useIFrameContext();
   const { control, setValue } = useFormContext<FormType>();
 
-  const { buyAmount } = useSwapAmount();
-  const buyAmountAfterSwap = useTokenBalanceAfterSwap(
-    context?.orderParams?.buyTokenAddress as Address,
-  );
-
   const { data: poolBalances, isLoading: isBalanceLoading } = usePoolBalance({
     poolId: pool?.id,
     chainId: context?.chainId,
   });
 
   const amounts = useWatch({ control, name: "amounts" });
-  const amountFromSwap = useWatch({
-    control,
-    name: "amountFromSwap",
-  });
-  const amountFromAccount = useWatch({
-    control,
-    name: "amountFromAccount",
-  });
 
   const tokenPrices = useMemo(
     () => poolBalances?.map((poolBalance) => getTokenPrice(poolBalance)),
@@ -92,36 +74,6 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
     [poolBalances, tokenPrices, pool, setValue],
   );
 
-  useEffect(() => {
-    if (amountFromSwap && context?.orderParams && buyAmount) {
-      const address =
-        context.orderParams.buyTokenAddress.toLowerCase() as Address;
-      setValue(`amounts.${address}`, buyAmount);
-      updateTokenAmounts(buyAmount, address);
-    }
-  }, [
-    context?.orderParams,
-    amountFromSwap,
-    setValue,
-    updateTokenAmounts,
-    buyAmount,
-  ]);
-
-  useEffect(() => {
-    if (amountFromAccount && context?.orderParams && buyAmountAfterSwap) {
-      const address =
-        context.orderParams.buyTokenAddress.toLowerCase() as Address;
-      setValue(`amounts.${address}`, buyAmountAfterSwap);
-      updateTokenAmounts(buyAmountAfterSwap, address);
-    }
-  }, [
-    context?.orderParams,
-    amountFromAccount,
-    setValue,
-    updateTokenAmounts,
-    buyAmountAfterSwap,
-  ]);
-
   if (!context) return null;
 
   if (!context?.orderParams)
@@ -150,13 +102,11 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
       <div className="flex w-full flex-row justify-between border border-muted px-5 py-2 mb-3 rounded-xl text-md">
         <span>Total</span>
         <span className="text-right">
-          ${totalUsd >= 0 ? formatNumber(totalUsd, 2) : "0"}
+          $
+          {totalUsd >= 0
+            ? formatNumber(totalUsd, 2, "decimal", "standard", 0.01)
+            : "0"}
         </span>
-      </div>
-      <div className="w-full flex flex-col gap-y-2 mb-3">
-        <AmountFromUserInputCheckbox />
-        <AmountFromSwapCheckbox />
-        <AmountFromAccountCheckbox />
       </div>
       <Info content={<InfoContent />} />
       <FormButton poolBalances={poolBalances} />

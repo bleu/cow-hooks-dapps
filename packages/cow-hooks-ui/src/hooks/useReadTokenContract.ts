@@ -1,3 +1,4 @@
+import { BigNumber, type BigNumberish } from "ethers";
 import { useCallback } from "react";
 import useSWR from "swr";
 import { type Address, type PublicClient, erc20Abi, zeroAddress } from "viem";
@@ -14,9 +15,14 @@ export const useReadTokenContract = ({
   const _readTokenContract = useCallback(
     async (address: Address) => {
       if (!publicClient || !context?.account) return;
-      return readTokenContract(address, publicClient, context?.account);
+      return readTokenContract(
+        address,
+        publicClient,
+        context?.account,
+        context?.balancesDiff,
+      );
     },
-    [publicClient, context?.account],
+    [publicClient, context?.account, context?.balancesDiff],
   );
 
   const {
@@ -50,7 +56,14 @@ export const readTokenContract = async (
   address: Address,
   publicClient: PublicClient,
   account: Address,
+  balancesDiff?: Record<Address, Record<Address, BigNumberish>>,
 ) => {
+  const accountLowerCase = account.toLowerCase() as Address;
+  const tokenAddressLowerCase = address.toLowerCase() as Address;
+
+  const tokenBalanceDiff =
+    balancesDiff?.[accountLowerCase]?.[tokenAddressLowerCase] || "0";
+
   const tokenContract = {
     address: address,
     abi: erc20Abi,
@@ -81,9 +94,27 @@ export const readTokenContract = async (
     if (result.status === "failure") throw new Error("Unexpected error");
   }
 
+  if (!account) {
+    return {
+      symbol: tokenResults?.[0],
+      decimals: tokenResults?.[1],
+      balance: undefined,
+    };
+  }
+  const contractBalance = tokenResults?.[2]?.result;
+
+  const balanceWithContextDiff = BigNumber.from(contractBalance)
+    .add(BigNumber.from(tokenBalanceDiff ?? 0))
+    .toBigInt();
+
+  const balanceResultWithContextDiff = {
+    ...tokenResults?.[2],
+    result: balanceWithContextDiff,
+  };
+
   return {
     symbol: tokenResults?.[0],
     decimals: tokenResults?.[1],
-    balance: account ? tokenResults?.[2] : undefined,
+    balance: balanceResultWithContextDiff,
   };
 };

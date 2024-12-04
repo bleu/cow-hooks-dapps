@@ -4,16 +4,16 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "next dev --port 3002",
     "check-types": "tsc --noEmit",
     "start": "next start"
   },
   "dependencies": {
     "@bleu/cow-hooks-ui": "workspace:*",
     "@bleu/tsconfig": "workspace:*",
-    "@bleu/ui": "0.1.131",
+    "@bleu.builders/ui": "0.1.133",
     "@cowprotocol/cow-sdk": "^5.5.1",
-    "@cowprotocol/hook-dapp-lib": "1.1.0-RC0",
+    "@cowprotocol/hook-dapp-lib": "1.3.1",
     "@ethersproject/providers": "5.7.2",
     "babel-plugin-react-compiler": "0.0.0-experimental-6067d4e-20240923",
     "lodash.debounce": "4.0.8",

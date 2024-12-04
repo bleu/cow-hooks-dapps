@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "next dev --port 3003",
     "start": "next start",
     "lint": "eslint '**/*.{ts,tsx}'",
     "lint:fix": "eslint '**/*.{ts,tsx}' --fix"
@@ -15,11 +15,11 @@
     "@balancer/sdk": "0.26.1",
     "@bleu/cow-hooks-ui": "workspace:*",
     "@bleu/tsconfig": "workspace:*",
-    "@bleu/ui": "0.1.131",
+    "@bleu.builders/ui": "0.1.133",
     "@bleu/utils": "workspace:*",
     "@cowprotocol/contracts": "1.6.0",
     "@cowprotocol/cow-sdk": "^5.5.1",
-    "@cowprotocol/hook-dapp-lib": "1.1.0-RC0",
+    "@cowprotocol/hook-dapp-lib": "1.3.1",
     "@cowprotocol/permit-utils": "0.3.1",
     "@ethersproject/providers": "5.7.2",
     "@hookform/resolvers": "3.9.0",

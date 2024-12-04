@@ -1,37 +1,24 @@
 "use client";
 
-import { type PropsWithChildren, useCallback, useMemo } from "react";
+import { type PropsWithChildren, useCallback } from "react";
 
+import { Form } from "@bleu.builders/ui";
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
-import { Form } from "@bleu/ui";
 import { useRouter } from "next/navigation";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
-import { useTokenBuyPools } from "#/hooks/useTokenBuyPools";
+import { useSelectedPool } from "#/hooks/useSelectedPool";
 import type { FormType } from "#/types";
 
 export function FormContextProvider({ children }: PropsWithChildren) {
   const { setHookInfo } = useIFrameContext();
-  const form = useForm<FormType>({
-    defaultValues: {
-      amountFromSwap: false,
-      amountFromAccount: false,
-      amountFromUserInput: true,
-    },
-  });
+  const form = useForm<FormType>({});
 
-  const { handleSubmit, control } = form;
+  const { handleSubmit } = form;
 
   const router = useRouter();
 
-  const { data: pools } = useTokenBuyPools();
-
-  const { poolId } = useWatch({ control });
-
-  const selectedPool = useMemo(
-    () => pools?.find((pool) => pool.id === poolId),
-    [pools, poolId],
-  );
+  const selectedPool = useSelectedPool();
 
   const getHookInfo = useGetHookInfo(selectedPool);
 

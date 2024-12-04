@@ -6,8 +6,8 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = {
   content: [
     "./src/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@bleu/ui/dist/**/*",
-    "../../node_modules/@bleu/ui/dist/**/*",
+    "./node_modules/@bleu.builders/ui/dist/**/*",
+    "../../node_modules/@bleu.builders/ui/dist/**/*",
     "../../packages/cow-hooks-ui/src/**/*.{js,ts,jsx,tsx}",
     "./node_modules/preline/dist/*.js",
     "../../node_modules/preline/dist/*.js",

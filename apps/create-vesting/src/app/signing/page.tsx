@@ -21,6 +21,7 @@ export default function Page() {
 
   const submitHook = useSubmitHook({
     recipientOverride: hookInfo?.recipientOverride,
+    defaultGasLimit: BigInt(730_000),
   });
   const cowShedSignature = useCowShedSignature({
     cowShed,

@@ -1,5 +1,5 @@
+import { formatNumber } from "@bleu.builders/ui";
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
-import { formatNumber } from "@bleu/ui";
 import { useMemo } from "react";
 
 export const useFormatVariables = ({
