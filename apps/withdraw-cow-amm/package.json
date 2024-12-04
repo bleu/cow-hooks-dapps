@@ -1,5 +1,5 @@
 {
-  "name": "@bleu/withdraw-pool",
+  "name": "@bleu/withdraw-cow-amm",
   "version": "0.0.0",
   "private": true,
   "scripts": {
