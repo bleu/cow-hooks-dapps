@@ -37,7 +37,7 @@ export function WithdrawFormContextProvider({
 
   const selectedPool = useMemo(() => {
     return pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase()
+      (pool) => pool.id.toLowerCase() === poolId?.toLowerCase(),
     );
   }, [pools, poolId]);
 
@@ -51,7 +51,7 @@ export function WithdrawFormContextProvider({
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [getHookInfo, setHookInfo, router, selectedPool]
+    [getHookInfo, setHookInfo, router, selectedPool],
   );
 
   // biome-ignore lint:

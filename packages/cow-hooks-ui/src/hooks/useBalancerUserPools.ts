@@ -12,11 +12,11 @@ export function useBalancerUserPools(poolType: "WEIGHTED" | "COW_AMM") {
       protocolVersionIn,
     },
     context?.chainId,
-    "userbalanceUsd"
+    "userbalanceUsd",
   );
 
   const data = useSwrData.data?.filter((pool) =>
-    BigNumber.from(pool.userBalance.walletBalance).gt(BigNumber.from("10"))
+    BigNumber.from(pool.userBalance.walletBalance).gt(BigNumber.from("10")),
   );
 
   return { ...useSwrData, data };

@@ -1,4 +1,4 @@
-import { useIFrameContext, useBalancerPools } from "@bleu/cow-hooks-ui";
+import { useBalancerPools, useIFrameContext } from "@bleu/cow-hooks-ui";
 import type { Address } from "viem";
 
 export function useTokenBuyPools() {
@@ -12,6 +12,6 @@ export function useTokenBuyPools() {
         : [],
     },
     context?.chainId,
-    "totalLiquidity"
+    "totalLiquidity",
   );
 }
