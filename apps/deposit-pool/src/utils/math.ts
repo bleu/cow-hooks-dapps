@@ -30,7 +30,7 @@ export function calculateProportionalTokenAmounts({
     {
       address: pool.address,
       totalShares: formatUnits(
-        BigInt(pool.dynamicData.totalShares.toString()),
+        BigInt(pool.dynamicData?.totalShares.toString() || "0"),
         pool.decimals,
       ) as `${number}`,
       tokens: poolBalances.map((balance) => ({
