@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "next dev --port 3005",
     "start": "next start",
     "lint": "eslint '**/*.{ts,tsx}'",
     "lint:fix": "eslint '**/*.{ts,tsx}' --fix"
