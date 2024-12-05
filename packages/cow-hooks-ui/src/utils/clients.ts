@@ -3,6 +3,10 @@ import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { http, createPublicClient } from "viem";
 import { arbitrum, gnosis, mainnet, sepolia } from "viem/chains";
 
+/**
+ * #CHAIN-INTEGRATION
+ * This needs to be changed if you want to support a new chain
+ */
 export const publicClientMapping = {
   [SupportedChainId.MAINNET]: createPublicClient({
     chain: mainnet,

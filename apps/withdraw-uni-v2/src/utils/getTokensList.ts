@@ -1,6 +1,10 @@
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { TokenData } from "#/types";
 
+/**
+ * #CHAIN-INTEGRATION
+ * This needs to be changed if you want to support a new chain
+ */
 const tokenListUrlMap = {
   [SupportedChainId.MAINNET]: [
     "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/CowSwap.json",

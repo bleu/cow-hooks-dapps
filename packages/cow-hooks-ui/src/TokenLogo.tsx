@@ -37,6 +37,10 @@ export const cowTokenListLogoUrl = (
   )?.logoURI;
 };
 
+/**
+ * #CHAIN-INTEGRATION
+ * This needs to be changed if you want to support a new chain
+ */
 const chainIdToName: Record<SupportedChainId, string> = {
   [SupportedChainId.MAINNET]: "ethereum",
   [SupportedChainId.GNOSIS_CHAIN]: "xdai",

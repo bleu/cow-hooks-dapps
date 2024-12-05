@@ -10,6 +10,10 @@ import { SupportedChainId } from "@cowprotocol/cow-sdk";
  */
 export type UID = string;
 
+/**
+ * #CHAIN-INTEGRATION
+ * This needs to be changed if you want to support a new chain
+ */
 function _getExplorerUrlByEnvironment(): Record<SupportedChainId, string> {
   const baseUrl =
     process.env.NEXT_PUBLIC_COW_EXPLORER_URL_PROD || "https://explorer.cow.fi";

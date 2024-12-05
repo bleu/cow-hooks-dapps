@@ -18,6 +18,10 @@ export interface BaseChainInfo {
 
 export type ChainInfoMap = Record<SupportedChainId, BaseChainInfo>;
 
+/**
+ * #CHAIN-INTEGRATION
+ * This needs to be changed if you want to support a new chain
+ */
 export const CHAIN_INFO: ChainInfoMap = {
   [SupportedChainId.MAINNET]: {
     docs: "https://docs.cow.fi",

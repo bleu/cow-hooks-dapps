@@ -1,6 +1,9 @@
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { arbitrum, gnosis, mainnet } from "viem/chains";
-
+/**
+ * #CHAIN-INTEGRATION
+ * This needs to be changed if you want to support a new chain
+ */
 export const RPC_URL_MAPPING =
   process.env.NODE_ENV === "development"
     ? {

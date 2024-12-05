@@ -1,6 +1,10 @@
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { isChainIdSupported } from "./uniswapSupportedChains";
 
+/**
+ * #CHAIN-INTEGRATION
+ * This needs to be changed if you want to support a new chain
+ */
 const coingeckoPlatfromMap = {
   [SupportedChainId.MAINNET]: "ethereum",
   [SupportedChainId.ARBITRUM_ONE]: "arbitrum-one",

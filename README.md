@@ -118,6 +118,56 @@ For more detailed information about each hook and how to use them, please refer 
 - [CoW Swap Documentation](https://docs.cow.fi)
 - [Hooks Guide](https://docs.cow.fi/cow-protocol/reference/core/intents/hooks#creating-orders-with-hooks)
 
+## Chain Integration Guide
+
+This guide outlines the steps required to add support for a new chain in our repository in the case where the CoWSwap wants to deploy into a new chain.
+
+### 1. Protocol Deployment Verification
+
+First, verify that all required protocols are deployed on the target chain:
+
+- [ ] LlamaPay
+- [ ] Balancer
+- [ ] CoW AMM
+- [ ] Uniswap V2
+
+You can verify deployments by checking each protocol's documentation or blockchain explorer.
+
+### 2. Update Configuration Files
+
+Search for all files marked with the `#CHAIN-INTEGRATION` tag and update them accordingly. This typically includes:
+
+- Network configuration
+- Token lists
+- Protocol addresses
+
+Don't forget to update all relevant `manifest.json` files across the applications.
+
+### 3. Testing Process
+
+Conduct manual testing using the CoWSwap interface:
+
+1. Compare with existing chain implementation (e.g., if adding Polygon, compare with Gnosis Chain)
+2. Test each application individually:
+   - LlamaPay: Test stream creation and withdrawal
+   - Balancer: Verify pool interactions
+   - CoW AMM: Test liquidity provision and trading
+   - Uniswap V2: Verify swap functionality
+
+Document any chain-specific behaviors or issues encountered.
+
+### 4. CoWSwap Integration
+
+Once testing is complete and everything works as expected:
+
+1. Open a Pull Request to the CoWSwap repository
+2. Update the hook dapps registry at:
+   ```
+   https://github.com/cowprotocol/cowswap/blob/4b9331cbfab92fc113043c4e204e280b55d09f62/libs/hook-dapp-lib/src/hookDappsRegistry.json
+   ```
+3. Include test results and any chain-specific considerations in the PR description
+
+
 ## 🆘 Support
 
 If you need help or have questions:
