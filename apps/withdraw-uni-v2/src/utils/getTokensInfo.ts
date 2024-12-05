@@ -39,12 +39,11 @@ export async function getTokensInfo(
   }
 
   // Fetch USD prices
-  const prices = await getTokensPrices(Object.keys(tokens), chainId);
-  const tokensWithPrices: TokenWithPrice[] = Object.values(tokens).map(
-    (token) => {
-      return { ...token, priceUsd: prices[token.address] };
-    },
-  );
+  const tokenList = Object.values(tokens);
+  const prices = await getTokensPrices(tokenList, chainId);
+  const tokensWithPrices: TokenWithPrice[] = tokenList.map((token, i) => {
+    return { ...token, priceUsd: prices[i] };
+  });
 
   return tokensWithPrices;
 }

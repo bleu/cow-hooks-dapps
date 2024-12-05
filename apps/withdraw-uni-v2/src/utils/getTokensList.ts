@@ -1,5 +1,6 @@
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { TokenData } from "#/types";
+import { combineTokenLists } from "./combineTokenLists";
 
 /**
  * #CHAIN-INTEGRATION
@@ -23,19 +24,6 @@ const tokenListUrlMap = {
   ],
 };
 
-const filterUniqueAddresses = (tokens: TokenData[]) => {
-  const seen = new Set();
-
-  return tokens.filter((token) => {
-    const lowercaseAddress = token.address.toLowerCase();
-    if (seen.has(lowercaseAddress)) {
-      return false;
-    }
-    seen.add(lowercaseAddress);
-    return true;
-  });
-};
-
 export async function getTokensList(
   chainId: SupportedChainId,
 ): Promise<TokenData[]> {
@@ -54,9 +42,9 @@ export async function getTokensList(
       response.map((res) => res.json()),
     )) as { tokens: TokenData[] }[];
 
-    const allTokens = allJsonFiles.flatMap(({ tokens }) => tokens);
+    const allTokens = allJsonFiles.map(({ tokens }) => tokens);
 
-    return filterUniqueAddresses(allTokens);
+    return combineTokenLists(...allTokens);
   } catch (error) {
     console.error("Error fetching token list:", error);
     throw error;

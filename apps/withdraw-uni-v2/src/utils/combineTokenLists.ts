@@ -11,16 +11,19 @@ function isTokenInList(token: TokenId, list: TokenId[]) {
   );
 }
 
-export function combineTokenLists<T extends TokenId>(
-  oldList: T[],
-  newList: T[],
-): T[] {
-  // Avoid storing the same token many times
-  const oldListFiltered = oldList.filter(
-    (token) => !isTokenInList(token, newList),
-  );
+export function combineTokenLists<T extends TokenId>(...lists: T[][]): T[] {
+  if (lists.length === 0) return [];
+  if (lists.length === 1) return lists[0];
 
-  const resultList = [...oldListFiltered, ...newList];
+  // Start with the last list and work backwards
+  return lists.reduceRight((accumulated: T[], current: T[]) => {
+    // Filter out tokens from the current list that already exist in accumulated
+    const uniqueTokens = current.filter(
+      (token) => !isTokenInList(token, accumulated),
+    );
 
-  return resultList;
+    // biome-ignore lint:
+    uniqueTokens.forEach((token) => accumulated.unshift(token));
+    return accumulated;
+  });
 }

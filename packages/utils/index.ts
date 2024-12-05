@@ -6,6 +6,7 @@ export * from "./balancerApi";
 export * from "./math";
 export * from "./schema";
 export * from "./decode";
+export * from "./cowApi";
 
 export function truncateAddress(address?: string | null) {
   if (!address) return address;

@@ -104,7 +104,7 @@ export function PoolsDropdownMenu({
       );
     return (
       <>
-        <p>No results found.</p>
+        <p>No results found and invalid address format to import pool.</p>
         <p>Try placing your LP token address on the search bar.</p>
       </>
     );
@@ -145,7 +145,8 @@ export function PoolsDropdownMenu({
               <CommandInput
                 className="bg-muted rounded-xl placeholder:text-muted-foreground/50 text-md px-2 py-2 mb-5"
                 placeholder="Search name or paste address"
-                onValueChange={(e) => setTypedAddress(e)}
+                onValueChange={(e) => setTypedAddress(e.trim())}
+                value={typedAddress}
               />
               <div className="w-full h-[1px] bg-muted my-1" />
               <CommandList className="overflow-y-auto">
