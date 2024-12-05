@@ -1,11 +1,12 @@
 import type { IPool } from "@bleu/cow-hooks-ui";
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import useSWR from "swr";
 import type { Address, PublicClient } from "viem";
 import { getLpTokensList } from "#/utils/getLpTokensList";
 import { getTokensInfo } from "#/utils/getTokensInfo";
 import { getTokensList } from "#/utils/getTokensList";
 import { readPairsData } from "#/utils/readPairsData";
+import { isChainIdSupported } from "#/utils/uniswapSupportedChains";
 
 async function getUserPools(
   ownerAddress: string,
@@ -134,11 +135,10 @@ export function usePools(
         balancesDiff === undefined
       )
         return [];
-      if (
-        chainId !== SupportedChainId.MAINNET &&
-        chainId !== SupportedChainId.ARBITRUM_ONE
-      )
-        throw new Error("Unsupported chain");
+
+      if (!isChainIdSupported(chainId)) {
+        throw new Error(`ChainId ${chainId} is not supported`);
+      }
 
       //@ts-ignore
       const userBalancesDiff = balancesDiff[ownerAddress.toLowerCase()] ?? {};

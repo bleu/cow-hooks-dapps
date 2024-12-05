@@ -1,4 +1,4 @@
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { RawTokenData } from "#/types";
 import { combineTokenLists } from "./combineTokenLists";
 
@@ -34,14 +34,6 @@ export const storeExtraTokens = (
     return;
   }
 
-  if (
-    chainId !== SupportedChainId.MAINNET &&
-    chainId !== SupportedChainId.ARBITRUM_ONE
-  ) {
-    console.error(`[storePermitCacheAtom] Unsupported chain: ${chainId}`);
-    return;
-  }
-
   const cachedTokens = getExtraTokens(chainId, account);
 
   const newCache = combineTokenLists(cachedTokens, newTokens);
@@ -59,14 +51,6 @@ export const getExtraTokens = (chainId: SupportedChainId, account: string) => {
 
   if (!account) {
     console.error("[storePermitCacheAtom] Missing required account");
-    return [];
-  }
-
-  if (
-    chainId !== SupportedChainId.MAINNET &&
-    chainId !== SupportedChainId.ARBITRUM_ONE
-  ) {
-    console.error(`[storePermitCacheAtom] Unsupported chain: ${chainId}`);
     return [];
   }
 

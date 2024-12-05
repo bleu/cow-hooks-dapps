@@ -11,18 +11,13 @@ import {
   type WithdrawSchemaType,
   decodeExitPoolHookCalldata,
 } from "@bleu/utils";
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { useCallback, useEffect, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
 import { useFetchNewPoolCallback } from "#/hooks/useFetchNewPoolCallback";
 import { useSelectedPool } from "#/hooks/useSelectedPool";
 import { useUserPools } from "#/hooks/useUserPools";
-
-const ALL_SUPPORTED_CHAIN_IDS = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.ARBITRUM_ONE,
-];
+import { isChainIdSupported } from "#/utils/uniswapSupportedChains";
 
 export default function Page() {
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
@@ -68,7 +63,7 @@ export default function Page() {
     return <span className="mt-10 text-center">Connect your wallet first</span>;
   }
 
-  if (!ALL_SUPPORTED_CHAIN_IDS.includes(context.chainId)) {
+  if (!isChainIdSupported(context.chainId)) {
     return <span className="mt-10 text-center">Unsupported chain</span>;
   }
 
