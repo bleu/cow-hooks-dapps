@@ -1,6 +1,6 @@
 import type { IPool } from "@bleu/cow-hooks-ui";
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
-import type { Address, PublicClient } from "viem";
+import { type Address, type PublicClient, formatUnits } from "viem";
 import { getTokensInfo } from "#/utils/getTokensInfo";
 import { readPairData } from "#/utils/readPairsData";
 import { storeExtraTokens } from "#/utils/storage";
@@ -11,12 +11,14 @@ async function fetchNewPool({
   poolAddress,
   client,
   balancesDiff,
+  saveOnStore,
 }: {
   chainId: number;
   account: string;
   poolAddress: Address;
   client: PublicClient;
   balancesDiff: Record<string, string>;
+  saveOnStore: boolean;
 }): Promise<IPool> {
   // Get lists of tokens
   const lpToken = await readPairData(
@@ -32,13 +34,11 @@ async function fetchNewPool({
   const userBalance0 = lpToken.userBalance
     .mul(lpToken.reserve0)
     .div(lpToken.totalSupply)
-    .mul(99)
-    .div(100); // 1% slippage
+    .toBigInt();
   const userBalance1 = lpToken.userBalance
     .mul(lpToken.reserve1)
     .div(lpToken.totalSupply)
-    .mul(99)
-    .div(100); // 1% slippage;
+    .toBigInt();
 
   const token0 = tokens.find((token) => token.address === lpToken.tokens[0]);
   const token1 = tokens.find((token) => token.address === lpToken.tokens[1]);
@@ -48,30 +48,33 @@ async function fetchNewPool({
       "Unexpected error in fetchNewPool: some of tokens are undefined",
     );
 
-  try {
-    storeExtraTokens(
-      [
-        {
-          chainId,
-          address: poolAddress,
-          name: `Uniswap V2 ${token0.symbol}/${token1.symbol}`,
-          symbol: lpToken.symbol,
-          decimals: 18, // UniV2 are always 18 decimals
-          extensions: { tokens: lpToken.tokens.join(",") },
-        },
-      ],
-      chainId,
-      account,
-    );
-  } catch (e) {
-    console.error("Error caching new LP token:", e);
+  if (saveOnStore) {
+    try {
+      storeExtraTokens(
+        [
+          {
+            chainId,
+            address: poolAddress,
+            name: `Uniswap V2 ${token0.symbol}/${token1.symbol}`,
+            symbol: lpToken.symbol,
+            decimals: 18, // UniV2 are always 18 decimals
+            extensions: { tokens: lpToken.tokens.join(",") },
+          },
+        ],
+        chainId,
+        account,
+      );
+    } catch (e) {
+      console.error("Error caching new LP token:", e);
+    }
   }
 
-  const userBalanceUsd0 =
-    (token0.priceUsd * userBalance0.toNumber()) / 10 ** token0.decimals;
+  const userBalance0Number = Number(formatUnits(userBalance0, token0.decimals));
+  const userBalance1Number = Number(formatUnits(userBalance1, token1.decimals));
 
-  const userBalanceUsd1 =
-    (token1.priceUsd * userBalance1.toNumber()) / 10 ** token1.decimals;
+  const userBalanceUsd0 = token0.priceUsd * userBalance0Number;
+
+  const userBalanceUsd1 = token1.priceUsd * userBalance1Number;
 
   return {
     id: lpToken.address as Address,
@@ -109,7 +112,7 @@ async function fetchNewPool({
   };
 }
 
-export function useFetchNewPoolCallback() {
+export function useFetchNewPoolCallback(saveOnStore = true) {
   const { context, publicClient } = useIFrameContext();
   //@ts-ignore
   const { account, chainId, balancesDiff } = context ?? {
@@ -130,6 +133,7 @@ export function useFetchNewPoolCallback() {
       poolAddress,
       client: publicClient,
       balancesDiff: userBalancesDiff as Record<string, string>,
+      saveOnStore,
     });
   };
 }

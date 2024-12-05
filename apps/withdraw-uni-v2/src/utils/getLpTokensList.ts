@@ -1,5 +1,6 @@
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { RawTokenData } from "#/types";
+import { combineTokenLists } from "./combineTokenLists";
 import { getExtraTokens } from "./storage";
 
 interface TokenData extends Omit<RawTokenData, "extensions"> {
@@ -23,9 +24,11 @@ export async function getLpTokensList(
 
     const cachedLpTokens = getExtraTokens(chainId, account);
 
+    const allTokens = combineTokenLists(data.tokens, cachedLpTokens);
+
     // Transform the tokens array
     const allLpTokens: TokenData[] = {
-      tokens: [...data.tokens, ...cachedLpTokens], // TODO: Remove this test token after review
+      tokens: allTokens,
     }.tokens.map((token) => ({
       chainId: token.chainId,
       address: token.address,

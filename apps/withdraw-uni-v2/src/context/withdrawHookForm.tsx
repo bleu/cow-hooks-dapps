@@ -30,7 +30,7 @@ export function WithdrawFormContextProvider({
 
   const poolId = useWatch({ control, name: "poolId" });
 
-  const { data: selectedPool } = useSelectedPool(poolId);
+  const selectedPool = useSelectedPool(poolId);
 
   const router = useRouter();
 

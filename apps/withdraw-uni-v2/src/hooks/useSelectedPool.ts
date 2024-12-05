@@ -1,21 +1,10 @@
-import { useCallback } from "react";
-import useSWR from "swr";
-import { isAddress } from "viem";
-import { useFetchNewPoolCallback } from "./useFetchNewPoolCallback";
+import { useMemo } from "react";
+import { useUserPools } from "./useUserPools";
 
 export function useSelectedPool(poolId: string) {
-  const fetchNewPoolCallback = useFetchNewPoolCallback();
-
-  const getSelectedPoolCallback = useCallback(
-    async (_poolId: string) => {
-      if (!fetchNewPoolCallback) return;
-      if (!isAddress(_poolId)) return;
-
-      const fetchedNewPool = await fetchNewPoolCallback(_poolId);
-      return fetchedNewPool;
-    },
-    [fetchNewPoolCallback],
-  );
-
-  return useSWR(poolId, getSelectedPoolCallback);
+  const { data: pools } = useUserPools();
+  return useMemo(() => {
+    if (!pools) return;
+    return pools.find((pool) => pool.id.toLowerCase() === poolId.toLowerCase());
+  }, [pools, poolId]);
 }
