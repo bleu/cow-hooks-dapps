@@ -95,18 +95,12 @@ export function PoolsDropdownMenu({
     [filteredPools, displayCount],
   );
 
-  const {
-    data: newPool,
-    isLoading: isLoadingNewPool,
-    error: errorNewPool,
-  } = useSWR<IPool | undefined>(
-    isAddress(typedAddress) ? typedAddress : null,
-    fetchNewPoolCallback,
-    {
-      revalidateOnFocus: false,
-      onSuccess: onFetchNewPoolSuccess,
-    },
-  );
+  const { isLoading: isLoadingNewPool, error: errorNewPool } = useSWR<
+    IPool | undefined
+  >(isAddress(typedAddress) ? typedAddress : null, fetchNewPoolCallback, {
+    revalidateOnFocus: false,
+    onSuccess: onFetchNewPoolSuccess,
+  });
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const element = e.currentTarget;
@@ -143,12 +137,6 @@ export function PoolsDropdownMenu({
     if (errorNewPool)
       return <span className="text-destructive">Error loading new pool.</span>;
 
-    if (newPool?.userBalance.walletBalance.toString() === "0")
-      return (
-        <span className="text-destructive">
-          You don't have any LP tokens on this pool
-        </span>
-      );
     return (
       <>
         <p>No results found.</p>
