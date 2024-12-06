@@ -31,7 +31,7 @@ export function PoolForm({ selectedPool }: { selectedPool?: IPool }) {
       <div className="size-full flex flex-col gap-2">
         <WithdrawPctSlider />
         <PoolBalancesPreview poolBalances={poolBalances} />
-        <SubmitButton poolId={selectedPool?.id} />
+        <SubmitButton selectedPool={selectedPool} />
       </div>
     </Suspense>
   );

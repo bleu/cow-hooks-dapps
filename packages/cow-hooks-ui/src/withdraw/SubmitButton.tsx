@@ -1,9 +1,10 @@
 import { Button } from "@bleu.builders/ui";
 import { useMemo } from "react";
 import { useFormContext, useFormState, useWatch } from "react-hook-form";
+import type { IPool } from "#/types";
 import { useIFrameContext } from "../context/iframe";
 
-export function SubmitButton({ poolId }: { poolId?: string }) {
+export function SubmitButton({ selectedPool }: { selectedPool?: IPool }) {
   const { control } = useFormContext();
   const { context } = useIFrameContext();
 
@@ -11,15 +12,17 @@ export function SubmitButton({ poolId }: { poolId?: string }) {
 
   const withdrawPct = useWatch({ control, name: "withdrawPct" });
   const buttonProps = useMemo(() => {
+    if (!Number(selectedPool?.userBalance.walletBalance.toString()))
+      return { disabled: true, message: "No tokens to withdraw" };
     if (!withdrawPct || Number(withdrawPct) === 0)
       return { disabled: true, message: "Define percentage" };
     return {
       disabled: false,
       message: context?.hookToEdit ? "Update pre-hook" : "Add pre-hook",
     };
-  }, [withdrawPct, context?.hookToEdit]);
+  }, [withdrawPct, context?.hookToEdit, selectedPool]);
 
-  if (!poolId) return;
+  if (!selectedPool) return;
 
   return (
     <div className="flex w-full">

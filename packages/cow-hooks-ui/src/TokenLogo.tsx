@@ -105,7 +105,7 @@ export const TokenLogo = ({
           objectFit="cover"
           alt={alt || ""}
           style={{ visibility }}
-          src={imagesSrc[index] as string}
+          src={imagesSrc[index] || (FALLBACK_SRC as string)}
           onError={onError}
           onLoadingComplete={() => {
             setReveal(true);

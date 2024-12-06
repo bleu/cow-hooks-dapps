@@ -2,7 +2,6 @@
 
 import {
   type IPool,
-  PoolItemInfo,
   PoolsDropdownMenu,
   Spinner,
   useIFrameContext,
@@ -14,6 +13,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
+import { PoolItemInfo } from "#/components/PoolItemInfo";
 import { useFetchNewPoolCallback } from "#/hooks/useFetchNewPoolCallback";
 import { useSelectedPool } from "#/hooks/useSelectedPool";
 import { useUserPools } from "#/hooks/useUserPools";

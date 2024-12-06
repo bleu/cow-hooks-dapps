@@ -1,5 +1,4 @@
 import {
-  type IBalance,
   type IPool,
   PoolBalancesPreview,
   Spinner,
@@ -7,30 +6,14 @@ import {
   WithdrawPctSlider,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
-import { Token } from "@uniswap/sdk-core";
-import type { BigNumberish } from "ethers";
 import { Suspense } from "react";
+import { usePoolBalances } from "#/hooks/usePoolBalances";
 
 export function PoolForm({ selectedPool }: { selectedPool?: IPool }) {
   const { context } = useIFrameContext();
-  const poolBalances: IBalance[] | undefined =
-    selectedPool && context
-      ? selectedPool?.allTokens.map((token) => {
-          return {
-            token: new Token(
-              context.chainId,
-              token.address,
-              token.decimals,
-              token.symbol,
-            ),
-            balance: token.userBalance as BigNumberish,
-            fiatAmount: token.userBalanceUsd as number,
-            weight: token.weight as number,
-          };
-        })
-      : undefined;
+  const { data: poolBalances, isLoading } = usePoolBalances(selectedPool);
 
-  if (!poolBalances?.length && selectedPool) {
+  if (isLoading && selectedPool) {
     return (
       <div className="flex justify-center w-[50px] mt-5">
         <Spinner size="xl" />
@@ -46,7 +29,7 @@ export function PoolForm({ selectedPool }: { selectedPool?: IPool }) {
       <div className="size-full flex flex-col gap-2">
         <WithdrawPctSlider />
         <PoolBalancesPreview poolBalances={poolBalances} />
-        <SubmitButton poolId={selectedPool?.id} />
+        <SubmitButton selectedPool={selectedPool} />
       </div>
     </Suspense>
   );

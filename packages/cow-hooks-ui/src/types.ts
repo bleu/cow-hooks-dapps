@@ -41,9 +41,7 @@ export interface IToken {
   decimals: number;
   isNested?: boolean;
   weight: number;
-  userBalance?: BigNumberish;
-  userBalanceUsd?: number;
-  reserve?: BigNumber;
+  reserve?: BigNumberish;
 }
 
 export interface IPool {
@@ -68,7 +66,7 @@ export interface IPool {
 
   userBalance: {
     walletBalance: BigNumberish;
-    walletBalanceUsd: number;
+    walletBalanceUsd?: number;
     stakedBalances?: {
       balance: BigNumberish;
       stakingId: string;
@@ -78,7 +76,7 @@ export interface IPool {
 
 export interface IBalance {
   token: Token;
-  balance: BigNumberish;
+  balance: BigNumber;
   fiatAmount: number;
   weight: number;
 }

@@ -1,12 +1,7 @@
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { PublicClient } from "viem";
 import type { TokenData } from "#/types";
-import { getTokensPrices } from "./getTokensPrices";
 import { readTokensData } from "./readTokensData";
-
-interface TokenWithPrice extends TokenData {
-  priceUsd: number;
-}
 
 export async function getTokensInfo(
   addresses: string[],
@@ -38,12 +33,5 @@ export async function getTokensInfo(
     tokens[tokenData.address] = tokenData;
   }
 
-  // Fetch USD prices
-  const tokenList = Object.values(tokens);
-  const prices = await getTokensPrices(tokenList, chainId);
-  const tokensWithPrices: TokenWithPrice[] = tokenList.map((token, i) => {
-    return { ...token, priceUsd: prices[i] };
-  });
-
-  return tokensWithPrices;
+  return Object.values(tokens);
 }

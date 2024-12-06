@@ -1,7 +1,8 @@
 import type { IPool } from "@bleu/cow-hooks-ui";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
+import { BigNumber } from "ethers";
 import useSWR from "swr";
-import { type Address, type PublicClient, formatUnits } from "viem";
+import type { Address, PublicClient } from "viem";
 import { getLpTokensList } from "#/utils/getLpTokensList";
 import { getTokensInfo } from "#/utils/getTokensInfo";
 import { getTokensList } from "#/utils/getTokensList";
@@ -43,71 +44,58 @@ async function getUserPools(
     return { ...lpToken, ...lpTokensInfo[idx] };
   });
 
-  const allPools: (IPool | undefined)[] = lpTokensWithInfo.map((lpToken) => {
-    const userBalance0 = lpToken.userBalance
-      .mul(lpToken.reserve0)
-      .div(lpToken.totalSupply)
-      .toBigInt();
-    const userBalance1 = lpToken.userBalance
-      .mul(lpToken.reserve1)
-      .div(lpToken.totalSupply)
-      .toBigInt();
+  const allPools: (IPool | undefined)[] = lpTokensWithInfo.map(
+    (lpToken, _index) => {
+      const token0 = tokens.find(
+        (token) => token.address === lpToken.tokens[0],
+      );
+      const token1 = tokens.find(
+        (token) => token.address === lpToken.tokens[1],
+      );
 
-    const token0 = tokens.find((token) => token.address === lpToken.tokens[0]);
-    const token1 = tokens.find((token) => token.address === lpToken.tokens[1]);
+      if (!token0 || !token1) return;
 
-    if (!token0 || !token1) return;
-
-    const userBalance0Number = Number(
-      formatUnits(userBalance0, token0.decimals),
-    );
-    const userBalance1Number = Number(
-      formatUnits(userBalance1, token1.decimals),
-    );
-
-    const userBalanceUsd0 = token0.priceUsd * userBalance0Number;
-
-    const userBalanceUsd1 = token1.priceUsd * userBalance1Number;
-
-    return {
-      id: lpToken.address as Address,
-      chain: String(chainId),
-      decimals: 18,
-      symbol: lpToken.symbol,
-      address: lpToken.address as Address,
-      type: "Uniswap v2",
-      protocolVersion: 2 as const,
-      totalSupply: lpToken.totalSupply,
-      allTokens: [
-        {
-          address: token0.address as Address,
-          symbol: token0.symbol,
-          decimals: token0.decimals,
-          userBalance: userBalance0,
-          userBalanceUsd: userBalanceUsd0,
-          reserve: lpToken.reserve0,
-          weight: 0.5,
+      return {
+        id: lpToken.address as Address,
+        chain: String(chainId),
+        decimals: 18,
+        symbol: lpToken.symbol,
+        address: lpToken.address as Address,
+        type: "Uniswap v2",
+        protocolVersion: 2 as const,
+        totalSupply: lpToken.totalSupply,
+        allTokens: [
+          {
+            address: token0.address as Address,
+            symbol: token0.symbol,
+            decimals: token0.decimals,
+            reserve: lpToken.reserve0.toString(),
+            weight: 0.5,
+          },
+          {
+            address: token1.address as Address,
+            symbol: token1.symbol,
+            decimals: token1.decimals,
+            reserve: lpToken.reserve1.toString(),
+            weight: 0.5,
+          },
+        ],
+        userBalance: {
+          walletBalance: lpToken.userBalance,
         },
-        {
-          address: token1.address as Address,
-          symbol: token1.symbol,
-          decimals: token1.decimals,
-          userBalance: userBalance1,
-          userBalanceUsd: userBalanceUsd1,
-          reserve: lpToken.reserve1,
-          weight: 0.5,
-        },
-      ],
-      userBalance: {
-        walletBalance: lpToken.userBalance,
-        walletBalanceUsd: userBalanceUsd0 + userBalanceUsd1,
-      },
-    };
-  });
+      };
+    },
+  );
 
   return allPools
     .filter((pool) => pool !== undefined)
-    .filter((pool) => pool.userBalance.walletBalance.toString() !== "0");
+    .sort((a, b) => {
+      const balanceA = BigNumber.from(a.userBalance.walletBalance);
+      const balanceB = BigNumber.from(b.userBalance.walletBalance);
+
+      if (balanceA.eq(balanceB)) return 0;
+      return balanceA.gt(balanceB) ? -1 : 1;
+    });
 }
 
 export function usePools(
