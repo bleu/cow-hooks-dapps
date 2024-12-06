@@ -95,12 +95,23 @@ export function PoolsDropdownMenu({
     [filteredPools, displayCount],
   );
 
+  const allPoolAddressesLowerCase = useMemo(
+    () => pools.map((pool) => pool.address?.toLowerCase()),
+    [pools],
+  );
+
   const { isLoading: isLoadingNewPool, error: errorNewPool } = useSWR<
     IPool | undefined
-  >(isAddress(typedAddress) ? typedAddress : null, fetchNewPoolCallback, {
-    revalidateOnFocus: false,
-    onSuccess: onFetchNewPoolSuccess,
-  });
+  >(
+    isAddress(typedAddress) && !allPoolAddressesLowerCase.includes(typedAddress)
+      ? typedAddress
+      : null,
+    fetchNewPoolCallback,
+    {
+      revalidateOnFocus: false,
+      onSuccess: onFetchNewPoolSuccess,
+    },
+  );
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const element = e.currentTarget;
