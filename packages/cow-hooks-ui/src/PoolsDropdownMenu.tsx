@@ -35,7 +35,8 @@ interface PoolsDropdownMenuProps {
   selectedPool?: IPool;
   isCheckDetailsCentered?: boolean;
   tooltipText?: string;
-  fetchNewPoolCallback?: (poolAddress: Address) => Promise<IPool>;
+  fetchNewPoolCallback?: (poolAddress: Address) => Promise<IPool | undefined>;
+  onFetchNewPoolSuccess?: (pool: IPool | undefined) => void;
 }
 
 export function PoolsDropdownMenu({
@@ -45,9 +46,9 @@ export function PoolsDropdownMenu({
   selectedPool,
   isCheckDetailsCentered = true,
   tooltipText,
-  fetchNewPoolCallback,
+  fetchNewPoolCallback = (_poolAddress: Address) => Promise.resolve(undefined),
+  onFetchNewPoolSuccess = () => {},
 }: PoolsDropdownMenuProps) {
-  const [fetchedPool, setFetchedPool] = useState<IPool | undefined>();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [typedAddress, setTypedAddress] = useState("");
@@ -75,27 +76,11 @@ export function PoolsDropdownMenu({
     return `${baseUrl}/${chainName}/cow/${selectedPool?.id.toLowerCase()}`;
   }, [selectedPool]);
 
-  const swrConfig = {
-    revalidateOnFocus: false,
-    onSuccess: (data: IPool) => {
-      if (
-        !pools.map((pool) => pool.address).includes(data.address) &&
-        data.userBalance.walletBalance.toString() !== "0"
-      )
-        setFetchedPool(data);
-    },
-  };
-
-  const allPools = useMemo(
-    () => [...pools, fetchedPool].filter((pool): pool is IPool => !!pool),
-    [pools, fetchedPool],
-  );
-
   // Filter pools based on search
   const filteredPools = useMemo(() => {
-    if (!search) return allPools;
+    if (!search) return pools;
     const searchLower = search.toLowerCase();
-    return allPools.filter(
+    return pools.filter(
       (pool) =>
         pool.symbol?.toLowerCase().includes(searchLower) ||
         pool.address?.toLowerCase().includes(searchLower) ||
@@ -103,7 +88,7 @@ export function PoolsDropdownMenu({
           token.symbol?.toLowerCase().includes(searchLower),
         ),
     );
-  }, [allPools, search]);
+  }, [pools, search]);
 
   const displayedPools = useMemo(
     () => filteredPools.slice(0, displayCount),
@@ -114,13 +99,14 @@ export function PoolsDropdownMenu({
     data: newPool,
     isLoading: isLoadingNewPool,
     error: errorNewPool,
-  } = fetchNewPoolCallback
-    ? useSWR<IPool>(
-        isAddress(typedAddress) ? typedAddress : null,
-        fetchNewPoolCallback,
-        swrConfig,
-      )
-    : { data: undefined, isLoading: undefined, error: undefined };
+  } = useSWR<IPool | undefined>(
+    isAddress(typedAddress) ? typedAddress : null,
+    fetchNewPoolCallback,
+    {
+      revalidateOnFocus: false,
+      onSuccess: onFetchNewPoolSuccess,
+    },
+  );
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const element = e.currentTarget;
