@@ -1,8 +1,8 @@
 import { Button } from "@bleu.builders/ui";
 import { useMemo } from "react";
 import { useFormContext, useFormState, useWatch } from "react-hook-form";
-import type { IPool } from "#/types";
 import { useIFrameContext } from "../context/iframe";
+import type { IPool } from "../types";
 
 export function SubmitButton({ selectedPool }: { selectedPool?: IPool }) {
   const { control } = useFormContext();
