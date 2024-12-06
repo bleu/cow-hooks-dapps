@@ -1,6 +1,6 @@
 import type { IPool } from "@bleu/cow-hooks-ui";
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
-import { type Address, type PublicClient, formatUnits } from "viem";
+import type { Address, PublicClient } from "viem";
 import { getTokensInfo } from "#/utils/getTokensInfo";
 import { readPairData } from "#/utils/readPairsData";
 import { storeExtraTokens } from "#/utils/storage";
@@ -31,15 +31,6 @@ async function fetchNewPool({
   // Read possibly missing tokens on chain and add price Usd
   const tokens = await getTokensInfo(lpToken.tokens, [], chainId, client);
 
-  const userBalance0 = lpToken.userBalance
-    .mul(lpToken.reserve0)
-    .div(lpToken.totalSupply)
-    .toBigInt();
-  const userBalance1 = lpToken.userBalance
-    .mul(lpToken.reserve1)
-    .div(lpToken.totalSupply)
-    .toBigInt();
-
   const token0 = tokens.find((token) => token.address === lpToken.tokens[0]);
   const token1 = tokens.find((token) => token.address === lpToken.tokens[1]);
 
@@ -69,13 +60,6 @@ async function fetchNewPool({
     }
   }
 
-  const userBalance0Number = Number(formatUnits(userBalance0, token0.decimals));
-  const userBalance1Number = Number(formatUnits(userBalance1, token1.decimals));
-
-  const userBalanceUsd0 = token0.priceUsd * userBalance0Number;
-
-  const userBalanceUsd1 = token1.priceUsd * userBalance1Number;
-
   return {
     id: lpToken.address as Address,
     chain: String(chainId),
@@ -90,24 +74,19 @@ async function fetchNewPool({
         address: token0.address as Address,
         symbol: token0.symbol,
         decimals: token0.decimals,
-        userBalance: userBalance0,
-        userBalanceUsd: userBalanceUsd0,
-        reserve: lpToken.reserve0,
         weight: 0.5,
+        reserve: lpToken.reserve0.toString(),
       },
       {
         address: token1.address as Address,
         symbol: token1.symbol,
         decimals: token1.decimals,
-        userBalance: userBalance1,
-        userBalanceUsd: userBalanceUsd1,
-        reserve: lpToken.reserve1,
         weight: 0.5,
+        reserve: lpToken.reserve1.toString(),
       },
     ],
     userBalance: {
       walletBalance: lpToken.userBalance,
-      walletBalanceUsd: userBalanceUsd0 + userBalanceUsd1,
     },
   };
 }

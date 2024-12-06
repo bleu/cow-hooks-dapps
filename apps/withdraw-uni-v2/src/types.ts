@@ -1,6 +1,3 @@
-import type { BigNumberish } from "ethers";
-import type { Address } from "viem";
-
 export interface RawTokenData {
   chainId: number;
   address: string;
@@ -18,13 +15,4 @@ export interface TokenData {
   name: string;
   decimals: number;
   symbol: string;
-}
-
-export interface IToken {
-  address: Address;
-  symbol: string;
-  decimals: number;
-  weight: number;
-  userBalance: BigNumberish;
-  userBalanceUsd: number;
 }
