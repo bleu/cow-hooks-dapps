@@ -1,5 +1,5 @@
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { arbitrum, gnosis, mainnet } from "viem/chains";
+import { arbitrum, base, gnosis, mainnet } from "viem/chains";
 /**
  * #CHAIN-INTEGRATION
  * This needs to be changed if you want to support a new chain
@@ -12,6 +12,7 @@ export const RPC_URL_MAPPING =
         [SupportedChainId.ARBITRUM_ONE]: arbitrum.rpcUrls.default.http[0],
         [SupportedChainId.SEPOLIA]:
           "https://ethereum-sepolia-rpc.publicnode.com",
+        [SupportedChainId.BASE]: base.rpcUrls.default.http[0],
       }
     : {
         [SupportedChainId.MAINNET]:
