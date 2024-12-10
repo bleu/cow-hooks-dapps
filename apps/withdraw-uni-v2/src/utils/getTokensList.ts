@@ -12,15 +12,21 @@ const tokenListUrlMap = {
     "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/CoinGecko.json",
   ],
   [SupportedChainId.ARBITRUM_ONE]: [
+    "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/CowSwap.json",
     "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/ArbitrumOneUniswapTokensList.json",
     "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/ArbitrumOneCoingeckoTokensList.json",
   ],
   [SupportedChainId.GNOSIS_CHAIN]: [
+    "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/CowSwap.json",
     "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/GnosisCoingeckoTokensList.json",
     "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/GnosisUniswapTokensList.json",
   ],
   [SupportedChainId.SEPOLIA]: [
     "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/CowSwapSepolia.json",
+  ],
+  [SupportedChainId.BASE]: [
+    "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/CowSwap.json",
+    "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/CoinGecko.8453.json",
   ],
 };
 

@@ -20,7 +20,7 @@
     "conditions": {
       "position": "pre",
       "walletCompatibility": ["EOA"],
-      "supportedNetworks": [1, 42161, 11155111]
+      "supportedNetworks": [1, 42161, 11155111, 8453]
     }
   }
 }

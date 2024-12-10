@@ -24,4 +24,8 @@ export const publicClientMapping = {
     chain: sepolia,
     transport: http(RPC_URL_MAPPING[SupportedChainId.SEPOLIA]),
   }),
+  [SupportedChainId.BASE]: createPublicClient({
+    chain: mainnet,
+    transport: http(RPC_URL_MAPPING[SupportedChainId.BASE]),
+  }),
 };

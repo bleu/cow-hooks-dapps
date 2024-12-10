@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@bleu.builders/ui";
-import { BalancerChainName } from "@bleu/utils";
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
   ArrowLeftIcon,
@@ -37,6 +37,7 @@ interface PoolsDropdownMenuProps {
   tooltipText?: string;
   fetchNewPoolCallback?: (poolAddress: Address) => Promise<IPool | undefined>;
   onFetchNewPoolSuccess?: (pool: IPool | undefined) => void;
+  getPoolLink: (chainId: SupportedChainId, selectedPool: IPool) => string;
 }
 
 export function PoolsDropdownMenu({
@@ -48,7 +49,9 @@ export function PoolsDropdownMenu({
   tooltipText,
   fetchNewPoolCallback = (_poolAddress: Address) => Promise.resolve(undefined),
   onFetchNewPoolSuccess = () => {},
+  getPoolLink,
 }: PoolsDropdownMenuProps) {
+  const { context } = useIFrameContext();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [typedAddress, setTypedAddress] = useState("");
@@ -64,17 +67,9 @@ export function PoolsDropdownMenu({
   }, [open, search]);
 
   const poolLink = useMemo(() => {
-    if (!selectedPool) return;
-    const chainName =
-      selectedPool?.chain === BalancerChainName[1]
-        ? "ethereum"
-        : selectedPool?.chain.toLowerCase();
-    const baseUrl =
-      selectedPool?.chain === BalancerChainName[11155111]
-        ? "https://test.balancer.fi/pools"
-        : "https://balancer.fi/pools";
-    return `${baseUrl}/${chainName}/cow/${selectedPool?.id.toLowerCase()}`;
-  }, [selectedPool]);
+    if (!selectedPool || !context?.chainId) return;
+    return getPoolLink(context.chainId, selectedPool);
+  }, [selectedPool, context, getPoolLink]);
 
   // Filter pools based on search
   const filteredPools = useMemo(() => {
@@ -146,12 +141,16 @@ export function PoolsDropdownMenu({
         </div>
       );
     if (errorNewPool)
-      return <span className="text-destructive">Error loading new pool.</span>;
+      return (
+        <span className="text-destructive">
+          Error loading new pool, usually this means that the provided address
+          is not a pool.
+        </span>
+      );
 
     return (
       <>
         <p>No results found.</p>
-        <p>Try placing your LP token address on the search bar.</p>
       </>
     );
   };

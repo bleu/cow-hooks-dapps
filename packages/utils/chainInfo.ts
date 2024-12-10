@@ -68,6 +68,17 @@ export const CHAIN_INFO: ChainInfoMap = {
     urlAlias: "arb1",
     color: "#29B6AF",
   },
+  [SupportedChainId.BASE]: {
+    docs: "https://docs.cow.fi",
+    explorer: "https://basescan.org",
+    infoLink: COW_PROTOCOL_LINK,
+    label: "Base",
+    name: "base",
+    addressPrefix: "base",
+    explorerTitle: "BaseScan",
+    urlAlias: "base",
+    color: "#62688F",
+  },
 };
 
 export const CHAIN_INFO_ARRAY: BaseChainInfo[] = Object.values(CHAIN_INFO);

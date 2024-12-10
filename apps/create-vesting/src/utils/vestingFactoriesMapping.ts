@@ -13,4 +13,5 @@ export const vestingFactoriesMapping: Record<
   [SupportedChainId.GNOSIS_CHAIN]: "0x62E13BE78af77C86D38a027ae432F67d9EcD4c10",
   [SupportedChainId.ARBITRUM_ONE]: "0x62E13BE78af77C86D38a027ae432F67d9EcD4c10",
   [SupportedChainId.SEPOLIA]: undefined,
+  [SupportedChainId.BASE]: "0x62E13BE78af77C86D38a027ae432F67d9EcD4c10",
 };

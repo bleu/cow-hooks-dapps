@@ -4,6 +4,7 @@ import {
   type IPool,
   PoolsDropdownMenu,
   Spinner,
+  getBalancerCoWPoolLink,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { COW_NATIVE_TOKEN_ADDRESS } from "@bleu/utils";
@@ -157,6 +158,7 @@ export default function Page() {
         pools={allPools}
         selectedPool={selectedPool}
         isCheckDetailsCentered={false}
+        getPoolLink={getBalancerCoWPoolLink}
       />
       {selectedPool && (
         <div className="flex flex-col justify-center mt-2 w-full">

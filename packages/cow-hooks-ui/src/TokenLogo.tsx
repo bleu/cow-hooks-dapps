@@ -46,6 +46,7 @@ const chainIdToName: Record<SupportedChainId, string> = {
   [SupportedChainId.GNOSIS_CHAIN]: "xdai",
   [SupportedChainId.SEPOLIA]: "ethereum",
   [SupportedChainId.ARBITRUM_ONE]: "arbitrum",
+  [SupportedChainId.BASE]: "base",
 };
 
 export function trustTokenLogoUrl(
