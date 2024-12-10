@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  getUniswapV2PoolLink,
   type IPool,
   PoolsDropdownMenu,
   Spinner,
@@ -33,7 +34,7 @@ export default function Page() {
 
     try {
       const data = await decodeExitPoolHookCalldata(
-        context?.hookToEdit?.hook.callData as `0x${string}`,
+        context?.hookToEdit?.hook.callData as `0x${string}`
       );
       setValue("poolId", data.poolId);
       setValue("withdrawPct", data.withdrawPct);
@@ -91,6 +92,7 @@ export default function Page() {
         isCheckDetailsCentered
         tooltipText="Withdraw of staked liquidity or pool with low user balance are not supported"
         fetchNewPoolCallback={fetchNewPoolCallback}
+        getPoolLink={getUniswapV2PoolLink}
       />
       <PoolForm selectedPool={selectedPool} />
     </div>

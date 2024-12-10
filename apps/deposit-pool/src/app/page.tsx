@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  getBalancerCoWPoolLink,
   type IPool,
   PoolsDropdownMenu,
   Spinner,
@@ -29,7 +30,7 @@ export default function Page() {
     name: "referenceTokenAddress",
   });
   const sellTokenAmountAfterSwap = useTokenBalanceAfterSwap(
-    context?.orderParams?.sellTokenAddress as Address,
+    context?.orderParams?.sellTokenAddress as Address
   );
 
   const selectedPool = useSelectedPool();
@@ -57,7 +58,7 @@ export default function Page() {
       return;
     const data = await decodeCalldata(
       context?.hookToEdit.hook.callData as `0x${string}`,
-      publicClient,
+      publicClient
     );
     if (data) {
       reset(data, {
@@ -157,6 +158,7 @@ export default function Page() {
         pools={allPools}
         selectedPool={selectedPool}
         isCheckDetailsCentered={false}
+        getPoolLink={getBalancerCoWPoolLink}
       />
       {selectedPool && (
         <div className="flex flex-col justify-center mt-2 w-full">

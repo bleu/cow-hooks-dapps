@@ -25,6 +25,7 @@ import {
 } from "./ui/Command";
 import { Spinner } from "./ui/Spinner";
 import { InfoTooltip } from "./ui/TooltipBase";
+import { SupportedChainId } from "@cowprotocol/cow-sdk";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -37,6 +38,7 @@ interface PoolsDropdownMenuProps {
   tooltipText?: string;
   fetchNewPoolCallback?: (poolAddress: Address) => Promise<IPool | undefined>;
   onFetchNewPoolSuccess?: (pool: IPool | undefined) => void;
+  getPoolLink: (chainId: SupportedChainId, selectedPool: IPool) => string;
 }
 
 export function PoolsDropdownMenu({
@@ -48,7 +50,9 @@ export function PoolsDropdownMenu({
   tooltipText,
   fetchNewPoolCallback = (_poolAddress: Address) => Promise.resolve(undefined),
   onFetchNewPoolSuccess = () => {},
+  getPoolLink,
 }: PoolsDropdownMenuProps) {
+  const { context } = useIFrameContext();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [typedAddress, setTypedAddress] = useState("");
@@ -64,17 +68,9 @@ export function PoolsDropdownMenu({
   }, [open, search]);
 
   const poolLink = useMemo(() => {
-    if (!selectedPool) return;
-    const chainName =
-      selectedPool?.chain === BalancerChainName[1]
-        ? "ethereum"
-        : selectedPool?.chain.toLowerCase();
-    const baseUrl =
-      selectedPool?.chain === BalancerChainName[11155111]
-        ? "https://test.balancer.fi/pools"
-        : "https://balancer.fi/pools";
-    return `${baseUrl}/${chainName}/cow/${selectedPool?.id.toLowerCase()}`;
-  }, [selectedPool]);
+    if (!selectedPool || !context?.chainId) return;
+    return getPoolLink(context.chainId, selectedPool);
+  }, [selectedPool, context]);
 
   // Filter pools based on search
   const filteredPools = useMemo(() => {
