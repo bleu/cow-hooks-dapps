@@ -22,4 +22,6 @@ export const RPC_URL_MAPPING =
           "https://lb.drpc.org/ogrpc?network=arbitrum&dkey=AnOfyGnZ_0nWpS-OOwQzqAnACrGNjLcR77k8TgFkVp5j",
         [SupportedChainId.SEPOLIA]:
           "https://lb.drpc.org/ogrpc?network=sepolia&dkey=AnOfyGnZ_0nWpS-OOwQzqAnACrGNjLcR77k8TgFkVp5j",
+        [SupportedChainId.BASE]:
+          "https://lb.drpc.org/ogrpc?network=base&dkey=AnOfyGnZ_0nWpS-OOwQzqAnACrGNjLcR77k8TgFkVp5j",
       };

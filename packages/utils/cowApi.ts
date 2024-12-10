@@ -12,6 +12,7 @@ export const COW_API_URL_BY_CHAIN_ID = {
   [SupportedChainId.GNOSIS_CHAIN]: `${COW_API_BASE_URL}xdai`,
   [SupportedChainId.SEPOLIA]: `${COW_API_BASE_URL}sepolia`,
   [SupportedChainId.ARBITRUM_ONE]: `${COW_API_BASE_URL}arbitrum_one`,
+  [SupportedChainId.BASE]: `${COW_API_BASE_URL}base`,
 };
 
 export interface INativePrice {
@@ -20,7 +21,7 @@ export interface INativePrice {
 
 export async function getNativePrice(
   tokenAddress: Address,
-  chainId: SupportedChainId,
+  chainId: SupportedChainId
 ): Promise<number> {
   const url = COW_API_URL_BY_CHAIN_ID[chainId];
 
@@ -53,6 +54,10 @@ export const USDC: Record<
     address: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
     decimals: 6,
   },
+  [SupportedChainId.BASE]: {
+    address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    decimals: 6,
+  },
 };
 
 export async function getCowProtocolUsdPrice({
@@ -73,11 +78,11 @@ export async function getCowProtocolUsdPrice({
   if (usdNativePrice && tokenNativePrice) {
     const usdPrice = invertNativeToTokenPrice(
       usdNativePrice,
-      usdcToken.decimals,
+      usdcToken.decimals
     );
     const tokenPrice = invertNativeToTokenPrice(
       tokenNativePrice,
-      tokenDecimals,
+      tokenDecimals
     );
 
     if (!tokenPrice) throw new Error("Token price is 0");

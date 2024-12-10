@@ -8,6 +8,7 @@ export const ALL_SUPPORTED_CHAIN_IDS = [
   SupportedChainId.MAINNET,
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.SEPOLIA,
+  SupportedChainId.BASE,
 ];
 
 export const isChainIdSupported = (chainId: SupportedChainId) =>

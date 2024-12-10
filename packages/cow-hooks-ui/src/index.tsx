@@ -29,3 +29,4 @@ export * from "./utils/poolDataConverter";
 export * from "./RootLayout";
 export * from "./withdraw";
 export * from "./GlobalError";
+export * from "./utils/getPoolLink";
