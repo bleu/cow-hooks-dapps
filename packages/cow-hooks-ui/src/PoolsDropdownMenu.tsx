@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@bleu.builders/ui";
-import { BalancerChainName } from "@bleu/utils";
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
   ArrowLeftIcon,
@@ -25,7 +25,6 @@ import {
 } from "./ui/Command";
 import { Spinner } from "./ui/Spinner";
 import { InfoTooltip } from "./ui/TooltipBase";
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -70,7 +69,7 @@ export function PoolsDropdownMenu({
   const poolLink = useMemo(() => {
     if (!selectedPool || !context?.chainId) return;
     return getPoolLink(context.chainId, selectedPool);
-  }, [selectedPool, context]);
+  }, [selectedPool, context, getPoolLink]);
 
   // Filter pools based on search
   const filteredPools = useMemo(() => {
@@ -81,19 +80,19 @@ export function PoolsDropdownMenu({
         pool.symbol?.toLowerCase().includes(searchLower) ||
         pool.address?.toLowerCase().includes(searchLower) ||
         pool.allTokens.some((token) =>
-          token.symbol?.toLowerCase().includes(searchLower)
-        )
+          token.symbol?.toLowerCase().includes(searchLower),
+        ),
     );
   }, [pools, search]);
 
   const displayedPools = useMemo(
     () => filteredPools.slice(0, displayCount),
-    [filteredPools, displayCount]
+    [filteredPools, displayCount],
   );
 
   const allPoolAddressesLowerCase = useMemo(
     () => pools.map((pool) => pool.address?.toLowerCase()),
-    [pools]
+    [pools],
   );
 
   const { isLoading: isLoadingNewPool, error: errorNewPool } = useSWR<
@@ -106,7 +105,7 @@ export function PoolsDropdownMenu({
     {
       revalidateOnFocus: false,
       onSuccess: onFetchNewPoolSuccess,
-    }
+    },
   );
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -241,7 +240,7 @@ export function PoolsDropdownMenu({
           <a
             className={cn(
               "inline-flex justify-start transition-colors text-primary underline-offset-4 hover:underline p-0 m-0 text-xs h-fit w-full",
-              { "justify-center": isCheckDetailsCentered }
+              { "justify-center": isCheckDetailsCentered },
             )}
             href={poolLink}
             target="_blank"
@@ -276,7 +275,7 @@ export function PoolLogo({ pool }: PoolLogoProps) {
               context.chainId,
               token.address,
               token.decimals,
-              token.symbol
+              token.symbol,
             )
           }
           weight={token.weight}

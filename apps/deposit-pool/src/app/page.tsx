@@ -1,10 +1,10 @@
 "use client";
 
 import {
-  getBalancerCoWPoolLink,
   type IPool,
   PoolsDropdownMenu,
   Spinner,
+  getBalancerCoWPoolLink,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { COW_NATIVE_TOKEN_ADDRESS } from "@bleu/utils";
@@ -30,7 +30,7 @@ export default function Page() {
     name: "referenceTokenAddress",
   });
   const sellTokenAmountAfterSwap = useTokenBalanceAfterSwap(
-    context?.orderParams?.sellTokenAddress as Address
+    context?.orderParams?.sellTokenAddress as Address,
   );
 
   const selectedPool = useSelectedPool();
@@ -58,7 +58,7 @@ export default function Page() {
       return;
     const data = await decodeCalldata(
       context?.hookToEdit.hook.callData as `0x${string}`,
-      publicClient
+      publicClient,
     );
     if (data) {
       reset(data, {

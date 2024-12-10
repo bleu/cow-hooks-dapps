@@ -9,7 +9,7 @@ export function PoolItemInfo({ pool }: { pool: IPool }) {
         formatUnits(BigInt(pool.userBalance.walletBalance.toString()), 18),
         4,
         "decimal",
-        "standard"
+        "standard",
       )}
     </i>
   );

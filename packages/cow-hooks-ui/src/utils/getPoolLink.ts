@@ -1,10 +1,10 @@
-import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { IPool } from "..";
 import { BalancerChainName } from "@bleu/utils";
+import { SupportedChainId } from "@cowprotocol/cow-sdk";
+import type { IPool } from "..";
 
 export function getBalancerCoWPoolLink(
   chainId: SupportedChainId,
-  selectedPool: IPool
+  selectedPool: IPool,
 ) {
   const chainName = BalancerChainName[chainId];
   const baseUrl =
@@ -28,7 +28,7 @@ export const UniswapV2ChainName: Record<SupportedChainId, string> = {
 
 export function getUniswapV2PoolLink(
   chainId: SupportedChainId,
-  selectedPool: IPool
+  selectedPool: IPool,
 ) {
   if (chainId === SupportedChainId.GNOSIS_CHAIN) {
     throw new Error("Uniswap V2 is not supported on Gnosis Chain");
