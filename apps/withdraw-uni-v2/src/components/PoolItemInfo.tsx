@@ -7,7 +7,9 @@ export function PoolItemInfo({ pool }: { pool: IPool }) {
     <i className="flex text-right justify-end">
       {formatNumber(
         formatUnits(BigInt(pool.userBalance.walletBalance.toString()), 18),
-        2,
+        4,
+        "decimal",
+        "standard"
       )}
     </i>
   );
