@@ -3,6 +3,7 @@ import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import type { Address, PublicClient } from "viem";
 import { getTokensInfo } from "#/utils/getTokensInfo";
 import { readPairData } from "#/utils/readPairsData";
+import { readTokensData } from "#/utils/readTokensData";
 import { storeExtraTokens } from "#/utils/storage";
 
 async function fetchNewPool({
@@ -27,17 +28,15 @@ async function fetchNewPool({
     client,
     balancesDiff,
   );
-
   // Read possibly missing tokens on chain and add price Usd
   const tokens = await getTokensInfo(lpToken.tokens, [], chainId, client);
 
-  const token0 = tokens.find((token) => token.address === lpToken.tokens[0]);
-  const token1 = tokens.find((token) => token.address === lpToken.tokens[1]);
+  let token0 = tokens.find((token) => token.address === lpToken.tokens[0]);
+  let token1 = tokens.find((token) => token.address === lpToken.tokens[1]);
 
-  if (!token0 || !token1)
-    throw new Error(
-      "Unexpected error in fetchNewPool: some of tokens are undefined",
-    );
+  if (!token0 || !token1) {
+    [token0, token1] = await readTokensData(lpToken.tokens, client, chainId);
+  }
 
   if (saveOnStore) {
     try {

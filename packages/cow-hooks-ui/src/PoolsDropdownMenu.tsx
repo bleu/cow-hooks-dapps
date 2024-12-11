@@ -54,7 +54,6 @@ export function PoolsDropdownMenu({
   const { context } = useIFrameContext();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [typedAddress, setTypedAddress] = useState("");
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
@@ -98,8 +97,9 @@ export function PoolsDropdownMenu({
   const { isLoading: isLoadingNewPool, error: errorNewPool } = useSWR<
     IPool | undefined
   >(
-    isAddress(typedAddress) && !allPoolAddressesLowerCase.includes(typedAddress)
-      ? typedAddress
+    isAddress(search, { strict: false }) &&
+      !allPoolAddressesLowerCase.includes(search.toLowerCase())
+      ? search.toLowerCase()
       : null,
     fetchNewPoolCallback,
     {
@@ -125,7 +125,7 @@ export function PoolsDropdownMenu({
   };
 
   const handleInputChange = (value: string) => {
-    setTypedAddress(value.trim());
+    setSearch(value.trim());
     // If the value is empty (like when selecting all and deleting), reset the search
     if (!value) {
       setSearch("");
@@ -142,10 +142,10 @@ export function PoolsDropdownMenu({
       );
     if (errorNewPool)
       return (
-        <span className="text-destructive">
-          Error loading new pool, usually this means that the provided address
-          is not a pool.
-        </span>
+        <div className="mx-auto p-2 flex flex-col items-center justify-center gap-2 text-destructive bg-destructive/30 rounded-xl w-fit">
+          <span>Error loading new pool</span>
+          {errorNewPool.message}
+        </div>
       );
 
     return (
@@ -178,7 +178,6 @@ export function PoolsDropdownMenu({
             </div>
             <Command
               filter={(value: string, search: string) => {
-                setSearch(search);
                 if (!search) return 1;
                 const regex = new RegExp(search, "i");
                 return Number(regex.test(value));
@@ -189,7 +188,7 @@ export function PoolsDropdownMenu({
                 className="bg-muted rounded-xl placeholder:text-muted-foreground/50 text-md px-2 py-2 mb-5"
                 placeholder="Search name or paste address"
                 onValueChange={handleInputChange}
-                value={typedAddress}
+                value={search}
               />
               <div className="w-full h-[1px] bg-muted my-1" />
               <CommandList

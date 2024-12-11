@@ -1,6 +1,8 @@
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { BigNumber } from "ethers";
 import type { Address, PublicClient } from "viem";
 import { uniswapV2PairAbi } from "./abis/uniswapV2PairAbi";
+import { uniswapFactoryMap } from "./uniswapRouterMap";
 
 interface PairData {
   address: string;
@@ -170,6 +172,11 @@ export async function readPairData(
       abi: uniswapV2PairAbi,
       functionName: "symbol",
     },
+    {
+      address: pairAddress as Address,
+      abi: uniswapV2PairAbi,
+      functionName: "factory",
+    },
   ];
 
   const results = await client.multicall({
@@ -178,7 +185,7 @@ export async function readPairData(
   });
 
   if (results.some((result) => result.status === "failure")) {
-    throw new Error("Failed to read pair data");
+    throw new Error("Contract interface mismatch or contract not found");
   }
 
   // Extract all results
@@ -191,8 +198,17 @@ export async function readPairData(
     token0Result,
     token1Result,
     symbol,
+    factory,
   ] = results;
 
+  const chainId = client.chain?.id as SupportedChainId;
+
+  if (
+    factory.result?.toString().toLowerCase() !==
+    uniswapFactoryMap[chainId]?.toLowerCase()
+  ) {
+    throw new Error("Pool created with a different factory");
+  }
   const tokenBalanceDiff = balancesDiff?.[pairAddress.toLowerCase()] || "0";
 
   return {
