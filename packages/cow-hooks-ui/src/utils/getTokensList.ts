@@ -32,21 +32,21 @@ const tokenListUrlMap = {
 };
 
 export async function getTokensList(
-  chainId: SupportedChainId
+  chainId: SupportedChainId,
 ): Promise<TokenData[]> {
   try {
     const response = await Promise.all(
-      tokenListUrlMap[chainId].map((file) => fetch(file))
+      tokenListUrlMap[chainId].map((file) => fetch(file)),
     );
 
     if (!response.every((res) => res.ok)) {
       throw new Error(
-        `HTTP error! status: ${response.map((res) => res.status)}`
+        `HTTP error! status: ${response.map((res) => res.status)}`,
       );
     }
 
     const allJsonFiles = (await Promise.all(
-      response.map((res) => res.json())
+      response.map((res) => res.json()),
     )) as { tokens: TokenData[] }[];
 
     const allTokens = allJsonFiles.map(({ tokens }) => tokens);
