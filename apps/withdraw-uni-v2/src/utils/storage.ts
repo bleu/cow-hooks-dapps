@@ -1,6 +1,6 @@
+import { combineTokenLists } from "@bleu/cow-hooks-ui";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { RawTokenData } from "#/types";
-import { combineTokenLists } from "./combineTokenLists";
 
 // Constants
 const STORAGE_KEY = "hookDapp:withdrawUniswapV2Cache:v1" as const;

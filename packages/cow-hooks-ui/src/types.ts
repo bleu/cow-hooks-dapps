@@ -81,3 +81,12 @@ export interface IBalance {
   fiatAmount: number;
   weight: number;
 }
+
+export interface TokenData {
+  chainId: number;
+  address: string;
+  name: string;
+  decimals: number;
+  symbol: string;
+  logoURI?: string;
+}

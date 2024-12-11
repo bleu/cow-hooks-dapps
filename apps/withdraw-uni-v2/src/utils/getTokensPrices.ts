@@ -1,7 +1,7 @@
+import type { TokenData } from "@bleu/cow-hooks-ui";
 import { getCowProtocolUsdPrice } from "@bleu/utils";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { Address } from "viem";
-import type { TokenData } from "#/types";
 import { isChainIdSupported } from "./uniswapSupportedChains";
 
 export async function getTokensPrices(

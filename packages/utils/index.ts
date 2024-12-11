@@ -1,4 +1,4 @@
-export * from "./cowTokenList";
+export * from "./cowNativeToken";
 export * from "./addressUtils";
 export * from "./chainInfo";
 export * from "./cowExplorer";

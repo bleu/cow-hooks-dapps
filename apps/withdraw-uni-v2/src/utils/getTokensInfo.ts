@@ -1,6 +1,6 @@
+import type { TokenData } from "@bleu/cow-hooks-ui";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { PublicClient } from "viem";
-import type { TokenData } from "#/types";
 import { readTokensData } from "./readTokensData";
 
 export async function getTokensInfo(

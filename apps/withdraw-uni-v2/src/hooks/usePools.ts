@@ -1,11 +1,10 @@
-import type { IPool } from "@bleu/cow-hooks-ui";
+import { type IPool, type TokenData, useTokenList } from "@bleu/cow-hooks-ui";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { BigNumber } from "ethers";
 import useSWR from "swr";
 import type { Address, PublicClient } from "viem";
 import { getLpTokensList } from "#/utils/getLpTokensList";
 import { getTokensInfo } from "#/utils/getTokensInfo";
-import { getTokensList } from "#/utils/getTokensList";
 import { readPairsData } from "#/utils/readPairsData";
 import { isChainIdSupported } from "#/utils/uniswapSupportedChains";
 
@@ -14,12 +13,10 @@ async function getUserPools(
   chainId: SupportedChainId,
   client: PublicClient,
   balancesDiff: Record<string, string>,
+  allTokens: TokenData[],
 ): Promise<IPool[]> {
   // Get lists of tokens
-  const [allLpTokens, allTokens] = await Promise.all([
-    getLpTokensList(chainId, ownerAddress),
-    getTokensList(chainId),
-  ]);
+  const allLpTokens = await getLpTokensList(chainId, ownerAddress);
 
   const lpTokens = allLpTokens.filter((lpToken) => lpToken.chainId === chainId);
 
@@ -104,10 +101,17 @@ export function usePools(
   client: PublicClient | undefined,
   balancesDiff: Record<string, Record<string, string>>,
 ) {
+  const { data: allTokens } = useTokenList();
   return useSWR(
-    [ownerAddress, chainId, client, balancesDiff],
+    [ownerAddress, chainId, client, balancesDiff, allTokens],
     async ([ownerAddress, chainId, client, balancesDiff]): Promise<IPool[]> => {
-      if (!ownerAddress || !chainId || !client || balancesDiff === undefined)
+      if (
+        !ownerAddress ||
+        !chainId ||
+        !client ||
+        !allTokens ||
+        balancesDiff === undefined
+      )
         return [];
 
       if (!isChainIdSupported(chainId)) {
@@ -122,6 +126,7 @@ export function usePools(
         chainId,
         client,
         userBalancesDiff,
+        allTokens,
       );
     },
     {

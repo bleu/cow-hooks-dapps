@@ -1,12 +1,13 @@
 "use client";
 
-import { cowTokenList } from "@bleu/utils";
 import Image from "next/image";
 import { Suspense, useState } from "react";
 
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { Token } from "@uniswap/sdk-core";
 import { useTokenLogoContext } from "./context/tokenLogo";
+import { useTokenList } from "./hooks/useTokenList";
+import type { TokenData } from "./types";
 
 type ImageAttributes = React.DetailedHTMLProps<
   React.ImgHTMLAttributes<HTMLImageElement>,
@@ -29,8 +30,9 @@ export const cowprotocolTokenLogoUrl = (
 export const cowTokenListLogoUrl = (
   address?: string,
   chainId?: SupportedChainId,
+  tokenList?: TokenData[],
 ) => {
-  return cowTokenList.find(
+  return tokenList?.find(
     (token) =>
       token.chainId === chainId &&
       token.address.toLowerCase() === address?.toLowerCase(),
@@ -56,6 +58,17 @@ export function trustTokenLogoUrl(
   return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/${chainIdToName[chainId || 1]}/assets/${address}/logo.png`;
 }
 
+export function findTokenLogoOnList(
+  token: Token,
+  tokenList: TokenData[],
+): string | undefined {
+  return tokenList.find(
+    (t) =>
+      t.chainId === token.chainId &&
+      t.address.toLowerCase() === token.address.toLowerCase(),
+  )?.logoURI;
+}
+
 const FALLBACK_SRC = "/assets/generic-token-logo.png";
 
 export const TokenLogo = ({
@@ -67,16 +80,17 @@ export const TokenLogo = ({
   quality,
 }: ImageFallbackProps) => {
   const { getTokenLogoSrcIndex, setTokenLogoSrcIndex } = useTokenLogoContext();
+  const { data: tokenList } = useTokenList();
   const [index, setIndex] = useState(getTokenLogoSrcIndex(token.address));
 
   const [reveal, setReveal] = useState(false);
   const visibility = reveal ? "visible" : "hidden";
 
   const imagesSrc = [
+    cowTokenListLogoUrl(token.address, token.chainId, tokenList),
+    cowTokenListLogoUrl(token.address, 1, tokenList),
     cowprotocolTokenLogoUrl(token.address?.toLowerCase(), token.chainId),
     cowprotocolTokenLogoUrl(token.address?.toLowerCase(), 1),
-    cowTokenListLogoUrl(token.address, token.chainId),
-    cowTokenListLogoUrl(token.address, 1),
     trustTokenLogoUrl(token.address?.toLowerCase(), token.chainId),
     trustTokenLogoUrl(token.address?.toLowerCase(), 1),
     FALLBACK_SRC,

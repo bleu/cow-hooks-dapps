@@ -4,6 +4,7 @@ import {
   type IPool,
   PoolsDropdownMenu,
   Spinner,
+  combineTokenLists,
   getUniswapV2PoolLink,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
@@ -18,7 +19,6 @@ import { PoolItemInfo } from "#/components/PoolItemInfo";
 import { useFetchNewPoolCallback } from "#/hooks/useFetchNewPoolCallback";
 import { useSelectedPool } from "#/hooks/useSelectedPool";
 import { useUserPools } from "#/hooks/useUserPools";
-import { combineTokenLists } from "#/utils/combineTokenLists";
 import { isChainIdSupported } from "#/utils/uniswapSupportedChains";
 
 export default function Page() {
