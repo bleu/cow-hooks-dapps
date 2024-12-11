@@ -22,6 +22,7 @@ interface IQuery {
       aprItems: {
         apr: number;
         id: string;
+        type: string;
       }[];
       totalLiquidity: string;
       volume24h: string;
@@ -59,6 +60,7 @@ const POOL_QUERY = gql`
         aprItems {
           apr
           id
+          type
         }
         totalLiquidity
         volume24h
