@@ -15,6 +15,7 @@ export const BALANCER_API_URL: Record<SupportedChainId, string> = {
   [SupportedChainId.SEPOLIA]: TEST_URL,
   [SupportedChainId.ARBITRUM_ONE]: BASE_URL,
   [SupportedChainId.GNOSIS_CHAIN]: BASE_URL,
+  [SupportedChainId.BASE]: BASE_URL,
 };
 
 export const BALANCER_GQL_CLIENT: Record<SupportedChainId, GraphQLClient> = {
@@ -22,6 +23,7 @@ export const BALANCER_GQL_CLIENT: Record<SupportedChainId, GraphQLClient> = {
   [SupportedChainId.SEPOLIA]: new GraphQLClient(TEST_URL),
   [SupportedChainId.ARBITRUM_ONE]: new GraphQLClient(BASE_URL),
   [SupportedChainId.GNOSIS_CHAIN]: new GraphQLClient(BASE_URL),
+  [SupportedChainId.BASE]: new GraphQLClient(BASE_URL),
 };
 
 export const SUPPORTED_CHAIN_ID_TO_CHAIN_ID: Record<SupportedChainId, ChainId> =
@@ -30,6 +32,7 @@ export const SUPPORTED_CHAIN_ID_TO_CHAIN_ID: Record<SupportedChainId, ChainId> =
     [SupportedChainId.SEPOLIA]: ChainId.SEPOLIA,
     [SupportedChainId.ARBITRUM_ONE]: ChainId.ARBITRUM_ONE,
     [SupportedChainId.GNOSIS_CHAIN]: ChainId.GNOSIS_CHAIN,
+    [SupportedChainId.BASE]: ChainId.BASE,
   };
 
 export const BalancerChainName: Record<SupportedChainId, string> = {
@@ -37,4 +40,5 @@ export const BalancerChainName: Record<SupportedChainId, string> = {
   [SupportedChainId.SEPOLIA]: "SEPOLIA",
   [SupportedChainId.ARBITRUM_ONE]: "ARBITRUM",
   [SupportedChainId.GNOSIS_CHAIN]: "GNOSIS",
+  [SupportedChainId.BASE]: "BASE",
 };

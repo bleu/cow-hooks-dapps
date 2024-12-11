@@ -4,6 +4,7 @@ import {
   type IPool,
   PoolsDropdownMenu,
   Spinner,
+  getUniswapV2PoolLink,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import {
@@ -91,6 +92,7 @@ export default function Page() {
         isCheckDetailsCentered
         tooltipText="Withdraw of staked liquidity or pool with low user balance are not supported"
         fetchNewPoolCallback={fetchNewPoolCallback}
+        getPoolLink={getUniswapV2PoolLink}
       />
       <PoolForm selectedPool={selectedPool} />
     </div>

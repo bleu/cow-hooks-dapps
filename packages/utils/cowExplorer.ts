@@ -23,6 +23,7 @@ function _getExplorerUrlByEnvironment(): Record<SupportedChainId, string> {
     [SupportedChainId.GNOSIS_CHAIN]: `${baseUrl}/gc`,
     [SupportedChainId.ARBITRUM_ONE]: `${baseUrl}/arb1`,
     [SupportedChainId.SEPOLIA]: `${baseUrl}/sepolia`,
+    [SupportedChainId.BASE]: `${baseUrl}l/base`,
   };
 }
 
