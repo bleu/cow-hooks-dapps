@@ -57,6 +57,7 @@ export interface IPool {
     aprItems: {
       apr: number;
       id: string;
+      type: string;
     }[];
     totalLiquidity: string;
     volume24h: string;

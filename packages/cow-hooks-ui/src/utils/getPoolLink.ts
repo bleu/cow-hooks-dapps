@@ -1,12 +1,23 @@
-import { BalancerChainName } from "@bleu/utils";
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { IPool } from "..";
+
+/**
+ * #CHAIN-INTEGRATION
+ * This needs to be changed if you want to support a new chain
+ */
+export const BalancerUrlChainName: Record<SupportedChainId, string> = {
+  [SupportedChainId.MAINNET]: "ethereum",
+  [SupportedChainId.SEPOLIA]: "sepolia",
+  [SupportedChainId.ARBITRUM_ONE]: "arbitrum",
+  [SupportedChainId.GNOSIS_CHAIN]: "gnosis",
+  [SupportedChainId.BASE]: "base",
+};
 
 export function getBalancerCoWPoolLink(
   chainId: SupportedChainId,
   selectedPool: IPool,
 ) {
-  const chainName = BalancerChainName[chainId];
+  const chainName = BalancerUrlChainName[chainId];
   const baseUrl =
     chainId === SupportedChainId.SEPOLIA
       ? "https://test.balancer.fi/pools"
