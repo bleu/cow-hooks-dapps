@@ -104,6 +104,8 @@ export function PoolsDropdownMenu({
     fetchNewPoolCallback,
     {
       revalidateOnFocus: false,
+      shouldRetryOnError: false,
+      revalidateOnReconnect: false,
       onSuccess: onFetchNewPoolSuccess,
     },
   );
