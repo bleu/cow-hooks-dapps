@@ -105,14 +105,8 @@ export function usePools(
   return useSWR(
     [ownerAddress, chainId, client, balancesDiff, allTokens],
     async ([ownerAddress, chainId, client, balancesDiff]): Promise<IPool[]> => {
-      if (
-        !ownerAddress ||
-        !chainId ||
-        !client ||
-        !allTokens ||
-        balancesDiff === undefined
-      )
-        return [];
+      if (!ownerAddress || !chainId || !client || !allTokens)
+        throw new Error("Missing required data");
 
       if (!isChainIdSupported(chainId)) {
         throw new Error(`ChainId ${chainId} is not supported`);
@@ -131,6 +125,9 @@ export function usePools(
     },
     {
       revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateOnMount: false,
+      shouldRetryOnError: false,
     },
   );
 }

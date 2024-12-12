@@ -15,5 +15,9 @@ export function useTokenList() {
   return useSWR<TokenData[] | undefined>(
     `tokenList-${context?.chainId}`,
     tokenListFetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    },
   );
 }
