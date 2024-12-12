@@ -142,7 +142,7 @@ export function PoolsDropdownMenu({
       );
     if (errorNewPool)
       return (
-        <div className="mx-auto p-2 flex flex-col items-center justify-center gap-2 text-destructive bg-destructive/30 rounded-xl w-fit">
+        <div className="mx-auto p-2 flex flex-col items-center justify-center gap-2 text-destructive rounded-xl w-fit">
           <span>Error loading new pool</span>
           {errorNewPool.message}
         </div>
