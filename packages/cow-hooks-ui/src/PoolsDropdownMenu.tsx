@@ -65,6 +65,12 @@ export function PoolsDropdownMenu({
     }
   }, [open, search]);
 
+  useEffect(() => {
+    if (!open) {
+      setSearch("");
+    }
+  }, [open]);
+
   const poolLink = useMemo(() => {
     if (!selectedPool || !context?.chainId) return;
     return getPoolLink(context.chainId, selectedPool);
