@@ -1,9 +1,12 @@
-import { type IPool, useIFrameContext } from "@bleu/cow-hooks-ui";
+import {
+  type IPool,
+  useIFrameContext,
+  useTokenPrice,
+} from "@bleu/cow-hooks-ui";
 import { Token } from "@uniswap/sdk-core";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import { formatUnits } from "viem";
-import { useTokenPrice } from "./useTokenPrice";
 
 export function usePoolBalances(pool?: IPool) {
   const { context } = useIFrameContext();

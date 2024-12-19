@@ -1,9 +1,9 @@
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
-import { usePools } from "./usePools";
+import { useIFrameContext } from "../context";
+import { useUniV2Pools } from "./useUniV2Pools";
 
-export function useUserPools() {
+export function useUserUniV2Pools() {
   const { context, publicClient } = useIFrameContext();
-  return usePools(
+  return useUniV2Pools(
     context?.account,
     context?.chainId,
     publicClient,

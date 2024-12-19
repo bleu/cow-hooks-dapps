@@ -1,6 +1,6 @@
-import { combineTokenLists } from "@bleu/cow-hooks-ui";
+import type { RawTokenData } from "@bleu/utils";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
-import type { RawTokenData } from "#/types";
+import { combineTokenLists } from "./combineTokenLists";
 import { getExtraTokens } from "./storage";
 
 interface TokenData extends Omit<RawTokenData, "extensions"> {

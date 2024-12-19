@@ -1,10 +1,10 @@
-import type { IPool } from "@bleu/cow-hooks-ui";
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
+import { readPairData } from "@bleu/utils";
 import type { Address, PublicClient } from "viem";
-import { getTokensInfo } from "#/utils/getTokensInfo";
-import { readPairData } from "#/utils/readPairsData";
-import { readTokensData } from "#/utils/readTokensData";
-import { storeExtraTokens } from "#/utils/storage";
+import { useIFrameContext } from "../context";
+import type { IPool } from "../types";
+import { getTokensInfo } from "../utils/getTokensInfo";
+import { readTokensData } from "../utils/readTokensData";
+import { storeExtraTokens } from "../utils/storage";
 
 async function fetchNewPool({
   chainId,
@@ -90,7 +90,7 @@ async function fetchNewPool({
   };
 }
 
-export function useFetchNewPoolCallback(saveOnStore = true) {
+export function useFetchNewUniV2PoolCallback(saveOnStore = true) {
   const { context, publicClient } = useIFrameContext();
   //@ts-ignore
   const { account, chainId, balancesDiff } = context ?? {

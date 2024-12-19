@@ -11,5 +11,5 @@ export const ALL_SUPPORTED_CHAIN_IDS = [
   SupportedChainId.BASE,
 ];
 
-export const isChainIdSupported = (chainId: SupportedChainId) =>
+export const isChainIdSupportedByUniV2 = (chainId: SupportedChainId) =>
   ALL_SUPPORTED_CHAIN_IDS.includes(chainId);

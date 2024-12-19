@@ -8,6 +8,10 @@ export * from "./schema";
 export * from "./decode";
 export * from "./cowApi";
 export * from "./constraintStringToBeNumeric";
+export * from "./types";
+export * from "./uniswapRouterMap";
+export * from "./readPairsData";
+export * from "./uniswapSupportedChains";
 
 export function truncateAddress(address?: string | null) {
   if (!address) return address;

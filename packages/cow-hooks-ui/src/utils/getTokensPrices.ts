@@ -1,14 +1,14 @@
-import type { TokenData } from "@bleu/cow-hooks-ui";
 import { getCowProtocolUsdPrice } from "@bleu/utils";
+import { isChainIdSupportedByUniV2 } from "@bleu/utils/uniswapSupportedChains";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import type { Address } from "viem";
-import { isChainIdSupported } from "./uniswapSupportedChains";
+import type { TokenData } from "../types";
 
 export async function getTokensPrices(
   tokens: TokenData[],
   chainId: SupportedChainId,
 ): Promise<number[]> {
-  if (!isChainIdSupported(chainId)) {
+  if (!isChainIdSupportedByUniV2(chainId)) {
     throw new Error(`ChainId ${chainId} is not supported`);
   }
 

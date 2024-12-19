@@ -1,12 +1,12 @@
-import { type IPool, type TokenData, useTokenList } from "@bleu/cow-hooks-ui";
+import { isChainIdSupportedByUniV2, readPairsData } from "@bleu/utils";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { BigNumber } from "ethers";
 import useSWR from "swr";
 import type { Address, PublicClient } from "viem";
-import { getLpTokensList } from "#/utils/getLpTokensList";
-import { getTokensInfo } from "#/utils/getTokensInfo";
-import { readPairsData } from "#/utils/readPairsData";
-import { isChainIdSupported } from "#/utils/uniswapSupportedChains";
+import type { IPool, TokenData } from "../types";
+import { getLpTokensList } from "../utils/getLpTokensList";
+import { getTokensInfo } from "../utils/getTokensInfo";
+import { useTokenList } from "./useTokenList";
 
 async function getUserPools(
   ownerAddress: string,
@@ -95,7 +95,7 @@ async function getUserPools(
     });
 }
 
-export function usePools(
+export function useUniV2Pools(
   ownerAddress: string | undefined,
   chainId: SupportedChainId | undefined,
   client: PublicClient | undefined,
@@ -108,7 +108,7 @@ export function usePools(
       if (!ownerAddress || !chainId || !client || !allTokens)
         throw new Error("Missing required data");
 
-      if (!isChainIdSupported(chainId)) {
+      if (!isChainIdSupportedByUniV2(chainId)) {
         throw new Error(`ChainId ${chainId} is not supported`);
       }
 

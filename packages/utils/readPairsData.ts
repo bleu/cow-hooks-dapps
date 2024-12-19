@@ -1,7 +1,7 @@
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { BigNumber } from "ethers";
 import type { Address, PublicClient } from "viem";
-import { uniswapV2PairAbi } from "./abis/uniswapV2PairAbi";
+import { uniswapV2PairAbi } from "./transactionFactory/abis/uniswapV2PairAbi";
 import { uniswapFactoryMap } from "./uniswapRouterMap";
 
 interface PairData {

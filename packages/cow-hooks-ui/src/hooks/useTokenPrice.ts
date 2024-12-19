@@ -1,7 +1,8 @@
-import { type IToken, useIFrameContext } from "@bleu/cow-hooks-ui";
 import { getCowProtocolUsdPrice } from "@bleu/utils";
 import { useCallback } from "react";
 import useSWR from "swr";
+import { useIFrameContext } from "../context";
+import type { IToken } from "../types";
 
 export function useTokenPrice(token?: IToken) {
   const { context } = useIFrameContext();

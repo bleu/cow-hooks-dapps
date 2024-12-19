@@ -6,25 +6,29 @@ import {
   Spinner,
   combineTokenLists,
   getUniswapV2PoolLink,
+  useFetchNewUniV2PoolCallback,
   useIFrameContext,
+  useUserUniV2Pools,
 } from "@bleu/cow-hooks-ui";
 import {
   type WithdrawSchemaType,
   decodeExitPoolHookCalldata,
+  isChainIdSupportedByUniV2,
 } from "@bleu/utils";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
 import { PoolItemInfo } from "#/components/PoolItemInfo";
-import { useFetchNewPoolCallback } from "#/hooks/useFetchNewPoolCallback";
 import { useSelectedPool } from "#/hooks/useSelectedPool";
-import { useUserPools } from "#/hooks/useUserPools";
-import { isChainIdSupported } from "#/utils/uniswapSupportedChains";
 
 export default function Page() {
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
   const { context } = useIFrameContext();
-  const { data: pools, isLoading: isLoadingPools, mutate } = useUserPools();
+  const {
+    data: pools,
+    isLoading: isLoadingPools,
+    mutate,
+  } = useUserUniV2Pools();
 
   const { setValue, control } = useFormContext<WithdrawSchemaType>();
 
@@ -54,7 +58,7 @@ export default function Page() {
     loadHookInfo();
   }, [loadHookInfo, poolId]);
 
-  const fetchNewPoolCallback = useFetchNewPoolCallback();
+  const fetchNewPoolCallback = useFetchNewUniV2PoolCallback();
 
   if (!context) return null;
 
@@ -62,7 +66,7 @@ export default function Page() {
     return <span className="mt-10 text-center">Connect your wallet first</span>;
   }
 
-  if (!isChainIdSupported(context.chainId)) {
+  if (!isChainIdSupportedByUniV2(context.chainId)) {
     return <span className="mt-10 text-center">Unsupported chain</span>;
   }
 

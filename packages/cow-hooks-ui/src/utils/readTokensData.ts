@@ -1,6 +1,6 @@
-import type { TokenData } from "@bleu/cow-hooks-ui";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { type Address, type PublicClient, erc20Abi } from "viem";
+import type { TokenData } from "../types";
 
 export async function readTokensData(
   addresses: string[],
