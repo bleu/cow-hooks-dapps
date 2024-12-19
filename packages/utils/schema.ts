@@ -6,3 +6,9 @@ export const withdrawSchema = z.object({
 });
 
 export type WithdrawSchemaType = z.infer<typeof withdrawSchema>;
+
+export type DepositFormType = {
+  poolId: string;
+  amounts: Record<string, string>;
+  referenceTokenAddress: string;
+};

@@ -3,6 +3,7 @@
 import {
   SignatureSteps,
   WaitingSignature,
+  useDepositAmounts,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import {
@@ -16,9 +17,8 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
-import { useDepositAmounts } from "#/hooks/useDepositAmounts";
-import type { FormType } from "#/types";
 import { encodeFormData } from "#/utils/encodeFormData";
+import { DepositFormType } from "@bleu/utils";
 
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -38,7 +38,7 @@ export default function Page() {
     spender: cowShedProxy,
   });
 
-  const { control } = useFormContext<FormType>();
+  const { control } = useFormContext<DepositFormType>();
   const values = useWatch({ control });
 
   useEffect(() => {
@@ -63,8 +63,8 @@ export default function Page() {
     if (!cowShedCall) throw new Error("Error signing hooks");
 
     const encodedFormData = encodeFormData(
-      values as FormType,
-      depositAmountsWithDecimals,
+      values as DepositFormType,
+      depositAmountsWithDecimals
     );
 
     await submitHook({
@@ -89,7 +89,7 @@ export default function Page() {
     }) => {
       const permitData = await handleTokenAllowance(
         BigNumber.from(permit.amount),
-        permit.tokenAddress as Address,
+        permit.tokenAddress as Address
       );
 
       if (permitData) {
@@ -104,7 +104,7 @@ export default function Page() {
       }
       setCurrentStepIndex((prev) => prev + 1);
     },
-    [handleTokenAllowance],
+    [handleTokenAllowance]
   );
 
   const steps = useMemo(() => {

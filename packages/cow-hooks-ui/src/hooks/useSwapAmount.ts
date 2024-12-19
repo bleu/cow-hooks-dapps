@@ -1,6 +1,7 @@
-import { useIFrameContext, useReadTokenContract } from "@bleu/cow-hooks-ui";
 import { useMemo } from "react";
 import { type Address, formatUnits } from "viem";
+import { useReadTokenContract } from "./useReadTokenContract";
+import { useIFrameContext } from "../context";
 
 export function useSwapAmount() {
   const { context } = useIFrameContext();
@@ -17,7 +18,7 @@ export function useSwapAmount() {
     if (!context?.orderParams?.buyAmount || !tokenBuyDecimals) return;
     return formatUnits(
       BigInt(context.orderParams.buyAmount),
-      tokenBuyDecimals,
+      tokenBuyDecimals
     ) as `${number}`;
   }, [context?.orderParams?.buyAmount, tokenBuyDecimals]);
 
@@ -25,7 +26,7 @@ export function useSwapAmount() {
     if (!context?.orderParams?.sellAmount || !tokenSellDecimals) return;
     return formatUnits(
       BigInt(context.orderParams.sellAmount),
-      tokenSellDecimals,
+      tokenSellDecimals
     ) as `${number}`;
   }, [context?.orderParams?.sellAmount, tokenSellDecimals]);
 

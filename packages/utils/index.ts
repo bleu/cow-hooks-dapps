@@ -7,6 +7,7 @@ export * from "./math";
 export * from "./schema";
 export * from "./decode";
 export * from "./cowApi";
+export * from "./constraintStringToBeNumeric";
 
 export function truncateAddress(address?: string | null) {
   if (!address) return address;

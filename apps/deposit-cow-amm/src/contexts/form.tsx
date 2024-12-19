@@ -3,16 +3,15 @@
 import { type PropsWithChildren, useCallback } from "react";
 
 import { Form } from "@bleu.builders/ui";
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
+import { useIFrameContext, useSelectedPool } from "@bleu/cow-hooks-ui";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
-import { useSelectedPool } from "#/hooks/useSelectedPool";
-import type { FormType } from "#/types";
+import { DepositFormType } from "@bleu/utils";
 
 export function FormContextProvider({ children }: PropsWithChildren) {
   const { setHookInfo } = useIFrameContext();
-  const form = useForm<FormType>({});
+  const form = useForm<DepositFormType>({});
 
   const { handleSubmit } = form;
 
@@ -23,13 +22,13 @@ export function FormContextProvider({ children }: PropsWithChildren) {
   const getHookInfo = useGetHookInfo(selectedPool);
 
   const onSubmitCallback = useCallback(
-    async (data: FormType) => {
+    async (data: DepositFormType) => {
       const hookInfo = await getHookInfo(data);
       if (!hookInfo) return;
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [getHookInfo, setHookInfo, router],
+    [getHookInfo, setHookInfo, router]
   );
 
   return (

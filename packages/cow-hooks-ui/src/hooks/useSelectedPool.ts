@@ -1,5 +1,5 @@
 import { useAtomValue } from "jotai";
-import { selectedPoolAtom } from "#/app/states/selectedPool";
+import { selectedPoolAtom } from "../states";
 
 export function useSelectedPool() {
   return useAtomValue(selectedPoolAtom);

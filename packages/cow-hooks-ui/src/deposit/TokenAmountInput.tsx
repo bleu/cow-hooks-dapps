@@ -1,19 +1,17 @@
 import { Button, Input, formatNumber } from "@bleu.builders/ui";
-import {
-  type IBalance,
-  InfoTooltip,
-  TokenLogoWithWeight,
-  useIFrameContext,
-} from "@bleu/cow-hooks-ui";
+
 import { useCallback, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
-import { useSwapAmount } from "#/hooks/useSwapAmount";
-import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
-import type { FormType } from "#/types";
-import { constraintStringToBeNumeric } from "#/utils/constraintStringToBeNumeric";
+import { useSwapAmount } from "../hooks/useSwapAmount";
+import { useTokenBalanceAfterSwap } from "../hooks/useTokenBalanceAfterSwap";
+import type { IBalance } from "../types";
+import { constraintStringToBeNumeric, DepositFormType } from "@bleu/utils";
+import { useIFrameContext } from "../context";
+import { InfoTooltip } from "../ui/TooltipBase";
+import { TokenLogoWithWeight } from "../TokenLogoWithWeight";
 
-export function TokenAmountInput({
+export function TokenAmountInputDeposit({
   poolBalance,
   tokenPrice,
   updateTokenAmounts,
@@ -23,7 +21,7 @@ export function TokenAmountInput({
   updateTokenAmounts: (amount: string, address: Address) => void;
 }) {
   const { context } = useIFrameContext();
-  const { register, control, setValue } = useFormContext<FormType>();
+  const { register, control, setValue } = useFormContext<DepositFormType>();
 
   const amount = useWatch({
     control,
@@ -31,7 +29,7 @@ export function TokenAmountInput({
   });
 
   const tokenBalanceAfterSwap = useTokenBalanceAfterSwap(
-    poolBalance.token.address,
+    poolBalance.token.address
   );
 
   const isTokenBuy = useMemo(() => {
@@ -54,11 +52,11 @@ export function TokenAmountInput({
       if (updateTokenAmounts) {
         updateTokenAmounts(
           constraintStringToBeNumeric(amount),
-          poolBalance.token.address as Address,
+          poolBalance.token.address as Address
         );
       }
     },
-    [updateTokenAmounts, poolBalance.token.address],
+    [updateTokenAmounts, poolBalance.token.address]
   );
 
   const maxButtonDisabled = useMemo(() => {
@@ -92,7 +90,7 @@ export function TokenAmountInput({
               onChange(e.target.value);
               setValue(
                 `amounts.${poolBalance.token.address.toLowerCase()}`,
-                constraintStringToBeNumeric(e.target.value),
+                constraintStringToBeNumeric(e.target.value)
               );
             },
           })}
@@ -119,7 +117,7 @@ export function TokenAmountInput({
                     4,
                     "decimal",
                     "standard",
-                    0.0001,
+                    0.0001
                   ).replace(/\.?0+$/, "") || "0"}
                 </span>
               </div>
@@ -132,7 +130,7 @@ export function TokenAmountInput({
                     onClick={() => {
                       setValue(
                         `amounts.${poolBalance.token.address.toLowerCase()}`,
-                        tokenBalanceAfterSwap,
+                        tokenBalanceAfterSwap
                       );
                       onChange(tokenBalanceAfterSwap);
                     }}
@@ -148,7 +146,7 @@ export function TokenAmountInput({
                     onClick={() => {
                       setValue(
                         `amounts.${poolBalance.token.address.toLowerCase()}`,
-                        buyAmount,
+                        buyAmount
                       );
                       onChange(buyAmount);
                     }}

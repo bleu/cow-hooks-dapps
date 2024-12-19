@@ -6,17 +6,16 @@ import {
   Spinner,
   getBalancerCoWPoolLink,
   useIFrameContext,
+  useSelectedPool,
+  useTokenBalanceAfterSwap,
 } from "@bleu/cow-hooks-ui";
-import { COW_NATIVE_TOKEN_ADDRESS } from "@bleu/utils";
+import { COW_NATIVE_TOKEN_ADDRESS, DepositFormType } from "@bleu/utils";
 import { ALL_SUPPORTED_CHAIN_IDS, type Address } from "@cowprotocol/cow-sdk";
 import { useCallback, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
 import { PoolItemInfo } from "#/components/PoolItemInfo";
 import { useCowAmmPools } from "#/hooks/useCowAmmPools";
-import { useSelectedPool } from "#/hooks/useSelectedPool";
-import { useTokenBalanceAfterSwap } from "#/hooks/useTokenBalanceAfterSwap";
-import type { FormType } from "#/types";
 import { decodeCalldata } from "#/utils/decodeCalldata";
 
 export default function Page() {
@@ -24,13 +23,13 @@ export default function Page() {
   const { data: pools, isLoading: isLoadingPools } = useCowAmmPools();
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
 
-  const { setValue, reset, control } = useFormContext<FormType>();
+  const { setValue, reset, control } = useFormContext<DepositFormType>();
   const referenceTokenAddress = useWatch({
     control,
     name: "referenceTokenAddress",
   });
   const sellTokenAmountAfterSwap = useTokenBalanceAfterSwap(
-    context?.orderParams?.sellTokenAddress as Address,
+    context?.orderParams?.sellTokenAddress as Address
   );
 
   const selectedPool = useSelectedPool();
@@ -58,7 +57,7 @@ export default function Page() {
       return;
     const data = await decodeCalldata(
       context?.hookToEdit.hook.callData as `0x${string}`,
-      publicClient,
+      publicClient
     );
     if (data) {
       reset(data, {

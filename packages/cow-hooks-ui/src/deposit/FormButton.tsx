@@ -1,26 +1,24 @@
-import {
-  ButtonPrimary,
-  type IBalance,
-  useIFrameContext,
-} from "@bleu/cow-hooks-ui";
 import { useMemo } from "react";
 import { useFormContext, useFormState, useWatch } from "react-hook-form";
 import type { Address } from "viem";
-import { useTokensAfterSwap } from "#/hooks/useTokensAfterSwap";
-import type { FormType } from "#/types";
+import { useTokensAfterSwap } from "../hooks/useTokensAfterSwap";
+import { DepositFormType } from "@bleu/utils";
+import { useIFrameContext } from "../context";
+import { IBalance } from "../types";
+import { ButtonPrimary } from "../ButtonPrimary";
 
 export function FormButton({ poolBalances }: { poolBalances: IBalance[] }) {
   const { context } = useIFrameContext();
   const tokenAddresses = useMemo(
     () =>
       poolBalances.map(
-        (poolBalance) => poolBalance.token.address.toLowerCase() as Address,
+        (poolBalance) => poolBalance.token.address.toLowerCase() as Address
       ),
-    [poolBalances],
+    [poolBalances]
   );
   const poolTokens = useTokensAfterSwap(tokenAddresses);
 
-  const { control } = useFormContext<FormType>();
+  const { control } = useFormContext<DepositFormType>();
 
   const { isSubmitting } = useFormState({
     control,

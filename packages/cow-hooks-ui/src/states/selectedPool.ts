@@ -1,5 +1,4 @@
-import type { IPool } from "@bleu/cow-hooks-ui";
 import { atom } from "jotai";
+import { IPool } from "../types";
 
-// Types
 export const selectedPoolAtom = atom<IPool | undefined>();

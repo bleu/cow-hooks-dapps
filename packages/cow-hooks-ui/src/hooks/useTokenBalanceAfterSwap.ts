@@ -1,8 +1,9 @@
-import { useIFrameContext, useReadTokenContract } from "@bleu/cow-hooks-ui";
 import { useMemo } from "react";
 import { type Address, formatUnits } from "viem";
-import { updateTokenBalanceAfterSwap } from "#/utils/math";
+import { updateTokenBalanceAfterSwap } from "../utils/math";
 import { useSwapAmount } from "./useSwapAmount";
+import { useIFrameContext } from "../context";
+import { useReadTokenContract } from "./useReadTokenContract";
 
 export function useTokenBalanceAfterSwap(address: string) {
   const { context } = useIFrameContext();
@@ -16,7 +17,7 @@ export function useTokenBalanceAfterSwap(address: string) {
     return updateTokenBalanceAfterSwap({
       userBalance: formatUnits(
         userBalance || BigInt(0),
-        tokenDecimals,
+        tokenDecimals
       ) as `${number}`,
       tokenAddress: address as Address,
       tokenDecimals: tokenDecimals,
