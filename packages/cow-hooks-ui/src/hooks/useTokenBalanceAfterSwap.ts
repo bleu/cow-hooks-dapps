@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { type Address, formatUnits } from "viem";
-import { updateTokenBalanceAfterSwap } from "../utils/math";
-import { useSwapAmount } from "./useSwapAmount";
 import { useIFrameContext } from "../context";
+import { updateTokenBalanceAfterSwap } from "../utils/math";
 import { useReadTokenContract } from "./useReadTokenContract";
+import { useSwapAmount } from "./useSwapAmount";
 
 export function useTokenBalanceAfterSwap(address: string) {
   const { context } = useIFrameContext();
@@ -17,7 +17,7 @@ export function useTokenBalanceAfterSwap(address: string) {
     return updateTokenBalanceAfterSwap({
       userBalance: formatUnits(
         userBalance || BigInt(0),
-        tokenDecimals
+        tokenDecimals,
       ) as `${number}`,
       tokenAddress: address as Address,
       tokenDecimals: tokenDecimals,

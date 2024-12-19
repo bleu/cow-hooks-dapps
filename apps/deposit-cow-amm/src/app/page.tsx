@@ -9,7 +9,7 @@ import {
   useSelectedPool,
   useTokenBalanceAfterSwap,
 } from "@bleu/cow-hooks-ui";
-import { COW_NATIVE_TOKEN_ADDRESS, DepositFormType } from "@bleu/utils";
+import { COW_NATIVE_TOKEN_ADDRESS, type DepositFormType } from "@bleu/utils";
 import { ALL_SUPPORTED_CHAIN_IDS, type Address } from "@cowprotocol/cow-sdk";
 import { useCallback, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
@@ -29,7 +29,7 @@ export default function Page() {
     name: "referenceTokenAddress",
   });
   const sellTokenAmountAfterSwap = useTokenBalanceAfterSwap(
-    context?.orderParams?.sellTokenAddress as Address
+    context?.orderParams?.sellTokenAddress as Address,
   );
 
   const selectedPool = useSelectedPool();
@@ -57,7 +57,7 @@ export default function Page() {
       return;
     const data = await decodeCalldata(
       context?.hookToEdit.hook.callData as `0x${string}`,
-      publicClient
+      publicClient,
     );
     if (data) {
       reset(data, {

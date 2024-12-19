@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { type Address, formatUnits } from "viem";
-import { readTokenContract } from "./useReadTokenContract";
 import { useIFrameContext } from "../context";
+import { readTokenContract } from "./useReadTokenContract";
 
 export function useTokens(tokens: Address[]) {
   const { context, publicClient } = useIFrameContext();
@@ -17,9 +17,9 @@ export function useTokens(tokens: Address[]) {
           token,
           publicClient,
           context.account as Address,
-          context.balancesDiff
+          context.balancesDiff,
         );
-      })
+      }),
     );
 
     const newTokensBalance = tokenReadInfo.reduce(
@@ -32,7 +32,7 @@ export function useTokens(tokens: Address[]) {
           [tokens[index]]: {
             balance: formatUnits(
               tokenInfo?.balance?.result || BigInt(0),
-              tokenInfo.decimals.result
+              tokenInfo.decimals.result,
             ) as `${number}`,
             decimals: tokenInfo.decimals.result,
             symbol: tokenInfo.symbol.result || "",
@@ -42,7 +42,7 @@ export function useTokens(tokens: Address[]) {
       {} as Record<
         string,
         { balance: `${number}`; decimals: number; symbol: string }
-      >
+      >,
     );
 
     setTokensBalance(newTokensBalance);

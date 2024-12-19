@@ -1,20 +1,20 @@
+import type { DepositFormType } from "@bleu/utils";
 import { useMemo } from "react";
 import { useFormContext, useFormState, useWatch } from "react-hook-form";
 import type { Address } from "viem";
-import { useTokensAfterSwap } from "../hooks/useTokensAfterSwap";
-import { DepositFormType } from "@bleu/utils";
-import { useIFrameContext } from "../context";
-import { IBalance } from "../types";
 import { ButtonPrimary } from "../ButtonPrimary";
+import { useIFrameContext } from "../context";
+import { useTokensAfterSwap } from "../hooks/useTokensAfterSwap";
+import type { IBalance } from "../types";
 
 export function FormButton({ poolBalances }: { poolBalances: IBalance[] }) {
   const { context } = useIFrameContext();
   const tokenAddresses = useMemo(
     () =>
       poolBalances.map(
-        (poolBalance) => poolBalance.token.address.toLowerCase() as Address
+        (poolBalance) => poolBalance.token.address.toLowerCase() as Address,
       ),
-    [poolBalances]
+    [poolBalances],
   );
   const poolTokens = useTokensAfterSwap(tokenAddresses);
 

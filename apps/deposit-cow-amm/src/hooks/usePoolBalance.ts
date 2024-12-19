@@ -69,7 +69,7 @@ export const POOL_QUERY = gql`
 
 async function fetchPoolBalance(
   chainId?: SupportedChainId,
-  poolId?: string
+  poolId?: string,
 ): Promise<IBalance[]> {
   if (!chainId || !poolId) return [];
   const chainName = BalancerChainName[chainId];

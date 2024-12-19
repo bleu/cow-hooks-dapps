@@ -10,11 +10,11 @@ import {
   getTokenPrice,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
+import type { DepositFormType } from "@bleu/utils";
 import { useCallback, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { type Address, formatUnits } from "viem";
 import { usePoolBalance } from "#/hooks/usePoolBalance";
-import { DepositFormType } from "@bleu/utils";
 
 export function PoolForm({ pool }: { pool: IPool | undefined }) {
   const { context } = useIFrameContext();
@@ -29,7 +29,7 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
 
   const tokenPrices = useMemo(
     () => poolBalances?.map((poolBalance) => getTokenPrice(poolBalance)),
-    [poolBalances]
+    [poolBalances],
   );
 
   const totalUsd = useMemo(() => {
@@ -65,14 +65,14 @@ export function PoolForm({ pool }: { pool: IPool | undefined }) {
         const tokenAmountKey = `amounts.${tokenAmountAddress}` as const;
         const calculatedAmount = formatUnits(
           tokenAmount.rawAmount,
-          tokenAmount.decimals
+          tokenAmount.decimals,
         );
         setValue(tokenAmountKey, calculatedAmount);
       }
 
       setValue("referenceTokenAddress", address);
     },
-    [poolBalances, tokenPrices, pool, setValue]
+    [poolBalances, tokenPrices, pool, setValue],
   );
 
   if (!context) return null;

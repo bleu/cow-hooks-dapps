@@ -4,10 +4,10 @@ import { type PropsWithChildren, useCallback } from "react";
 
 import { Form } from "@bleu.builders/ui";
 import { useIFrameContext, useSelectedPool } from "@bleu/cow-hooks-ui";
+import type { DepositFormType } from "@bleu/utils";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
-import { DepositFormType } from "@bleu/utils";
 
 export function FormContextProvider({ children }: PropsWithChildren) {
   const { setHookInfo } = useIFrameContext();
@@ -28,7 +28,7 @@ export function FormContextProvider({ children }: PropsWithChildren) {
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [getHookInfo, setHookInfo, router]
+    [getHookInfo, setHookInfo, router],
   );
 
   return (

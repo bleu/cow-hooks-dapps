@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import type { Address } from "viem";
+import { useIFrameContext } from "../context";
 import { updateTokenBalanceAfterSwap } from "../utils/math";
 import { useSwapAmount } from "./useSwapAmount";
 import { useTokens } from "./useTokens";
-import { useIFrameContext } from "../context";
 
 export function useTokensAfterSwap(
-  tokens: Address[]
+  tokens: Address[],
 ): Record<string, { balance: `${number}`; decimals: number; symbol: string }> {
   const { context } = useIFrameContext();
   const balancesBeforeSwap = useTokens(tokens);
@@ -41,7 +41,7 @@ export function useTokensAfterSwap(
       {} as Record<
         string,
         { balance: `${number}`; decimals: number; symbol: string }
-      >
+      >,
     );
   }, [balancesBeforeSwap, buyAmount, sellAmount, context?.orderParams]);
 }

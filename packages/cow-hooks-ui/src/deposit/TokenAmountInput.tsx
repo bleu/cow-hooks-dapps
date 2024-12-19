@@ -1,15 +1,15 @@
 import { Button, Input, formatNumber } from "@bleu.builders/ui";
 
+import { type DepositFormType, constraintStringToBeNumeric } from "@bleu/utils";
 import { useCallback, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
+import { TokenLogoWithWeight } from "../TokenLogoWithWeight";
+import { useIFrameContext } from "../context";
 import { useSwapAmount } from "../hooks/useSwapAmount";
 import { useTokenBalanceAfterSwap } from "../hooks/useTokenBalanceAfterSwap";
 import type { IBalance } from "../types";
-import { constraintStringToBeNumeric, DepositFormType } from "@bleu/utils";
-import { useIFrameContext } from "../context";
 import { InfoTooltip } from "../ui/TooltipBase";
-import { TokenLogoWithWeight } from "../TokenLogoWithWeight";
 
 export function TokenAmountInputDeposit({
   poolBalance,
@@ -29,7 +29,7 @@ export function TokenAmountInputDeposit({
   });
 
   const tokenBalanceAfterSwap = useTokenBalanceAfterSwap(
-    poolBalance.token.address
+    poolBalance.token.address,
   );
 
   const isTokenBuy = useMemo(() => {
@@ -52,11 +52,11 @@ export function TokenAmountInputDeposit({
       if (updateTokenAmounts) {
         updateTokenAmounts(
           constraintStringToBeNumeric(amount),
-          poolBalance.token.address as Address
+          poolBalance.token.address as Address,
         );
       }
     },
-    [updateTokenAmounts, poolBalance.token.address]
+    [updateTokenAmounts, poolBalance.token.address],
   );
 
   const maxButtonDisabled = useMemo(() => {
@@ -90,7 +90,7 @@ export function TokenAmountInputDeposit({
               onChange(e.target.value);
               setValue(
                 `amounts.${poolBalance.token.address.toLowerCase()}`,
-                constraintStringToBeNumeric(e.target.value)
+                constraintStringToBeNumeric(e.target.value),
               );
             },
           })}
@@ -117,7 +117,7 @@ export function TokenAmountInputDeposit({
                     4,
                     "decimal",
                     "standard",
-                    0.0001
+                    0.0001,
                   ).replace(/\.?0+$/, "") || "0"}
                 </span>
               </div>
@@ -130,7 +130,7 @@ export function TokenAmountInputDeposit({
                     onClick={() => {
                       setValue(
                         `amounts.${poolBalance.token.address.toLowerCase()}`,
-                        tokenBalanceAfterSwap
+                        tokenBalanceAfterSwap,
                       );
                       onChange(tokenBalanceAfterSwap);
                     }}
@@ -146,7 +146,7 @@ export function TokenAmountInputDeposit({
                     onClick={() => {
                       setValue(
                         `amounts.${poolBalance.token.address.toLowerCase()}`,
-                        buyAmount
+                        buyAmount,
                       );
                       onChange(buyAmount);
                     }}
