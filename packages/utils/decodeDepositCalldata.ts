@@ -1,4 +1,3 @@
-import type { DepositFormType } from "types";
 import {
   type Address,
   type PublicClient,
@@ -6,6 +5,7 @@ import {
   formatUnits,
   hexToBigInt,
 } from "viem";
+import type { DepositFormType } from "./types";
 
 export const decodeDepositCalldata = async (
   string: `0x${string}`,

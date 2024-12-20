@@ -1,5 +1,5 @@
 {
-  "name": "@bleu/deposit-pool",
+  "name": "@bleu/deposit-uni-v2",
   "version": "0.0.0",
   "private": true,
   "scripts": {

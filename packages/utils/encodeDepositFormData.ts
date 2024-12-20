@@ -1,7 +1,5 @@
-// TODO: Move to @bleu/utils
-
 import type { BigNumberish } from "ethers";
-import type { DepositFormType } from "types";
+import type { DepositFormType } from "./types";
 
 function remove0x(v: string): string {
   return v.slice(2);
