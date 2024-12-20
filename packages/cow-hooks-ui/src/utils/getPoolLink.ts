@@ -31,7 +31,7 @@ export function getBalancerCoWPoolLink(
  */
 export const UniswapV2ChainName: Record<SupportedChainId, string> = {
   [SupportedChainId.MAINNET]: "ethereum",
-  [SupportedChainId.SEPOLIA]: "sepolia",
+  [SupportedChainId.SEPOLIA]: "ethereum_sepolia",
   [SupportedChainId.ARBITRUM_ONE]: "arbitrum",
   [SupportedChainId.GNOSIS_CHAIN]: "",
   [SupportedChainId.BASE]: "base",

@@ -32,4 +32,7 @@ export * from "./GlobalError";
 export * from "./utils/getPoolLink";
 export * from "./utils/combineTokenLists";
 export * from "./utils/getTokensList";
+export * from "./utils/math";
 export * from "./hooks/useTokenList";
+export * from "./deposit";
+export * from "./states";

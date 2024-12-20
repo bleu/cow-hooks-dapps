@@ -5,9 +5,9 @@ import {
   SubmitButton,
   WithdrawPctSlider,
   useIFrameContext,
+  usePoolBalances,
 } from "@bleu/cow-hooks-ui";
 import { Suspense } from "react";
-import { usePoolBalances } from "#/hooks/usePoolBalances";
 
 export function PoolForm({ selectedPool }: { selectedPool?: IPool }) {
   const { context } = useIFrameContext();
