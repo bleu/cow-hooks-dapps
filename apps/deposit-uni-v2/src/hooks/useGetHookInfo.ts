@@ -17,7 +17,7 @@ import { BigNumber } from "ethers";
 import { useCallback, useMemo } from "react";
 import { type Address, maxUint256, parseUnits } from "viem";
 
-const SLIPPAGE = BigInt(100); // 1% slippage
+const SLIPPAGE = BigInt(200); // 2% slippage
 
 export function useGetHookInfo(pool?: IPool) {
   const { cowShedProxy, context } = useIFrameContext();
