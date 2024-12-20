@@ -11,7 +11,7 @@
   "theme_color": "#ffffff",
   "cow_hook_dapp": {
     "id": "8cae0a2bde1ca3242ece932ee31b24541ca5e6d1efc0d7be80bd85de0734e558",
-    "name": "Deposit Uniswap v2 Liquidity",
+    "name": "Uniswap v2 Deposit",
     "descriptionShort": "Add liquidity to a Uniswap v2 pool after the swap",
     "description": "Easily increase your position in a liquidity pool, adding both tokens in the right ratio.\n\n Whether you're seeking to increase your exposure to specific tokens or maximize the returns from your assets, this tool offers a quick and efficient way to enhance your liquidity position after a token swap, all in a smooth, efficient process.",
     "version": "0.0.1",
