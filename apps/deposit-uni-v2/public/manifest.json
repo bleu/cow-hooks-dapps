@@ -1,0 +1,26 @@
+{
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "homepage_url": "https://swap.cow.fi",
+  "description": "CoW hook dapp: Deposit Uniswap v2 Liquidity",
+  "icons": [],
+  "orientation": "portrait",
+  "name": "Deposit Uniswap v2 Liquidity",
+  "short_name": "Deposit Uniswap v2 Liquidity",
+  "start_url": ".",
+  "theme_color": "#ffffff",
+  "cow_hook_dapp": {
+    "id": "453074b3f9525c0a88e09decbe69e701e52163560d00e752b1e56175ad1217bb",
+    "name": "Deposit Uniswap v2 Liquidity",
+    "descriptionShort": "Add liquidity from a Uniswap v2 Weighted pool after the swap",
+    "description": "Easily increase your position in a liquidity pool, adding both tokens in the right ratio.\n\n Whether you're seeking to increase your exposure to specific tokens or maximize the returns from your assets, this tool offers a quick and efficient way to enhance your liquidity position after a token swap, all in a smooth, efficient process.",
+    "version": "0.0.1",
+    "website": "https://app.uniswap.org/pools/v2",
+    "image": "tbd",
+    "conditions": {
+      "position": "post",
+      "walletCompatibility": ["EOA"],
+      "supportedNetworks": [1, 42161, 11155111, 8453]
+    }
+  }
+}

@@ -12,7 +12,7 @@
       }
     ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "../../packages/utils/uniswapRouterMap.ts", "../../packages/utils/uniswapSupportedChains.ts", "../../packages/cow-hooks-ui/src/hooks/useTokenPrice.ts", "../../packages/cow-hooks-ui/src/hooks/useUniV2Pools.ts", "../../packages/cow-hooks-ui/src/hooks/useUserUniV2Pools.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"],
   "types": ["node", "jest", "@testing-library/jest-dom"]
 }

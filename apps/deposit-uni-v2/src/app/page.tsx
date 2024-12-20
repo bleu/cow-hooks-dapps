@@ -4,10 +4,13 @@ import {
   type IPool,
   PoolsDropdownMenu,
   Spinner,
-  getBalancerCoWPoolLink,
+  combineTokenLists,
+  getUniswapV2PoolLink,
+  useFetchNewUniV2PoolCallback,
   useIFrameContext,
   useSelectedPool,
   useTokenBalanceAfterSwap,
+  useUserUniV2Pools,
 } from "@bleu/cow-hooks-ui";
 import {
   COW_NATIVE_TOKEN_ADDRESS,
@@ -19,11 +22,14 @@ import { useCallback, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
 import { PoolItemInfo } from "#/components/PoolItemInfo";
-import { useCowAmmPools } from "#/hooks/useCowAmmPools";
 
 export default function Page() {
   const { context, publicClient } = useIFrameContext();
-  const { data: pools, isLoading: isLoadingPools } = useCowAmmPools();
+  const {
+    data: pools,
+    isLoading: isLoadingPools,
+    mutate,
+  } = useUserUniV2Pools();
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
 
   const { setValue, reset, control } = useFormContext<DepositFormType>();
@@ -36,6 +42,7 @@ export default function Page() {
   );
 
   const selectedPool = useSelectedPool();
+  const fetchNewPoolCallback = useFetchNewUniV2PoolCallback();
 
   const allPools = useMemo(() => {
     if (!pools && !selectedPool) return [];
@@ -160,7 +167,15 @@ export default function Page() {
         pools={allPools}
         selectedPool={selectedPool}
         isCheckDetailsCentered={false}
-        getPoolLink={getBalancerCoWPoolLink}
+        getPoolLink={getUniswapV2PoolLink}
+        onFetchNewPoolSuccess={(pool: IPool | undefined) => {
+          if (!pool) return;
+          const chainId = context.chainId;
+          const poolWithChainId = { ...pool, chainId };
+          const poolsWithChainId = pools?.map((p) => ({ ...p, chainId })) || [];
+          mutate(combineTokenLists([poolWithChainId], poolsWithChainId));
+        }}
+        fetchNewPoolCallback={fetchNewPoolCallback}
       />
       {selectedPool && (
         <div className="flex flex-col justify-center mt-2 w-full">

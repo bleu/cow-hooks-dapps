@@ -1,5 +1,7 @@
+// TODO: Move to @bleu/utils
+
 import type { BigNumberish } from "ethers";
-import type { FormType } from "#/types";
+import type { DepositFormType } from "types";
 
 function remove0x(v: string): string {
   return v.slice(2);
@@ -9,8 +11,8 @@ function processAmount(amount: BigNumberish) {
   return amount.toString(16).padStart(64, "0");
 }
 
-export function encodeFormData(
-  data: FormType,
+export function encodeDepositFormData(
+  data: DepositFormType,
   parsedAmounts: Record<string, bigint>,
 ): string {
   const { poolId, referenceTokenAddress } = data;

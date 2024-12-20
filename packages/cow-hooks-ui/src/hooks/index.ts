@@ -15,3 +15,4 @@ export * from "./useFetchNewUniV2PoolCallback";
 export * from "./useTokenPrice";
 export * from "./useUniV2Pools";
 export * from "./useUserUniV2Pools";
+export * from "../../../../apps/withdraw-uni-v2/src/hooks/usePoolBalances";

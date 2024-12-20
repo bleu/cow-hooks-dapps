@@ -1,3 +1,4 @@
+import type { DepositFormType } from "types";
 import {
   type Address,
   type PublicClient,
@@ -5,12 +6,11 @@ import {
   formatUnits,
   hexToBigInt,
 } from "viem";
-import type { FormType } from "#/types";
 
-export const decodeCalldata = async (
+export const decodeDepositCalldata = async (
   string: `0x${string}`,
   publicClient: PublicClient,
-): Promise<FormType> => {
+): Promise<DepositFormType> => {
   const encodedFormData = string.slice(-290);
 
   const poolId = `0x${encodedFormData.slice(0, 40)}`;
@@ -53,7 +53,7 @@ export const decodeCalldata = async (
     poolId,
     amounts,
     referenceTokenAddress,
-  } as FormType;
+  } as DepositFormType;
 
   return result;
 };
