@@ -113,7 +113,7 @@ export default function Page() {
 
   if (
     !context?.orderParams?.buyTokenAddress ||
-    !context?.orderParams?.buyTokenAddress ||
+    !context?.orderParams?.sellTokenAddress ||
     !context?.orderParams?.sellAmount ||
     !context?.orderParams?.buyAmount
   ) {
