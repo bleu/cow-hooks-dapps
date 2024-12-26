@@ -43,11 +43,14 @@ async function getUserPools(
 
   const allPools: (IPool | undefined)[] = lpTokensWithInfo.map(
     (lpToken, _index) => {
+      const tokenAddresses = [...lpToken.tokens];
+      tokenAddresses.sort();
+
       const token0 = tokens.find(
-        (token) => token.address === lpToken.tokens[0],
+        (token) => token.address === tokenAddresses[0],
       );
       const token1 = tokens.find(
-        (token) => token.address === lpToken.tokens[1],
+        (token) => token.address === tokenAddresses[1],
       );
 
       if (!token0 || !token1) return;
