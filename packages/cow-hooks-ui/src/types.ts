@@ -39,7 +39,6 @@ export interface IToken {
   address: Address;
   symbol: string;
   decimals: number;
-  isNested?: boolean;
   weight: number;
   reserve?: BigNumberish;
 }

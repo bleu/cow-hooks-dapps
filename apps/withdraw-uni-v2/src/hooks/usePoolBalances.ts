@@ -30,7 +30,7 @@ export function usePoolBalances(pool?: IPool) {
         .div(totalSupply);
 
       const balanceNumber = Number(
-        formatUnits(balance.toBigInt(), token.decimals)
+        formatUnits(balance.toBigInt(), token.decimals),
       );
 
       const fiatAmount =
@@ -40,7 +40,7 @@ export function usePoolBalances(pool?: IPool) {
           context.chainId,
           token.address,
           token.decimals,
-          token.symbol
+          token.symbol,
         ),
         balance,
         fiatAmount,

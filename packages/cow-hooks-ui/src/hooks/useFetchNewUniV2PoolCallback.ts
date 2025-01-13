@@ -26,7 +26,7 @@ async function fetchNewPool({
     account,
     poolAddress,
     client,
-    balancesDiff
+    balancesDiff,
   );
   // Read possibly missing tokens on chain and add price Usd
   const tokens = await getTokensInfo(lpToken.tokens, [], chainId, client);
@@ -52,7 +52,7 @@ async function fetchNewPool({
           },
         ],
         chainId,
-        account
+        account,
       );
     } catch (e) {
       console.error("Error caching new LP token:", e);

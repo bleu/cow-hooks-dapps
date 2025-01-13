@@ -20,11 +20,11 @@ export function minimalPoolToPoolState(pool: IPool): PoolState {
 
 export function fetchPoolState(
   poolId: string,
-  chainId: SupportedChainId
+  chainId: SupportedChainId,
 ): Promise<PoolState> {
   const balancerApi = new BalancerApi(
     BALANCER_API_URL[chainId],
-    SUPPORTED_CHAIN_ID_TO_CHAIN_ID[chainId]
+    SUPPORTED_CHAIN_ID_TO_CHAIN_ID[chainId],
   );
   return balancerApi.pools.fetchPoolState(poolId);
 }

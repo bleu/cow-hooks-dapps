@@ -13,7 +13,7 @@ async function getUserPools(
   chainId: SupportedChainId,
   client: PublicClient,
   balancesDiff: Record<string, string>,
-  poolTokens: TokenData[]
+  poolTokens: TokenData[],
 ): Promise<IPool[]> {
   // Get lists of tokens
   const allLpTokens = await getLpTokensList(chainId, ownerAddress);
@@ -25,7 +25,7 @@ async function getUserPools(
     lpTokens.flatMap((lpToken) => lpToken.tokens),
     poolTokens,
     chainId,
-    client
+    client,
   );
 
   // Read contracts on-chain data
@@ -33,7 +33,7 @@ async function getUserPools(
     ownerAddress,
     lpTokens.map((lpToken) => lpToken.address),
     client,
-    balancesDiff
+    balancesDiff,
   );
 
   // Add on-chain info to pairs (amount of LPs)
@@ -47,10 +47,10 @@ async function getUserPools(
       tokenAddresses.sort();
 
       const token0 = tokens.find(
-        (token) => token.address === tokenAddresses[0]
+        (token) => token.address === tokenAddresses[0],
       );
       const token1 = tokens.find(
-        (token) => token.address === tokenAddresses[1]
+        (token) => token.address === tokenAddresses[1],
       );
 
       if (!token0 || !token1) return;
@@ -84,7 +84,7 @@ async function getUserPools(
           walletBalance: lpToken.userBalance,
         },
       };
-    }
+    },
   );
 
   return allPools
@@ -102,7 +102,7 @@ export function useUniV2Pools(
   ownerAddress: string | undefined,
   chainId: SupportedChainId | undefined,
   client: PublicClient | undefined,
-  balancesDiff: Record<string, Record<string, string>>
+  balancesDiff: Record<string, Record<string, string>>,
 ) {
   const { data: poolTokens } = useTokenList();
   return useSWR(
@@ -123,7 +123,7 @@ export function useUniV2Pools(
         chainId,
         client,
         userBalancesDiff,
-        poolTokens
+        poolTokens,
       );
     },
     {
@@ -131,6 +131,6 @@ export function useUniV2Pools(
       revalidateOnReconnect: false,
       revalidateOnMount: false,
       shouldRetryOnError: false,
-    }
+    },
   );
 }

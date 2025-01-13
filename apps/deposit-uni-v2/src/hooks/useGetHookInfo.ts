@@ -53,7 +53,7 @@ export function useGetHookInfo(pool?: IPool) {
         const tokenAddress = token.address.toLowerCase();
         const amount = params.amounts[tokenAddress];
         const amountBigNumber = BigNumber.from(
-          parseUnits(amount.toString(), token.decimals)
+          parseUnits(amount.toString(), token.decimals),
         );
         return {
           tokenAddress,
@@ -80,7 +80,7 @@ export function useGetHookInfo(pool?: IPool) {
           }) || []
       );
     },
-    [pool, tokenAllowances, defaultPermitData]
+    [pool, tokenAllowances, defaultPermitData],
   );
 
   const getPoolDepositTxs = useCallback(
@@ -97,7 +97,7 @@ export function useGetHookInfo(pool?: IPool) {
       const referenceTokenDecimals = pool.poolTokens.find(
         (token) =>
           token.address.toLowerCase() ===
-          params.referenceTokenAddress.toLowerCase()
+          params.referenceTokenAddress.toLowerCase(),
       )?.decimals;
 
       if (!referenceTokenDecimals) throw new Error("Invalid reference token");
@@ -107,11 +107,11 @@ export function useGetHookInfo(pool?: IPool) {
 
       const desiredAmountA = parseUnits(
         params.amounts[tokenA.address.toLowerCase()],
-        tokenA.decimals
+        tokenA.decimals,
       );
       const desiredAmountB = parseUnits(
         params.amounts[tokenB.address.toLowerCase()],
-        tokenB.decimals
+        tokenB.decimals,
       );
 
       const amountAMin =
@@ -157,11 +157,11 @@ export function useGetHookInfo(pool?: IPool) {
 
       return Promise.all(
         [...transferFromUserToProxyArgs, ...approveArgs, depositArg].map(
-          (arg) => TransactionFactory.createRawTx(arg.type, arg)
-        )
+          (arg) => TransactionFactory.createRawTx(arg.type, arg),
+        ),
       );
     },
-    [context, cowShedProxy, pool, uniswapRouterAddress, deadline]
+    [context, cowShedProxy, pool, uniswapRouterAddress, deadline],
   );
 
   return useCallback(
@@ -176,6 +176,6 @@ export function useGetHookInfo(pool?: IPool) {
         txs: poolDepositTxs,
       };
     },
-    [getPermitData, getPoolDepositTxs]
+    [getPermitData, getPoolDepositTxs],
   );
 }

@@ -27,7 +27,7 @@ export function usePoolBalance(pool?: IPool) {
       const balance = BigNumber.from(token.reserve);
 
       const balanceNumber = Number(
-        formatUnits(balance.toBigInt(), token.decimals)
+        formatUnits(balance.toBigInt(), token.decimals),
       );
 
       const fiatAmount =
@@ -37,7 +37,7 @@ export function usePoolBalance(pool?: IPool) {
           context.chainId,
           token.address,
           token.decimals,
-          token.symbol
+          token.symbol,
         ),
         balance,
         fiatAmount,

@@ -85,19 +85,19 @@ export function PoolsDropdownMenu({
         pool.symbol?.toLowerCase().includes(searchLower) ||
         pool.address?.toLowerCase().includes(searchLower) ||
         pool.poolTokens.some((token) =>
-          token.symbol?.toLowerCase().includes(searchLower)
-        )
+          token.symbol?.toLowerCase().includes(searchLower),
+        ),
     );
   }, [pools, search]);
 
   const displayedPools = useMemo(
     () => filteredPools.slice(0, displayCount),
-    [filteredPools, displayCount]
+    [filteredPools, displayCount],
   );
 
   const allPoolAddressesLowerCase = useMemo(
     () => pools.map((pool) => pool.address?.toLowerCase()),
-    [pools]
+    [pools],
   );
 
   const { isLoading: isLoadingNewPool, error: errorNewPool } = useSWR<
@@ -113,7 +113,7 @@ export function PoolsDropdownMenu({
       shouldRetryOnError: false,
       revalidateOnReconnect: false,
       onSuccess: onFetchNewPoolSuccess,
-    }
+    },
   );
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -247,7 +247,7 @@ export function PoolsDropdownMenu({
           <a
             className={cn(
               "inline-flex justify-start transition-colors text-primary underline-offset-4 hover:underline p-0 m-0 text-xs h-fit w-full",
-              { "justify-center": isCheckDetailsCentered }
+              { "justify-center": isCheckDetailsCentered },
             )}
             href={poolLink}
             target="_blank"
@@ -282,7 +282,7 @@ export function PoolLogo({ pool }: PoolLogoProps) {
               context.chainId,
               token.address,
               token.decimals,
-              token.symbol
+              token.symbol,
             )
           }
           weight={token.weight}
