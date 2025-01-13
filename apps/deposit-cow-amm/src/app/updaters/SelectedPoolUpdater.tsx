@@ -27,11 +27,10 @@ interface IQuery {
       volume24h: string;
       totalShares: string;
     };
-    allTokens: {
+    poolTokens: {
       address: Address;
       symbol: string;
       decimals: number;
-      isNested: boolean;
       weight: number;
     }[];
     userBalance: {
@@ -65,11 +64,10 @@ const POOL_QUERY = gql`
         volume24h
         totalShares
       }
-      allTokens {
+      poolTokens {
         address
         symbol
         decimals
-        isNested
         weight
       }
       userBalance {
@@ -100,12 +98,12 @@ export async function fetchPool(id?: string, chainId?: SupportedChainId) {
           ...pool.userBalance,
           walletBalance: parseUnits(
             pool.userBalance.walletBalance,
-            pool.decimals,
+            pool.decimals
           ),
           stakedBalances: pool.userBalance.stakedBalances.map((staked) => ({
             balance: parseUnits(
               Number(staked.balance).toFixed(pool.decimals),
-              pool.decimals,
+              pool.decimals
             ),
             stakingId: staked.stakingId,
           })),
@@ -114,7 +112,7 @@ export async function fetchPool(id?: string, chainId?: SupportedChainId) {
           ...pool.dynamicData,
           totalShares: parseUnits(
             Number(pool.dynamicData.totalShares).toFixed(pool.decimals),
-            pool.decimals,
+            pool.decimals
           ),
         },
       };
@@ -131,7 +129,7 @@ export function SelectedPoolUpdater() {
   useEffect(() => {
     if (!pools || !poolId) return;
     const newSelectedPool = pools?.find(
-      (pool) => pool.id.toLowerCase() === poolId.toLowerCase(),
+      (pool) => pool.id.toLowerCase() === poolId.toLowerCase()
     );
     if (newSelectedPool) {
       setSelectedPool(newSelectedPool);

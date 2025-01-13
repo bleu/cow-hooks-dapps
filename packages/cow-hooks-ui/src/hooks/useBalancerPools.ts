@@ -24,11 +24,10 @@ interface IQuery {
       volume24h: string;
       totalShares: string;
     };
-    allTokens: {
+    poolTokens: {
       address: Address;
       symbol: string;
       decimals: number;
-      isNested: boolean;
       weight: number;
     }[];
     userBalance: {
@@ -76,11 +75,10 @@ const USER_POOLS_QUERY = gql`
         volume24h
         totalShares
       }
-      allTokens {
+      poolTokens {
         address
         symbol
         decimals
-        isNested
         weight
       }
       userBalance {
@@ -105,7 +103,7 @@ interface IGetPoolsWhere {
 export function useBalancerPools(
   where: IGetPoolsWhere,
   chainId?: SupportedChainId,
-  orderBy?: string,
+  orderBy?: string
 ) {
   return useSWR(
     [where, chainId],
@@ -128,31 +126,31 @@ export function useBalancerPools(
                 ...pool.userBalance,
                 walletBalance: parseUnits(
                   pool.userBalance.walletBalance,
-                  pool.decimals,
+                  pool.decimals
                 ),
                 stakedBalances: pool.userBalance.stakedBalances.map(
                   (staked) => ({
                     balance: parseUnits(
                       Number(staked.balance).toFixed(pool.decimals),
-                      pool.decimals,
+                      pool.decimals
                     ),
                     stakingId: staked.stakingId,
-                  }),
+                  })
                 ),
               },
               dynamicData: {
                 ...pool.dynamicData,
                 totalShares: parseUnits(
                   Number(pool.dynamicData.totalShares).toFixed(pool.decimals),
-                  pool.decimals,
+                  pool.decimals
                 ),
               },
             }))
-            .filter((pool) => pool.allTokens.length === 2);
+            .filter((pool) => pool.poolTokens.length === 2);
         });
     },
     {
       revalidateOnFocus: false,
-    },
+    }
   );
 }

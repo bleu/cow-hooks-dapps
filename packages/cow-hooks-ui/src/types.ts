@@ -63,7 +63,7 @@ export interface IPool {
     volume24h: string;
     totalShares: BigNumberish;
   };
-  allTokens: IToken[];
+  poolTokens: IToken[];
 
   userBalance: {
     walletBalance: BigNumberish;

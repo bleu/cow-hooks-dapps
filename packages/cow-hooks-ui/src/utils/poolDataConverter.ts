@@ -8,7 +8,7 @@ export function minimalPoolToPoolState(pool: IPool): PoolState {
     id: pool.id,
     protocolVersion: pool.protocolVersion,
     address: pool.address,
-    tokens: pool.allTokens.map((token, index) => ({
+    tokens: pool.poolTokens.map((token, index) => ({
       address: token.address,
       decimals: token.decimals,
       index,
@@ -20,11 +20,11 @@ export function minimalPoolToPoolState(pool: IPool): PoolState {
 
 export function fetchPoolState(
   poolId: string,
-  chainId: SupportedChainId,
+  chainId: SupportedChainId
 ): Promise<PoolState> {
   const balancerApi = new BalancerApi(
     BALANCER_API_URL[chainId],
-    SUPPORTED_CHAIN_ID_TO_CHAIN_ID[chainId],
+    SUPPORTED_CHAIN_ID_TO_CHAIN_ID[chainId]
   );
   return balancerApi.pools.fetchPoolState(poolId);
 }

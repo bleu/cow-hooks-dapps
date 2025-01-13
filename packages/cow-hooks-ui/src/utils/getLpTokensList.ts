@@ -9,11 +9,11 @@ interface TokenData extends Omit<RawTokenData, "extensions"> {
 
 export async function getLpTokensList(
   chainId: SupportedChainId,
-  account: string,
+  account: string
 ): Promise<TokenData[]> {
   try {
     const response = await fetch(
-      "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/lp-tokens/uniswapv2.json",
+      "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/lp-tokens/uniswapv2.json"
     );
 
     if (!response.ok) {
@@ -24,11 +24,11 @@ export async function getLpTokensList(
 
     const cachedLpTokens = getExtraTokens(chainId, account);
 
-    const allTokens = combineTokenLists(data.tokens, cachedLpTokens);
+    const poolTokens = combineTokenLists(data.tokens, cachedLpTokens);
 
     // Transform the tokens array
     const allLpTokens: TokenData[] = {
-      tokens: allTokens,
+      tokens: poolTokens,
     }.tokens.map((token) => ({
       chainId: token.chainId,
       address: token.address,

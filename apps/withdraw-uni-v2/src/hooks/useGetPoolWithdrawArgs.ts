@@ -13,7 +13,7 @@ import { useCallback } from "react";
 
 export function useGetPoolWithdrawArgs(): (
   pool: IPool,
-  bptAMount: BigNumber,
+  bptAMount: BigNumber
 ) => Promise<
   (ERC20TransferFromArgs | UniswapWithdrawArgs | ERC20ApproveArgs)[] | undefined
 > {
@@ -48,13 +48,13 @@ export function useGetPoolWithdrawArgs(): (
       };
 
       const amountAMin = BigNumber.from(bptWalletAmount)
-        .mul(pool.allTokens[0].reserve ?? "0")
+        .mul(pool.poolTokens[0].reserve ?? "0")
         .div(pool?.totalSupply ?? "1")
         .mul(99)
         .div(100); // 1% slippage
 
       const amountBMin = BigNumber.from(bptWalletAmount)
-        .mul(pool.allTokens[1].reserve ?? "0")
+        .mul(pool.poolTokens[1].reserve ?? "0")
         .div(pool?.totalSupply ?? "1")
         .mul(99)
         .div(100); // 1% slippage
@@ -65,8 +65,8 @@ export function useGetPoolWithdrawArgs(): (
         {
           type: TRANSACTION_TYPES.UNISWAP_WITHDRAW,
           uniswapRouterAddress: uniswapRouterMap[context.chainId],
-          tokenA: pool.allTokens[0].address,
-          tokenB: pool.allTokens[1].address,
+          tokenA: pool.poolTokens[0].address,
+          tokenB: pool.poolTokens[1].address,
           liquidity: BigNumber.from(bptWalletAmount).toBigInt(),
           amountAMin,
           amountBMin,
@@ -75,6 +75,6 @@ export function useGetPoolWithdrawArgs(): (
         },
       ] as (ERC20TransferFromArgs | UniswapWithdrawArgs | ERC20ApproveArgs)[];
     },
-    [context, cowShedProxy, deadline],
+    [context, cowShedProxy, deadline]
   );
 }

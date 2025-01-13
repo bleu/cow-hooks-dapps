@@ -14,23 +14,23 @@ export function usePoolBalances(pool?: IPool) {
     data: token0Price,
     isLoading: isLoadingToken0,
     isValidating: isValidatingToken0,
-  } = useTokenPrice(pool?.allTokens[0]);
+  } = useTokenPrice(pool?.poolTokens[0]);
   const {
     data: token1Price,
     isLoading: isLoadingToken1,
     isValidating: isValidatingToken1,
-  } = useTokenPrice(pool?.allTokens[1]);
+  } = useTokenPrice(pool?.poolTokens[1]);
 
   const data = useMemo(() => {
     if (!pool || !pool.totalSupply || !context?.chainId) return;
     const totalSupply = BigNumber.from(pool.totalSupply);
-    return pool?.allTokens.map((token, index) => {
+    return pool?.poolTokens.map((token, index) => {
       const balance = BigNumber.from(token.reserve)
         .mul(pool.userBalance.walletBalance)
         .div(totalSupply);
 
       const balanceNumber = Number(
-        formatUnits(balance.toBigInt(), token.decimals),
+        formatUnits(balance.toBigInt(), token.decimals)
       );
 
       const fiatAmount =
@@ -40,7 +40,7 @@ export function usePoolBalances(pool?: IPool) {
           context.chainId,
           token.address,
           token.decimals,
-          token.symbol,
+          token.symbol
         ),
         balance,
         fiatAmount,
