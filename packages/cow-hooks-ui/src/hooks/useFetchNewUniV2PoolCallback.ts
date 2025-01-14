@@ -68,7 +68,7 @@ async function fetchNewPool({
     type: "Uniswap v2",
     protocolVersion: 2 as const,
     totalSupply: lpToken.totalSupply,
-    allTokens: [
+    poolTokens: [
       {
         address: token0.address as Address,
         symbol: token0.symbol,

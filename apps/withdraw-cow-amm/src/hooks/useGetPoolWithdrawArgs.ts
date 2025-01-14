@@ -46,7 +46,7 @@ export function useGetPoolWithdrawArgs(): (
               symbol: pool.symbol,
             };
 
-      const transferFromProxyToUserTokens = pool.allTokens.map((token) => {
+      const transferFromProxyToUserTokens = pool.poolTokens.map((token) => {
         const tokenAddress = token.address;
 
         return {

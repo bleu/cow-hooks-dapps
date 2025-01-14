@@ -24,11 +24,10 @@ interface IQuery {
       volume24h: string;
       totalShares: string;
     };
-    allTokens: {
+    poolTokens: {
       address: Address;
       symbol: string;
       decimals: number;
-      isNested: boolean;
       weight: number;
     }[];
     userBalance: {
@@ -76,11 +75,10 @@ const USER_POOLS_QUERY = gql`
         volume24h
         totalShares
       }
-      allTokens {
+      poolTokens {
         address
         symbol
         decimals
-        isNested
         weight
       }
       userBalance {
@@ -148,7 +146,7 @@ export function useBalancerPools(
                 ),
               },
             }))
-            .filter((pool) => pool.allTokens.length === 2);
+            .filter((pool) => pool.poolTokens.length === 2);
         });
     },
     {

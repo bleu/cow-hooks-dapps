@@ -84,7 +84,7 @@ export function PoolsDropdownMenu({
       (pool) =>
         pool.symbol?.toLowerCase().includes(searchLower) ||
         pool.address?.toLowerCase().includes(searchLower) ||
-        pool.allTokens.some((token) =>
+        pool.poolTokens.some((token) =>
           token.symbol?.toLowerCase().includes(searchLower),
         ),
     );
@@ -212,7 +212,7 @@ export function PoolsDropdownMenu({
                       key={pool.id}
                       value={
                         pool?.symbol +
-                        (pool?.allTokens
+                        (pool?.poolTokens
                           .map((token) => token.symbol)
                           .join("") || "") +
                         (pool?.address || "")
@@ -273,7 +273,7 @@ export function PoolLogo({ pool }: PoolLogoProps) {
 
   return (
     <div className="flex flex-row gap-1">
-      {pool.allTokens.map((token) => (
+      {pool.poolTokens.map((token) => (
         <TokenLogoWithWeight
           className="group-hover:bg-primary group-hover:text-primary-foreground"
           key={`${pool.id}-${token.address}`}

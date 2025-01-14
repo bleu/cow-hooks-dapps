@@ -8,7 +8,7 @@ export function minimalPoolToPoolState(pool: IPool): PoolState {
     id: pool.id,
     protocolVersion: pool.protocolVersion,
     address: pool.address,
-    tokens: pool.allTokens.map((token, index) => ({
+    tokens: pool.poolTokens.map((token, index) => ({
       address: token.address,
       decimals: token.decimals,
       index,

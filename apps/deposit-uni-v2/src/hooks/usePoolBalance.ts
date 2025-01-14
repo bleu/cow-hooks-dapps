@@ -14,16 +14,16 @@ export function usePoolBalance(pool?: IPool) {
     data: token0Price,
     isLoading: isLoadingToken0,
     isValidating: isValidatingToken0,
-  } = useTokenPrice(pool?.allTokens[0]);
+  } = useTokenPrice(pool?.poolTokens[0]);
   const {
     data: token1Price,
     isLoading: isLoadingToken1,
     isValidating: isValidatingToken1,
-  } = useTokenPrice(pool?.allTokens[1]);
+  } = useTokenPrice(pool?.poolTokens[1]);
 
   const data = useMemo(() => {
     if (!pool || !pool.totalSupply || !context?.chainId) return;
-    return pool?.allTokens.map((token, index) => {
+    return pool?.poolTokens.map((token, index) => {
       const balance = BigNumber.from(token.reserve);
 
       const balanceNumber = Number(

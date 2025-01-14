@@ -22,7 +22,7 @@ const SLIPPAGE = BigInt(200); // 2% slippage
 export function useGetHookInfo(pool?: IPool) {
   const { cowShedProxy, context } = useIFrameContext();
   const tokenAllowances = useTokensAllowances({
-    tokenAddresses: pool?.allTokens.map((token) => token.address) || [],
+    tokenAddresses: pool?.poolTokens.map((token) => token.address) || [],
     spender: cowShedProxy,
   });
 
@@ -34,7 +34,7 @@ export function useGetHookInfo(pool?: IPool) {
   }, [context]);
 
   const defaultPermitData = useMemo(() => {
-    return pool?.allTokens.map((token) => {
+    return pool?.poolTokens.map((token) => {
       return {
         tokenAddress: token.address,
         amount: maxUint256,
@@ -49,7 +49,7 @@ export function useGetHookInfo(pool?: IPool) {
 
       if (!tokenAllowances) return defaultPermitData;
 
-      const amountsWithBuffer = pool.allTokens.map((token) => {
+      const amountsWithBuffer = pool.poolTokens.map((token) => {
         const tokenAddress = token.address.toLowerCase();
         const amount = params.amounts[tokenAddress];
         const amountBigNumber = BigNumber.from(
@@ -94,7 +94,7 @@ export function useGetHookInfo(pool?: IPool) {
       )
         throw new Error("Missing context");
 
-      const referenceTokenDecimals = pool.allTokens.find(
+      const referenceTokenDecimals = pool.poolTokens.find(
         (token) =>
           token.address.toLowerCase() ===
           params.referenceTokenAddress.toLowerCase(),
@@ -102,8 +102,8 @@ export function useGetHookInfo(pool?: IPool) {
 
       if (!referenceTokenDecimals) throw new Error("Invalid reference token");
 
-      const tokenA = pool.allTokens[0];
-      const tokenB = pool.allTokens[1];
+      const tokenA = pool.poolTokens[0];
+      const tokenB = pool.poolTokens[1];
 
       const desiredAmountA = parseUnits(
         params.amounts[tokenA.address.toLowerCase()],
@@ -122,8 +122,8 @@ export function useGetHookInfo(pool?: IPool) {
       const depositArg: UniswapDepositArgs = {
         type: TRANSACTION_TYPES.UNISWAP_DEPOSIT,
         uniswapRouterAddress,
-        tokenA: pool.allTokens[0].address,
-        tokenB: pool.allTokens[1].address,
+        tokenA: pool.poolTokens[0].address,
+        tokenB: pool.poolTokens[1].address,
         amountADesired: desiredAmountA,
         amountBDesired: desiredAmountB,
         amountAMin,
@@ -146,7 +146,7 @@ export function useGetHookInfo(pool?: IPool) {
         } as ERC20TransferFromArgs;
       });
 
-      const approveArgs = pool.allTokens.map((token) => {
+      const approveArgs = pool.poolTokens.map((token) => {
         return {
           type: TRANSACTION_TYPES.ERC20_APPROVE,
           token: token.address as Address,

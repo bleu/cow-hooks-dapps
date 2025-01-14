@@ -14,7 +14,7 @@ export function useDepositAmounts(): Record<string, bigint> {
 
     return Object.fromEntries(
       Object.entries(amounts).map(([key, value]) => {
-        const token = selectedPool.allTokens.find(
+        const token = selectedPool.poolTokens.find(
           (token) => token.address.toLowerCase() === key.toLowerCase(),
         );
         if (!token) return [key, parseUnits(value, 18)];

@@ -24,11 +24,11 @@ export async function getLpTokensList(
 
     const cachedLpTokens = getExtraTokens(chainId, account);
 
-    const allTokens = combineTokenLists(data.tokens, cachedLpTokens);
+    const poolTokens = combineTokenLists(data.tokens, cachedLpTokens);
 
     // Transform the tokens array
     const allLpTokens: TokenData[] = {
-      tokens: allTokens,
+      tokens: poolTokens,
     }.tokens.map((token) => ({
       chainId: token.chainId,
       address: token.address,

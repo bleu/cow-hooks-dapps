@@ -49,9 +49,9 @@ export async function getTokensList(
       response.map((res) => res.json()),
     )) as { tokens: TokenData[] }[];
 
-    const allTokens = allJsonFiles.map(({ tokens }) => tokens);
+    const poolTokens = allJsonFiles.map(({ tokens }) => tokens);
 
-    return combineTokenLists(...allTokens);
+    return combineTokenLists(...poolTokens);
   } catch (error) {
     console.error("Error fetching token list:", error);
     throw error;

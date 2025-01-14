@@ -13,7 +13,7 @@ async function getUserPools(
   chainId: SupportedChainId,
   client: PublicClient,
   balancesDiff: Record<string, string>,
-  allTokens: TokenData[],
+  poolTokens: TokenData[],
 ): Promise<IPool[]> {
   // Get lists of tokens
   const allLpTokens = await getLpTokensList(chainId, ownerAddress);
@@ -23,7 +23,7 @@ async function getUserPools(
   // Read possibly missing tokens on chain and add price Usd
   const tokens = await getTokensInfo(
     lpTokens.flatMap((lpToken) => lpToken.tokens),
-    allTokens,
+    poolTokens,
     chainId,
     client,
   );
@@ -64,7 +64,7 @@ async function getUserPools(
         type: "Uniswap v2",
         protocolVersion: 2 as const,
         totalSupply: lpToken.totalSupply,
-        allTokens: [
+        poolTokens: [
           {
             address: token0.address as Address,
             symbol: token0.symbol,
@@ -104,11 +104,11 @@ export function useUniV2Pools(
   client: PublicClient | undefined,
   balancesDiff: Record<string, Record<string, string>>,
 ) {
-  const { data: allTokens } = useTokenList();
+  const { data: poolTokens } = useTokenList();
   return useSWR(
-    [ownerAddress, chainId, client, balancesDiff, allTokens],
+    [ownerAddress, chainId, client, balancesDiff, poolTokens],
     async ([ownerAddress, chainId, client, balancesDiff]): Promise<IPool[]> => {
-      if (!ownerAddress || !chainId || !client || !allTokens)
+      if (!ownerAddress || !chainId || !client || !poolTokens)
         throw new Error("Missing required data");
 
       if (!isChainIdSupportedByUniV2(chainId)) {
@@ -123,7 +123,7 @@ export function useUniV2Pools(
         chainId,
         client,
         userBalancesDiff,
-        allTokens,
+        poolTokens,
       );
     },
     {

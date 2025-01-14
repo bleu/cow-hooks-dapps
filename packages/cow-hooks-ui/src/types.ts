@@ -39,7 +39,6 @@ export interface IToken {
   address: Address;
   symbol: string;
   decimals: number;
-  isNested?: boolean;
   weight: number;
   reserve?: BigNumberish;
 }
@@ -63,7 +62,7 @@ export interface IPool {
     volume24h: string;
     totalShares: BigNumberish;
   };
-  allTokens: IToken[];
+  poolTokens: IToken[];
 
   userBalance: {
     walletBalance: BigNumberish;
