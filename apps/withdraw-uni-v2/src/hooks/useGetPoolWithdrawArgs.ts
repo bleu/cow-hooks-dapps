@@ -13,7 +13,7 @@ import { useCallback } from "react";
 
 export function useGetPoolWithdrawArgs(): (
   pool: IPool,
-  bptAMount: BigNumber,
+  bptAMount: BigNumber
 ) => Promise<
   (ERC20TransferFromArgs | UniswapWithdrawArgs | ERC20ApproveArgs)[] | undefined
 > {
@@ -50,14 +50,14 @@ export function useGetPoolWithdrawArgs(): (
       const amountAMin = BigNumber.from(bptWalletAmount)
         .mul(pool.poolTokens[0].reserve ?? "0")
         .div(pool?.totalSupply ?? "1")
-        .mul(99)
-        .div(100); // 1% slippage
+        .mul(98000)
+        .div(100000); // 2% slippage
 
       const amountBMin = BigNumber.from(bptWalletAmount)
         .mul(pool.poolTokens[1].reserve ?? "0")
         .div(pool?.totalSupply ?? "1")
-        .mul(99)
-        .div(100); // 1% slippage
+        .mul(98000)
+        .div(100000); // 2% slippage
 
       return [
         transferBptArg,
@@ -75,6 +75,6 @@ export function useGetPoolWithdrawArgs(): (
         },
       ] as (ERC20TransferFromArgs | UniswapWithdrawArgs | ERC20ApproveArgs)[];
     },
-    [context, cowShedProxy, deadline],
+    [context, cowShedProxy, deadline]
   );
 }
