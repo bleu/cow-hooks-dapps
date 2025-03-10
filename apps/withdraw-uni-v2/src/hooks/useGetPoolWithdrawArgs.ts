@@ -13,7 +13,7 @@ import { useCallback } from "react";
 
 export function useGetPoolWithdrawArgs(): (
   pool: IPool,
-  bptAMount: BigNumber
+  bptAMount: BigNumber,
 ) => Promise<
   (ERC20TransferFromArgs | UniswapWithdrawArgs | ERC20ApproveArgs)[] | undefined
 > {
@@ -75,6 +75,6 @@ export function useGetPoolWithdrawArgs(): (
         },
       ] as (ERC20TransferFromArgs | UniswapWithdrawArgs | ERC20ApproveArgs)[];
     },
-    [context, cowShedProxy, deadline]
+    [context, cowShedProxy, deadline],
   );
 }
