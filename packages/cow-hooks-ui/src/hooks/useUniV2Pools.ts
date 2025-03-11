@@ -106,8 +106,8 @@ export function useUniV2Pools(
 ) {
   const { data: poolTokens } = useTokenList();
   return useSWR(
-    [ownerAddress, chainId, client, balancesDiff, poolTokens],
-    async ([ownerAddress, chainId, client, balancesDiff]): Promise<IPool[]> => {
+    [ownerAddress, chainId, poolTokens],
+    async ([ownerAddress, chainId]): Promise<IPool[]> => {
       if (!ownerAddress || !chainId || !client || !poolTokens)
         throw new Error("Missing required data");
 
@@ -117,7 +117,6 @@ export function useUniV2Pools(
 
       //@ts-ignore
       const userBalancesDiff = balancesDiff[ownerAddress.toLowerCase()] ?? {};
-
       return await getUserPools(
         ownerAddress,
         chainId,

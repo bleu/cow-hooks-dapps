@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  type HookDappContextAdjusted,
   type IPool,
   PoolsDropdownMenu,
   Spinner,
@@ -9,7 +10,6 @@ import {
   useFetchNewUniV2PoolCallback,
   useIFrameContext,
   useSelectedPool,
-  useTokenBalanceAfterSwap,
   useUserUniV2Pools,
 } from "@bleu/cow-hooks-ui";
 import {
@@ -17,14 +17,28 @@ import {
   type DepositFormType,
   decodeDepositCalldata,
 } from "@bleu/utils";
-import { ALL_SUPPORTED_CHAIN_IDS, type Address } from "@cowprotocol/cow-sdk";
-import { useCallback, useMemo, useState } from "react";
+import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
 import { PoolItemInfo } from "#/components/PoolItemInfo";
 
 export default function Page() {
-  const { context, publicClient } = useIFrameContext();
+  const { context: iFrameContext, publicClient } = useIFrameContext();
+  const [context, setContext] = useState<HookDappContextAdjusted | undefined>();
+
+  // Avoid reloading the page when orderParams becomes null (waiting for new quote)
+  useEffect(() => {
+    const newContext = iFrameContext?.orderParams
+      ? iFrameContext
+      : {
+          ...(iFrameContext as HookDappContextAdjusted),
+          orderParams: context?.orderParams ?? null,
+        };
+    if (JSON.stringify(newContext) !== JSON.stringify(context))
+      setContext(newContext);
+  }, [iFrameContext, context]);
+
   const {
     data: pools,
     isLoading: isLoadingPools,
@@ -37,9 +51,6 @@ export default function Page() {
     control,
     name: "referenceTokenAddress",
   });
-  const sellTokenAmountAfterSwap = useTokenBalanceAfterSwap(
-    context?.orderParams?.sellTokenAddress as Address,
-  );
 
   const selectedPool = useSelectedPool();
   const fetchNewPoolCallback = useFetchNewUniV2PoolCallback();
@@ -135,7 +146,7 @@ export default function Page() {
     );
   }
 
-  if (isLoadingPools || sellTokenAmountAfterSwap === undefined) {
+  if (isLoadingPools) {
     return (
       <div className="text-center mt-10 p-2">
         <Spinner
@@ -147,14 +158,6 @@ export default function Page() {
             animation: "spin 2s linear infinite",
           }}
         />
-      </div>
-    );
-  }
-
-  if (Number(sellTokenAmountAfterSwap) < 0) {
-    return (
-      <div className="w-full text-center mt-10 p-2">
-        <span>Insufficient sell token amount</span>
       </div>
     );
   }
