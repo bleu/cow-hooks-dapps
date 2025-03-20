@@ -50,6 +50,13 @@ export const useGetHooksInfoVestAllFromAccount = () => {
             user: context.account,
           },
         ),
+        // Reset approvals
+        TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
+          type: TRANSACTION_TYPES.ERC20_APPROVE,
+          token: tokenAddress,
+          spender: vestingEscrowFactoryAddress,
+          amount: BigInt(0),
+        }),
       ]);
 
       const permitData = [

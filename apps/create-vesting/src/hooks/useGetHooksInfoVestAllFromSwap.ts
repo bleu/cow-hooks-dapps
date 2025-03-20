@@ -48,6 +48,13 @@ export const useGetHooksInfoVestAllFromSwap = () => {
             vestingEscrowFactoryAddress: vestingEscrowFactoryAddress,
           },
         ),
+        // Reset approvals
+        TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
+          type: TRANSACTION_TYPES.ERC20_APPROVE,
+          token: tokenAddress,
+          spender: vestingEscrowFactoryAddress,
+          amount: BigInt(0),
+        }),
       ]);
 
       return { txs, recipientOverride: cowShedProxy };

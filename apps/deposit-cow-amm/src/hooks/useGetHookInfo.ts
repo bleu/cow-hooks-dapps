@@ -143,10 +143,22 @@ export function useGetHookInfo(pool?: IPool) {
         } as ERC20ApproveArgs;
       });
 
+      const resetApprovalsArgs = pool.poolTokens.map((token) => {
+        return {
+          type: TRANSACTION_TYPES.ERC20_APPROVE,
+          token: token.address as Address,
+          spender: pool.address,
+          amount: BigInt(0),
+        } as ERC20ApproveArgs;
+      });
+
       return Promise.all(
-        [...transferFromUserToProxyArgs, ...approveArgs, depositArg].map(
-          (arg) => TransactionFactory.createRawTx(arg.type, arg),
-        ),
+        [
+          ...transferFromUserToProxyArgs,
+          ...approveArgs,
+          depositArg,
+          ...resetApprovalsArgs,
+        ].map((arg) => TransactionFactory.createRawTx(arg.type, arg)),
       );
     },
     [context, cowShedProxy, pool],
