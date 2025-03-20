@@ -4,12 +4,12 @@ import {
   TransactionFactory,
 } from "@bleu/utils/transactionFactory";
 import { useCallback } from "react";
-import { type Address, maxUint256 } from "viem";
+import { type Address, erc20Abi, maxUint256 } from "viem";
 import { scaleToSecondsMapping } from "#/utils/scaleToSecondsMapping";
 import type { GetHooksTransactionsParams } from "./useGetHooksTransactions";
 
 export const useGetHooksInfoVestAllFromAccount = () => {
-  const { context, cowShedProxy } = useIFrameContext();
+  const { context, cowShedProxy, publicClient } = useIFrameContext();
 
   return useCallback(
     async (
@@ -21,7 +21,7 @@ export const useGetHooksInfoVestAllFromAccount = () => {
         formData: { period, periodScale, recipient },
       } = params;
 
-      if (!context?.account || !cowShedProxy) return;
+      if (!context?.account || !cowShedProxy || !publicClient) return;
 
       const periodInSeconds = Math.ceil(
         period * scaleToSecondsMapping[periodScale],
@@ -29,14 +29,34 @@ export const useGetHooksInfoVestAllFromAccount = () => {
       const tokenAddress = token.address as Address;
       const tokenSymbol = token.symbol ?? "";
 
+      const allowance = await publicClient.readContract({
+        address: tokenAddress,
+        abi: erc20Abi,
+        functionName: "allowance",
+        args: [cowShedProxy, vestingEscrowFactoryAddress],
+      });
+
+      const approveTxs =
+        allowance < maxUint256
+          ? [
+              TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
+                type: TRANSACTION_TYPES.ERC20_APPROVE,
+                token: tokenAddress as Address,
+                spender: vestingEscrowFactoryAddress,
+                amount: BigInt(0),
+              }),
+              TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
+                type: TRANSACTION_TYPES.ERC20_APPROVE,
+                token: tokenAddress as Address,
+                spender: vestingEscrowFactoryAddress,
+                amount: maxUint256,
+              }),
+            ]
+          : [];
+
       const txs = await Promise.all([
         // Approve create vesting
-        TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
-          type: TRANSACTION_TYPES.ERC20_APPROVE,
-          token: tokenAddress,
-          spender: vestingEscrowFactoryAddress,
-          amount: maxUint256,
-        }),
+        ...approveTxs,
         // transfer from user to proxy and create vesting (weiroll)
         TransactionFactory.createRawTx(
           TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_USER,
@@ -62,6 +82,6 @@ export const useGetHooksInfoVestAllFromAccount = () => {
 
       return { txs, permitData };
     },
-    [context?.account, cowShedProxy],
+    [context?.account, cowShedProxy, publicClient],
   );
 };

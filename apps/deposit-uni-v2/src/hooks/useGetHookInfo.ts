@@ -15,12 +15,12 @@ import {
 } from "@bleu/utils/transactionFactory";
 import { BigNumber } from "ethers";
 import { useCallback, useMemo } from "react";
-import { type Address, maxUint256, parseUnits } from "viem";
+import { type Address, erc20Abi, maxUint256, parseUnits } from "viem";
 
 const SLIPPAGE = BigInt(2000); // 2% slippage
 
 export function useGetHookInfo(pool?: IPool) {
-  const { cowShedProxy, context } = useIFrameContext();
+  const { cowShedProxy, context, publicClient } = useIFrameContext();
   const tokenAllowances = useTokensAllowances({
     tokenAddresses: pool?.poolTokens.map((token) => token.address) || [],
     spender: cowShedProxy,
@@ -90,7 +90,8 @@ export function useGetHookInfo(pool?: IPool) {
         !context ||
         !context.account ||
         !cowShedProxy ||
-        !uniswapRouterAddress
+        !uniswapRouterAddress ||
+        !publicClient
       )
         throw new Error("Missing context");
 
@@ -146,14 +147,39 @@ export function useGetHookInfo(pool?: IPool) {
         } as ERC20TransferFromArgs;
       });
 
-      const approveArgs = pool.poolTokens.map((token) => {
-        return {
-          type: TRANSACTION_TYPES.ERC20_APPROVE,
-          token: token.address as Address,
-          spender: uniswapRouterAddress,
-          amount: maxUint256,
-        } as ERC20ApproveArgs;
+      const allowances = await publicClient.multicall({
+        contracts: pool.poolTokens.map((token) => ({
+          address: token.address,
+          abi: erc20Abi,
+          functionName: "allowance",
+          args: [cowShedProxy, uniswapRouterAddress],
+        })),
       });
+
+      const approveArgs = pool.poolTokens
+        .map((token, idx) => {
+          if (
+            allowances[idx].status === "failure" ||
+            BigInt(allowances[idx].result) < maxUint256
+          )
+            return [
+              {
+                type: TRANSACTION_TYPES.ERC20_APPROVE,
+                token: token.address as Address,
+                spender: uniswapRouterAddress,
+                amount: BigInt(0),
+              },
+              {
+                type: TRANSACTION_TYPES.ERC20_APPROVE,
+                token: token.address as Address,
+                spender: uniswapRouterAddress,
+                amount: maxUint256,
+              },
+            ] as ERC20ApproveArgs[];
+
+          return [] as ERC20ApproveArgs[];
+        })
+        .flat(2);
 
       return Promise.all(
         [...transferFromUserToProxyArgs, ...approveArgs, depositArg].map(
@@ -161,7 +187,7 @@ export function useGetHookInfo(pool?: IPool) {
         ),
       );
     },
-    [context, cowShedProxy, pool, uniswapRouterAddress, deadline],
+    [context, cowShedProxy, pool, uniswapRouterAddress, deadline, publicClient],
   );
 
   return useCallback(
