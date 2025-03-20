@@ -153,7 +153,8 @@ export function useGetHookInfo(pool?: IPool) {
         .map((token, idx) => {
           if (
             allowances[idx].status === "failure" ||
-            BigInt(allowances[idx].result) < MAX_UINT256
+            (BigInt(0) < BigInt(allowances[idx].result) &&
+              BigInt(allowances[idx].result) < MAX_UINT256)
           )
             return [
               {
@@ -162,6 +163,16 @@ export function useGetHookInfo(pool?: IPool) {
                 spender: pool.address,
                 amount: BigInt(0),
               },
+              {
+                type: TRANSACTION_TYPES.ERC20_APPROVE,
+                token: token.address as Address,
+                spender: pool.address,
+                amount: MAX_UINT256,
+              },
+            ] as ERC20ApproveArgs[];
+
+          if (BigInt(0) === BigInt(allowances[idx].result))
+            return [
               {
                 type: TRANSACTION_TYPES.ERC20_APPROVE,
                 token: token.address as Address,

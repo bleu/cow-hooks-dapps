@@ -35,27 +35,36 @@ export const useGetHooksInfoVestAllFromSwap = () => {
         args: [cowShedProxy, vestingEscrowFactoryAddress],
       });
 
-      const approveTxs =
-        allowance < maxUint256
-          ? [
-              TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
-                type: TRANSACTION_TYPES.ERC20_APPROVE,
-                token: tokenAddress as Address,
-                spender: vestingEscrowFactoryAddress,
-                amount: BigInt(0),
-              }),
-              TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
-                type: TRANSACTION_TYPES.ERC20_APPROVE,
-                token: tokenAddress as Address,
-                spender: vestingEscrowFactoryAddress,
-                amount: maxUint256,
-              }),
-            ]
-          : [];
+      const getApproveTxs = () => {
+        if (allowance === maxUint256) return [];
+        if (allowance === BigInt(0))
+          return [
+            TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
+              type: TRANSACTION_TYPES.ERC20_APPROVE,
+              token: tokenAddress as Address,
+              spender: vestingEscrowFactoryAddress,
+              amount: maxUint256,
+            }),
+          ];
+        return [
+          TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
+            type: TRANSACTION_TYPES.ERC20_APPROVE,
+            token: tokenAddress as Address,
+            spender: vestingEscrowFactoryAddress,
+            amount: BigInt(0),
+          }),
+          TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
+            type: TRANSACTION_TYPES.ERC20_APPROVE,
+            token: tokenAddress as Address,
+            spender: vestingEscrowFactoryAddress,
+            amount: maxUint256,
+          }),
+        ];
+      };
 
       const txs = await Promise.all([
         // Proxy approves Vesting Escrow Factory
-        ...approveTxs,
+        ...getApproveTxs(),
         // Create vesting (weiroll)
         TransactionFactory.createRawTx(
           TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_PROXY,
