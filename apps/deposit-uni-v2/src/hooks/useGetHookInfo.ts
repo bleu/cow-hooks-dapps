@@ -15,12 +15,12 @@ import {
 } from "@bleu/utils/transactionFactory";
 import { BigNumber } from "ethers";
 import { useCallback, useMemo } from "react";
-import { type Address, maxUint256, parseUnits } from "viem";
+import { type Address, erc20Abi, maxUint256, parseUnits } from "viem";
 
 const SLIPPAGE = BigInt(2000); // 2% slippage
 
 export function useGetHookInfo(pool?: IPool) {
-  const { cowShedProxy, context } = useIFrameContext();
+  const { cowShedProxy, context, publicClient } = useIFrameContext();
   const tokenAllowances = useTokensAllowances({
     tokenAddresses: pool?.poolTokens.map((token) => token.address) || [],
     spender: cowShedProxy,
@@ -53,7 +53,7 @@ export function useGetHookInfo(pool?: IPool) {
         const tokenAddress = token.address.toLowerCase();
         const amount = params.amounts[tokenAddress];
         const amountBigNumber = BigNumber.from(
-          parseUnits(amount.toString(), token.decimals),
+          parseUnits(amount.toString(), token.decimals)
         );
         return {
           tokenAddress,
@@ -80,7 +80,7 @@ export function useGetHookInfo(pool?: IPool) {
           }) || []
       );
     },
-    [pool, tokenAllowances, defaultPermitData],
+    [pool, tokenAllowances, defaultPermitData]
   );
 
   const getPoolDepositTxs = useCallback(
@@ -90,14 +90,15 @@ export function useGetHookInfo(pool?: IPool) {
         !context ||
         !context.account ||
         !cowShedProxy ||
-        !uniswapRouterAddress
+        !uniswapRouterAddress ||
+        !publicClient
       )
         throw new Error("Missing context");
 
       const referenceTokenDecimals = pool.poolTokens.find(
         (token) =>
           token.address.toLowerCase() ===
-          params.referenceTokenAddress.toLowerCase(),
+          params.referenceTokenAddress.toLowerCase()
       )?.decimals;
 
       if (!referenceTokenDecimals) throw new Error("Invalid reference token");
@@ -107,11 +108,11 @@ export function useGetHookInfo(pool?: IPool) {
 
       const desiredAmountA = parseUnits(
         params.amounts[tokenA.address.toLowerCase()],
-        tokenA.decimals,
+        tokenA.decimals
       );
       const desiredAmountB = parseUnits(
         params.amounts[tokenB.address.toLowerCase()],
-        tokenB.decimals,
+        tokenB.decimals
       );
 
       const amountAMin =
@@ -146,14 +147,50 @@ export function useGetHookInfo(pool?: IPool) {
         } as ERC20TransferFromArgs;
       });
 
-      const approveArgs = pool.poolTokens.map((token) => {
-        return {
-          type: TRANSACTION_TYPES.ERC20_APPROVE,
-          token: token.address as Address,
-          spender: uniswapRouterAddress,
-          amount: maxUint256,
-        } as ERC20ApproveArgs;
+      const allowances = await publicClient.multicall({
+        contracts: pool.poolTokens.map((token) => ({
+          address: token.address,
+          abi: erc20Abi,
+          functionName: "allowance",
+          args: [cowShedProxy, uniswapRouterAddress],
+        })),
       });
+
+      const approveArgs = pool.poolTokens
+        .map((token, idx) => {
+          if (
+            allowances[idx].status === "failure" ||
+            (BigInt(0) < BigInt(allowances[idx].result) &&
+              BigInt(allowances[idx].result) < maxUint256 / BigInt(10))
+          )
+            return [
+              {
+                type: TRANSACTION_TYPES.ERC20_APPROVE,
+                token: token.address as Address,
+                spender: uniswapRouterAddress,
+                amount: BigInt(0),
+              },
+              {
+                type: TRANSACTION_TYPES.ERC20_APPROVE,
+                token: token.address as Address,
+                spender: uniswapRouterAddress,
+                amount: maxUint256,
+              },
+            ] as ERC20ApproveArgs[];
+
+          if (BigInt(0) === BigInt(allowances[idx].result))
+            return [
+              {
+                type: TRANSACTION_TYPES.ERC20_APPROVE,
+                token: token.address as Address,
+                spender: uniswapRouterAddress,
+                amount: maxUint256,
+              },
+            ] as ERC20ApproveArgs[];
+
+          return [] as ERC20ApproveArgs[];
+        })
+        .flat(2);
 
       const resetApprovalsArgs = pool.poolTokens.map((token) => {
         return {
@@ -170,10 +207,10 @@ export function useGetHookInfo(pool?: IPool) {
           ...approveArgs,
           depositArg,
           ...resetApprovalsArgs,
-        ].map((arg) => TransactionFactory.createRawTx(arg.type, arg)),
+        ].map((arg) => TransactionFactory.createRawTx(arg.type, arg))
       );
     },
-    [context, cowShedProxy, pool, uniswapRouterAddress, deadline],
+    [context, cowShedProxy, pool, uniswapRouterAddress, deadline, publicClient]
   );
 
   return useCallback(
@@ -188,6 +225,6 @@ export function useGetHookInfo(pool?: IPool) {
         txs: poolDepositTxs,
       };
     },
-    [getPermitData, getPoolDepositTxs],
+    [getPermitData, getPoolDepositTxs]
   );
 }
