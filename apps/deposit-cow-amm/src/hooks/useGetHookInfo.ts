@@ -54,7 +54,7 @@ export function useGetHookInfo(pool?: IPool) {
         const tokenAddress = token.address.toLowerCase();
         const amount = params.amounts[tokenAddress];
         const amountBigNumber = BigNumber.from(
-          parseUnits(amount.toString(), token.decimals)
+          parseUnits(amount.toString(), token.decimals),
         );
         return {
           tokenAddress,
@@ -81,7 +81,7 @@ export function useGetHookInfo(pool?: IPool) {
           }) || []
       );
     },
-    [pool, tokenAllowances, defaultPermitData]
+    [pool, tokenAllowances, defaultPermitData],
   );
 
   const getPoolDepositTxs = useCallback(
@@ -99,7 +99,7 @@ export function useGetHookInfo(pool?: IPool) {
       const referenceTokenDecimals = pool.poolTokens.find(
         (token) =>
           token.address.toLowerCase() ===
-          params.referenceTokenAddress.toLowerCase()
+          params.referenceTokenAddress.toLowerCase(),
       )?.decimals;
 
       if (!referenceTokenDecimals) throw new Error("Invalid reference token");
@@ -112,7 +112,7 @@ export function useGetHookInfo(pool?: IPool) {
             params.amounts[
               params.referenceTokenAddress.toLowerCase()
             ].toString(),
-            referenceTokenDecimals
+            referenceTokenDecimals,
           ),
           decimals: referenceTokenDecimals,
           address: params.referenceTokenAddress as Address,
@@ -200,10 +200,10 @@ export function useGetHookInfo(pool?: IPool) {
           ...approveArgs,
           depositArg,
           ...resetApprovalsArgs,
-        ].map((arg) => TransactionFactory.createRawTx(arg.type, arg))
+        ].map((arg) => TransactionFactory.createRawTx(arg.type, arg)),
       );
     },
-    [context, cowShedProxy, pool, publicClient]
+    [context, cowShedProxy, pool, publicClient],
   );
 
   const getWeirollTransferFromProxyToUserTxs = useCallback(() => {
@@ -219,7 +219,7 @@ export function useGetHookInfo(pool?: IPool) {
     } as ERC20TransferFromAllWeirollArgs;
     return TransactionFactory.createRawTx(
       weirollTransferFromProxyArgs.type,
-      weirollTransferFromProxyArgs
+      weirollTransferFromProxyArgs,
     );
   }, [context?.account, cowShedProxy, pool]);
 
@@ -236,6 +236,6 @@ export function useGetHookInfo(pool?: IPool) {
         txs: [...poolDepositTxs, transferTx],
       };
     },
-    [getPermitData, getPoolDepositTxs, getWeirollTransferFromProxyToUserTxs]
+    [getPermitData, getPoolDepositTxs, getWeirollTransferFromProxyToUserTxs],
   );
 }
