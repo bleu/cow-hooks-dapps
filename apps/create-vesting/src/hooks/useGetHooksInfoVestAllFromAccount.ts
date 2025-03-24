@@ -37,7 +37,7 @@ export const useGetHooksInfoVestAllFromAccount = () => {
       });
 
       const getApproveTxs = () => {
-        if (allowance === maxUint256) return [];
+        if (allowance <= maxUint256 / BigInt(10)) return [];
         if (allowance === BigInt(0))
           return [
             TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {

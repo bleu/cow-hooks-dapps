@@ -161,7 +161,7 @@ export function useGetHookInfo(pool?: IPool) {
           if (
             allowances[idx].status === "failure" ||
             (BigInt(0) < BigInt(allowances[idx].result) &&
-              BigInt(allowances[idx].result) < maxUint256)
+              BigInt(allowances[idx].result) < maxUint256 / BigInt(10))
           )
             return [
               {
