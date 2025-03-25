@@ -105,7 +105,7 @@ export function useUniV2Pools(
   balancesDiff: Record<string, Record<string, string>>,
 ) {
   const { data: poolTokens } = useTokenList();
-  return useSWR(
+  const swr = useSWR(
     [ownerAddress, chainId, poolTokens],
     async ([ownerAddress, chainId]): Promise<IPool[]> => {
       if (!ownerAddress || !chainId || !client || !poolTokens)
@@ -132,4 +132,9 @@ export function useUniV2Pools(
       shouldRetryOnError: false,
     },
   );
+
+  return {
+    ...swr,
+    isLoading: swr.isLoading || !poolTokens,
+  };
 }
