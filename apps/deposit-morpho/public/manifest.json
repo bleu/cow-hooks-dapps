@@ -1,0 +1,25 @@
+{
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "homepage_url": "https://swap.cow.fi",
+  "description": "CoW hook dapp: Deposit Morpho",
+  "icons": [],
+  "orientation": "portrait",
+  "name": "Deposit Morpho",
+  "short_name": "Deposit Morpho",
+  "start_url": ".",
+  "theme_color": "#ffffff",
+  "cow_hook_dapp": {
+    "id": "8691670bc668abc4e0172cc8573dde013c4dc813c3ba253cfaa06613cd0a3eb9",
+    "name": "Deposit Morpho",
+    "descriptionShort": "Add liquidity to any of the Morpho vaults",
+    "description": "Easily increase your position in a Morpho vault.",
+    "version": "0.0.1",
+    "website": "https://app.morpho.org/",
+    "image": "https://cow-hooks-dapps-deposit-morpho.vercel.app/icon.png",
+    "conditions": {
+      "walletCompatibility": ["EOA"],
+      "supportedNetworks": [1, 8453]
+    }
+  }
+}
