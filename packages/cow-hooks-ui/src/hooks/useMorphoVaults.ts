@@ -4,9 +4,44 @@ import { gql } from "graphql-request";
 import useSWR from "swr";
 import type { Address } from "viem";
 
+export interface Vault {
+  address: Address;
+  asset: {
+    address: Address;
+    decimals: number;
+    logoURI: string;
+    name: string;
+    symbol: string;
+    priceUsd: number;
+  };
+  chain: {
+    id: number;
+    network: string;
+  };
+  liquidity: {
+    usd: number;
+  };
+  metadata: {
+    curators: {
+      name: string;
+      image: string;
+      url: string;
+    }[];
+  };
+  state: {
+    dailyNetApy: number;
+    weeklyNetApy: number;
+    monthlyNetApy: number;
+    quarterlyNetApy: number;
+    totalAssets: bigint;
+    totalAssetsUsd: number;
+    totalSupply: bigint;
+  };
+}
+
 interface IQuery {
   vaults: {
-    items: { address: string }[];
+    items: Vault[];
   };
 }
 
@@ -27,6 +62,37 @@ const MORPHO_VAULTS_QUERY = gql`
     ) {
       items {
         address
+        asset {
+          address
+          decimals
+          logoURI
+          name
+          symbol
+          priceUsd
+        }
+        chain {
+          id
+          network
+        }
+        liquidity {
+          usd
+        }
+        metadata {
+          curators {
+            name
+            image
+            url
+          }
+        }
+        state {
+          dailyNetApy
+          weeklyNetApy
+          monthlyNetApy
+          quarterlyNetApy
+          totalAssets
+          totalAssetsUsd
+          totalSupply
+        }
       }
 
       pageInfo {
@@ -48,16 +114,21 @@ export function useMorphoVaults(
   chainId?: SupportedChainId,
   orderBy?: string
 ) {
-  return useSWR<IQuery>(
+  return useSWR<Vault[]>(
     [where, chainId],
-    async ([where, chainId]): Promise<IQuery> => {
-      if (!chainId) return { vaults: { items: [] } };
-      return await MORPHO_GQL_CLIENT.request<IQuery>(MORPHO_VAULTS_QUERY, {
-        where: where ?? {},
-        first: 5,
-        orderBy,
-        OrderDirection: "Asc",
-      });
+    async ([where, chainId]): Promise<Vault[]> => {
+      if (!chainId) return [] as Vault[];
+      return (
+        await MORPHO_GQL_CLIENT.request<IQuery>(MORPHO_VAULTS_QUERY, {
+          where: {
+            ...where,
+            chainId_in: [chainId],
+            whitelisted: true,
+          },
+          orderBy: orderBy ?? "TotalAssetsUsd",
+          OrderDirection: "Desc",
+        })
+      ).vaults.items;
     },
     {
       revalidateOnFocus: false,
