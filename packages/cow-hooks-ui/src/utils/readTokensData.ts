@@ -45,7 +45,10 @@ export async function readTokensData(
       tokensData.push({
         address,
         name: name.status === "success" ? String(name.result) : "",
-        symbol: symbol.status === "success" ? String(symbol.result) : "",
+        symbol:
+          symbol.status === "success"
+            ? String(symbol.result).replace("₮0", "T")
+            : "",
         decimals: decimals.status === "success" ? Number(decimals.result) : 0,
         chainId,
       });
