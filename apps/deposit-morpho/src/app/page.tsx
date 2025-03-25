@@ -2,10 +2,10 @@
 
 import {
   Spinner,
-  useIFrameContext,
-  useMorphoVaults,
   type Vault,
   VaultsDropdownMenu,
+  useIFrameContext,
+  useMorphoVaults,
 } from "@bleu/cow-hooks-ui";
 
 export default function Page() {

@@ -1,10 +1,13 @@
 "use client";
 
+import { formatNumber } from "@bleu.builders/ui";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowLeftIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { Token } from "@uniswap/sdk-core";
 import { useEffect, useMemo, useState } from "react";
+import { TokenLogo } from "./TokenLogo";
 import { useIFrameContext } from "./context/iframe";
+import type { Vault } from "./hooks/useMorphoVaults";
 import {
   Command,
   CommandEmpty,
@@ -14,9 +17,6 @@ import {
   CommandList,
 } from "./ui/Command";
 import { Spinner } from "./ui/Spinner";
-import type { Vault } from "./hooks/useMorphoVaults";
-import { TokenLogo } from "./TokenLogo";
-import { formatNumber } from "@bleu.builders/ui";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -55,13 +55,13 @@ export function VaultsDropdownMenu({
     if (!search) return vaults;
     const searchLower = search.toLowerCase();
     return vaults.filter((vault) =>
-      vault.name.toLowerCase().includes(searchLower)
+      vault.name.toLowerCase().includes(searchLower),
     );
   }, [vaults, search]);
 
   const displayedVaults = useMemo(
     () => filteredVaults.slice(0, displayCount),
-    [filteredVaults, displayCount]
+    [filteredVaults, displayCount],
   );
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -208,7 +208,7 @@ export function VaultLogo({ vault }: VaultLogoProps) {
             context.chainId,
             vault.asset.address,
             vault.asset.decimals,
-            vault.asset.symbol
+            vault.asset.symbol,
           )
         }
       />
