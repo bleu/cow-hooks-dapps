@@ -28,6 +28,7 @@ export interface Vault {
       url: string;
     }[];
   };
+  name: string;
   state: {
     dailyNetApy: number;
     weeklyNetApy: number;
@@ -84,6 +85,7 @@ const MORPHO_VAULTS_QUERY = gql`
             url
           }
         }
+        name
         state {
           dailyNetApy
           weeklyNetApy
