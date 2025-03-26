@@ -14,6 +14,7 @@ export * from "./readPairsData";
 export * from "./uniswapSupportedChains";
 export * from "./decodeDepositCalldata";
 export * from "./encodeDepositFormData";
+export * from "./morphoApi";
 
 export function truncateAddress(address?: string | null) {
   if (!address) return address;
