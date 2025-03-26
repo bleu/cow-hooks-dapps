@@ -7,7 +7,7 @@ import { Token } from "@uniswap/sdk-core";
 import { useEffect, useMemo, useState } from "react";
 import { TokenLogo } from "./TokenLogo";
 import { useIFrameContext } from "./context/iframe";
-import type { Vault } from "./hooks/useMorphoVaults";
+import type { Vault } from "./types";
 import {
   Command,
   CommandEmpty,
@@ -101,11 +101,14 @@ export function VaultsDropdownMenu({
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <div className="flex flex-row gap-1 w-full justify-between">
           <Dialog.Trigger
-            className="w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-muted shadow-sm text-foreground group hover:bg-primary hover:text-primary-foreground"
+            className="w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-muted shadow-sm text-foreground group hover:bg-primary hover:text-primary-foreground transition-all"
             onClick={() => setOpen(true)}
           >
             {selectedVault ? (
-              <VaultLogo vault={selectedVault} />
+              <div className="flex flex-row gap-2">
+                <VaultLogo vault={selectedVault} />
+                <span>{selectedVault.name}</span>
+              </div>
             ) : (
               "Select a vault"
             )}
@@ -115,7 +118,7 @@ export function VaultsDropdownMenu({
         <Dialog.Portal>
           <Dialog.Content className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] border p-[15px] w-screen h-screen bg-background border-none flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <Dialog.Close className="cursor-pointer hover:opacity-50">
+              <Dialog.Close className="cursor-pointer hover:opacity-50 transition-all">
                 <ArrowLeftIcon className="size-5" />
               </Dialog.Close>
               <Dialog.Title>Select a vault</Dialog.Title>
