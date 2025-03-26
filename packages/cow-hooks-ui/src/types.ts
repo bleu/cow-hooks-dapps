@@ -89,3 +89,49 @@ export interface TokenData {
   symbol: string;
   logoURI?: string;
 }
+
+export interface Vault {
+  address: Address;
+  asset: {
+    address: Address;
+    decimals: number;
+    logoURI: string;
+    name: string;
+    symbol: string;
+    priceUsd: number;
+  };
+  chain: {
+    id: number;
+    network: string;
+  };
+  liquidity: {
+    usd: number;
+  };
+  metadata: {
+    curators: {
+      name: string;
+      image: string;
+      url: string;
+    }[];
+  };
+  name: string;
+  state: {
+    allocation: {
+      market: {
+        collateralAsset: {
+          address: Address;
+          symbol: string;
+          decimals: number;
+          logoURI: string;
+        };
+      };
+    }[];
+    dailyNetApy: number;
+    weeklyNetApy: number;
+    monthlyNetApy: number;
+    quarterlyNetApy: number;
+    totalAssets: bigint;
+    totalAssetsUsd: number;
+    totalSupply: bigint;
+  };
+}

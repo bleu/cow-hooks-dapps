@@ -3,42 +3,7 @@ import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { gql } from "graphql-request";
 import useSWR from "swr";
 import type { Address } from "viem";
-
-export interface Vault {
-  address: Address;
-  asset: {
-    address: Address;
-    decimals: number;
-    logoURI: string;
-    name: string;
-    symbol: string;
-    priceUsd: number;
-  };
-  chain: {
-    id: number;
-    network: string;
-  };
-  liquidity: {
-    usd: number;
-  };
-  metadata: {
-    curators: {
-      name: string;
-      image: string;
-      url: string;
-    }[];
-  };
-  name: string;
-  state: {
-    dailyNetApy: number;
-    weeklyNetApy: number;
-    monthlyNetApy: number;
-    quarterlyNetApy: number;
-    totalAssets: bigint;
-    totalAssetsUsd: number;
-    totalSupply: bigint;
-  };
-}
+import type { Vault } from "#/types";
 
 interface IQuery {
   vaults: {
@@ -87,6 +52,16 @@ const MORPHO_VAULTS_QUERY = gql`
         }
         name
         state {
+          allocation {
+            market {
+              collateralAsset {
+                address
+                symbol
+                decimals
+                logoURI
+              }
+            }
+          }
           dailyNetApy
           weeklyNetApy
           monthlyNetApy
