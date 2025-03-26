@@ -1,9 +1,9 @@
+import type { Vault } from "../types";
 import { MORPHO_GQL_CLIENT } from "@bleu/utils";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { gql } from "graphql-request";
 import useSWR from "swr";
 import type { Address } from "viem";
-import type { Vault } from "#/types";
 
 interface IQuery {
   vaults: {
@@ -89,7 +89,7 @@ interface IGetPoolsWhere {
 export function useMorphoVaults(
   where: IGetPoolsWhere,
   chainId?: SupportedChainId,
-  orderBy?: string,
+  orderBy?: string
 ) {
   return useSWR<Vault[]>(
     [where, chainId],
@@ -109,6 +109,6 @@ export function useMorphoVaults(
     },
     {
       revalidateOnFocus: false,
-    },
+    }
   );
 }
