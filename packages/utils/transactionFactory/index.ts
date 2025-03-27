@@ -10,3 +10,4 @@ export * from "./abis/cowShedAbi";
 export * from "./abis/vestingEscrowFactoryAbi";
 export * from "./abis/weirollAbi";
 export * from "./abis/uniswapV2Router02Abi";
+export * from "./abis/morphoBundlersAbi";
