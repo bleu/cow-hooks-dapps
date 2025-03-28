@@ -32,7 +32,7 @@ export function VaultForm({ vault }: { vault: Vault }) {
       userBalance !== undefined && tokenDecimals
         ? Number(userBalance) / 10 ** Number(tokenDecimals)
         : undefined,
-    [userBalance, tokenDecimals]
+    [userBalance, tokenDecimals],
   );
 
   const formattedUserBalance = useMemo(
@@ -40,7 +40,7 @@ export function VaultForm({ vault }: { vault: Vault }) {
       userBalanceFloat !== undefined
         ? formatNumber(userBalanceFloat, 4, "decimal", "standard", 0.0001)
         : "",
-    [userBalanceFloat]
+    [userBalanceFloat],
   );
 
   if (!context) return null;
@@ -58,7 +58,7 @@ export function VaultForm({ vault }: { vault: Vault }) {
     const inputedDecimals = v.includes(".") && v.split(".").at(-1);
     if (inputedDecimals && inputedDecimals.length > vault.asset.decimals)
       return Number(
-        v.slice(0, -(inputedDecimals.length - vault.asset.decimals))
+        v.slice(0, -(inputedDecimals.length - vault.asset.decimals)),
       );
     return Number(v);
   };
@@ -132,7 +132,7 @@ export function VaultForm({ vault }: { vault: Vault }) {
             vault.chain.id,
             vault.asset.address,
             vault.asset.decimals,
-            vault.asset.symbol
+            vault.asset.symbol,
           )
         }
         label="Deposit Amount"

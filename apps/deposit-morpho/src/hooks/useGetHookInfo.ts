@@ -26,7 +26,7 @@ export const useGetHookInfo = ({ vault, amount }: DepositMorphoFormData) => {
       throw new Error("missing params");
 
     const amountBigNumber = BigNumber.from(
-      parseUnits(amount.toString(), vault.asset.decimals)
+      parseUnits(amount.toString(), vault.asset.decimals),
     ).toBigInt();
 
     const minShares = await publicClient.readContract({
@@ -42,7 +42,7 @@ export const useGetHookInfo = ({ vault, amount }: DepositMorphoFormData) => {
   const { data: minShares } = useSWR(
     ["minShares", context?.chainId, context?.account, vault],
     getMinShares,
-    {}
+    {},
   );
 
   return useCallback(
@@ -56,7 +56,7 @@ export const useGetHookInfo = ({ vault, amount }: DepositMorphoFormData) => {
       const morphoBundlerAddress = "0x23055618898e202386e6c13955a58D3C68200BFB";
 
       const amountBigNumber = BigNumber.from(
-        parseUnits(amount.toString(), vault.asset.decimals)
+        parseUnits(amount.toString(), vault.asset.decimals),
       ).toBigInt();
 
       const txs = await Promise.all([
@@ -98,6 +98,6 @@ export const useGetHookInfo = ({ vault, amount }: DepositMorphoFormData) => {
 
       return { txs, permitData };
     },
-    [context?.account, cowShedProxy, minShares]
+    [context?.account, cowShedProxy, minShares],
   );
 };
