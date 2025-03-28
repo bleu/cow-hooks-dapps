@@ -26,21 +26,23 @@ export const useGetHookInfo = ({ vault, amount }: DepositMorphoFormData) => {
       throw new Error("missing params");
 
     const amountBigNumber = BigNumber.from(
-      parseUnits(amount.toString(), vault.asset.decimals),
+      parseUnits(amount.toString(), vault.asset.decimals)
     ).toBigInt();
 
-    return await publicClient.readContract({
+    const minShares = await publicClient.readContract({
       address: vault.address,
       abi: morphoVaultAbi,
       functionName: "convertToShares",
       args: [amountBigNumber],
     });
+
+    return (minShares * BigInt(9900)) / BigInt(10000); // 1% splippage
   }, [publicClient, vault, amount]);
 
   const { data: minShares } = useSWR(
     ["minShares", context?.chainId, context?.account, vault],
     getMinShares,
-    {},
+    {}
   );
 
   return useCallback(
@@ -54,10 +56,26 @@ export const useGetHookInfo = ({ vault, amount }: DepositMorphoFormData) => {
       const morphoBundlerAddress = "0x23055618898e202386e6c13955a58D3C68200BFB";
 
       const amountBigNumber = BigNumber.from(
-        parseUnits(amount.toString(), vault.asset.decimals),
+        parseUnits(amount.toString(), vault.asset.decimals)
       ).toBigInt();
 
       const txs = await Promise.all([
+        // Transfer from user to proxy
+        TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_TRANSFER_FROM, {
+          type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM,
+          token: vault.asset.address,
+          from: context.account,
+          to: cowShedProxy,
+          amount: amountBigNumber,
+          symbol: vault.asset.symbol,
+        }),
+        // Approve deposit amount
+        TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
+          type: TRANSACTION_TYPES.ERC20_APPROVE,
+          token: vault.asset.address,
+          spender: morphoBundlerAddress,
+          amount: amountBigNumber,
+        }),
         // Deposit
         TransactionFactory.createRawTx(TRANSACTION_TYPES.MORPHO_DEPOSIT, {
           type: TRANSACTION_TYPES.MORPHO_DEPOSIT,
@@ -80,6 +98,6 @@ export const useGetHookInfo = ({ vault, amount }: DepositMorphoFormData) => {
 
       return { txs, permitData };
     },
-    [context?.account, cowShedProxy, minShares],
+    [context?.account, cowShedProxy, minShares]
   );
 };
