@@ -1,6 +1,7 @@
 "use client";
 
 import { RootLayout } from "@bleu/cow-hooks-ui";
+import { FormContextProvider } from "#/contexts/form";
 import "@bleu/cow-hooks-ui/global.css";
 import Head from "next/head";
 
@@ -12,7 +13,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Head>
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <RootLayout>{children}</RootLayout>
+      <RootLayout>
+        <FormContextProvider>{children}</FormContextProvider>
+      </RootLayout>
     </html>
   );
 }

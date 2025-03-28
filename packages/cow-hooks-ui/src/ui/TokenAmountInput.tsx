@@ -24,6 +24,7 @@ export interface ITokenAmountInput
   disabledValueFullDecimals?: string | undefined;
   userBalance?: string | undefined;
   userBalanceFullDecimals?: string | undefined;
+  fiatAmount?: string;
   shouldEnableMaxSelector?: boolean;
   shouldDisplayApprox?: boolean;
 }
@@ -40,6 +41,7 @@ export function TokenAmountInput({
   disabled,
   disabledValue,
   disabledValueFullDecimals,
+  fiatAmount,
   userBalance,
   userBalanceFullDecimals,
   shouldEnableMaxSelector,
@@ -63,7 +65,7 @@ export function TokenAmountInput({
         </div>
       )}
       <div className="flex flex-col gap-1 w-full min-h-24 pt-4 pb-1 px-6 bg-color-paper-darker rounded-xl items-start">
-        <div className="flex w-full items-center justify-between gap-2 w-full">
+        <div className="flex w-full items-center justify-between gap-2">
           <div className="rounded-xl text-color-text-paper bg-color-paper cursor-default">
             {token && (
               <div className="w-fit py-2 px-4 flex items-center justify-center gap-2">
@@ -77,7 +79,7 @@ export function TokenAmountInput({
           {disabled && disabledValue ? (
             <span
               title={disabledValueFullDecimals}
-              className="outline-none font-semibold text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-right border-none block overflow-hidden text-ellipsis whitespace-nowrap"
+              className="outline-none font-semibold text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-right border-none block overflow-hidden text-ellipsis whitespace-nowrap"
             >
               {shouldDisplayApprox && "≈ "}
               {disabledValue}
@@ -85,7 +87,7 @@ export function TokenAmountInput({
           ) : (
             <Input
               className={cn(
-                "outline-none font-semibold text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-right p-0 m-0 h-min border-none rounded-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none truncate",
+                "outline-none font-semibold text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-right p-0 m-0 h-min border-none rounded-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none truncate",
                 className,
               )}
               {...register(name, validation)}
@@ -93,25 +95,32 @@ export function TokenAmountInput({
             />
           )}
         </div>
-        {userBalance && token?.symbol && (
-          <span className="font-normal pl-1">
-            <span
-              title={userBalanceFullDecimals}
-              className="opacity-40 text-xs"
-            >
-              Balance: {userBalance} {token?.symbol}
-            </span>
-            {shouldEnableMaxSelector && (
-              <button
-                type="button"
-                className="inline text-color-text-paper bg-color-paper px-1 ml-1 opacity-100 rounded-md text-xs hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]"
-                onClick={() => setValue(name, Number(userBalanceFullDecimals))}
+        <div className="flex w-full justify-between items-center">
+          {userBalance && token?.symbol && (
+            <span className="font-normal pl-1">
+              <span
+                title={userBalanceFullDecimals}
+                className="opacity-40 text-xs"
               >
-                MAX
-              </button>
-            )}
+                Balance: {userBalance} {token?.symbol}
+              </span>
+              {shouldEnableMaxSelector && (
+                <button
+                  type="button"
+                  className="inline text-color-text-paper bg-color-paper px-1 ml-1 opacity-100 rounded-md text-xs hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]"
+                  onClick={() =>
+                    setValue(name, Number(userBalanceFullDecimals))
+                  }
+                >
+                  MAX
+                </button>
+              )}
+            </span>
+          )}
+          <span title={userBalanceFullDecimals} className="opacity-40 text-xs">
+            {fiatAmount}
           </span>
-        )}
+        </div>
       </div>
       {errorMessage && (
         <div className="mt-1 ml-2 text-start text-sm text-destructive">

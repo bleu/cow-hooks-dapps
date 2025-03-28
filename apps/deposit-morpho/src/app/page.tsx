@@ -7,13 +7,14 @@ import {
   useIFrameContext,
   useMorphoVaults,
 } from "@bleu/cow-hooks-ui";
-import { useState } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 import { VaultForm } from "#/components/VaultForm";
+import type { DepositMorphoFormData } from "#/contexts/form";
 
 export default function Page() {
-  const [selectedVault, setSelectedVault] = useState<Vault | undefined>(
-    undefined,
-  );
+  const { setValue, control } = useFormContext<DepositMorphoFormData>();
+  const { vault: selectedVault } = useWatch({ control });
+
   const { context } = useIFrameContext();
   const { data: vaults } = useMorphoVaults({}, context?.chainId);
 
@@ -35,11 +36,11 @@ export default function Page() {
   return (
     <div className="w-full flex flex-col py-1 px-4">
       <VaultsDropdownMenu
-        onSelect={(vault: Vault) => setSelectedVault(vault)}
+        onSelect={(vault: Vault) => setValue("vault", vault)}
         vaults={vaults}
-        selectedVault={selectedVault}
+        selectedVault={selectedVault as Vault | undefined}
       />
-      {selectedVault && <VaultForm vault={selectedVault} />}
+      {selectedVault && <VaultForm vault={selectedVault as Vault} />}
     </div>
   );
 }

@@ -1,7 +1,8 @@
-import { BigNumber, type BigNumberish } from "ethers";
+import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import useSWR from "swr";
 import { type Address, type PublicClient, erc20Abi, zeroAddress } from "viem";
+import type { HookDappContextAdjusted } from "#/types";
 import { useIFrameContext } from "../context/iframe";
 
 export const useReadTokenContract = ({
@@ -56,13 +57,11 @@ export const readTokenContract = async (
   address: Address,
   publicClient: PublicClient,
   account: Address,
-  balancesDiff?: Record<Address, Record<Address, BigNumberish>>,
+  balancesDiff?: HookDappContextAdjusted["balancesDiff"],
 ) => {
-  const accountLowerCase = account.toLowerCase() as Address;
   const tokenAddressLowerCase = address.toLowerCase() as Address;
-
   const tokenBalanceDiff =
-    balancesDiff?.[accountLowerCase]?.[tokenAddressLowerCase] || "0";
+    balancesDiff?.account?.[tokenAddressLowerCase] || "0";
 
   const tokenContract = {
     address: address,
