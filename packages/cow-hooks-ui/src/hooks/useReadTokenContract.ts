@@ -2,8 +2,8 @@ import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import useSWR from "swr";
 import { type Address, type PublicClient, erc20Abi, zeroAddress } from "viem";
-import type { HookDappContextAdjusted } from "#/types";
 import { useIFrameContext } from "../context/iframe";
+import type { HookDappContextAdjusted } from "../types";
 
 export const useReadTokenContract = ({
   tokenAddress,
