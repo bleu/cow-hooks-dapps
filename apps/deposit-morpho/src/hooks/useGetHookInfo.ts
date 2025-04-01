@@ -7,7 +7,7 @@ import {
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import { type Address, parseUnits } from "viem";
-import { chainIdToMorphoBundler } from "#/constants";
+import { chainIdToMorphoBundler } from "#/utils/constants";
 import type { DepositMorphoFormData } from "#/contexts/form";
 
 export interface DepositMorphoHookParams {
@@ -26,7 +26,7 @@ export const useGetHookInfo = ({ vault, amount }: DepositMorphoFormData) => {
       throw new Error("missing params");
 
     const amountBigNumber = BigNumber.from(
-      parseUnits(amount.toString(), vault.asset.decimals),
+      parseUnits(amount.toString(), vault.asset.decimals)
     ).toBigInt();
 
     const minShares = await publicClient.readContract({
@@ -53,7 +53,7 @@ export const useGetHookInfo = ({ vault, amount }: DepositMorphoFormData) => {
       if (!minShares) throw new Error("could not fetch min shares");
 
       const amountBigNumber = BigNumber.from(
-        parseUnits(amount.toString(), vault.asset.decimals),
+        parseUnits(amount.toString(), vault.asset.decimals)
       ).toBigInt();
 
       const txs = await Promise.all([
@@ -95,6 +95,6 @@ export const useGetHookInfo = ({ vault, amount }: DepositMorphoFormData) => {
 
       return { txs, permitData };
     },
-    [context?.account, context?.chainId, cowShedProxy, getMinShares],
+    [context?.account, context?.chainId, cowShedProxy, getMinShares]
   );
 };
