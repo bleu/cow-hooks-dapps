@@ -1,7 +1,5 @@
 "use client";
 
-import type { DepositMorphoFormData } from "#/contexts/form";
-import { encodeFormData } from "#/utils/encodeFormData";
 import {
   SignatureSteps,
   WaitingSignature,
@@ -17,7 +15,9 @@ import { BigNumber, type BigNumberish } from "ethers";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { parseUnits, type Address } from "viem";
+import { type Address, parseUnits } from "viem";
+import type { DepositMorphoFormData } from "#/contexts/form";
+import { encodeFormData } from "#/utils/encodeFormData";
 
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -68,7 +68,7 @@ export default function Page() {
     if (!cowShedCall) throw new Error("Error signing hooks");
 
     const amountBigNumber = BigNumber.from(
-      parseUnits(amount.toString(), vault.asset.decimals)
+      parseUnits(amount.toString(), vault.asset.decimals),
     ).toBigInt();
 
     const encodedFormData = encodeFormData({
@@ -98,7 +98,7 @@ export default function Page() {
     }) => {
       const permitData = await handleTokenAllowance(
         BigNumber.from(permit.amount),
-        permit.tokenAddress as Address
+        permit.tokenAddress as Address,
       );
 
       if (permitData) {
@@ -113,7 +113,7 @@ export default function Page() {
       }
       setCurrentStepIndex((prev) => prev + 1);
     },
-    [handleTokenAllowance]
+    [handleTokenAllowance],
   );
 
   const steps = useMemo(() => {

@@ -7,10 +7,10 @@ import {
   useIFrameContext,
   useMorphoVaults,
 } from "@bleu/cow-hooks-ui";
+import { useCallback, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { VaultForm } from "#/components/VaultForm";
 import type { DepositMorphoFormData } from "#/contexts/form";
-import { useCallback, useState } from "react";
 import { decodeCalldata } from "#/utils/decodeCalldata";
 
 export default function Page() {
@@ -32,7 +32,7 @@ export default function Page() {
     try {
       const data = await decodeCalldata(
         context?.hookToEdit?.hook.callData as `0x${string}`,
-        vaults
+        vaults,
       );
       if (data) {
         setValue("vault", data.vault);
