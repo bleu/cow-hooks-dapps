@@ -1,7 +1,5 @@
 "use client";
 
-import type { DepositMorphoFormData } from "#/contexts/form";
-import { encodeFormData } from "#/utils/encodeFormData";
 import {
   SignatureSteps,
   WaitingSignature,
@@ -16,16 +14,13 @@ import {
 import { BigNumber, type BigNumberish } from "ethers";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
-import { parseUnits, type Address } from "viem";
+import type { Address } from "viem";
 
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [permitTxs, setPermitTxs] = useState<BaseTransaction[]>([]);
   const { hookInfo, cowShed, signer, context, cowShedProxy } =
     useIFrameContext();
-  const { control } = useFormContext<DepositMorphoFormData>();
-  const { vault, amount } = useWatch({ control });
   const [account, setAccount] = useState<string>();
   const router = useRouter();
   const submitHook = useSubmitHook({ defaultGasLimit: BigInt(700000) });
@@ -53,42 +48,23 @@ export default function Page() {
   }, [context?.account, account, router.push]);
 
   const cowShedCallback = useCallback(async () => {
-    if (
-      !cowShedSignature ||
-      !hookInfo ||
-      !cowShed ||
-      !vault?.address ||
-      !vault?.asset?.decimals ||
-      !amount
-    )
-      return;
+    if (!cowShedSignature || !hookInfo || !cowShed) return;
 
     const txs = [...permitTxs, ...hookInfo.txs];
     const cowShedCall = await cowShedSignature(txs);
     if (!cowShedCall) throw new Error("Error signing hooks");
 
-    const amountBigNumber = BigNumber.from(
-      parseUnits(amount.toString(), vault.asset.decimals)
-    ).toBigInt();
-
-    const encodedFormData = encodeFormData({
-      vaultId: vault?.address,
-      amount: amountBigNumber,
-    });
+    // const encodedFormData = encodeDepositFormData(
+    //   values as DepositFormType,
+    //   depositAmountsWithDecimals,
+    // );
 
     await submitHook({
       target: cowShed.getFactoryAddress(),
-      callData: cowShedCall + encodedFormData,
+      // callData: cowShedCall + encodedFormData,
+      callData: cowShedCall,
     });
-  }, [
-    cowShedSignature,
-    submitHook,
-    hookInfo,
-    permitTxs,
-    cowShed,
-    vault,
-    amount,
-  ]);
+  }, [cowShedSignature, submitHook, hookInfo, permitTxs, cowShed]);
 
   const permitCallback = useCallback(
     async (permit: {
@@ -98,7 +74,7 @@ export default function Page() {
     }) => {
       const permitData = await handleTokenAllowance(
         BigNumber.from(permit.amount),
-        permit.tokenAddress as Address
+        permit.tokenAddress as Address,
       );
 
       if (permitData) {
@@ -113,7 +89,7 @@ export default function Page() {
       }
       setCurrentStepIndex((prev) => prev + 1);
     },
-    [handleTokenAllowance]
+    [handleTokenAllowance],
   );
 
   const steps = useMemo(() => {
