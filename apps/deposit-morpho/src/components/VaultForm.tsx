@@ -1,20 +1,67 @@
 import { formatNumber } from "@bleu.builders/ui";
+import { Token } from "@uniswap/sdk-core";
+
 import {
   ButtonPrimary,
   Info,
   InfoContent,
+  TokenAmountInput,
   type Vault,
   useIFrameContext,
+  useReadTokenContract,
 } from "@bleu/cow-hooks-ui";
+import { useMemo } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
+import type { DepositMorphoFormData } from "#/contexts/form";
 
 export function VaultForm({ vault }: { vault: Vault }) {
   const { context } = useIFrameContext();
+
+  const { control } = useFormContext<DepositMorphoFormData>();
+  const { amount } = useWatch({ control });
+  const fiatAmount = amount
+    ? `~${formatNumber(Number(amount) * vault.asset.priceUsd, 2, "currency", "standard")}`
+    : "~$0.0";
+
+  const { userBalance, tokenDecimals } = useReadTokenContract({
+    tokenAddress: vault.asset.address,
+  });
+
+  const userBalanceFloat = useMemo(
+    () =>
+      userBalance !== undefined && tokenDecimals
+        ? Number(userBalance) / 10 ** Number(tokenDecimals)
+        : undefined,
+    [userBalance, tokenDecimals],
+  );
+
+  const formattedUserBalance = useMemo(
+    () =>
+      userBalanceFloat !== undefined
+        ? formatNumber(userBalanceFloat, 4, "decimal", "standard", 0.0001)
+        : "",
+    [userBalanceFloat],
+  );
 
   if (!context) return null;
 
   const collateralAssets = vault.state.allocation
     .map((allocation) => allocation.market.collateralAsset)
     .filter((asset) => asset);
+
+  const handleSetValue = (value: string) => {
+    if (value === "") return undefined;
+    if (typeof value === "number") return value;
+
+    let v = value;
+    v = v.replace(",", ".");
+    const inputedDecimals = v.includes(".") && v.split(".").at(-1);
+    if (inputedDecimals && inputedDecimals.length > vault.asset.decimals)
+      return Number(
+        v.slice(0, -(inputedDecimals.length - vault.asset.decimals)),
+      );
+    return Number(v);
+  };
 
   return (
     <div className="flex flex-col w-full gap-4 mt-4">
@@ -74,6 +121,33 @@ export function VaultForm({ vault }: { vault: Vault }) {
           )}
         </div>
       </div>
+      <TokenAmountInput
+        name="amount"
+        type="number"
+        inputMode="decimal"
+        step={`0.${"0".repeat(vault.asset.decimals - 1)}1`}
+        max="1000000000000"
+        token={
+          new Token(
+            vault.chain.id,
+            vault.asset.address,
+            vault.asset.decimals,
+            vault.asset.symbol,
+          )
+        }
+        label="Deposit Amount"
+        placeholder="0.0"
+        autoComplete="off"
+        disabled={false}
+        userBalance={formattedUserBalance}
+        userBalanceFullDecimals={String(userBalanceFloat)}
+        fiatAmount={fiatAmount}
+        shouldEnableMaxSelector={true}
+        validation={{ setValueAs: handleSetValue }}
+        onKeyDown={(e) =>
+          ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
+        }
+      />
       <Info content={<InfoContent />} />
       <ButtonPrimary type="submit" className="mb-0">
         Add Hook
