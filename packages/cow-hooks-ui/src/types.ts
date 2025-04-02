@@ -90,7 +90,7 @@ export interface TokenData {
   logoURI?: string;
 }
 
-export interface Vault {
+export interface MorphoVault {
   address: Address;
   asset: {
     address: Address;

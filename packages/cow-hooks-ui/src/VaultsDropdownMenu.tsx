@@ -7,7 +7,7 @@ import { Token } from "@uniswap/sdk-core";
 import { useEffect, useMemo, useState } from "react";
 import { TokenLogo } from "./TokenLogo";
 import { useIFrameContext } from "./context/iframe";
-import type { Vault } from "./types";
+import type { MorphoVault } from "./types";
 import {
   Command,
   CommandEmpty,
@@ -21,9 +21,9 @@ import { Spinner } from "./ui/Spinner";
 const ITEMS_PER_PAGE = 20;
 
 interface VaultsDropdownMenuProps {
-  onSelect: (vault: Vault) => void;
-  vaults: Vault[];
-  selectedVault?: Vault;
+  onSelect: (vault: MorphoVault) => void;
+  vaults: MorphoVault[];
+  selectedVault?: MorphoVault;
 }
 
 export function VaultsDropdownMenu({
@@ -192,7 +192,7 @@ export function VaultsDropdownMenu({
 }
 
 interface VaultLogoProps {
-  vault: Vault;
+  vault: MorphoVault;
 }
 
 export function VaultLogo({ vault }: VaultLogoProps) {

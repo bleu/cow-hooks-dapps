@@ -3,11 +3,10 @@ import { Token } from "@uniswap/sdk-core";
 
 import {
   ButtonPrimary,
-  type HookDappContextAdjusted,
   Info,
   InfoContent,
+  type MorphoVault,
   TokenAmountInput,
-  type Vault,
   useIFrameContext,
   useReadTokenContract,
 } from "@bleu/cow-hooks-ui";
@@ -15,7 +14,7 @@ import { useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { DepositMorphoFormData } from "#/contexts/form";
 
-export function VaultForm({ vault }: { vault: Vault }) {
+export function VaultForm({ vault }: { vault: MorphoVault }) {
   const { context } = useIFrameContext();
 
   const { control } = useFormContext<DepositMorphoFormData>();
@@ -43,6 +42,17 @@ export function VaultForm({ vault }: { vault: Vault }) {
         : "",
     [userBalanceFloat],
   );
+
+  const buttonMessage = useMemo(() => {
+    if (context?.hookToEdit && context?.isPreHook)
+      return <span>Update Pre-hook</span>;
+    if (context?.hookToEdit && !context?.isPreHook)
+      return <span>Update Post-hook</span>;
+    if (!context?.hookToEdit && context?.isPreHook)
+      return <span>Add Pre-hook</span>;
+    if (!context?.hookToEdit && !context?.isPreHook)
+      return <span>Add Post-hook</span>;
+  }, [context?.hookToEdit, context?.isPreHook]);
 
   if (!context) return null;
 
@@ -151,31 +161,8 @@ export function VaultForm({ vault }: { vault: Vault }) {
       />
       <Info content={<InfoContent />} />
       <ButtonPrimary type="submit" className="mb-0">
-        <ButtonText context={context} />
+        {buttonMessage}
       </ButtonPrimary>
     </div>
   );
 }
-
-const ButtonText = ({
-  context,
-  errorMessage,
-  isLoading,
-}: {
-  context: HookDappContextAdjusted;
-  errorMessage?: string | undefined;
-  isLoading?: boolean;
-}) => {
-  if (errorMessage) return <span>{errorMessage}</span>;
-
-  if (isLoading) return <span>Loading...</span>;
-
-  if (context?.hookToEdit && context?.isPreHook)
-    return <span>Update Pre-hook</span>;
-  if (context?.hookToEdit && !context?.isPreHook)
-    return <span>Update Post-hook</span>;
-  if (!context?.hookToEdit && context?.isPreHook)
-    return <span>Add Pre-hook</span>;
-  if (!context?.hookToEdit && !context?.isPreHook)
-    return <span>Add Post-hook</span>;
-};

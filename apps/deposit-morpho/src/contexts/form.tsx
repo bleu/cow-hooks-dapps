@@ -3,13 +3,13 @@
 import { type PropsWithChildren, useCallback } from "react";
 
 import { Form } from "@bleu.builders/ui";
-import { type Vault, useIFrameContext } from "@bleu/cow-hooks-ui";
+import { type MorphoVault, useIFrameContext } from "@bleu/cow-hooks-ui";
 import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 
 export interface DepositMorphoFormData {
-  vault: Vault;
+  vault: MorphoVault;
   amount: string;
 }
 
@@ -24,7 +24,7 @@ export function FormContextProvider({ children }: PropsWithChildren) {
   const router = useRouter();
 
   const getHookInfo = useGetHookInfo({
-    vault: vault as Vault,
+    vault: vault as MorphoVault,
     amount: amount as string,
   });
 

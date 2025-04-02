@@ -1,20 +1,23 @@
-import type { Vault } from "@bleu/cow-hooks-ui";
-import { formatUnits } from "viem";
+import type { MorphoVault } from "@bleu/cow-hooks-ui";
+import { decodeAbiParameters, formatUnits } from "viem";
 import type { DepositMorphoFormData } from "#/contexts/form";
+import { encodingParams } from "./encodeFormData";
 
 export const decodeCalldata = async (
   string: `0x${string}`,
-  vaults: Vault[],
+  vaults: MorphoVault[],
 ): Promise<DepositMorphoFormData> => {
-  const encodedFormData = string.slice(-104);
+  const encodedFormData =
+    `0x${string.slice(-64 * encodingParams.length)}` as `0x${string}`;
 
-  const vaultId = `0x${encodedFormData.slice(0, 40)}`;
-  const amountString = `0x${encodedFormData.slice(40, 104)}`;
+  const [vaultId, amountBigInt] = decodeAbiParameters(
+    encodingParams,
+    encodedFormData,
+  );
 
   const vault = vaults.find((v) => v.address === vaultId);
 
-  const amount =
-    vault && formatUnits(BigInt(amountString), vault.asset.decimals);
+  const amount = vault && formatUnits(amountBigInt, vault.asset.decimals);
 
   return {
     vault,
