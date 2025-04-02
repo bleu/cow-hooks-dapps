@@ -26,8 +26,6 @@ export function WaitingSignature({
   const { reset } = useFormContext();
   const router = useRouter();
 
-  // if (error) console.error(error);
-
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="flex flex-row gap-2 items-center mb-10">
