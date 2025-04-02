@@ -89,7 +89,7 @@ interface IGetPoolsWhere {
 export function useMorphoVaults(
   where: IGetPoolsWhere,
   chainId?: SupportedChainId,
-  orderBy?: string
+  orderBy?: string,
 ) {
   return useSWR<MorphoVault[]>(
     [where, chainId],
@@ -109,6 +109,6 @@ export function useMorphoVaults(
     },
     {
       revalidateOnFocus: false,
-    }
+    },
   );
 }

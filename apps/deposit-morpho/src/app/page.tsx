@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  Spinner,
   type MorphoVault,
+  Spinner,
   VaultsDropdownMenu,
   useIFrameContext,
   useMorphoVaults,
@@ -32,7 +32,7 @@ export default function Page() {
     try {
       const data = await decodeCalldata(
         context?.hookToEdit?.hook.callData as `0x${string}`,
-        vaults
+        vaults,
       );
       if (data) {
         setValue("vault", data.vault);

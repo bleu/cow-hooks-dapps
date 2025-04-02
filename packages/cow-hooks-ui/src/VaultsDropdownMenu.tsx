@@ -55,13 +55,13 @@ export function VaultsDropdownMenu({
     if (!search) return vaults;
     const searchLower = search.toLowerCase();
     return vaults.filter((vault) =>
-      vault.name.toLowerCase().includes(searchLower)
+      vault.name.toLowerCase().includes(searchLower),
     );
   }, [vaults, search]);
 
   const displayedVaults = useMemo(
     () => filteredVaults.slice(0, displayCount),
-    [filteredVaults, displayCount]
+    [filteredVaults, displayCount],
   );
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -211,7 +211,7 @@ export function VaultLogo({ vault }: VaultLogoProps) {
             context.chainId,
             vault.asset.address,
             vault.asset.decimals,
-            vault.asset.symbol
+            vault.asset.symbol,
           )
         }
       />
