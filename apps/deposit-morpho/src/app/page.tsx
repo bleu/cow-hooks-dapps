@@ -2,7 +2,7 @@
 
 import {
   Spinner,
-  type Vault,
+  type MorphoVault,
   VaultsDropdownMenu,
   useIFrameContext,
   useMorphoVaults,
@@ -32,7 +32,7 @@ export default function Page() {
     try {
       const data = await decodeCalldata(
         context?.hookToEdit?.hook.callData as `0x${string}`,
-        vaults,
+        vaults
       );
       if (data) {
         setValue("vault", data.vault);
@@ -83,11 +83,11 @@ export default function Page() {
   return (
     <div className="w-full flex flex-col py-1 px-4">
       <VaultsDropdownMenu
-        onSelect={(vault: Vault) => setValue("vault", vault)}
+        onSelect={(vault: MorphoVault) => setValue("vault", vault)}
         vaults={vaults}
-        selectedVault={selectedVault as Vault | undefined}
+        selectedVault={selectedVault as MorphoVault | undefined}
       />
-      {selectedVault && <VaultForm vault={selectedVault as Vault} />}
+      {selectedVault && <VaultForm vault={selectedVault as MorphoVault} />}
     </div>
   );
 }

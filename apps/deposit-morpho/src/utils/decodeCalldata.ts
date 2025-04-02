@@ -1,10 +1,10 @@
-import type { Vault } from "@bleu/cow-hooks-ui";
+import type { MorphoVault } from "@bleu/cow-hooks-ui";
 import { formatUnits } from "viem";
 import type { DepositMorphoFormData } from "#/contexts/form";
 
 export const decodeCalldata = async (
   string: `0x${string}`,
-  vaults: Vault[],
+  vaults: MorphoVault[]
 ): Promise<DepositMorphoFormData> => {
   const encodedFormData = string.slice(-104);
 

@@ -3,11 +3,11 @@ import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { gql } from "graphql-request";
 import useSWR from "swr";
 import type { Address } from "viem";
-import type { Vault } from "../types";
+import type { MorphoVault } from "../types";
 
 interface IQuery {
   vaults: {
-    items: Vault[];
+    items: MorphoVault[];
   };
 }
 
@@ -89,12 +89,12 @@ interface IGetPoolsWhere {
 export function useMorphoVaults(
   where: IGetPoolsWhere,
   chainId?: SupportedChainId,
-  orderBy?: string,
+  orderBy?: string
 ) {
-  return useSWR<Vault[]>(
+  return useSWR<MorphoVault[]>(
     [where, chainId],
-    async ([where, chainId]): Promise<Vault[]> => {
-      if (!chainId) return [] as Vault[];
+    async ([where, chainId]): Promise<MorphoVault[]> => {
+      if (!chainId) return [] as MorphoVault[];
       return (
         await MORPHO_GQL_CLIENT.request<IQuery>(MORPHO_VAULTS_QUERY, {
           where: {
@@ -109,6 +109,6 @@ export function useMorphoVaults(
     },
     {
       revalidateOnFocus: false,
-    },
+    }
   );
 }
