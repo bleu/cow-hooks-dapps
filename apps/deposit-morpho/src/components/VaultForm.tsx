@@ -3,7 +3,6 @@ import { Token } from "@uniswap/sdk-core";
 
 import {
   ButtonPrimary,
-  type HookDappContextAdjusted,
   Info,
   InfoContent,
   TokenAmountInput,
@@ -43,6 +42,17 @@ export function VaultForm({ vault }: { vault: MorphoVault }) {
         : "",
     [userBalanceFloat]
   );
+
+  const buttonMessage = useMemo(() => {
+    if (context?.hookToEdit && context?.isPreHook)
+      return <span>Update Pre-hook</span>;
+    if (context?.hookToEdit && !context?.isPreHook)
+      return <span>Update Post-hook</span>;
+    if (!context?.hookToEdit && context?.isPreHook)
+      return <span>Add Pre-hook</span>;
+    if (!context?.hookToEdit && !context?.isPreHook)
+      return <span>Add Post-hook</span>;
+  }, [context?.hookToEdit, context?.isPreHook]);
 
   if (!context) return null;
 
@@ -151,31 +161,8 @@ export function VaultForm({ vault }: { vault: MorphoVault }) {
       />
       <Info content={<InfoContent />} />
       <ButtonPrimary type="submit" className="mb-0">
-        <ButtonText context={context} />
+        {buttonMessage}
       </ButtonPrimary>
     </div>
   );
 }
-
-const ButtonText = ({
-  context,
-  errorMessage,
-  isLoading,
-}: {
-  context: HookDappContextAdjusted;
-  errorMessage?: string | undefined;
-  isLoading?: boolean;
-}) => {
-  if (errorMessage) return <span>{errorMessage}</span>;
-
-  if (isLoading) return <span>Loading...</span>;
-
-  if (context?.hookToEdit && context?.isPreHook)
-    return <span>Update Pre-hook</span>;
-  if (context?.hookToEdit && !context?.isPreHook)
-    return <span>Update Post-hook</span>;
-  if (!context?.hookToEdit && context?.isPreHook)
-    return <span>Add Pre-hook</span>;
-  if (!context?.hookToEdit && !context?.isPreHook)
-    return <span>Add Post-hook</span>;
-};
