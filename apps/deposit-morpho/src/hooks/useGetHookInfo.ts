@@ -7,8 +7,8 @@ import {
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import { type Address, parseUnits } from "viem";
-import { chainIdToMorphoBundler } from "#/constants";
 import type { DepositMorphoFormData } from "#/contexts/form";
+import { chainIdToMorphoBundler } from "#/utils/constants";
 
 export interface DepositMorphoHookParams {
   assetAddress: Address;
