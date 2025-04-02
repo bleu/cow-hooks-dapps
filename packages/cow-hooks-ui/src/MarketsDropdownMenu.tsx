@@ -154,7 +154,7 @@ export function MarketsDropdownMenu({
             >
               <CommandInput
                 className="bg-muted rounded-xl placeholder:text-muted-foreground/50 text-md px-2 py-2 mb-5"
-                placeholder="Search name or paste address"
+                placeholder="Search token symbols"
                 onValueChange={handleInputChange}
                 value={search}
               />
