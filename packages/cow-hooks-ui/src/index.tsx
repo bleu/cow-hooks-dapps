@@ -37,3 +37,4 @@ export * from "./hooks/useTokenList";
 export * from "./deposit";
 export * from "./states";
 export * from "./VaultsDropdownMenu";
+export * from "./MarketsDropdownMenu";

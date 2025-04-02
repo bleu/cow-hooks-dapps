@@ -135,3 +135,41 @@ export interface Vault {
     totalSupply: bigint;
   };
 }
+
+export interface MorphoMarket {
+  state: {
+    supplyAssetsUsd: number;
+    borrowAssetsUsd: number;
+    collateralAssetsUsd: number;
+    dailyNetBorrowApy: number;
+    dailyNetSupplyApy: number;
+    weeklyNetBorrowApy: number;
+    weeklyNetSupplyApy: number;
+    monthlyNetBorrowApy: number;
+    monthlyNetSupplyApy: number;
+  };
+  collateralAsset: {
+    address: Address;
+    decimals: number;
+    name: string;
+    symbol: string;
+    priceUsd: number;
+  };
+  lltv: bigint;
+  loanAsset: {
+    address: Address;
+    decimals: number;
+    name: string;
+    symbol: string;
+    priceUsd: number;
+  };
+  id: string;
+  irmAddress: Address;
+  oracle: {
+    chain: {
+      id: number;
+      network: string;
+    };
+    address: Address;
+  };
+}
