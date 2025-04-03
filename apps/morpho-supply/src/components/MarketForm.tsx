@@ -13,8 +13,8 @@ import {
 import { useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { MorphoSupplyFormData } from "#/contexts/form";
-import { useUserMarketPosition } from "#/hooks/useUserMarketPosition";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
+import { useUserMarketPosition } from "#/hooks/useUserMarketPosition";
 
 export function MarketForm({ market }: { market: MorphoMarket }) {
   const { context } = useIFrameContext();
@@ -90,7 +90,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
       inputedDecimals.length > market.collateralAsset.decimals
     )
       return Number(
-        v.slice(0, -(inputedDecimals.length - market.collateralAsset.decimals))
+        v.slice(0, -(inputedDecimals.length - market.collateralAsset.decimals)),
       );
     return Number(v);
   };
@@ -182,7 +182,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
             market.oracle.chain.id,
             market.collateralAsset.address,
             market.collateralAsset.decimals,
-            market.collateralAsset.symbol
+            market.collateralAsset.symbol,
           )
         }
         label="Deposit Amount"

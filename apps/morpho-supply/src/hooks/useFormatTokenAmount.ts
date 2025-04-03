@@ -13,7 +13,7 @@ export const useFormatTokenAmount = ({
       amount !== undefined && decimals !== undefined
         ? Number(amount) / 10 ** Number(decimals)
         : undefined,
-    [amount, decimals]
+    [amount, decimals],
   );
 
   const formatted = useMemo(
@@ -21,7 +21,7 @@ export const useFormatTokenAmount = ({
       float !== undefined
         ? formatNumber(float, 4, "decimal", "standard", 0.0001)
         : "",
-    [float]
+    [float],
   );
   return { float, formatted };
 };
