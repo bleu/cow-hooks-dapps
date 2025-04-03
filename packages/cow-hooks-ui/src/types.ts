@@ -154,6 +154,7 @@ export interface MorphoMarket {
     name: string;
     symbol: string;
     priceUsd: number;
+    logoURI: string;
   };
   lltv: bigint;
   loanAsset: {
@@ -162,8 +163,9 @@ export interface MorphoMarket {
     name: string;
     symbol: string;
     priceUsd: number;
+    logoURI: string;
   };
-  id: string;
+  uniqueKey: string;
   irmAddress: Address;
   oracle: {
     chain: {

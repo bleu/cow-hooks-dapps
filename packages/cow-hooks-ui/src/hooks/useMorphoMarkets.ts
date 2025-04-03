@@ -44,6 +44,7 @@ const MORPHO_MARKETS_QUERY = gql`
           name
           symbol
           priceUsd
+          logoURI
         }
         lltv
         loanAsset {
@@ -52,8 +53,9 @@ const MORPHO_MARKETS_QUERY = gql`
           name
           symbol
           priceUsd
+          logoURI
         }
-        id
+        uniqueKey
         irmAddress
         oracle {
           chain {
