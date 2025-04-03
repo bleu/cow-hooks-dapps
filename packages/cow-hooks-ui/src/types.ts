@@ -165,7 +165,7 @@ export interface MorphoMarket {
     priceUsd: number;
     logoURI: string;
   };
-  uniqueKey: string;
+  uniqueKey: `0x${string}`;
   irmAddress: Address;
   oracle: {
     chain: {

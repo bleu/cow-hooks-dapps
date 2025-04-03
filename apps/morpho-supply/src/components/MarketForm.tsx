@@ -13,6 +13,8 @@ import {
 import { useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { MorphoSupplyFormData } from "#/contexts/form";
+import { useUserMarketPosition } from "#/hooks/useUserMarketPosition";
+import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 
 export function MarketForm({ market }: { market: MorphoMarket }) {
   const { context } = useIFrameContext();
@@ -28,42 +30,40 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
       tokenAddress: market.loanAsset.address,
     });
 
-  const loanBalanceFloat = useMemo(
-    () =>
-      loanBalance !== undefined && loanDecimals
-        ? Number(loanBalance) / 10 ** Number(loanDecimals)
-        : undefined,
-    [loanBalance, loanDecimals],
-  );
-
-  const formattedLoanBalance = useMemo(
-    () =>
-      loanBalanceFloat !== undefined
-        ? formatNumber(loanBalanceFloat, 4, "decimal", "standard", 0.0001)
-        : "",
-    [loanBalanceFloat],
-  );
-
   const { userBalance: collateralBalance, tokenDecimals: collateralDecimals } =
     useReadTokenContract({
       tokenAddress: market.collateralAsset.address,
     });
 
-  const collateralBalanceFloat = useMemo(
-    () =>
-      collateralBalance !== undefined && collateralDecimals
-        ? Number(collateralBalance) / 10 ** Number(collateralDecimals)
-        : undefined,
-    [collateralBalance, collateralDecimals],
-  );
+  const { borrow, collateral } = useUserMarketPosition({
+    marketKey: market.uniqueKey,
+  }) ?? {
+    borrow: undefined,
+    collateral: undefined,
+  };
 
-  const formattedCollateralBalance = useMemo(
-    () =>
-      collateralBalanceFloat !== undefined
-        ? formatNumber(collateralBalanceFloat, 4, "decimal", "standard", 0.0001)
-        : "",
-    [collateralBalanceFloat],
-  );
+  const { formatted: formattedLoanBalance } = useFormatTokenAmount({
+    amount: loanBalance,
+    decimals: loanDecimals,
+  });
+
+  const {
+    float: collateralBalanceFloat,
+    formatted: formattedCollateralBalance,
+  } = useFormatTokenAmount({
+    amount: collateralBalance,
+    decimals: collateralDecimals,
+  });
+
+  const { formatted: formattedCollateral } = useFormatTokenAmount({
+    amount: collateral,
+    decimals: collateralDecimals,
+  });
+
+  const { formatted: formattedBorrow } = useFormatTokenAmount({
+    amount: borrow,
+    decimals: loanDecimals,
+  });
 
   const buttonMessage = useMemo(() => {
     if (context?.hookToEdit && context?.isPreHook)
@@ -90,7 +90,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
       inputedDecimals.length > market.collateralAsset.decimals
     )
       return Number(
-        v.slice(0, -(inputedDecimals.length - market.collateralAsset.decimals)),
+        v.slice(0, -(inputedDecimals.length - market.collateralAsset.decimals))
       );
     return Number(v);
   };
@@ -140,6 +140,33 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
           </div>
           <span>{formattedLoanBalance}</span>
         </div>
+        <span>Your Positions:</span>
+        <div className="flex gap-2">
+          <span>Collateral:</span>
+          <div className="w-6 h-6">
+            <img
+              width={24}
+              height={24}
+              src={market.collateralAsset.logoURI}
+              alt={market.collateralAsset.symbol}
+              title={market.collateralAsset.symbol}
+            />
+          </div>
+          <span>{formattedCollateral}</span>
+        </div>
+        <div className="flex gap-2">
+          <span>Loan:</span>
+          <div className="w-6 h-6">
+            <img
+              width={24}
+              height={24}
+              src={market.loanAsset.logoURI}
+              alt={market.loanAsset.symbol}
+              title={market.loanAsset.symbol}
+            />
+          </div>
+          <span>{formattedBorrow}</span>
+        </div>
         <span>{market.oracle.address}</span>
         <span>{market.irmAddress}</span>
         <span>{market.uniqueKey}</span>
@@ -155,7 +182,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
             market.oracle.chain.id,
             market.collateralAsset.address,
             market.collateralAsset.decimals,
-            market.collateralAsset.symbol,
+            market.collateralAsset.symbol
           )
         }
         label="Deposit Amount"

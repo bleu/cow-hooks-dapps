@@ -12,3 +12,4 @@ export * from "./abis/weirollAbi";
 export * from "./abis/uniswapV2Router02Abi";
 export * from "./abis/morphoBundlersAbi";
 export * from "./abis/morphoVaultAbi";
+export * from "./abis/morphoAbi";
