@@ -1,12 +1,10 @@
 import { formatNumber } from "@bleu.builders/ui";
-import { Token } from "@uniswap/sdk-core";
 
 import {
   ButtonPrimary,
   Info,
   InfoContent,
   type MorphoMarket,
-  TokenAmountInput,
   useIFrameContext,
   useReadTokenContract,
 } from "@bleu/cow-hooks-ui";
@@ -15,6 +13,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { useUserMarketPosition } from "#/hooks/useUserMarketPosition";
+import { AmountInput } from "./AmoutIntput";
 
 export function MarketForm({ market }: { market: MorphoMarket }) {
   const { context } = useIFrameContext();
@@ -77,23 +76,6 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   }, [context?.hookToEdit, context?.isPreHook]);
 
   if (!context) return null;
-
-  const handleSetValue = (value: string) => {
-    if (value === "") return undefined;
-    if (typeof value === "number") return value;
-
-    let v = value;
-    v = v.replace(",", ".");
-    const inputedDecimals = v.includes(".") && v.split(".").at(-1);
-    if (
-      inputedDecimals &&
-      inputedDecimals.length > market.collateralAsset.decimals
-    )
-      return Number(
-        v.slice(0, -(inputedDecimals.length - market.collateralAsset.decimals)),
-      );
-    return Number(v);
-  };
 
   return (
     <div className="flex flex-col w-full gap-4 mt-4">
@@ -171,62 +153,26 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
           <span>{formattedBorrow}</span>
         </div>
       </div>
-      <TokenAmountInput
+      <AmountInput
         name="collateralAmount"
-        type="number"
-        inputMode="decimal"
-        step={`0.${"0".repeat(market.collateralAsset.decimals - 1)}1`}
-        max="1000000000000"
-        token={
-          new Token(
-            market.oracle.chain.id,
-            market.collateralAsset.address,
-            market.collateralAsset.decimals,
-            market.collateralAsset.symbol,
-          )
-        }
         label="Supply Collateral"
-        placeholder="0.0"
-        autoComplete="off"
-        disabled={false}
-        userBalance={formattedCollateralBalance}
-        userBalanceFullDecimals={String(collateralBalanceFloat)}
-        fiatAmount={fiatAmount}
-        shouldEnableMaxSelector={true}
-        validation={{ setValueAs: handleSetValue }}
-        onKeyDown={(e) =>
-          ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
-        }
+        asset={market.collateralAsset}
+        chainId={market.oracle.chain.id}
+        formattedBalance={formattedCollateralBalance}
+        floatBalance={collateralBalanceFloat ?? 0.0}
+        fiatBalance={fiatAmount}
       />
-      <TokenAmountInput
+      <AmountInput
         name="borrowAmount"
-        type="number"
-        inputMode="decimal"
-        step={`0.${"0".repeat(market.loanAsset.decimals - 1)}1`}
-        max="1000000000000"
-        token={
-          new Token(
-            market.oracle.chain.id,
-            market.loanAsset.address,
-            market.loanAsset.decimals,
-            market.loanAsset.symbol,
-          )
-        }
         label={`Borrow ${market.loanAsset.symbol}`}
-        placeholder="0.0"
-        autoComplete="off"
-        disabled={false}
-        userBalance={formattedCollateralBalance}
-        userBalanceFullDecimals={String(collateralBalanceFloat)}
-        fiatAmount={fiatAmount}
-        shouldEnableMaxSelector={true}
-        validation={{ setValueAs: handleSetValue }}
-        onKeyDown={(e) =>
-          ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
-        }
+        asset={market.loanAsset}
+        chainId={market.oracle.chain.id}
+        formattedBalance={formattedLoanBalance}
+        floatBalance={0.0}
+        fiatBalance={"0.0"}
       />
       <Info content={<InfoContent />} />
-      <ButtonPrimary type="submit" className="mb-0">
+      <ButtonPrimary type="submit" className="mb-4">
         {buttonMessage}
       </ButtonPrimary>
     </div>
