@@ -110,9 +110,11 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
           30-day APY:{" "}
           {formatNumber(market.state.monthlyNetBorrowApy, 2, "percent")}
         </span>
+        <br />
         <span>
           Total supply assets: ${formatNumber(market.state.supplyAssetsUsd, 1)}
         </span>
+        <br />
         <span>Your Balances:</span>
         <div className="flex gap-2">
           <span>Collateral:</span>
@@ -140,6 +142,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
           </div>
           <span>{formattedLoanBalance}</span>
         </div>
+        <br />
         <span>Your Positions:</span>
         <div className="flex gap-2">
           <span>Collateral:</span>
@@ -167,12 +170,9 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
           </div>
           <span>{formattedBorrow}</span>
         </div>
-        <span>{market.oracle.address}</span>
-        <span>{market.irmAddress}</span>
-        <span>{market.uniqueKey}</span>
       </div>
       <TokenAmountInput
-        name="amount"
+        name="collateralAmount"
         type="number"
         inputMode="decimal"
         step={`0.${"0".repeat(market.collateralAsset.decimals - 1)}1`}
@@ -185,7 +185,34 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
             market.collateralAsset.symbol,
           )
         }
-        label="Deposit Amount"
+        label="Supply Collateral"
+        placeholder="0.0"
+        autoComplete="off"
+        disabled={false}
+        userBalance={formattedCollateralBalance}
+        userBalanceFullDecimals={String(collateralBalanceFloat)}
+        fiatAmount={fiatAmount}
+        shouldEnableMaxSelector={true}
+        validation={{ setValueAs: handleSetValue }}
+        onKeyDown={(e) =>
+          ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
+        }
+      />
+      <TokenAmountInput
+        name="borrowAmount"
+        type="number"
+        inputMode="decimal"
+        step={`0.${"0".repeat(market.loanAsset.decimals - 1)}1`}
+        max="1000000000000"
+        token={
+          new Token(
+            market.oracle.chain.id,
+            market.loanAsset.address,
+            market.loanAsset.decimals,
+            market.loanAsset.symbol,
+          )
+        }
+        label={`Borrow ${market.loanAsset.symbol}`}
         placeholder="0.0"
         autoComplete="off"
         disabled={false}
