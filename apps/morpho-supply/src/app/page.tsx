@@ -8,6 +8,7 @@ import {
   useMorphoMarkets,
 } from "@bleu/cow-hooks-ui";
 import { useFormContext, useWatch } from "react-hook-form";
+import { MarketForm } from "#/components/MarketForm";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 
 export default function Page() {
@@ -40,6 +41,7 @@ export default function Page() {
         markets={markets}
         selectedMarket={selectedMarket as MorphoMarket | undefined}
       />
+      {selectedMarket && <MarketForm market={selectedMarket as MorphoMarket} />}
     </div>
   );
 }
