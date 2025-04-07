@@ -3,8 +3,10 @@
 import { type PropsWithChildren, useCallback } from "react";
 
 import { Form } from "@bleu.builders/ui";
-import type { MorphoMarket } from "@bleu/cow-hooks-ui";
+import { useIFrameContext, type MorphoMarket } from "@bleu/cow-hooks-ui";
 import { useForm } from "react-hook-form";
+import { useGetHookInfo } from "#/hooks/useGetHookInfo";
+import { useRouter } from "next/navigation";
 
 export interface MorphoSupplyFormData {
   market: MorphoMarket;
@@ -12,11 +14,24 @@ export interface MorphoSupplyFormData {
 }
 
 export function FormContextProvider({ children }: PropsWithChildren) {
+  const { setHookInfo } = useIFrameContext();
   const form = useForm<MorphoSupplyFormData>({});
+
+  const router = useRouter();
 
   const { handleSubmit } = form;
 
-  const onSubmitCallback = useCallback(async () => {}, []);
+  const getHookInfo = useGetHookInfo();
+
+  const onSubmitCallback = useCallback(
+    async (data: MorphoSupplyFormData) => {
+      const hookInfo = await getHookInfo(data);
+      if (!hookInfo) return;
+      setHookInfo(hookInfo);
+      router.push("/signing");
+    },
+    [getHookInfo, setHookInfo, router]
+  );
 
   return (
     <Form

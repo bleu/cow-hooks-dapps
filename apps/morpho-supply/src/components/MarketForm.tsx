@@ -15,6 +15,7 @@ import { useDynamicBorrow } from "#/hooks/useDynamicBorrow";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { useUserMarketPosition } from "#/hooks/useUserMarketPosition";
 import { AmountInput } from "./AmoutIntput";
+import { getMarketParams } from "#/utils/getMarketParams";
 
 export function MarketForm({ market }: { market: MorphoMarket }) {
   const { context } = useIFrameContext();
@@ -35,13 +36,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
       tokenAddress: market.collateralAsset.address,
     });
 
-  const marketParams = {
-    loanToken: market.loanAsset.address,
-    collateralToken: market.collateralAsset.address,
-    oracle: market.oracle.address,
-    irm: market.irmAddress,
-    lltv: market.lltv,
-  };
+  const marketParams = getMarketParams(market);
 
   const marketPosition = useUserMarketPosition({
     marketKey: market.uniqueKey,
@@ -178,7 +173,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
         </div>
       </div>
       <AmountInput
-        name="collateralAmount"
+        name="amount"
         label="Supply Collateral"
         asset={market.collateralAsset}
         chainId={market.oracle.chain.id}
