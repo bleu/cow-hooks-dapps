@@ -1,6 +1,5 @@
-import { useIFrameContext } from "@bleu/cow-hooks-ui";
-import { morphoAbi } from "@bleu/utils/transactionFactory";
-import { MarketUtils } from "@morpho-org/blue-sdk";
+import { type MorphoMarketParams, useIFrameContext } from "@bleu/cow-hooks-ui";
+import { morphoAbi, morphoIrmAbi } from "@bleu/utils/transactionFactory";
 import { useCallback } from "react";
 import useSWR from "swr";
 // import { useIFrameContext } from "@bleu/cow-hooks-ui";
@@ -10,7 +9,6 @@ const MORPHO_ADDRESS = "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb";
 
 interface UserMarketPosition {
   supplyShares: bigint;
-  borrow: bigint;
   borrowShares: bigint;
   collateral: bigint;
   totalSupplyAssets: bigint;
@@ -19,19 +17,27 @@ interface UserMarketPosition {
   totalBorrowShares: bigint;
   lastUpdate: bigint;
   fee: bigint;
+  borrowRate: bigint;
 }
 
 export const useUserMarketPosition = ({
   marketKey,
+  marketParams,
 }: {
   marketKey: `0x${string}`;
+  marketParams: MorphoMarketParams;
 }) => {
   const { publicClient, context } = useIFrameContext();
 
   const fetcher = useCallback(async () => {
     if (!publicClient || !context?.account) throw new Error("missing context");
-    return getUserMarketPosition(marketKey, context.account, publicClient);
-  }, [publicClient, context?.account, marketKey]);
+    return getUserMarketPosition(
+      marketKey,
+      marketParams,
+      context.account,
+      publicClient
+    );
+  }, [publicClient, context?.account, marketKey, marketParams]);
 
   const { data } = useSWR<UserMarketPosition>(
     ["getUserMarketPosition", context?.chainId, context?.account, marketKey],
@@ -42,15 +48,16 @@ export const useUserMarketPosition = ({
       refreshWhenOffline: false,
       refreshWhenHidden: false,
       refreshInterval: 0,
-    },
+    }
   );
   return data;
 };
 
 export const getUserMarketPosition = async (
   marketKey: `0x${string}`,
+  marketParams: MorphoMarketParams,
   userAddress: Address,
-  publicClient: PublicClient,
+  publicClient: PublicClient
 ): Promise<UserMarketPosition> => {
   const results =
     publicClient &&
@@ -86,14 +93,24 @@ export const getUserMarketPosition = async (
     fee,
   ] = results[1].result;
 
-  const borrow = MarketUtils.toBorrowAssets(borrowShares, {
+  const marketState = {
+    totalSupplyAssets,
+    totalSupplyShares,
     totalBorrowAssets,
     totalBorrowShares,
+    lastUpdate,
+    fee,
+  };
+
+  const borrowRate = await publicClient.readContract({
+    address: marketParams.irm,
+    abi: morphoIrmAbi,
+    functionName: "borrowRateView",
+    args: [{ ...marketParams }, marketState],
   });
 
   return {
     supplyShares,
-    borrow,
     borrowShares,
     collateral,
     totalSupplyAssets,
@@ -102,5 +119,6 @@ export const getUserMarketPosition = async (
     totalBorrowShares,
     lastUpdate,
     fee,
+    borrowRate,
   };
 };

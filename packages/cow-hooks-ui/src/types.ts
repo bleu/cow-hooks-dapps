@@ -175,3 +175,11 @@ export interface MorphoMarket {
     address: Address;
   };
 }
+
+export interface MorphoMarketParams {
+  collateralToken: Address;
+  loanToken: Address;
+  oracle: Address;
+  irm: Address;
+  lltv: bigint;
+}

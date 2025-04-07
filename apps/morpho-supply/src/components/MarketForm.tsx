@@ -14,6 +14,7 @@ import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { useUserMarketPosition } from "#/hooks/useUserMarketPosition";
 import { AmountInput } from "./AmoutIntput";
+import { useDynamicBorrow } from "#/hooks/useDynamicBorrow";
 
 export function MarketForm({ market }: { market: MorphoMarket }) {
   const { context } = useIFrameContext();
@@ -34,12 +35,35 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
       tokenAddress: market.collateralAsset.address,
     });
 
-  const { borrow, collateral } = useUserMarketPosition({
-    marketKey: market.uniqueKey,
-  }) ?? {
-    borrow: undefined,
-    collateral: undefined,
+  const marketParams = {
+    loanToken: market.loanAsset.address,
+    collateralToken: market.collateralAsset.address,
+    oracle: market.oracle.address,
+    irm: market.irmAddress,
+    lltv: market.lltv,
   };
+
+  const marketPosition = useUserMarketPosition({
+    marketKey: market.uniqueKey,
+    marketParams,
+  });
+
+  const {
+    collateral,
+    borrowShares,
+    totalBorrowAssets,
+    totalBorrowShares,
+    borrowRate,
+    lastUpdate,
+  } = marketPosition ?? {};
+
+  const borrow = useDynamicBorrow({
+    borrowShares,
+    totalBorrowAssets,
+    totalBorrowShares,
+    borrowRate,
+    lastUpdate,
+  });
 
   const { formatted: formattedLoanBalance } = useFormatTokenAmount({
     amount: loanBalance,
@@ -59,7 +83,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     decimals: collateralDecimals,
   });
 
-  const { formatted: formattedBorrow } = useFormatTokenAmount({
+  const { float: floatBorrow } = useFormatTokenAmount({
     amount: borrow,
     decimals: loanDecimals,
   });
@@ -150,7 +174,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
               title={market.loanAsset.symbol}
             />
           </div>
-          <span>{formattedBorrow}</span>
+          <span>{floatBorrow}</span>
         </div>
       </div>
       <AmountInput
