@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { MarketUtils } from "@morpho-org/blue-sdk";
 
@@ -25,7 +25,7 @@ export function useDynamicBorrow({
             totalBorrowShares: totalBorrowShares,
           })
         : undefined,
-    [borrowShares, totalBorrowAssets, totalBorrowShares]
+    [borrowShares, totalBorrowAssets, totalBorrowShares],
   );
 
   // 3s loop update

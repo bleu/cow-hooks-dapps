@@ -35,7 +35,7 @@ export const useUserMarketPosition = ({
       marketKey,
       marketParams,
       context.account,
-      publicClient
+      publicClient,
     );
   }, [publicClient, context?.account, marketKey, marketParams]);
 
@@ -48,7 +48,7 @@ export const useUserMarketPosition = ({
       refreshWhenOffline: false,
       refreshWhenHidden: false,
       refreshInterval: 0,
-    }
+    },
   );
   return data;
 };
@@ -57,7 +57,7 @@ export const getUserMarketPosition = async (
   marketKey: `0x${string}`,
   marketParams: MorphoMarketParams,
   userAddress: Address,
-  publicClient: PublicClient
+  publicClient: PublicClient,
 ): Promise<UserMarketPosition> => {
   const results =
     publicClient &&
