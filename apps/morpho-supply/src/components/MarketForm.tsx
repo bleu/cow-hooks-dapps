@@ -14,8 +14,8 @@ import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useDynamicBorrow } from "#/hooks/useDynamicBorrow";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { useUserMarketPosition } from "#/hooks/useUserMarketPosition";
-import { AmountInput } from "./AmoutIntput";
 import { getMarketParams } from "#/utils/getMarketParams";
+import { AmountInput } from "./AmoutIntput";
 
 export function MarketForm({ market }: { market: MorphoMarket }) {
   const { context } = useIFrameContext();

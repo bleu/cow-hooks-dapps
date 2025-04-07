@@ -91,7 +91,7 @@ const TRANSACTION_CREATORS: {
 export class TransactionFactory {
   static async createRawTx<T extends TRANSACTION_TYPES>(
     type: T,
-    args: TransactionBindings[T]
+    args: TransactionBindings[T],
   ): Promise<BaseTransaction> {
     const TransactionCreator = TRANSACTION_CREATORS[type];
     const txCreator = new TransactionCreator();

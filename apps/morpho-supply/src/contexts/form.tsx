@@ -3,10 +3,10 @@
 import { type PropsWithChildren, useCallback } from "react";
 
 import { Form } from "@bleu.builders/ui";
-import { useIFrameContext, type MorphoMarket } from "@bleu/cow-hooks-ui";
+import { type MorphoMarket, useIFrameContext } from "@bleu/cow-hooks-ui";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useGetHookInfo } from "#/hooks/useGetHookInfo";
-import { useRouter } from "next/navigation";
 
 export interface MorphoSupplyFormData {
   market: MorphoMarket;
@@ -30,7 +30,7 @@ export function FormContextProvider({ children }: PropsWithChildren) {
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [getHookInfo, setHookInfo, router]
+    [getHookInfo, setHookInfo, router],
   );
 
   return (
