@@ -5,6 +5,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowLeftIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { Token } from "@uniswap/sdk-core";
 import { useEffect, useMemo, useState } from "react";
+import { formatUnits } from "viem";
 import { TokenLogo } from "./TokenLogo";
 import { useIFrameContext } from "./context/iframe";
 import type { MorphoMarket } from "./types";
@@ -17,7 +18,6 @@ import {
   CommandList,
 } from "./ui/Command";
 import { Spinner } from "./ui/Spinner";
-import { formatUnits } from "viem";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -58,13 +58,13 @@ export function MarketsDropdownMenu({
     return markets.filter((market) =>
       (market.collateralAsset.symbol + market.loanAsset.symbol)
         .toLowerCase()
-        .includes(searchLower)
+        .includes(searchLower),
     );
   }, [markets, search]);
 
   const displayedVaults = useMemo(
     () => filteredVaults.slice(0, displayCount),
-    [filteredVaults, displayCount]
+    [filteredVaults, displayCount],
   );
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -126,7 +126,7 @@ export function MarketsDropdownMenu({
                       Number(selectedMarket.lltv) /
                         10 ** selectedMarket.collateralAsset.decimals,
                       0,
-                      "percent"
+                      "percent",
                     )}
                   </span>
                 </div>
@@ -191,12 +191,12 @@ export function MarketsDropdownMenu({
                             {formatNumber(
                               formatUnits(
                                 market.position.collateral,
-                                market.collateralAsset.decimals
+                                market.collateralAsset.decimals,
                               ),
                               4,
                               "decimal",
                               "standard",
-                              0.0001
+                              0.0001,
                             )}
                           </span>
                         )}
@@ -211,12 +211,12 @@ export function MarketsDropdownMenu({
                             {formatNumber(
                               formatUnits(
                                 market.position.borrowAssets,
-                                market.loanAsset.decimals
+                                market.loanAsset.decimals,
                               ),
                               4,
                               "decimal",
                               "standard",
-                              0.0001
+                              0.0001,
                             )}
                           </span>
                         )}
@@ -226,7 +226,7 @@ export function MarketsDropdownMenu({
                           {formatNumber(
                             Number(market.lltv.toString().slice(0, 3)) / 1000,
                             1,
-                            "percent"
+                            "percent",
                           )}
                         </span>
                       </div>
@@ -274,7 +274,7 @@ export function AssetLogo({ asset }: { asset: AssetProps }) {
             context.chainId,
             asset.address,
             asset.decimals,
-            asset.symbol
+            asset.symbol,
           )
         }
       />

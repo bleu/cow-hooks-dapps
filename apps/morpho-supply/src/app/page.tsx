@@ -20,7 +20,7 @@ export default function Page() {
   const { data: markets } = useMorphoMarkets(
     {},
     context?.chainId,
-    context?.account
+    context?.account,
   );
 
   if (!markets)
