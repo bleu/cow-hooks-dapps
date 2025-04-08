@@ -17,6 +17,7 @@ import {
   CommandList,
 } from "./ui/Command";
 import { Spinner } from "./ui/Spinner";
+import { formatUnits } from "viem";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -57,13 +58,13 @@ export function MarketsDropdownMenu({
     return markets.filter((market) =>
       (market.collateralAsset.symbol + market.loanAsset.symbol)
         .toLowerCase()
-        .includes(searchLower),
+        .includes(searchLower)
     );
   }, [markets, search]);
 
   const displayedVaults = useMemo(
     () => filteredVaults.slice(0, displayCount),
-    [filteredVaults, displayCount],
+    [filteredVaults, displayCount]
   );
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -125,7 +126,7 @@ export function MarketsDropdownMenu({
                       Number(selectedMarket.lltv) /
                         10 ** selectedMarket.collateralAsset.decimals,
                       0,
-                      "percent",
+                      "percent"
                     )}
                   </span>
                 </div>
@@ -180,20 +181,52 @@ export function MarketsDropdownMenu({
                       }}
                       className="w-full hover:bg-color-paper-darkest hover:text-muted-foreground rounded-md px-2 cursor-pointer grid grid-cols-3"
                     >
-                      <div className="flex gap-2">
-                        <AssetLogo asset={market.collateralAsset} />
-                        <span>{market.collateralAsset.symbol}</span>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-2">
+                          <AssetLogo asset={market.collateralAsset} />
+                          <span>{market.collateralAsset.symbol}</span>
+                        </div>
+                        {market?.position && (
+                          <span>
+                            {formatNumber(
+                              formatUnits(
+                                market.position.collateral,
+                                market.collateralAsset.decimals
+                              ),
+                              4,
+                              "decimal",
+                              "standard",
+                              0.0001
+                            )}
+                          </span>
+                        )}
                       </div>
-                      <div className="flex gap-2">
-                        <AssetLogo asset={market.loanAsset} />
-                        <span>{market.loanAsset.symbol}</span>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-2">
+                          <AssetLogo asset={market.loanAsset} />
+                          <span>{market.loanAsset.symbol}</span>
+                        </div>
+                        {market?.position && (
+                          <span>
+                            {formatNumber(
+                              formatUnits(
+                                market.position.borrowAssets,
+                                market.loanAsset.decimals
+                              ),
+                              4,
+                              "decimal",
+                              "standard",
+                              0.0001
+                            )}
+                          </span>
+                        )}
                       </div>
                       <div className="flex gap-2">
                         <span>
                           {formatNumber(
                             Number(market.lltv.toString().slice(0, 3)) / 1000,
                             1,
-                            "percent",
+                            "percent"
                           )}
                         </span>
                       </div>
@@ -241,7 +274,7 @@ export function AssetLogo({ asset }: { asset: AssetProps }) {
             context.chainId,
             asset.address,
             asset.decimals,
-            asset.symbol,
+            asset.symbol
           )
         }
       />
