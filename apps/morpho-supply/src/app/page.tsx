@@ -17,7 +17,11 @@ export default function Page() {
 
   const { context } = useIFrameContext();
 
-  const { data: markets } = useMorphoMarkets({}, context?.chainId);
+  const { data: markets } = useMorphoMarkets(
+    {},
+    context?.chainId,
+    context?.account,
+  );
 
   if (!markets)
     return (
@@ -33,6 +37,10 @@ export default function Page() {
         />
       </div>
     );
+
+  console.log({
+    marketsFiltered: markets.filter((x) => x.position !== null),
+  });
 
   return (
     <div className="w-full flex flex-col py-1 px-4">
