@@ -10,6 +10,7 @@ import {
   getMaxReallocatableLiquidity,
 } from "#/utils/borrowReallocation";
 import { getMarketParams } from "#/utils/getMarketParams";
+import { publicAllocatorMap } from "#/utils/publicAllocatorMap";
 
 export const useGetBorrowReallocationTxs = () => {
   const { context, cowShedProxy } = useIFrameContext();
@@ -42,8 +43,7 @@ export const useGetBorrowReallocationTxs = () => {
         possibleWithdrawals,
       );
 
-      const publicAllocatorAddress =
-        "0xA090dD1a701408Df1d4d0B85b716c87565f90467";
+      const publicAllocatorAddress = publicAllocatorMap[context.chainId];
 
       const txs: BaseTransaction[] = withdrawals.map((withdrawal) => ({
         to: publicAllocatorAddress,
