@@ -14,3 +14,4 @@ export * from "./abis/morphoBundlersAbi";
 export * from "./abis/morphoVaultAbi";
 export * from "./abis/morphoAbi";
 export * from "./abis/morphoIrmAbi";
+export * from "./abis/morphoPublicAllocatorAbi";

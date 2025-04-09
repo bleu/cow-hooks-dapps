@@ -10,7 +10,8 @@ import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 
 export interface MorphoSupplyFormData {
   market: MorphoMarket;
-  amount: string;
+  supplyAmount: string;
+  borrowAmount: string;
 }
 
 export function FormContextProvider({ children }: PropsWithChildren) {

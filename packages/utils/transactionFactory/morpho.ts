@@ -83,7 +83,7 @@ export class MorphoSupplyCreator implements ITransaction<MorphoSupplyArgs> {
 }
 
 export interface MorphoBorrowArgs extends BaseArgs {
-  type: TRANSACTION_TYPES.MORPHO_SUPPLY;
+  type: TRANSACTION_TYPES.MORPHO_BORROW;
   marketParams: MorphoMarketParams;
   assets: bigint;
   shares: bigint;

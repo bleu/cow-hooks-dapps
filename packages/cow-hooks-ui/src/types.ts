@@ -150,7 +150,9 @@ export interface MarketPosition {
 
 export interface MorphoMarket {
   state: {
+    supplyAssets: bigint;
     supplyAssetsUsd: number;
+    borrowAssets: bigint;
     borrowAssetsUsd: number;
     collateralAssetsUsd: number;
     dailyNetBorrowApy: number;
@@ -159,6 +161,7 @@ export interface MorphoMarket {
     weeklyNetSupplyApy: number;
     monthlyNetBorrowApy: number;
     monthlyNetSupplyApy: number;
+    liquidityAssets: bigint;
   };
   collateralAsset: {
     address: Address;
@@ -186,6 +189,8 @@ export interface MorphoMarket {
     };
     address: Address;
   };
+  supplyingVaults: { address: Address }[];
+  reallocatableLiquidityAssets: bigint;
   position: MarketPosition | null;
 }
 

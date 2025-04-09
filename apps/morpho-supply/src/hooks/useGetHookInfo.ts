@@ -1,14 +1,9 @@
-import { type IHooksInfo, useIFrameContext } from "@bleu/cow-hooks-ui";
-import {
-  TRANSACTION_TYPES,
-  TransactionFactory,
-} from "@bleu/utils/transactionFactory";
-import { MORPHO_ADDRESS } from "@bleu/utils/transactionFactory/morpho";
-import { BigNumber } from "ethers";
+import type { IHooksInfo } from "@bleu/cow-hooks-ui";
 import { useCallback } from "react";
-import { type Address, parseUnits } from "viem";
+import type { Address } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
-import { getMarketParams } from "#/utils/getMarketParams";
+import { useGetBorrowHookInfo } from "./useGetBorrowHookInfo";
+import { useGetSupplyHookInfo } from "./useGetSupplyHookInfo";
 
 export interface DepositMorphoHookParams {
   assetAddress: Address;
@@ -19,59 +14,27 @@ export interface DepositMorphoHookParams {
 }
 
 export const useGetHookInfo = () => {
-  const { context, cowShedProxy } = useIFrameContext();
+  const getSupplyHookInfo = useGetSupplyHookInfo();
+  const getBorrowHookInfo = useGetBorrowHookInfo();
 
   return useCallback(
-    async ({
-      market,
-      amount,
-    }: MorphoSupplyFormData): Promise<IHooksInfo | undefined> => {
-      if (!context?.account || !context?.chainId || !cowShedProxy || !amount)
-        return;
+    async (formData: MorphoSupplyFormData): Promise<IHooksInfo | undefined> => {
+      const supplyHookInfo = await getSupplyHookInfo(formData);
+      const borrowHookInfo = await getBorrowHookInfo(formData);
 
-      const amountBigNumber = BigNumber.from(
-        parseUnits(amount.toString(), market.collateralAsset.decimals),
-      ).toBigInt();
+      if (!supplyHookInfo && !borrowHookInfo) return;
 
-      const tokenAddress = market.collateralAsset.address;
-      const tokenSymbol = market.collateralAsset.symbol;
-
-      const txs = await Promise.all([
-        // Transfer from user to proxy
-        TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_TRANSFER_FROM, {
-          type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM,
-          token: tokenAddress,
-          from: context.account,
-          to: cowShedProxy,
-          amount: amountBigNumber,
-          symbol: tokenSymbol,
-        }),
-        // Approve deposit amount
-        TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
-          type: TRANSACTION_TYPES.ERC20_APPROVE,
-          token: tokenAddress,
-          spender: MORPHO_ADDRESS,
-          amount: amountBigNumber,
-        }),
-        // Deposit
-        TransactionFactory.createRawTx(TRANSACTION_TYPES.MORPHO_SUPPLY, {
-          type: TRANSACTION_TYPES.MORPHO_SUPPLY,
-          marketParams: getMarketParams(market),
-          amount: amountBigNumber,
-          recipient: context.account,
-        }),
-      ]);
-
+      const txs = [
+        ...(supplyHookInfo?.txs ?? []),
+        ...(borrowHookInfo?.txs ?? []),
+      ];
       const permitData = [
-        {
-          tokenAddress: tokenAddress,
-          amount: amountBigNumber,
-          tokenSymbol: tokenSymbol,
-        },
+        ...(supplyHookInfo?.permitData ?? []),
+        ...(borrowHookInfo?.permitData ?? []),
       ];
 
       return { txs, permitData };
     },
-    [context?.account, context?.chainId, cowShedProxy],
+    [getSupplyHookInfo, getBorrowHookInfo],
   );
 };
