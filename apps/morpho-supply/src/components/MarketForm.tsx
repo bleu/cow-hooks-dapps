@@ -81,15 +81,17 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     decimals: collateralDecimals,
   });
 
-  const { formatted: formattedCollateral } = useFormatTokenAmount({
-    amount: collateral,
-    decimals: collateralDecimals,
-  });
+  const { formatted: formattedCollateral, float: collateralFloat } =
+    useFormatTokenAmount({
+      amount: collateral,
+      decimals: collateralDecimals,
+    });
 
-  const { float: floatBorrow } = useFormatTokenAmount({
-    amount: borrow,
-    decimals: loanDecimals,
-  });
+  const { float: floatBorrow, formatted: formattedBorrow } =
+    useFormatTokenAmount({
+      amount: borrow,
+      decimals: loanDecimals,
+    });
 
   const buttonMessage = useMemo(() => {
     if (context?.hookToEdit && context?.isPreHook)
@@ -123,6 +125,34 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
       setValue("supplyAmount", newSupply);
     }
   }, [isMaxSupply, collateralBalanceFloat, setValue]);
+
+  const collateralAfter = (collateralFloat ?? 0) + Number(supplyAmount ?? 0);
+  const borrowAfter = (floatBorrow ?? 0) + Number(borrowAmount ?? 0);
+
+  const ltvBefore =
+    floatBorrow && collateralFloat
+      ? formatNumber(
+          (floatBorrow * market.loanAsset.priceUsd) /
+            (collateralFloat * market.collateralAsset.priceUsd),
+          2,
+          "percent"
+        )
+      : 0.0;
+  const ltvAfter =
+    borrowAfter && collateralAfter
+      ? formatNumber(
+          (borrowAfter * market.loanAsset.priceUsd) /
+            (collateralAfter * market.collateralAsset.priceUsd),
+          2,
+          "percent"
+        )
+      : 0.0;
+
+  const lltv = formatNumber(
+    Number(market.lltv.toString().slice(0, 3)) / 1000,
+    1,
+    "percent"
+  );
 
   if (!context) return null;
 
@@ -228,6 +258,20 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
         floatBalance={String(maxBorrowableFloat ?? 0.0)}
         fiatBalance={fiatBorrowAmount}
       />
+      <div className="flex flex-col gap-2">
+        <span className="opacity-60 text-sm mb-[-8px]">Collateral</span>
+        <div className="flex gap-2">
+          <span>{`${formattedCollateral} -> ${collateralAfter.toFixed(4)}`}</span>
+        </div>
+        <span className="opacity-60 text-sm mb-[-8px]">Borrow</span>
+        <div className="flex gap-2">
+          <span>{`${formattedBorrow} -> ${borrowAfter.toFixed(4)}`}</span>
+        </div>
+        <span className="opacity-60 text-sm mb-[-8px]">LTV</span>
+        <div className="flex gap-2">
+          <span>{`${ltvBefore} -> ${ltvAfter} / ${lltv}`}</span>
+        </div>
+      </div>
       <Info content={<InfoContent />} />
       <ButtonPrimary type="submit" className="mb-4">
         {buttonMessage}
