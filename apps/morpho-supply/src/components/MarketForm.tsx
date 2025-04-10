@@ -8,21 +8,23 @@ import {
   useIFrameContext,
   useReadTokenContract,
 } from "@bleu/cow-hooks-ui";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useDynamicBorrow } from "#/hooks/useDynamicBorrow";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
+import { useMaxBorrowableAmount } from "#/hooks/useMaxBorrowableAmount";
 import { useUserMarketPosition } from "#/hooks/useUserMarketPosition";
 import { getMarketParams } from "#/utils/getMarketParams";
 import { AmountInput } from "./AmoutIntput";
-import { useMaxBorrowableAmount } from "#/hooks/useMaxBorrowableAmount";
 
 export function MarketForm({ market }: { market: MorphoMarket }) {
   const { context } = useIFrameContext();
 
-  const { control } = useFormContext<MorphoSupplyFormData>();
-  const { supplyAmount, borrowAmount } = useWatch({ control });
+  const { control, setValue } = useFormContext<MorphoSupplyFormData>();
+  const { supplyAmount, borrowAmount, isMaxBorrow, isMaxSupply } = useWatch({
+    control,
+  });
 
   const fiatSupplyAmount = supplyAmount
     ? `~${formatNumber(Number(supplyAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
@@ -66,11 +68,10 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     lastUpdate,
   });
 
-  const { formatted: formattedLoanBalance, float: loanBalanceFloat } =
-    useFormatTokenAmount({
-      amount: loanBalance,
-      decimals: loanDecimals,
-    });
+  const { formatted: formattedLoanBalance } = useFormatTokenAmount({
+    amount: loanBalance,
+    decimals: loanDecimals,
+  });
 
   const {
     float: collateralBalanceFloat,
@@ -102,6 +103,26 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   }, [context?.hookToEdit, context?.isPreHook]);
 
   const maxBorrowableAmount = useMaxBorrowableAmount();
+
+  const { formatted: maxBorrowableFormatted, float: maxBorrowableFloat } =
+    useFormatTokenAmount({
+      amount: maxBorrowableAmount,
+      decimals: market.loanAsset.decimals,
+    });
+
+  useEffect(() => {
+    if (isMaxBorrow && maxBorrowableFloat) {
+      const newBorrow = String(maxBorrowableFloat);
+      setValue("borrowAmount", newBorrow);
+    }
+  }, [isMaxBorrow, maxBorrowableFloat, setValue]);
+
+  useEffect(() => {
+    if (isMaxSupply && collateralBalanceFloat) {
+      const newSupply = String(collateralBalanceFloat);
+      setValue("supplyAmount", newSupply);
+    }
+  }, [isMaxSupply, collateralBalanceFloat, setValue]);
 
   if (!context) return null;
 
@@ -194,7 +215,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
         asset={market.collateralAsset}
         chainId={market.oracle.chain.id}
         formattedBalance={formattedCollateralBalance}
-        floatBalance={collateralBalanceFloat ?? 0.0}
+        floatBalance={String(collateralBalanceFloat ?? 0.0)}
         fiatBalance={fiatSupplyAmount}
       />
       <AmountInput
@@ -203,8 +224,8 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
         maxName="isMaxBorrow"
         asset={market.loanAsset}
         chainId={market.oracle.chain.id}
-        formattedBalance={formattedLoanBalance}
-        floatBalance={loanBalanceFloat ?? 0.0}
+        formattedBalance={maxBorrowableFormatted}
+        floatBalance={String(maxBorrowableFloat ?? 0.0)}
         fiatBalance={fiatBorrowAmount}
       />
       <Info content={<InfoContent />} />

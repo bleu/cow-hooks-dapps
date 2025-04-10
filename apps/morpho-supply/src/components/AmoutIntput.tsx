@@ -1,5 +1,5 @@
 import { Input, Label, cn } from "@bleu.builders/ui";
-import { InfoTooltip, TokenLogo } from "@bleu/cow-hooks-ui";
+import { TokenLogo } from "@bleu/cow-hooks-ui";
 import { Token } from "@uniswap/sdk-core";
 import {
   type FieldError,
@@ -24,7 +24,7 @@ interface AmountInputProps {
   };
   chainId: number;
   formattedBalance: string;
-  floatBalance: number;
+  floatBalance: string;
   fiatBalance: string;
 }
 
@@ -61,26 +61,21 @@ export const AmountInput = ({
     return Number(v);
   };
 
-  const tooltipText = undefined;
-  const tooltipLink = undefined;
-  const extraLabelElement = undefined;
+  const handleDisableMaxOnUserInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (isMaxValue && e.isTrusted) {
+      setValue(maxName, false);
+    }
+  };
 
   const token = new Token(chainId, asset.address, asset.decimals, asset.symbol);
-
-  const userBalance = formattedBalance;
-  const userBalanceFullDecimals = String(floatBalance);
-  const fiatAmount = fiatBalance;
-
-  const className = "";
-  const validation = { setValueAs: handleSetValue };
 
   return (
     <div className="w-full">
       {label && (
         <div className="flex flex-row gap-x-2 items-center mb-2">
           <Label className="ml-2 block text-sm">{label}</Label>
-          {tooltipText && <InfoTooltip text={tooltipText} link={tooltipLink} />}
-          {extraLabelElement}
         </div>
       )}
       <div className="flex flex-col gap-1 w-full min-h-24 pt-4 pb-1 px-6 bg-color-paper-darker rounded-xl items-start">
@@ -102,24 +97,21 @@ export const AmountInput = ({
             max="1000000000000"
             placeholder="0.0"
             autoComplete="off"
-            className={cn(
-              "outline-none font-semibold text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-right p-0 m-0 h-min border-none rounded-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none truncate",
-              className,
-            )}
+            className="outline-none font-semibold text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-right p-0 m-0 h-min border-none rounded-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none truncate"
             onKeyDown={(e) =>
               ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
             }
-            {...register(name, validation)}
+            {...register(name, {
+              setValueAs: handleSetValue,
+              onChange: handleDisableMaxOnUserInput,
+            })}
           />
         </div>
         <div className="flex w-full justify-between items-center">
-          {userBalance && token?.symbol && (
+          {formattedBalance && token?.symbol && (
             <span className="font-normal pl-1">
-              <span
-                title={userBalanceFullDecimals}
-                className="opacity-40 text-xs"
-              >
-                Max: {userBalance} {token?.symbol}
+              <span title={floatBalance} className="opacity-40 text-xs">
+                Max: {formattedBalance} {token?.symbol}
               </span>
               <button
                 type="button"
@@ -135,8 +127,8 @@ export const AmountInput = ({
               </button>
             </span>
           )}
-          <span title={userBalanceFullDecimals} className="opacity-40 text-xs">
-            {fiatAmount}
+          <span title={floatBalance} className="opacity-40 text-xs">
+            {fiatBalance}
           </span>
         </div>
       </div>

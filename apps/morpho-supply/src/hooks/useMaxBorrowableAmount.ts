@@ -1,15 +1,31 @@
+import type { MorphoMarket } from "@bleu/cow-hooks-ui";
 import { MarketUtils } from "@morpho-org/blue-sdk";
-import { useUserMarketPosition } from "./useUserMarketPosition";
-import { getMarketParams } from "#/utils/getMarketParams";
+import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import { parseUnits } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
-import type { MorphoMarket } from "@bleu/cow-hooks-ui";
+import { useMorphoContext } from "#/contexts/morpho";
+import { getMaxReallocatableLiquidity } from "#/utils/borrowReallocation";
+import { getMarketParams } from "#/utils/getMarketParams";
 import { useReadPrice } from "./useReadPrice";
+import { useUserMarketPosition } from "./useUserMarketPosition";
 
 export const useMaxBorrowableAmount = () => {
   const { control } = useFormContext<MorphoSupplyFormData>();
-  const { market } = useWatch({ control });
+  const { market, supplyAmount } = useWatch({ control });
+
+  const { markets } = useMorphoContext();
+
+  const supplyBigInt =
+    market && supplyAmount
+      ? BigNumber.from(
+          parseUnits(
+            supplyAmount.toString(),
+            (market as MorphoMarket).collateralAsset.decimals,
+          ),
+        ).toBigInt()
+      : BigInt(0);
 
   const lltv =
     market &&
@@ -27,7 +43,7 @@ export const useMaxBorrowableAmount = () => {
       data;
 
     return MarketUtils.getMaxBorrowableAssets(
-      { collateral, borrowShares },
+      { collateral: collateral + supplyBigInt, borrowShares },
       {
         totalBorrowAssets,
         totalBorrowShares,
@@ -35,9 +51,25 @@ export const useMaxBorrowableAmount = () => {
       },
       {
         lltv,
-      }
+      },
     );
-  }, [data, lltv, price]);
+  }, [data, lltv, price, supplyBigInt]);
 
-  return maxBorrowableAmount;
+  const maxReallocatableLiquidity =
+    market &&
+    markets &&
+    getMaxReallocatableLiquidity(market as MorphoMarket, markets)
+      .maxReallocatableLiquidity;
+
+  const marketBorrowLimit =
+    market &&
+    maxReallocatableLiquidity &&
+    (market as MorphoMarket).state.liquidityAssets + maxReallocatableLiquidity;
+
+  const canUserBorrowMaxMarket =
+    maxBorrowableAmount &&
+    marketBorrowLimit &&
+    maxBorrowableAmount > marketBorrowLimit;
+
+  return canUserBorrowMaxMarket ? marketBorrowLimit : maxBorrowableAmount;
 };
