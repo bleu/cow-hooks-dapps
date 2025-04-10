@@ -187,6 +187,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
       <AmountInput
         name="supplyAmount"
         label="Supply Collateral"
+        maxName="isMaxSupply"
         asset={market.collateralAsset}
         chainId={market.oracle.chain.id}
         formattedBalance={formattedCollateralBalance}
@@ -196,6 +197,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
       <AmountInput
         name="borrowAmount"
         label={`Borrow ${market.loanAsset.symbol}`}
+        maxName="isMaxBorrow"
         asset={market.loanAsset}
         chainId={market.oracle.chain.id}
         formattedBalance={formattedLoanBalance}
