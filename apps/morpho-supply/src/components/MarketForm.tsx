@@ -15,9 +15,9 @@ import { useDynamicBorrow } from "#/hooks/useDynamicBorrow";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { useMaxBorrowableAmount } from "#/hooks/useMaxBorrowableAmount";
 import { useUserMarketPosition } from "#/hooks/useUserMarketPosition";
+import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
 import { getMarketParams } from "#/utils/getMarketParams";
 import { AmountInput } from "./AmoutIntput";
-import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
 
 export function MarketForm({ market }: { market: MorphoMarket }) {
   const { context } = useIFrameContext();
@@ -158,27 +158,27 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   const lltv = formatNumber(
     Number(market.lltv.toString().slice(0, 3)) / 1000,
     1,
-    "percent"
+    "percent",
   );
 
   const supplyAmountBigInt = decimalsToBigInt(
     supplyAmount,
-    market.collateralAsset.decimals
+    market.collateralAsset.decimals,
   );
   const isInsufficientBalance = Boolean(
     collateral !== undefined &&
       supplyAmountBigInt !== undefined &&
-      supplyAmountBigInt > collateral
+      supplyAmountBigInt > collateral,
   );
 
   const borrowAmountBigInt = decimalsToBigInt(
     borrowAmount,
-    market.loanAsset.decimals
+    market.loanAsset.decimals,
   );
   const isInsufficientPosition = Boolean(
     maxBorrowableAmount !== undefined &&
       borrowAmountBigInt !== undefined &&
-      borrowAmountBigInt > maxBorrowableAmount
+      borrowAmountBigInt > maxBorrowableAmount,
   );
 
   const buttonMessage = useMemo(() => {

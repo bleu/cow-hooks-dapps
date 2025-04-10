@@ -3,7 +3,7 @@ import { parseUnits } from "viem";
 
 export function decimalsToBigInt(
   amount: string | undefined,
-  decimals: number | undefined
+  decimals: number | undefined,
 ) {
   if (amount === undefined || decimals === undefined) return;
 

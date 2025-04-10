@@ -16,7 +16,7 @@ export const useFormatTokenAmount = ({
       amount !== undefined && decimals !== undefined
         ? formatUnits(amount, decimals)
         : "",
-    [amount, decimals]
+    [amount, decimals],
   );
 
   const formatted = useMemo(
@@ -24,7 +24,7 @@ export const useFormatTokenAmount = ({
       fullDecimals !== undefined
         ? formatNumber(fullDecimals, 4, "decimal", "compact", 0.0001)
         : "",
-    [fullDecimals]
+    [fullDecimals],
   );
 
   const usd = useMemo(
@@ -32,12 +32,12 @@ export const useFormatTokenAmount = ({
       fullDecimals && priceUsd !== undefined
         ? Number(fullDecimals) * priceUsd
         : undefined,
-    [fullDecimals, priceUsd]
+    [fullDecimals, priceUsd],
   );
 
   const usdFormatted = useMemo(
     () => (usd !== undefined ? `≈ $${formatNumber(usd, 2, "decimal")}` : ""),
-    [usd]
+    [usd],
   );
 
   return { formatted, fullDecimals, usd, usdFormatted };
