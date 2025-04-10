@@ -99,17 +99,6 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     priceUsd: market.loanAsset.priceUsd,
   });
 
-  const buttonMessage = useMemo(() => {
-    if (context?.hookToEdit && context?.isPreHook)
-      return <span>Update Pre-hook</span>;
-    if (context?.hookToEdit && !context?.isPreHook)
-      return <span>Update Post-hook</span>;
-    if (!context?.hookToEdit && context?.isPreHook)
-      return <span>Add Pre-hook</span>;
-    if (!context?.hookToEdit && !context?.isPreHook)
-      return <span>Add Post-hook</span>;
-  }, [context?.hookToEdit, context?.isPreHook]);
-
   const maxBorrowableAmount = useMaxBorrowableAmount();
 
   const { formatted: maxBorrowableFormatted, fullDecimals: maxBorrowableFull } =
@@ -171,6 +160,48 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     1,
     "percent"
   );
+
+  const supplyAmountBigInt = decimalsToBigInt(
+    supplyAmount,
+    market.collateralAsset.decimals
+  );
+  const isInsufficientBalance = Boolean(
+    collateral !== undefined &&
+      supplyAmountBigInt !== undefined &&
+      supplyAmountBigInt > collateral
+  );
+
+  const borrowAmountBigInt = decimalsToBigInt(
+    borrowAmount,
+    market.loanAsset.decimals
+  );
+  const isInsufficientPosition = Boolean(
+    maxBorrowableAmount !== undefined &&
+      borrowAmountBigInt !== undefined &&
+      borrowAmountBigInt > maxBorrowableAmount
+  );
+
+  const buttonMessage = useMemo(() => {
+    if (isInsufficientBalance)
+      return `Insufficient ${market.collateralAsset.symbol} Balance`;
+
+    if (isInsufficientPosition) return <span>Insufficient Collateral</span>;
+
+    if (context?.hookToEdit && context?.isPreHook)
+      return <span>Update Pre-hook</span>;
+    if (context?.hookToEdit && !context?.isPreHook)
+      return <span>Update Post-hook</span>;
+    if (!context?.hookToEdit && context?.isPreHook)
+      return <span>Add Pre-hook</span>;
+    if (!context?.hookToEdit && !context?.isPreHook)
+      return <span>Add Post-hook</span>;
+  }, [
+    context?.hookToEdit,
+    context?.isPreHook,
+    isInsufficientBalance,
+    isInsufficientPosition,
+    market.collateralAsset.symbol,
+  ]);
 
   if (!context) return null;
 
@@ -291,7 +322,11 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
         </div>
       </div>
       <Info content={<InfoContent />} />
-      <ButtonPrimary type="submit" className="mb-4">
+      <ButtonPrimary
+        type="submit"
+        className="mb-4"
+        disabled={isInsufficientBalance || isInsufficientPosition}
+      >
         {buttonMessage}
       </ButtonPrimary>
     </div>
