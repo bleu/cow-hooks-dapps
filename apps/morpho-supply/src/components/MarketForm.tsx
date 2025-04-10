@@ -17,6 +17,7 @@ import { useMaxBorrowableAmount } from "#/hooks/useMaxBorrowableAmount";
 import { useUserMarketPosition } from "#/hooks/useUserMarketPosition";
 import { getMarketParams } from "#/utils/getMarketParams";
 import { AmountInput } from "./AmoutIntput";
+import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
 
 export function MarketForm({ market }: { market: MorphoMarket }) {
   const { context } = useIFrameContext();
@@ -74,24 +75,29 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   });
 
   const {
-    float: collateralBalanceFloat,
+    fullDecimals: collateralBalanceFull,
     formatted: formattedCollateralBalance,
   } = useFormatTokenAmount({
     amount: collateralBalance,
     decimals: collateralDecimals,
   });
 
-  const { formatted: formattedCollateral, float: collateralFloat } =
+  const { formatted: formattedCollateral, usd: collateralUsd } =
     useFormatTokenAmount({
       amount: collateral,
       decimals: collateralDecimals,
+      priceUsd: market.collateralAsset.priceUsd,
     });
 
-  const { float: floatBorrow, formatted: formattedBorrow } =
-    useFormatTokenAmount({
-      amount: borrow,
-      decimals: loanDecimals,
-    });
+  const {
+    fullDecimals: borrowFullDecimals,
+    formatted: formattedBorrow,
+    usd: borrowUsd,
+  } = useFormatTokenAmount({
+    amount: borrow,
+    decimals: loanDecimals,
+    priceUsd: market.loanAsset.priceUsd,
+  });
 
   const buttonMessage = useMemo(() => {
     if (context?.hookToEdit && context?.isPreHook)
@@ -106,47 +112,59 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
 
   const maxBorrowableAmount = useMaxBorrowableAmount();
 
-  const { formatted: maxBorrowableFormatted, float: maxBorrowableFloat } =
+  const { formatted: maxBorrowableFormatted, fullDecimals: maxBorrowableFull } =
     useFormatTokenAmount({
       amount: maxBorrowableAmount,
       decimals: market.loanAsset.decimals,
     });
 
   useEffect(() => {
-    if (isMaxBorrow && maxBorrowableFloat) {
-      const newBorrow = String(maxBorrowableFloat);
+    if (isMaxBorrow && maxBorrowableFull) {
+      const newBorrow = maxBorrowableFull;
       setValue("borrowAmount", newBorrow);
     }
-  }, [isMaxBorrow, maxBorrowableFloat, setValue]);
+  }, [isMaxBorrow, maxBorrowableFull, setValue]);
 
   useEffect(() => {
-    if (isMaxSupply && collateralBalanceFloat) {
-      const newSupply = String(collateralBalanceFloat);
+    if (isMaxSupply && collateralBalanceFull) {
+      const newSupply = collateralBalanceFull;
       setValue("supplyAmount", newSupply);
     }
-  }, [isMaxSupply, collateralBalanceFloat, setValue]);
+  }, [isMaxSupply, collateralBalanceFull, setValue]);
 
-  const collateralAfter = (collateralFloat ?? 0) + Number(supplyAmount ?? 0);
-  const borrowAfter = (floatBorrow ?? 0) + Number(borrowAmount ?? 0);
+  const borrowAfter =
+    borrow &&
+    borrow +
+      (decimalsToBigInt(borrowAmount, market.loanAsset.decimals) ?? BigInt(0));
+
+  const { formatted: borrowAfterFormatted, usd: borrowAfterUsd } =
+    useFormatTokenAmount({
+      amount: borrowAfter,
+      decimals: market.loanAsset.decimals,
+      priceUsd: market.loanAsset.priceUsd,
+    });
+
+  const collateralAfter =
+    collateral &&
+    collateral +
+      (decimalsToBigInt(supplyAmount, market.collateralAsset.decimals) ??
+        BigInt(0));
+  const { formatted: collateralAfterFormatted, usd: collateralAfterUsd } =
+    useFormatTokenAmount({
+      amount: collateralAfter,
+      decimals: market.collateralAsset.decimals,
+      priceUsd: market.collateralAsset.priceUsd,
+    });
 
   const ltvBefore =
-    floatBorrow && collateralFloat
-      ? formatNumber(
-          (floatBorrow * market.loanAsset.priceUsd) /
-            (collateralFloat * market.collateralAsset.priceUsd),
-          2,
-          "percent"
-        )
-      : 0.0;
+    borrowUsd && collateralUsd
+      ? formatNumber(borrowUsd / collateralUsd, 2, "percent")
+      : "";
+
   const ltvAfter =
-    borrowAfter && collateralAfter
-      ? formatNumber(
-          (borrowAfter * market.loanAsset.priceUsd) /
-            (collateralAfter * market.collateralAsset.priceUsd),
-          2,
-          "percent"
-        )
-      : 0.0;
+    borrowAfterUsd && collateralAfterUsd
+      ? formatNumber(borrowAfterUsd / collateralAfterUsd, 2, "percent")
+      : "";
 
   const lltv = formatNumber(
     Number(market.lltv.toString().slice(0, 3)) / 1000,
@@ -235,7 +253,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
               title={market.loanAsset.symbol}
             />
           </div>
-          <span>{floatBorrow}</span>
+          <span>{borrowFullDecimals}</span>
         </div>
       </div>
       <AmountInput
@@ -245,7 +263,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
         asset={market.collateralAsset}
         chainId={market.oracle.chain.id}
         formattedBalance={formattedCollateralBalance}
-        floatBalance={String(collateralBalanceFloat ?? 0.0)}
+        floatBalance={collateralBalanceFull}
         fiatBalance={fiatSupplyAmount}
       />
       <AmountInput
@@ -255,17 +273,17 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
         asset={market.loanAsset}
         chainId={market.oracle.chain.id}
         formattedBalance={maxBorrowableFormatted}
-        floatBalance={String(maxBorrowableFloat ?? 0.0)}
+        floatBalance={maxBorrowableFull ?? 0.0}
         fiatBalance={fiatBorrowAmount}
       />
       <div className="flex flex-col gap-2">
         <span className="opacity-60 text-sm mb-[-8px]">Collateral</span>
         <div className="flex gap-2">
-          <span>{`${formattedCollateral} -> ${collateralAfter.toFixed(4)}`}</span>
+          <span>{`${formattedCollateral} -> ${collateralAfterFormatted}`}</span>
         </div>
         <span className="opacity-60 text-sm mb-[-8px]">Borrow</span>
         <div className="flex gap-2">
-          <span>{`${formattedBorrow} -> ${borrowAfter.toFixed(4)}`}</span>
+          <span>{`${formattedBorrow} -> ${borrowAfterFormatted}`}</span>
         </div>
         <span className="opacity-60 text-sm mb-[-8px]">LTV</span>
         <div className="flex gap-2">
