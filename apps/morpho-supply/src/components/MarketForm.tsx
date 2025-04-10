@@ -16,6 +16,7 @@ import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { useUserMarketPosition } from "#/hooks/useUserMarketPosition";
 import { getMarketParams } from "#/utils/getMarketParams";
 import { AmountInput } from "./AmoutIntput";
+import { useMaxBorrowableAmount } from "#/hooks/useMaxBorrowableAmount";
 
 export function MarketForm({ market }: { market: MorphoMarket }) {
   const { context } = useIFrameContext();
@@ -99,6 +100,8 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     if (!context?.hookToEdit && !context?.isPreHook)
       return <span>Add Post-hook</span>;
   }, [context?.hookToEdit, context?.isPreHook]);
+
+  const maxBorrowableAmount = useMaxBorrowableAmount();
 
   if (!context) return null;
 
