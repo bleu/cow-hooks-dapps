@@ -34,7 +34,9 @@ const MORPHO_MARKETS_QUERY = gql`
     ) {
       items {
         state {
+          supplyAssets
           supplyAssetsUsd
+          borrowAssets
           borrowAssetsUsd
           collateralAssetsUsd
           dailyNetBorrowApy
@@ -43,6 +45,7 @@ const MORPHO_MARKETS_QUERY = gql`
           weeklyNetSupplyApy
           monthlyNetBorrowApy
           monthlyNetSupplyApy
+          liquidityAssets
         }
         collateralAsset {
           address
@@ -70,6 +73,10 @@ const MORPHO_MARKETS_QUERY = gql`
           }
           address
         }
+        supplyingVaults {
+          address
+        }
+        reallocatableLiquidityAssets
       }
 
       pageInfo {

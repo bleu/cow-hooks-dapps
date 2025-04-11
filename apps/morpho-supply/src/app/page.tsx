@@ -4,24 +4,16 @@ import {
   MarketsDropdownMenu,
   type MorphoMarket,
   Spinner,
-  useIFrameContext,
-  useMorphoMarkets,
 } from "@bleu/cow-hooks-ui";
 import { useFormContext, useWatch } from "react-hook-form";
 import { MarketForm } from "#/components/MarketForm";
 import type { MorphoSupplyFormData } from "#/contexts/form";
+import { useMorphoContext } from "#/contexts/morpho";
 
 export default function Page() {
   const { setValue, control } = useFormContext<MorphoSupplyFormData>();
   const { market: selectedMarket } = useWatch({ control });
-
-  const { context } = useIFrameContext();
-
-  const { data: markets } = useMorphoMarkets(
-    {},
-    context?.chainId,
-    context?.account,
-  );
+  const { markets } = useMorphoContext();
 
   if (!markets)
     return (

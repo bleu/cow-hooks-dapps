@@ -15,6 +15,10 @@ import { BigNumber, type BigNumberish } from "ethers";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Address } from "viem";
+import {
+  useAuthorizeCowShedOnMorpho,
+  useIsCowShedAuthorizedOnMorpho,
+} from "#/hooks/useAllowCowShedOnMorpho";
 
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -32,6 +36,11 @@ export default function Page() {
   const handleTokenAllowance = useHandleTokenAllowance({
     spender: cowShedProxy,
   });
+
+  const isCoWShedAuthorizedOnMorpho = useIsCowShedAuthorizedOnMorpho();
+  const allowCowShedMorpho = useAuthorizeCowShedOnMorpho(
+    isCoWShedAuthorizedOnMorpho,
+  );
 
   useEffect(() => {
     if (!account && context?.account) {
@@ -99,7 +108,20 @@ export default function Page() {
           tooltipText: permit.tokenAddress,
         };
       }) || [];
+
+    const morphoAuthorization = isCoWShedAuthorizedOnMorpho
+      ? []
+      : [
+          {
+            label: "Allow Morpho operations",
+            description: "Authorize proxy to operate Morpho on your behalf",
+            id: "allow-morpho-operations",
+            callback: allowCowShedMorpho,
+          },
+        ];
+
     return [
+      ...morphoAuthorization,
       ...permitSteps,
       {
         label: "Approve and add pre-hook",
@@ -108,7 +130,13 @@ export default function Page() {
         callback: cowShedCallback,
       },
     ];
-  }, [hookInfo, permitCallback, cowShedCallback]);
+  }, [
+    hookInfo,
+    permitCallback,
+    cowShedCallback,
+    allowCowShedMorpho,
+    isCoWShedAuthorizedOnMorpho,
+  ]);
 
   return (
     <div className="flex flex-col gap-2 p-2 text-center h-full justify-between items-center">

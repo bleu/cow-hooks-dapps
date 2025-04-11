@@ -21,9 +21,14 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   const { context } = useIFrameContext();
 
   const { control } = useFormContext<MorphoSupplyFormData>();
-  const { amount } = useWatch({ control });
-  const fiatAmount = amount
-    ? `~${formatNumber(Number(amount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
+  const { supplyAmount, borrowAmount } = useWatch({ control });
+
+  const fiatSupplyAmount = supplyAmount
+    ? `~${formatNumber(Number(supplyAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
+    : "~$0.0";
+
+  const fiatBorrowAmount = borrowAmount
+    ? `~${formatNumber(Number(borrowAmount) * market.loanAsset.priceUsd, 2, "currency", "standard")}`
     : "~$0.0";
 
   const { userBalance: loanBalance, tokenDecimals: loanDecimals } =
@@ -60,10 +65,11 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     lastUpdate,
   });
 
-  const { formatted: formattedLoanBalance } = useFormatTokenAmount({
-    amount: loanBalance,
-    decimals: loanDecimals,
-  });
+  const { formatted: formattedLoanBalance, float: loanBalanceFloat } =
+    useFormatTokenAmount({
+      amount: loanBalance,
+      decimals: loanDecimals,
+    });
 
   const {
     float: collateralBalanceFloat,
@@ -114,6 +120,12 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
         <br />
         <span>
           Total supply assets: ${formatNumber(market.state.supplyAssetsUsd, 1)}
+        </span>
+        <span>
+          Total borrow assets: ${formatNumber(market.state.borrowAssetsUsd, 1)}
+        </span>
+        <span>
+          Total assets: ${formatNumber(market.state.collateralAssetsUsd, 1)}
         </span>
         <br />
         <span>Your Balances:</span>
@@ -173,13 +185,13 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
         </div>
       </div>
       <AmountInput
-        name="amount"
+        name="supplyAmount"
         label="Supply Collateral"
         asset={market.collateralAsset}
         chainId={market.oracle.chain.id}
         formattedBalance={formattedCollateralBalance}
         floatBalance={collateralBalanceFloat ?? 0.0}
-        fiatBalance={fiatAmount}
+        fiatBalance={fiatSupplyAmount}
       />
       <AmountInput
         name="borrowAmount"
@@ -187,8 +199,8 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
         asset={market.loanAsset}
         chainId={market.oracle.chain.id}
         formattedBalance={formattedLoanBalance}
-        floatBalance={0.0}
-        fiatBalance={"0.0"}
+        floatBalance={loanBalanceFloat ?? 0.0}
+        fiatBalance={fiatBorrowAmount}
       />
       <Info content={<InfoContent />} />
       <ButtonPrimary type="submit" className="mb-4">
