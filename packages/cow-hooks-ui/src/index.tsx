@@ -38,3 +38,4 @@ export * from "./deposit";
 export * from "./states";
 export * from "./VaultsDropdownMenu";
 export * from "./MarketsDropdownMenu";
+export * from "./utils/readOnchainMorphoMarkets";

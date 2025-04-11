@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import { formatUnits } from "viem";
 import { TokenLogo } from "./TokenLogo";
 import { useIFrameContext } from "./context/iframe";
+import { hasPosition } from "./hooks/useMorphoMarkets";
 import type { MorphoMarket } from "./types";
 import {
   Command,
@@ -123,9 +124,8 @@ export function MarketsDropdownMenu({
                   <span>LLTV:</span>
                   <span>
                     {formatNumber(
-                      Number(selectedMarket.lltv) /
-                        10 ** selectedMarket.collateralAsset.decimals,
-                      0,
+                      Number(selectedMarket.lltv.toString().slice(0, 3)) / 1000,
+                      1,
                       "percent",
                     )}
                   </span>
@@ -186,7 +186,7 @@ export function MarketsDropdownMenu({
                           <AssetLogo asset={market.collateralAsset} />
                           <span>{market.collateralAsset.symbol}</span>
                         </div>
-                        {market?.position && (
+                        {hasPosition(market.position) && (
                           <span>
                             {formatNumber(
                               formatUnits(
@@ -206,11 +206,11 @@ export function MarketsDropdownMenu({
                           <AssetLogo asset={market.loanAsset} />
                           <span>{market.loanAsset.symbol}</span>
                         </div>
-                        {market?.position && (
+                        {hasPosition(market.position) && (
                           <span>
                             {formatNumber(
                               formatUnits(
-                                market.position.borrowAssets,
+                                market.position.borrow,
                                 market.loanAsset.decimals,
                               ),
                               4,

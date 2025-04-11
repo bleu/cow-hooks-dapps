@@ -1,37 +1,21 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
+import type { MorphoMarket } from "@bleu/cow-hooks-ui";
 import { MarketUtils } from "@morpho-org/blue-sdk";
+import { useMarketBorrowRate } from "./useMarketBorrowRate";
 
-export function useDynamicBorrow({
-  borrowShares,
-  totalBorrowAssets,
-  totalBorrowShares,
-  borrowRate,
-  lastUpdate,
-}: {
-  borrowShares: bigint | undefined;
-  totalBorrowAssets: bigint | undefined;
-  totalBorrowShares: bigint | undefined;
-  borrowRate: bigint | undefined;
-  lastUpdate: bigint | undefined;
-}) {
+export function useDynamicBorrow({ market }: { market: MorphoMarket }) {
   const [borrow, setBorrow] = useState<bigint | undefined>(undefined);
 
-  const borrowWithoutRate = useMemo(
-    () =>
-      borrowShares && totalBorrowAssets && totalBorrowShares
-        ? MarketUtils.toBorrowAssets(borrowShares, {
-            totalBorrowAssets,
-            totalBorrowShares: totalBorrowShares,
-          })
-        : undefined,
-    [borrowShares, totalBorrowAssets, totalBorrowShares],
-  );
+  const borrowRate = useMarketBorrowRate({ market });
+
+  const borrowWithoutRate = market.position.borrow;
+  const lastUpdate = market.onchainState.lastUpdate;
 
   // 3s loop update
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!borrowWithoutRate || !lastUpdate || !borrowRate) {
+      if (!borrowRate) {
         setBorrow(undefined);
         return;
       }
