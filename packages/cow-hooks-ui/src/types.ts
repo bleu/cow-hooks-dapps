@@ -137,31 +137,26 @@ export interface MorphoVault {
 }
 
 export interface MarketPosition {
-  borrowAssets: bigint;
-  borrowAssetsUsd: number;
+  borrow: bigint;
+  borrowUsd: number;
   borrowShares: bigint;
   collateral: bigint;
   collateralUsd: number;
-  collateralValue: bigint;
-  supplyAssets: bigint;
-  supplyAssetsUsd: number;
-  supplyShares: bigint;
 }
 
 export interface MorphoMarket {
   state: {
-    supplyAssets: bigint;
-    supplyAssetsUsd: number;
-    borrowAssets: bigint;
-    borrowAssetsUsd: number;
-    collateralAssetsUsd: number;
     dailyNetBorrowApy: number;
-    dailyNetSupplyApy: number;
     weeklyNetBorrowApy: number;
-    weeklyNetSupplyApy: number;
     monthlyNetBorrowApy: number;
-    monthlyNetSupplyApy: number;
-    liquidityAssets: bigint;
+  };
+  onchainState: {
+    totalSupplyAssets: bigint;
+    totalSupplyShares: bigint;
+    totalBorrowAssets: bigint;
+    totalBorrowShares: bigint;
+    lastUpdate: bigint;
+    fee: bigint;
   };
   collateralAsset: {
     address: Address;
@@ -172,6 +167,9 @@ export interface MorphoMarket {
     logoURI: string;
   };
   lltv: bigint;
+  liquidity: bigint;
+  liquidityUsd: number;
+  price: bigint;
   loanAsset: {
     address: Address;
     decimals: number;
@@ -190,8 +188,7 @@ export interface MorphoMarket {
     address: Address;
   };
   supplyingVaults: { address: Address }[];
-  reallocatableLiquidityAssets: bigint;
-  position: MarketPosition | null;
+  position: MarketPosition;
 }
 
 export interface MorphoMarketParams {

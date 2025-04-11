@@ -34,13 +34,12 @@ export function getMaxReallocatableLiquidity(
           .includes(vaultAddress),
       );
 
-    const liquidity = mkt.state.supplyAssets - mkt.state.borrowAssets;
-    maxReallocatableLiquidity += liquidity;
+    maxReallocatableLiquidity += mkt.liquidity;
     return {
       marketKey: mkt.uniqueKey,
       commonVault: commonVault ?? "",
       marketParams: getMarketParams(mkt),
-      amount: liquidity,
+      amount: mkt.liquidity,
     };
   });
 
@@ -53,13 +52,11 @@ export function buildWithdrawals(
   maxReallocatableLiquidity: bigint,
   possibleWithdrawals: Withdrawal[],
 ) {
-  const marketLiquidity = market.state.supplyAssets - market.state.borrowAssets;
-
-  if (amount > marketLiquidity + maxReallocatableLiquidity) return [];
-  if (amount <= marketLiquidity) return [];
+  if (amount > market.liquidity + maxReallocatableLiquidity) return [];
+  if (amount <= market.liquidity) return [];
 
   const reallocations = [] as Withdrawal[];
-  const totalToReallocate = amount - marketLiquidity;
+  const totalToReallocate = amount - market.liquidity;
   let missingReallocation = totalToReallocate;
 
   for (const possibleWithdraw of possibleWithdrawals) {

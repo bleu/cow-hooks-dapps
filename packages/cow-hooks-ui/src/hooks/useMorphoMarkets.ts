@@ -2,19 +2,17 @@ import { MORPHO_GQL_CLIENT } from "@bleu/utils";
 import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { gql } from "graphql-request";
 import useSWR from "swr";
-import type { Address } from "viem";
+import type { Address, PublicClient } from "viem";
 import type { MarketPosition, MorphoMarket } from "../types";
 import { ensureBigIntType } from "../utils/ensureBigInt";
+import { readOnchainMorphoMarkets } from "../utils/readOnchainMorphoMarkets";
 
 interface IQuery {
   markets: {
-    items: Omit<MorphoMarket, "position">[];
-  };
-}
-
-interface IMarketPositionsQuery {
-  userByAddress: {
-    marketPositions: { market: { uniqueKey: string }; state: MarketPosition }[];
+    items: Omit<
+      MorphoMarket,
+      "position" | "liquidity" | "liquidityUsd" | "price" | "onchainState"
+    >[];
   };
 }
 
@@ -35,18 +33,9 @@ const MORPHO_MARKETS_QUERY = gql`
     ) {
       items {
         state {
-          supplyAssets
-          supplyAssetsUsd
-          borrowAssets
-          borrowAssetsUsd
-          collateralAssetsUsd
           dailyNetBorrowApy
-          dailyNetSupplyApy
           weeklyNetBorrowApy
-          weeklyNetSupplyApy
           monthlyNetBorrowApy
-          monthlyNetSupplyApy
-          liquidityAssets
         }
         collateralAsset {
           address
@@ -77,7 +66,6 @@ const MORPHO_MARKETS_QUERY = gql`
         supplyingVaults {
           address
         }
-        reallocatableLiquidityAssets
       }
 
       pageInfo {
@@ -90,46 +78,25 @@ const MORPHO_MARKETS_QUERY = gql`
   }
 `;
 
-const USER_MARKET_POSITIONS_QUERY = gql`
-  query GetUserMarketPositions($chainId: Int!, $userAddress: String!) {
-    userByAddress(address: $userAddress, chainId: $chainId) {
-      marketPositions {
-        market {
-          uniqueKey
-        }
-        state {
-          supplyShares
-          supplyAssetsUsd
-          supplyAssets
-          collateralUsd
-          collateralValue
-          collateral
-          borrowShares
-          borrowAssetsUsd
-          borrowAssets
-        }
-      }
-    }
-  }
-`;
-
 interface IGetPoolsWhere {
   userAddress?: Address;
 }
 
 export function useMorphoMarkets(
-  where: IGetPoolsWhere,
+  userAddress: Address | undefined,
+  publicClient: PublicClient | undefined,
   chainId?: SupportedChainId,
-  userAddress?: Address,
+  where?: IGetPoolsWhere,
   orderBy?: string,
 ) {
   return useSWR<MorphoMarket[]>(
     [where, chainId, userAddress],
     async ([where, chainId, userAddress]): Promise<MorphoMarket[]> => {
-      if (!chainId) return [] as MorphoMarket[];
+      if (!chainId || !userAddress) return [] as MorphoMarket[];
+      if (!publicClient) throw new Error("missing public client");
 
       // TODO: handle pages
-      const markets = (
+      const gqlMarkets = (
         await MORPHO_GQL_CLIENT.request<IQuery>(MORPHO_MARKETS_QUERY, {
           where: {
             ...where,
@@ -141,51 +108,41 @@ export function useMorphoMarkets(
         })
       ).markets.items.filter((market) => market.collateralAsset !== null);
 
-      if (!userAddress)
-        return markets.map((market) => ({ ...market, position: null }));
-
-      let rawPositions: IMarketPositionsQuery | null;
-      rawPositions = null;
-      try {
-        rawPositions = (await MORPHO_GQL_CLIENT.request<IMarketPositionsQuery>(
-          USER_MARKET_POSITIONS_QUERY,
-          {
-            chainId,
-            userAddress,
-          },
-        )) as IMarketPositionsQuery;
-        // No positions will trigger an error
-      } catch {}
-
-      if (!rawPositions)
-        return markets.map((market) => ({ ...market, position: null }));
-
-      // parse positions
-      const positions = rawPositions.userByAddress.marketPositions.map(
-        (marketPosiiton) => ({
-          ...marketPosiiton.state,
-          uniqueKey: marketPosiiton.market.uniqueKey,
-        }),
-      ) as (MarketPosition & { uniqueKey: string })[];
-
-      // merge positions into markets
-      const marketsWithPositions = ensureBigIntType(
-        markets.map((market) => {
-          const position = positions.find(
-            (position) => position.uniqueKey === market.uniqueKey,
-          );
-          if (!position) return { ...market, position: null };
-          return { ...market, position: position as MarketPosition };
-        }),
+      const marketsOnchainInfo = await readOnchainMorphoMarkets(
+        userAddress as Address,
+        gqlMarkets as MorphoMarket[],
+        publicClient,
       );
 
+      // merge onchain info into markets
+      const marketsWithOnchainInfo = gqlMarkets
+        .map((market, index) => {
+          const marketOnchainInfo = marketsOnchainInfo[index];
+          return marketOnchainInfo
+            ? {
+                ...market,
+                ...marketOnchainInfo,
+              }
+            : undefined;
+        })
+        .filter((market) => market) as MorphoMarket[];
+
+      // Ensure bigint type
+      const markets = ensureBigIntType(marketsWithOnchainInfo);
+
       return [
-        ...marketsWithPositions.filter((m) => m.position),
-        ...marketsWithPositions.filter((m) => !m.position),
+        ...markets.filter((m) => hasPosition(m.position)),
+        ...markets.filter((m) => !hasPosition(m.position)),
       ];
     },
     {
       revalidateOnFocus: false,
     },
   );
+}
+
+export function hasPosition(position: MarketPosition) {
+  if (position.borrow > BigInt(0) || position.collateral > BigInt(0))
+    return true;
+  return false;
 }

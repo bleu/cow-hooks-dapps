@@ -21,13 +21,13 @@ const MorphoContext = createContext<MorphoContextData>({
 export const useMorphoContext = () => useContext(MorphoContext);
 
 export function MorphoContextProvider({ children }: PropsWithChildren) {
-  const { context } = useIFrameContext();
+  const { context, publicClient } = useIFrameContext();
 
   // Get markets data from useMorphoMarkets
   const { data: markets } = useMorphoMarkets(
-    {},
-    context?.chainId,
     context?.account,
+    publicClient,
+    context?.chainId,
   );
 
   // Create the value object to be provided by the context
