@@ -7,7 +7,6 @@ import { parseUnits } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useMorphoContext } from "#/contexts/morpho";
 import { getMaxReallocatableLiquidity } from "#/utils/borrowReallocation";
-import { useReadPrice } from "./useReadPrice";
 
 export const useMaxBorrowableAmount = () => {
   const { control } = useFormContext<MorphoSupplyFormData>();
@@ -31,8 +30,6 @@ export const useMaxBorrowableAmount = () => {
   const lltv =
     market && ((market as MorphoMarket).lltv * BigInt(9500)) / BigInt(10000);
 
-  const price = useReadPrice();
-
   const maxBorrowableAmount = useMemo(() => {
     if (!lltv) return;
     const { totalBorrowAssets, totalBorrowShares } = market.onchainState;
@@ -43,13 +40,13 @@ export const useMaxBorrowableAmount = () => {
       {
         totalBorrowAssets,
         totalBorrowShares,
-        price,
+        price: market.price,
       },
       {
         lltv,
       },
     );
-  }, [market, lltv, price, supplyBigInt]);
+  }, [market, lltv, supplyBigInt]);
 
   const maxReallocatableLiquidity =
     market &&
