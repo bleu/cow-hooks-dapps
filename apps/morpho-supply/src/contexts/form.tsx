@@ -12,11 +12,15 @@ export interface MorphoSupplyFormData {
   market: MorphoMarket;
   supplyAmount: string;
   borrowAmount: string;
+  isMaxSupply: boolean;
+  isMaxBorrow: boolean;
 }
 
 export function FormContextProvider({ children }: PropsWithChildren) {
   const { setHookInfo } = useIFrameContext();
-  const form = useForm<MorphoSupplyFormData>({});
+  const form = useForm<MorphoSupplyFormData>({
+    defaultValues: { isMaxBorrow: false, isMaxSupply: false },
+  });
 
   const router = useRouter();
 

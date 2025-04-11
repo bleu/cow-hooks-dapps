@@ -8,20 +8,24 @@ import {
   useIFrameContext,
   useReadTokenContract,
 } from "@bleu/cow-hooks-ui";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useDynamicBorrow } from "#/hooks/useDynamicBorrow";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
+import { useMaxBorrowableAmount } from "#/hooks/useMaxBorrowableAmount";
 import { useUserMarketPosition } from "#/hooks/useUserMarketPosition";
+import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
 import { getMarketParams } from "#/utils/getMarketParams";
 import { AmountInput } from "./AmoutIntput";
 
 export function MarketForm({ market }: { market: MorphoMarket }) {
   const { context } = useIFrameContext();
 
-  const { control } = useFormContext<MorphoSupplyFormData>();
-  const { supplyAmount, borrowAmount } = useWatch({ control });
+  const { control, setValue } = useFormContext<MorphoSupplyFormData>();
+  const { supplyAmount, borrowAmount, isMaxBorrow, isMaxSupply } = useWatch({
+    control,
+  });
 
   const fiatSupplyAmount = supplyAmount
     ? `~${formatNumber(Number(supplyAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
@@ -65,31 +69,124 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     lastUpdate,
   });
 
-  const { formatted: formattedLoanBalance, float: loanBalanceFloat } =
-    useFormatTokenAmount({
-      amount: loanBalance,
-      decimals: loanDecimals,
-    });
+  const { formatted: formattedLoanBalance } = useFormatTokenAmount({
+    amount: loanBalance,
+    decimals: loanDecimals,
+  });
 
   const {
-    float: collateralBalanceFloat,
+    fullDecimals: collateralBalanceFull,
     formatted: formattedCollateralBalance,
   } = useFormatTokenAmount({
     amount: collateralBalance,
     decimals: collateralDecimals,
   });
 
-  const { formatted: formattedCollateral } = useFormatTokenAmount({
-    amount: collateral,
-    decimals: collateralDecimals,
-  });
+  const { formatted: formattedCollateral, usd: collateralUsd } =
+    useFormatTokenAmount({
+      amount: collateral,
+      decimals: collateralDecimals,
+      priceUsd: market.collateralAsset.priceUsd,
+    });
 
-  const { float: floatBorrow } = useFormatTokenAmount({
+  const {
+    fullDecimals: borrowFullDecimals,
+    formatted: formattedBorrow,
+    usd: borrowUsd,
+  } = useFormatTokenAmount({
     amount: borrow,
     decimals: loanDecimals,
+    priceUsd: market.loanAsset.priceUsd,
   });
 
+  const maxBorrowableAmount = useMaxBorrowableAmount();
+
+  const { formatted: maxBorrowableFormatted, fullDecimals: maxBorrowableFull } =
+    useFormatTokenAmount({
+      amount: maxBorrowableAmount,
+      decimals: market.loanAsset.decimals,
+    });
+
+  useEffect(() => {
+    if (isMaxBorrow && maxBorrowableFull) {
+      const newBorrow = maxBorrowableFull;
+      setValue("borrowAmount", newBorrow);
+    }
+  }, [isMaxBorrow, maxBorrowableFull, setValue]);
+
+  useEffect(() => {
+    if (isMaxSupply && collateralBalanceFull) {
+      const newSupply = collateralBalanceFull;
+      setValue("supplyAmount", newSupply);
+    }
+  }, [isMaxSupply, collateralBalanceFull, setValue]);
+
+  const borrowAfter =
+    borrow &&
+    borrow +
+      (decimalsToBigInt(borrowAmount, market.loanAsset.decimals) ?? BigInt(0));
+
+  const { formatted: borrowAfterFormatted, usd: borrowAfterUsd } =
+    useFormatTokenAmount({
+      amount: borrowAfter,
+      decimals: market.loanAsset.decimals,
+      priceUsd: market.loanAsset.priceUsd,
+    });
+
+  const collateralAfter =
+    collateral &&
+    collateral +
+      (decimalsToBigInt(supplyAmount, market.collateralAsset.decimals) ??
+        BigInt(0));
+  const { formatted: collateralAfterFormatted, usd: collateralAfterUsd } =
+    useFormatTokenAmount({
+      amount: collateralAfter,
+      decimals: market.collateralAsset.decimals,
+      priceUsd: market.collateralAsset.priceUsd,
+    });
+
+  const ltvBefore =
+    borrowUsd && collateralUsd
+      ? formatNumber(borrowUsd / collateralUsd, 2, "percent")
+      : "";
+
+  const ltvAfter =
+    borrowAfterUsd && collateralAfterUsd
+      ? formatNumber(borrowAfterUsd / collateralAfterUsd, 2, "percent")
+      : "";
+
+  const lltv = formatNumber(
+    Number(market.lltv.toString().slice(0, 3)) / 1000,
+    1,
+    "percent",
+  );
+
+  const supplyAmountBigInt = decimalsToBigInt(
+    supplyAmount,
+    market.collateralAsset.decimals,
+  );
+  const isInsufficientBalance = Boolean(
+    collateral !== undefined &&
+      supplyAmountBigInt !== undefined &&
+      supplyAmountBigInt > collateral,
+  );
+
+  const borrowAmountBigInt = decimalsToBigInt(
+    borrowAmount,
+    market.loanAsset.decimals,
+  );
+  const isInsufficientPosition = Boolean(
+    maxBorrowableAmount !== undefined &&
+      borrowAmountBigInt !== undefined &&
+      borrowAmountBigInt > maxBorrowableAmount,
+  );
+
   const buttonMessage = useMemo(() => {
+    if (isInsufficientBalance)
+      return `Insufficient ${market.collateralAsset.symbol} Balance`;
+
+    if (isInsufficientPosition) return <span>Insufficient Collateral</span>;
+
     if (context?.hookToEdit && context?.isPreHook)
       return <span>Update Pre-hook</span>;
     if (context?.hookToEdit && !context?.isPreHook)
@@ -98,7 +195,13 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
       return <span>Add Pre-hook</span>;
     if (!context?.hookToEdit && !context?.isPreHook)
       return <span>Add Post-hook</span>;
-  }, [context?.hookToEdit, context?.isPreHook]);
+  }, [
+    context?.hookToEdit,
+    context?.isPreHook,
+    isInsufficientBalance,
+    isInsufficientPosition,
+    market.collateralAsset.symbol,
+  ]);
 
   if (!context) return null;
 
@@ -181,29 +284,49 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
               title={market.loanAsset.symbol}
             />
           </div>
-          <span>{floatBorrow}</span>
+          <span>{borrowFullDecimals}</span>
         </div>
       </div>
       <AmountInput
         name="supplyAmount"
         label="Supply Collateral"
+        maxName="isMaxSupply"
         asset={market.collateralAsset}
         chainId={market.oracle.chain.id}
         formattedBalance={formattedCollateralBalance}
-        floatBalance={collateralBalanceFloat ?? 0.0}
+        floatBalance={collateralBalanceFull}
         fiatBalance={fiatSupplyAmount}
       />
       <AmountInput
         name="borrowAmount"
         label={`Borrow ${market.loanAsset.symbol}`}
+        maxName="isMaxBorrow"
         asset={market.loanAsset}
         chainId={market.oracle.chain.id}
-        formattedBalance={formattedLoanBalance}
-        floatBalance={loanBalanceFloat ?? 0.0}
+        formattedBalance={maxBorrowableFormatted}
+        floatBalance={maxBorrowableFull ?? 0.0}
         fiatBalance={fiatBorrowAmount}
       />
+      <div className="flex flex-col gap-2">
+        <span className="opacity-60 text-sm mb-[-8px]">Collateral</span>
+        <div className="flex gap-2">
+          <span>{`${formattedCollateral} -> ${collateralAfterFormatted}`}</span>
+        </div>
+        <span className="opacity-60 text-sm mb-[-8px]">Borrow</span>
+        <div className="flex gap-2">
+          <span>{`${formattedBorrow} -> ${borrowAfterFormatted}`}</span>
+        </div>
+        <span className="opacity-60 text-sm mb-[-8px]">LTV</span>
+        <div className="flex gap-2">
+          <span>{`${ltvBefore} -> ${ltvAfter} / ${lltv}`}</span>
+        </div>
+      </div>
       <Info content={<InfoContent />} />
-      <ButtonPrimary type="submit" className="mb-4">
+      <ButtonPrimary
+        type="submit"
+        className="mb-4"
+        disabled={isInsufficientBalance || isInsufficientPosition}
+      >
         {buttonMessage}
       </ButtonPrimary>
     </div>

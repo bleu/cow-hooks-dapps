@@ -1,27 +1,44 @@
 import { formatNumber } from "@bleu.builders/ui";
 import { useMemo } from "react";
+import { formatUnits } from "viem";
 
 export const useFormatTokenAmount = ({
   amount,
   decimals,
+  priceUsd,
 }: {
   amount: bigint | undefined;
   decimals: number | undefined;
+  priceUsd?: number;
 }) => {
-  const float = useMemo(
+  const fullDecimals = useMemo(
     () =>
       amount !== undefined && decimals !== undefined
-        ? Number(amount) / 10 ** Number(decimals)
-        : undefined,
+        ? formatUnits(amount, decimals)
+        : "",
     [amount, decimals],
   );
 
   const formatted = useMemo(
     () =>
-      float !== undefined
-        ? formatNumber(float, 4, "decimal", "standard", 0.0001)
+      fullDecimals !== undefined
+        ? formatNumber(fullDecimals, 4, "decimal", "compact", 0.0001)
         : "",
-    [float],
+    [fullDecimals],
   );
-  return { float, formatted };
+
+  const usd = useMemo(
+    () =>
+      fullDecimals && priceUsd !== undefined
+        ? Number(fullDecimals) * priceUsd
+        : undefined,
+    [fullDecimals, priceUsd],
+  );
+
+  const usdFormatted = useMemo(
+    () => (usd !== undefined ? `≈ $${formatNumber(usd, 2, "decimal")}` : ""),
+    [usd],
+  );
+
+  return { formatted, fullDecimals, usd, usdFormatted };
 };
