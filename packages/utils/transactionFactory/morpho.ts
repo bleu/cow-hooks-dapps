@@ -1,4 +1,5 @@
 import { type Address, encodeFunctionData } from "viem";
+import { morphoAbi } from "./abis/morphoAbi";
 import { morphoBundlerAbi } from "./abis/morphoBundlersAbi";
 import type {
   BaseArgs,
@@ -6,6 +7,8 @@ import type {
   ITransaction,
   TRANSACTION_TYPES,
 } from "./types";
+
+export const MORPHO_ADDRESS = "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb";
 
 export interface MorphoDepositArgs extends BaseArgs {
   type: TRANSACTION_TYPES.MORPHO_DEPOSIT;
@@ -45,6 +48,35 @@ export class MorphoDepositCreator implements ITransaction<MorphoDepositArgs> {
         abi: morphoBundlerAbi,
         functionName: "multicall",
         args: [[transferFrom, deposit]],
+      }),
+    };
+  }
+}
+
+interface MorphoMarketParams {
+  collateralToken: Address;
+  loanToken: Address;
+  oracle: Address;
+  irm: Address;
+  lltv: bigint;
+}
+
+export interface MorphoSupplyArgs extends BaseArgs {
+  type: TRANSACTION_TYPES.MORPHO_SUPPLY;
+  marketParams: MorphoMarketParams;
+  amount: bigint;
+  recipient: Address;
+}
+
+export class MorphoSupplyCreator implements ITransaction<MorphoSupplyArgs> {
+  async createRawTx(args: MorphoSupplyArgs): Promise<BaseTransaction> {
+    return {
+      to: MORPHO_ADDRESS,
+      value: BigInt(0),
+      callData: encodeFunctionData({
+        abi: morphoAbi,
+        functionName: "supplyCollateral",
+        args: [args.marketParams, args.amount, args.recipient, "0x"],
       }),
     };
   }

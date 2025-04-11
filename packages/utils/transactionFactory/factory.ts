@@ -18,7 +18,12 @@ import {
   type ERC20TransferFromArgs,
   ERC20TransferFromCreator,
 } from "./erc20";
-import { type MorphoDepositArgs, MorphoDepositCreator } from "./morpho";
+import {
+  type MorphoDepositArgs,
+  MorphoDepositCreator,
+  type MorphoSupplyArgs,
+  MorphoSupplyCreator,
+} from "./morpho";
 import {
   type BaseTransaction,
   type ITransaction,
@@ -55,6 +60,7 @@ export interface TransactionBindings {
   [TRANSACTION_TYPES.UNISWAP_WITHDRAW]: UniswapWithdrawArgs;
   [TRANSACTION_TYPES.UNISWAP_DEPOSIT]: UniswapDepositArgs;
   [TRANSACTION_TYPES.MORPHO_DEPOSIT]: MorphoDepositArgs;
+  [TRANSACTION_TYPES.MORPHO_SUPPLY]: MorphoSupplyArgs;
 }
 
 const TRANSACTION_CREATORS: {
@@ -78,6 +84,7 @@ const TRANSACTION_CREATORS: {
   [TRANSACTION_TYPES.UNISWAP_WITHDRAW]: UniswapWithdrawCreator,
   [TRANSACTION_TYPES.UNISWAP_DEPOSIT]: UniswapDepositCreator,
   [TRANSACTION_TYPES.MORPHO_DEPOSIT]: MorphoDepositCreator,
+  [TRANSACTION_TYPES.MORPHO_SUPPLY]: MorphoSupplyCreator,
 };
 
 // This class is intentionally designed with only static members
