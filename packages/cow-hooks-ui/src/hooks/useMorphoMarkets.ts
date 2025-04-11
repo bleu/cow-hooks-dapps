@@ -4,6 +4,7 @@ import { gql } from "graphql-request";
 import useSWR from "swr";
 import type { Address } from "viem";
 import type { MarketPosition, MorphoMarket } from "../types";
+import { ensureBigIntType } from "../utils/ensureBigInt";
 
 interface IQuery {
   markets: {
@@ -168,13 +169,15 @@ export function useMorphoMarkets(
       ) as (MarketPosition & { uniqueKey: string })[];
 
       // merge positions into markets
-      const marketsWithPositions = markets.map((market) => {
-        const position = positions.find(
-          (position) => position.uniqueKey === market.uniqueKey,
-        );
-        if (!position) return { ...market, position: null };
-        return { ...market, position: position as MarketPosition };
-      });
+      const marketsWithPositions = ensureBigIntType(
+        markets.map((market) => {
+          const position = positions.find(
+            (position) => position.uniqueKey === market.uniqueKey,
+          );
+          if (!position) return { ...market, position: null };
+          return { ...market, position: position as MarketPosition };
+        }),
+      );
 
       return [
         ...marketsWithPositions.filter((m) => m.position),

@@ -28,8 +28,7 @@ export const useMaxBorrowableAmount = () => {
       : BigInt(0);
 
   const lltv =
-    market &&
-    (BigInt((market as MorphoMarket).lltv) * BigInt(9500)) / BigInt(10000);
+    market && ((market as MorphoMarket).lltv * BigInt(9500)) / BigInt(10000);
   const data = useUserMarketPosition({
     marketKey: (market as MorphoMarket).uniqueKey,
     marketParams: getMarketParams(market as MorphoMarket),
@@ -64,8 +63,7 @@ export const useMaxBorrowableAmount = () => {
   const marketBorrowLimit =
     market &&
     maxReallocatableLiquidity &&
-    BigInt((market as MorphoMarket).state.liquidityAssets) +
-      maxReallocatableLiquidity;
+    (market as MorphoMarket).state.liquidityAssets + maxReallocatableLiquidity;
 
   const canUserBorrowMaxMarket =
     maxBorrowableAmount &&

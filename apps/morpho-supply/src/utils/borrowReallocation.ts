@@ -34,8 +34,7 @@ export function getMaxReallocatableLiquidity(
           .includes(vaultAddress),
       );
 
-    const liquidity =
-      BigInt(mkt.state.supplyAssets) - BigInt(mkt.state.borrowAssets);
+    const liquidity = mkt.state.supplyAssets - mkt.state.borrowAssets;
     maxReallocatableLiquidity += liquidity;
     return {
       marketKey: mkt.uniqueKey,
@@ -54,8 +53,7 @@ export function buildWithdrawals(
   maxReallocatableLiquidity: bigint,
   possibleWithdrawals: Withdrawal[],
 ) {
-  const marketLiquidity =
-    BigInt(market.state.supplyAssets) - BigInt(market.state.borrowAssets);
+  const marketLiquidity = market.state.supplyAssets - market.state.borrowAssets;
 
   if (amount > marketLiquidity + maxReallocatableLiquidity) return [];
   if (amount <= marketLiquidity) return [];
