@@ -17,7 +17,11 @@ export default function Page() {
 
   const { context } = useIFrameContext();
 
-  const { data: markets } = useMorphoMarkets({}, context?.chainId);
+  const { data: markets } = useMorphoMarkets(
+    {},
+    context?.chainId,
+    context?.account,
+  );
 
   if (!markets)
     return (

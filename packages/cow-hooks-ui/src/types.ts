@@ -136,6 +136,18 @@ export interface MorphoVault {
   };
 }
 
+export interface MarketPosition {
+  borrowAssets: bigint;
+  borrowAssetsUsd: number;
+  borrowShares: bigint;
+  collateral: bigint;
+  collateralUsd: number;
+  collateralValue: bigint;
+  supplyAssets: bigint;
+  supplyAssetsUsd: number;
+  supplyShares: bigint;
+}
+
 export interface MorphoMarket {
   state: {
     supplyAssetsUsd: number;
@@ -174,6 +186,7 @@ export interface MorphoMarket {
     };
     address: Address;
   };
+  position: MarketPosition | null;
 }
 
 export interface MorphoMarketParams {

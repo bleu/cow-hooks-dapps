@@ -5,6 +5,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowLeftIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { Token } from "@uniswap/sdk-core";
 import { useEffect, useMemo, useState } from "react";
+import { formatUnits } from "viem";
 import { TokenLogo } from "./TokenLogo";
 import { useIFrameContext } from "./context/iframe";
 import type { MorphoMarket } from "./types";
@@ -180,13 +181,45 @@ export function MarketsDropdownMenu({
                       }}
                       className="w-full hover:bg-color-paper-darkest hover:text-muted-foreground rounded-md px-2 cursor-pointer grid grid-cols-3"
                     >
-                      <div className="flex gap-2">
-                        <AssetLogo asset={market.collateralAsset} />
-                        <span>{market.collateralAsset.symbol}</span>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-2">
+                          <AssetLogo asset={market.collateralAsset} />
+                          <span>{market.collateralAsset.symbol}</span>
+                        </div>
+                        {market?.position && (
+                          <span>
+                            {formatNumber(
+                              formatUnits(
+                                market.position.collateral,
+                                market.collateralAsset.decimals,
+                              ),
+                              4,
+                              "decimal",
+                              "standard",
+                              0.0001,
+                            )}
+                          </span>
+                        )}
                       </div>
-                      <div className="flex gap-2">
-                        <AssetLogo asset={market.loanAsset} />
-                        <span>{market.loanAsset.symbol}</span>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex gap-2">
+                          <AssetLogo asset={market.loanAsset} />
+                          <span>{market.loanAsset.symbol}</span>
+                        </div>
+                        {market?.position && (
+                          <span>
+                            {formatNumber(
+                              formatUnits(
+                                market.position.borrowAssets,
+                                market.loanAsset.decimals,
+                              ),
+                              4,
+                              "decimal",
+                              "standard",
+                              0.0001,
+                            )}
+                          </span>
+                        )}
                       </div>
                       <div className="flex gap-2">
                         <span>
