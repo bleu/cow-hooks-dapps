@@ -64,7 +64,8 @@ export const useMaxBorrowableAmount = () => {
   const marketBorrowLimit =
     market &&
     maxReallocatableLiquidity &&
-    (market as MorphoMarket).state.liquidityAssets + maxReallocatableLiquidity;
+    BigInt((market as MorphoMarket).state.liquidityAssets) +
+      maxReallocatableLiquidity;
 
   const canUserBorrowMaxMarket =
     maxBorrowableAmount &&
