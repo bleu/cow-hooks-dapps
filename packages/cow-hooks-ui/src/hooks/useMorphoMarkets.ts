@@ -4,7 +4,6 @@ import { gql } from "graphql-request";
 import useSWR from "swr";
 import type { Address, PublicClient } from "viem";
 import type { MarketPosition, MorphoMarket } from "../types";
-import { ensureBigIntType } from "../utils/ensureBigInt";
 import { readOnchainMorphoMarkets } from "../utils/readOnchainMorphoMarkets";
 
 interface IQuery {
@@ -87,7 +86,7 @@ export function useMorphoMarkets(
   publicClient: PublicClient | undefined,
   chainId?: SupportedChainId,
   where?: IGetPoolsWhere,
-  orderBy?: string,
+  orderBy?: string
 ) {
   return useSWR<MorphoMarket[]>(
     [where, chainId, userAddress],
@@ -111,24 +110,22 @@ export function useMorphoMarkets(
       const marketsOnchainInfo = await readOnchainMorphoMarkets(
         userAddress as Address,
         gqlMarkets as MorphoMarket[],
-        publicClient,
+        publicClient
       );
 
       // merge onchain info into markets
-      const marketsWithOnchainInfo = gqlMarkets
+      const markets = gqlMarkets
         .map((market, index) => {
           const marketOnchainInfo = marketsOnchainInfo[index];
           return marketOnchainInfo
             ? {
                 ...market,
                 ...marketOnchainInfo,
+                lltv: BigInt(market.lltv),
               }
             : undefined;
         })
         .filter((market) => market) as MorphoMarket[];
-
-      // Ensure bigint type
-      const markets = ensureBigIntType(marketsWithOnchainInfo);
 
       return [
         ...markets.filter((m) => hasPosition(m.position)),
@@ -137,7 +134,7 @@ export function useMorphoMarkets(
     },
     {
       revalidateOnFocus: false,
-    },
+    }
   );
 }
 
