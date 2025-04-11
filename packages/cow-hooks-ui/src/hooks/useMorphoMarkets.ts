@@ -86,7 +86,7 @@ export function useMorphoMarkets(
   publicClient: PublicClient | undefined,
   chainId?: SupportedChainId,
   where?: IGetPoolsWhere,
-  orderBy?: string
+  orderBy?: string,
 ) {
   return useSWR<MorphoMarket[]>(
     [where, chainId, userAddress],
@@ -110,7 +110,7 @@ export function useMorphoMarkets(
       const marketsOnchainInfo = await readOnchainMorphoMarkets(
         userAddress as Address,
         gqlMarkets as MorphoMarket[],
-        publicClient
+        publicClient,
       );
 
       // merge onchain info into markets
@@ -134,7 +134,7 @@ export function useMorphoMarkets(
     },
     {
       revalidateOnFocus: false,
-    }
+    },
   );
 }
 
