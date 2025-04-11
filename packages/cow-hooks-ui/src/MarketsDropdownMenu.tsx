@@ -107,7 +107,7 @@ export function MarketsDropdownMenu({
             onClick={() => setOpen(true)}
           >
             {selectedMarket ? (
-              <div className="group hover:bg-color-paper-darkest hover:text-muted-foreground rounded-md px-2 cursor-pointer flex flex-row gap-2 items-center justify-between">
+              <div className="group rounded-md px-2 cursor-pointer flex flex-row gap-2 items-center justify-between">
                 <div className="flex gap-2">
                   <span>Collateral:</span>
                   <AssetLogo asset={selectedMarket.collateralAsset} />
@@ -169,7 +169,7 @@ export function MarketsDropdownMenu({
                 <CommandGroup>
                   {displayedVaults.map((market) => (
                     <CommandItem
-                      key={market.id}
+                      key={market.uniqueKey}
                       value={
                         market?.collateralAsset.symbol +
                         market?.loanAsset.symbol
