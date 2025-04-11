@@ -166,9 +166,9 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     market.collateralAsset.decimals,
   );
   const isInsufficientBalance = Boolean(
-    collateral !== undefined &&
+    collateralBalance !== undefined &&
       supplyAmountBigInt !== undefined &&
-      supplyAmountBigInt > collateral,
+      supplyAmountBigInt > collateralBalance,
   );
 
   const borrowAmountBigInt = decimalsToBigInt(
