@@ -14,8 +14,9 @@ import { useMorphoContext } from "#/contexts/morpho";
 import { decodeFormData } from "#/utils/hookEncoding";
 
 export default function Page() {
-  const { setValue, control } = useFormContext<MorphoSupplyFormData>();
+  const { control, setValue } = useFormContext<MorphoSupplyFormData>();
   const { market: selectedMarket } = useWatch({ control });
+  const market = selectedMarket as MorphoMarket | undefined;
   const { markets } = useMorphoContext();
 
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
@@ -88,9 +89,9 @@ export default function Page() {
       <MarketsDropdownMenu
         onSelect={(market: MorphoMarket) => setValue("market", market)}
         markets={markets}
-        selectedMarket={selectedMarket as MorphoMarket | undefined}
+        selectedMarket={market}
       />
-      {selectedMarket && <MarketForm market={selectedMarket as MorphoMarket} />}
+      {market && <MarketForm market={market} />}
     </div>
   );
 }

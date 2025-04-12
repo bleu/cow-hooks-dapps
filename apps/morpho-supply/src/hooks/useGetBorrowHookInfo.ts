@@ -1,4 +1,8 @@
-import { type IHooksInfo, useIFrameContext } from "@bleu/cow-hooks-ui";
+import {
+  type IHooksInfo,
+  type MorphoMarket,
+  useIFrameContext,
+} from "@bleu/cow-hooks-ui";
 import {
   TRANSACTION_TYPES,
   TransactionFactory,
@@ -10,9 +14,9 @@ import type { MorphoSupplyFormData } from "#/contexts/form";
 import { getMarketParams } from "#/utils/getMarketParams";
 import { useGetBorrowReallocationTxs } from "./useGetBorrowReallocationTxs";
 
-export const useGetBorrowHookInfo = () => {
+export const useGetBorrowHookInfo = (market: MorphoMarket | undefined) => {
   const { context, cowShedProxy } = useIFrameContext();
-  const getReallocationTxs = useGetBorrowReallocationTxs();
+  const getBorrowReallocationTxs = useGetBorrowReallocationTxs(market);
 
   return useCallback(
     async (data: MorphoSupplyFormData): Promise<IHooksInfo | undefined> => {
@@ -31,7 +35,7 @@ export const useGetBorrowHookInfo = () => {
       ).toBigInt();
 
       // When market doesn't have enough supply
-      const reallocationTxs = await getReallocationTxs(data);
+      const reallocationTxs = await getBorrowReallocationTxs(data);
 
       const borrowTx = await TransactionFactory.createRawTx(
         TRANSACTION_TYPES.MORPHO_BORROW,
@@ -47,6 +51,11 @@ export const useGetBorrowHookInfo = () => {
 
       return { txs };
     },
-    [context?.account, context?.chainId, cowShedProxy, getReallocationTxs],
+    [
+      context?.account,
+      context?.chainId,
+      cowShedProxy,
+      getBorrowReallocationTxs,
+    ],
   );
 };

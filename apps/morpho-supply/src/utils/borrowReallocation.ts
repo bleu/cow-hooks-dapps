@@ -1,79 +1,150 @@
 import type { MorphoMarket, MorphoMarketParams } from "@bleu/cow-hooks-ui";
-import { getMarketParams } from "./getMarketParams";
 
-interface Withdrawal {
-  marketKey: string;
-  marketParams: MorphoMarketParams;
+import { morphoPublicAllocatorAbi } from "@bleu/utils/transactionFactory";
+import type { Address, PublicClient } from "viem";
+import { getMarketParams } from "#/utils/getMarketParams";
+import { publicAllocatorMap } from "#/utils/publicAllocatorMap";
+
+export interface BorrowReallocation {
+  vault: Address;
+  from: MorphoMarketParams;
+  to: MorphoMarketParams;
+  fromKey: `0x${string}`;
+  toKey: `0x${string}`;
   amount: bigint;
-  commonVault: string;
 }
 
-export function getMaxReallocatableLiquidity(
+function mapPossibleReallocations(
   market: MorphoMarket,
   markets: MorphoMarket[],
-) {
-  // 1. get reallocatableMarkets
-  const reallocatableMarkets = markets.filter(
-    (m) =>
-      m.loanAsset.address === market.loanAsset.address &&
-      m.supplyingVaults.some((vault) =>
-        market.supplyingVaults.map((v) => v.address).includes(vault.address),
-      ) &&
-      m.uniqueKey !== market.uniqueKey,
-  );
+): Omit<BorrowReallocation, "amount">[] {
+  const possibleReallocations = [] as Omit<BorrowReallocation, "amount">[];
 
-  let maxReallocatableLiquidity = BigInt(0);
+  const possibleVaults = getVaults(market);
 
-  // 2. Prepare a list of possible max withdrawals:
-  const possibleWithdrawals: Withdrawal[] = reallocatableMarkets.map((mkt) => {
-    const commonVault = mkt.supplyingVaults
-      .map((vault) => vault.address)
-      .find((vaultAddress) =>
-        market.supplyingVaults
-          .map((vault) => vault.address)
-          .includes(vaultAddress),
-      );
+  for (const vault of possibleVaults) {
+    for (const mkt of markets) {
+      if (mkt.uniqueKey === market.uniqueKey) continue;
+      const mktVaults = getVaults(mkt);
+      if (
+        mktVaults.includes(vault) &&
+        mkt.loanAsset.address === market.loanAsset.address
+      )
+        possibleReallocations.push({
+          vault,
+          from: getMarketParams(mkt),
+          to: getMarketParams(market),
+          fromKey: mkt.uniqueKey,
+          toKey: market.uniqueKey,
+        });
+    }
+  }
 
-    maxReallocatableLiquidity += mkt.liquidity;
-    return {
-      marketKey: mkt.uniqueKey,
-      commonVault: commonVault ?? "",
-      marketParams: getMarketParams(mkt),
-      amount: mkt.liquidity,
-    };
-  });
-
-  return { maxReallocatableLiquidity, possibleWithdrawals };
+  return possibleReallocations;
 }
 
-export function buildWithdrawals(
+function getVaults(market: MorphoMarket) {
+  return market.supplyingVaults.map((vault) => vault.address);
+}
+
+export async function getPossibleReallocations(
+  market: MorphoMarket,
+  markets: MorphoMarket[],
+  publicClient: PublicClient,
+  chainId: number,
+): Promise<BorrowReallocation[]> {
+  const reallocations = mapPossibleReallocations(market, markets);
+  const publicAllocatorAddress = publicAllocatorMap[chainId];
+
+  if (reallocations.length === 0) return [];
+
+  const multicallRequests = reallocations.map((reallocation) => ({
+    address: publicAllocatorAddress,
+    abi: morphoPublicAllocatorAbi,
+    functionName: "flowCaps",
+    args: [reallocation.vault, reallocation.fromKey],
+  }));
+
+  try {
+    const flowCapsResults = (await publicClient.multicall({
+      contracts: multicallRequests,
+    })) as (
+      | {
+          error?: undefined;
+          result: [bigint, bigint];
+          status: "success";
+        }
+      | {
+          error: Error;
+          result?: undefined;
+          status: "failure";
+        }
+    )[];
+
+    const borrowReallocations: BorrowReallocation[] = [];
+
+    for (let i = 0; i < flowCapsResults.length; i++) {
+      const result = flowCapsResults[i];
+
+      if (result.status !== "success") continue;
+
+      const [_maxIn, maxOut] = result.result as [bigint, bigint];
+
+      if (maxOut > BigInt(0)) {
+        borrowReallocations.push({
+          ...reallocations[i],
+          amount: maxOut,
+        });
+      }
+    }
+
+    return borrowReallocations.sort((a, b) => {
+      // For descending order
+      if (a.amount > b.amount) return -1;
+      if (a.amount < b.amount) return 1;
+      return 0;
+    });
+  } catch (error) {
+    console.error("Error in multicall for flow caps:", error);
+    return [];
+  }
+}
+
+export function getMaxBorrowReallocation(
+  possibleReallocations: BorrowReallocation[],
+) {
+  let maxBorrowReallocation = BigInt(0);
+  for (const reallocation of possibleReallocations)
+    maxBorrowReallocation += reallocation.amount;
+  return maxBorrowReallocation;
+}
+
+export function buildReallocations(
   market: MorphoMarket,
   amount: bigint,
-  maxReallocatableLiquidity: bigint,
-  possibleWithdrawals: Withdrawal[],
-) {
-  if (amount > market.liquidity + maxReallocatableLiquidity) return [];
+  possibleReallocations: BorrowReallocation[],
+): BorrowReallocation[] {
+  const maxBorrowReallocation = getMaxBorrowReallocation(possibleReallocations);
+
+  if (amount > market.liquidity + maxBorrowReallocation) return [];
   if (amount <= market.liquidity) return [];
 
-  const reallocations = [] as Withdrawal[];
+  const reallocations = [] as BorrowReallocation[];
   const totalToReallocate = amount - market.liquidity;
   let missingReallocation = totalToReallocate;
 
-  for (const possibleWithdraw of possibleWithdrawals) {
-    const isReallocationSufficient =
-      missingReallocation <= possibleWithdraw.amount;
+  for (const reallocation of possibleReallocations) {
+    const isReallocationSufficient = missingReallocation <= reallocation.amount;
     reallocations.push({
-      marketKey: possibleWithdraw.marketKey,
-      marketParams: possibleWithdraw.marketParams,
+      ...reallocation,
       amount: isReallocationSufficient
         ? missingReallocation
-        : possibleWithdraw.amount,
-      commonVault: possibleWithdraw.commonVault,
+        : reallocation.amount,
     });
     if (isReallocationSufficient) {
       break;
     }
-    missingReallocation -= possibleWithdraw.amount;
+    missingReallocation -= reallocation.amount;
   }
   return reallocations;
 }

@@ -13,9 +13,7 @@ export interface MorphoContextData {
 }
 
 // Create the context with a default empty value
-const MorphoContext = createContext<MorphoContextData>({
-  markets: undefined,
-});
+const MorphoContext = createContext<MorphoContextData>({} as MorphoContextData);
 
 // Custom hook to use the context
 export const useMorphoContext = () => useContext(MorphoContext);

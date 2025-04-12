@@ -24,9 +24,11 @@ export function FormContextProvider({ children }: PropsWithChildren) {
 
   const router = useRouter();
 
-  const { handleSubmit } = form;
+  const { handleSubmit, getValues } = form;
 
-  const getHookInfo = useGetHookInfo();
+  const { market } = getValues();
+
+  const getHookInfo = useGetHookInfo(market);
 
   const onSubmitCallback = useCallback(
     async (data: MorphoSupplyFormData) => {
