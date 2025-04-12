@@ -7,15 +7,17 @@ import {
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { useCallback, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import { MarketForm } from "#/components/MarketForm";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useMorphoContext } from "#/contexts/morpho";
 import { decodeFormData } from "#/utils/hookEncoding";
 
 export default function Page() {
-  const { setValue } = useFormContext<MorphoSupplyFormData>();
-  const { market, markets } = useMorphoContext();
+  const { control, setValue } = useFormContext<MorphoSupplyFormData>();
+  const { market: selectedMarket } = useWatch({ control });
+  const market = selectedMarket as MorphoMarket | undefined;
+  const { markets } = useMorphoContext();
 
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
   const { context } = useIFrameContext();

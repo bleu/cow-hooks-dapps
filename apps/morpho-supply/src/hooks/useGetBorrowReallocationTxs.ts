@@ -1,21 +1,25 @@
-import { type BaseTransaction, useIFrameContext } from "@bleu/cow-hooks-ui";
+import {
+  type BaseTransaction,
+  type MorphoMarket,
+  useIFrameContext,
+} from "@bleu/cow-hooks-ui";
 import { morphoPublicAllocatorAbi } from "@bleu/utils/transactionFactory";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import { type Address, encodeFunctionData, parseUnits } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useMorphoContext } from "#/contexts/morpho";
-import {
-  buildWithdrawals,
-  getMaxReallocatableLiquidity,
-} from "#/utils/borrowReallocation";
-import { getMarketParams } from "#/utils/getMarketParams";
+import { buildReallocations } from "#/utils/borrowReallocation";
 import { publicAllocatorMap } from "#/utils/publicAllocatorMap";
+import { useBorrowReallocation } from "./useBorrowReallocation";
 
-export const useGetBorrowReallocationTxs = () => {
+export const useGetBorrowReallocationTxs = (
+  market: MorphoMarket | undefined,
+) => {
   const { context, cowShedProxy } = useIFrameContext();
-
   const { markets } = useMorphoContext();
+
+  const { possibleReallocations } = useBorrowReallocation(market);
 
   return useCallback(
     async ({
@@ -27,45 +31,50 @@ export const useGetBorrowReallocationTxs = () => {
         !context?.account ||
         !context?.chainId ||
         !cowShedProxy ||
+        !possibleReallocations ||
         !borrowAmount
       )
         return;
 
-      const { maxReallocatableLiquidity, possibleWithdrawals } =
-        getMaxReallocatableLiquidity(market, markets);
       const amountBigNumber = BigNumber.from(
         parseUnits(borrowAmount.toString(), market.loanAsset.decimals),
       ).toBigInt();
-      const withdrawals = buildWithdrawals(
+
+      const reallocations = buildReallocations(
         market,
         amountBigNumber,
-        maxReallocatableLiquidity,
-        possibleWithdrawals,
+        possibleReallocations,
       );
 
       const publicAllocatorAddress = publicAllocatorMap[context.chainId];
 
-      const txs: BaseTransaction[] = withdrawals.map((withdrawal) => ({
+      const txs: BaseTransaction[] = reallocations.map((reallocation) => ({
         to: publicAllocatorAddress,
         value: BigInt(0),
         callData: encodeFunctionData({
           abi: morphoPublicAllocatorAbi,
           functionName: "reallocateTo",
           args: [
-            withdrawal.commonVault as Address,
+            reallocation.vault as Address,
             [
               {
-                amount: withdrawal.amount,
-                marketParams: withdrawal.marketParams,
+                amount: reallocation.amount,
+                marketParams: reallocation.from,
               },
             ],
-            getMarketParams(market),
+            reallocation.to,
           ],
         }),
       }));
 
       return txs;
     },
-    [context?.account, context?.chainId, cowShedProxy, markets],
+    [
+      context?.account,
+      context?.chainId,
+      cowShedProxy,
+      markets,
+      possibleReallocations,
+    ],
   );
 };
