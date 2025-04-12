@@ -7,16 +7,15 @@ import {
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
 import { useCallback, useState } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { MarketForm } from "#/components/MarketForm";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useMorphoContext } from "#/contexts/morpho";
 import { decodeFormData } from "#/utils/hookEncoding";
 
 export default function Page() {
-  const { setValue, control } = useFormContext<MorphoSupplyFormData>();
-  const { market: selectedMarket } = useWatch({ control });
-  const { markets } = useMorphoContext();
+  const { setValue } = useFormContext<MorphoSupplyFormData>();
+  const { market, markets } = useMorphoContext();
 
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
   const { context } = useIFrameContext();
@@ -88,9 +87,9 @@ export default function Page() {
       <MarketsDropdownMenu
         onSelect={(market: MorphoMarket) => setValue("market", market)}
         markets={markets}
-        selectedMarket={selectedMarket as MorphoMarket | undefined}
+        selectedMarket={market}
       />
-      {selectedMarket && <MarketForm market={selectedMarket as MorphoMarket} />}
+      {market && <MarketForm market={market} />}
     </div>
   );
 }
