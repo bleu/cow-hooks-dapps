@@ -16,7 +16,7 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
     market.state.monthlyNetBorrowApy,
     2,
     "percent",
-    "standard",
+    "standard"
   );
 
   const lltvFloat = Number(market.lltv.toString().slice(0, 3)) / 1000;
@@ -27,12 +27,12 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
     ? formatNumber(
         formatUnits(
           market.position.collateral,
-          market.collateralAsset.decimals,
+          market.collateralAsset.decimals
         ),
         4,
         "decimal",
         "standard",
-        0.0001,
+        0.0001
       )
     : undefined;
 
@@ -42,7 +42,7 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
         4,
         "decimal",
         "standard",
-        0.0001,
+        0.0001
       )
     : undefined;
 
@@ -58,7 +58,7 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
       ? formatNumber(userLtvFloat, 2, "percent")
       : undefined;
 
-  const liquidity = formatNumber(market.liquidityUsd, 1);
+  const liquidity = `$${formatNumber(market.liquidityUsd, 1)}`;
 
   return (
     <div className="w-full flex justify-between rounded-2xl p-4 cursor-pointer bg-color-paper-darker hover:bg-color-paper-darkest hover:text-muted-foreground transition-all">
