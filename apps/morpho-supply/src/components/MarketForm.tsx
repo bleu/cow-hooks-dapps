@@ -8,6 +8,7 @@ import {
   useIFrameContext,
   useReadTokenContract,
 } from "@bleu/cow-hooks-ui";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { useEffect, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { MorphoSupplyFormData } from "#/contexts/form";
@@ -16,7 +17,6 @@ import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { useMaxBorrowableAmount } from "#/hooks/useMaxBorrowableAmount";
 import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
 import { AmountInput } from "./AmoutIntput";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
 
 export function MarketForm({ market }: { market: MorphoMarket }) {
   const { context } = useIFrameContext();
@@ -123,27 +123,27 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   const lltv = formatNumber(
     Number(market.lltv.toString().slice(0, 3)) / 1000,
     1,
-    "percent"
+    "percent",
   );
 
   const supplyAmountBigInt = decimalsToBigInt(
     supplyAmount,
-    market.collateralAsset.decimals
+    market.collateralAsset.decimals,
   );
   const isInsufficientBalance = Boolean(
     collateralBalance !== undefined &&
       supplyAmountBigInt !== undefined &&
-      supplyAmountBigInt > collateralBalance
+      supplyAmountBigInt > collateralBalance,
   );
 
   const borrowAmountBigInt = decimalsToBigInt(
     borrowAmount,
-    market.loanAsset.decimals
+    market.loanAsset.decimals,
   );
   const isInsufficientPosition = Boolean(
     maxBorrowableAmount !== undefined &&
       borrowAmountBigInt !== undefined &&
-      borrowAmountBigInt > maxBorrowableAmount
+      borrowAmountBigInt > maxBorrowableAmount,
   );
 
   const buttonMessage = useMemo(() => {
@@ -151,6 +151,9 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
       return `Insufficient ${market.collateralAsset.symbol} Balance`;
 
     if (isInsufficientPosition) return <span>Insufficient Collateral</span>;
+
+    if (!supplyAmount && !borrowAmount)
+      return <span>Enter supply or borrow</span>;
 
     if (context?.hookToEdit && context?.isPreHook)
       return <span>Update Pre-hook</span>;
@@ -166,6 +169,8 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     isInsufficientBalance,
     isInsufficientPosition,
     market.collateralAsset.symbol,
+    supplyAmount,
+    borrowAmount,
   ]);
 
   if (!context) return null;
@@ -196,23 +201,41 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
         <span className="opacity-60 text-sm mb-[-8px] font-medium">
           Your collateral position ({market.collateralAsset.symbol})
         </span>
-        <div className="flex gap-2">
-          <span>{`${formattedCollateral} -> ${collateralAfterFormatted}`}</span>
+        <div className="flex items-center gap-2">
+          {(supplyAmount || borrowAmount) && (
+            <>
+              <span className="opacity-70 font-semibold">
+                {formattedCollateral}
+              </span>
+              <ArrowRightIcon className="w-5 h-5 opacity-70" />
+            </>
+          )}
+          <span className="font-semibold">{collateralAfterFormatted}</span>
         </div>
         <span className="opacity-60 text-sm mb-[-8px] font-medium">
           Your loan position ({market.loanAsset.symbol})
         </span>
         <div className="flex items-center gap-2">
-          <span className="opacity-70 font-semibold">{formattedBorrow}</span>
-          <ArrowRightIcon className="w-5 h-5 opacity-70" />
+          {(supplyAmount || borrowAmount) && (
+            <>
+              <span className="opacity-70 font-semibold">
+                {formattedBorrow}
+              </span>
+              <ArrowRightIcon className="w-5 h-5 opacity-70" />
+            </>
+          )}
           <span className="font-semibold">{borrowAfterFormatted}</span>
         </div>
         <span className="opacity-60 text-sm mb-[-8px] font-medium">
           LTV / Liquidation LTV
         </span>
         <div className="flex items-center gap-2">
-          <span className="opacity-70 font-semibold">{ltvBefore}</span>
-          <ArrowRightIcon className="w-5 h-5 opacity-70" />
+          {(supplyAmount || borrowAmount) && (
+            <>
+              <span className="opacity-70 font-semibold">{ltvBefore}</span>
+              <ArrowRightIcon className="w-5 h-5 opacity-70" />
+            </>
+          )}
           <span className="font-semibold">
             {ltvAfter} / {lltv}
           </span>
@@ -222,7 +245,11 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
       <ButtonPrimary
         type="submit"
         className="mb-4"
-        disabled={isInsufficientBalance || isInsufficientPosition}
+        disabled={
+          isInsufficientBalance ||
+          isInsufficientPosition ||
+          (!supplyAmount && !borrowAmount)
+        }
       >
         {buttonMessage}
       </ButtonPrimary>

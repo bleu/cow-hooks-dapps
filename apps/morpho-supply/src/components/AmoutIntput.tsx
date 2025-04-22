@@ -45,6 +45,7 @@ export const AmountInput = ({
   const values = useWatch({ control });
 
   const isMaxValue = values[maxName] as boolean;
+  const value = values[name] as string;
 
   const error = errors[name] as FieldError | undefined;
   const errorMessage = error?.message;
@@ -73,13 +74,34 @@ export const AmountInput = ({
 
   return (
     <div className="w-full">
-      {label && (
-        <div className="flex flex-row gap-x-2 items-center mb-2">
-          <Label className="ml-2 block text-sm">{label}</Label>
-        </div>
-      )}
-      <div className="flex flex-col gap-1 w-full min-h-24 pt-4 pb-1 px-6 bg-color-paper-darker rounded-xl items-start">
+      <div
+        className={cn(
+          "flex flex-col gap-1 w-full min-h-24 pt-4 pb-1 px-6 bg-color-paper-darker rounded-xl items-start",
+          { "bg-color-paper-darkest": value },
+        )}
+      >
+        {label && (
+          <div className="flex flex-row gap-x-2 items-center mb-2">
+            <Label className="block font-semibold opacity-70">{label}</Label>
+          </div>
+        )}
         <div className="flex w-full items-center justify-between gap-2">
+          <Input
+            type="number"
+            inputMode="decimal"
+            step={`0.${"0".repeat(asset.decimals - 1)}1`}
+            max="1000000000000"
+            placeholder="0.0"
+            autoComplete="off"
+            className="outline-none font-semibold text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-left p-0 m-0 h-min border-none rounded-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none truncate"
+            onKeyDown={(e) =>
+              ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
+            }
+            {...register(name, {
+              setValueAs: handleSetValue,
+              onChange: handleDisableMaxOnUserInput,
+            })}
+          />
           <div className="rounded-xl text-color-text-paper bg-color-paper cursor-default">
             {token && (
               <div className="w-fit py-2 px-4 flex items-center justify-center gap-2">
@@ -90,28 +112,15 @@ export const AmountInput = ({
               </div>
             )}
           </div>
-          <Input
-            type="number"
-            inputMode="decimal"
-            step={`0.${"0".repeat(asset.decimals - 1)}1`}
-            max="1000000000000"
-            placeholder="0.0"
-            autoComplete="off"
-            className="outline-none font-semibold text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-right p-0 m-0 h-min border-none rounded-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none truncate"
-            onKeyDown={(e) =>
-              ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
-            }
-            {...register(name, {
-              setValueAs: handleSetValue,
-              onChange: handleDisableMaxOnUserInput,
-            })}
-          />
         </div>
         <div className="flex w-full justify-between items-center">
+          <span title={floatBalance} className="opacity-40 text-xs">
+            {fiatBalance}
+          </span>
           {formattedBalance && token?.symbol && (
             <span className="font-normal pl-1">
               <span title={floatBalance} className="opacity-40 text-xs">
-                Max: {formattedBalance} {token?.symbol}
+                {formattedBalance} {token?.symbol}
               </span>
               <button
                 type="button"
@@ -127,9 +136,6 @@ export const AmountInput = ({
               </button>
             </span>
           )}
-          <span title={floatBalance} className="opacity-40 text-xs">
-            {fiatBalance}
-          </span>
         </div>
       </div>
       {errorMessage && (

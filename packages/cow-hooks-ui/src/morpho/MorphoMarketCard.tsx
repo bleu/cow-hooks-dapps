@@ -55,7 +55,7 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
     : undefined;
   const userLtv =
     userHasPosition && userLtvFloat
-      ? formatNumber(userLtvFloat, 2, "percent")
+      ? formatNumber(userLtvFloat, 1, "percent")
       : undefined;
 
   const liquidity = `$${formatNumber(market.liquidityUsd, 1)}`;
@@ -111,6 +111,7 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
         href={`https://app.morpho.org/${market.oracle.chain.network}/market/${market.uniqueKey}`}
         target="_blank"
         title="Market details"
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="h-full flex items-center justify-center ml-2">
           <ExternalLinkIcon className="size-4 shrink-0 bg-inherit opacity-70 hover:opacity-100 transition-all" />
