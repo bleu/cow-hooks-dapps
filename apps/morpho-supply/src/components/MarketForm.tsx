@@ -14,9 +14,7 @@ import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useDynamicBorrow } from "#/hooks/useDynamicBorrow";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { useMaxBorrowableAmount } from "#/hooks/useMaxBorrowableAmount";
-import { useUserMarketPosition } from "#/hooks/useUserMarketPosition";
 import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
-import { getMarketParams } from "#/utils/getMarketParams";
 import { AmountInput } from "./AmoutIntput";
 
 export function MarketForm({ market }: { market: MorphoMarket }) {
@@ -45,29 +43,9 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
       tokenAddress: market.collateralAsset.address,
     });
 
-  const marketParams = getMarketParams(market);
+  const { collateral } = market.position;
 
-  const marketPosition = useUserMarketPosition({
-    marketKey: market.uniqueKey,
-    marketParams,
-  });
-
-  const {
-    collateral,
-    borrowShares,
-    totalBorrowAssets,
-    totalBorrowShares,
-    borrowRate,
-    lastUpdate,
-  } = marketPosition ?? {};
-
-  const borrow = useDynamicBorrow({
-    borrowShares,
-    totalBorrowAssets,
-    totalBorrowShares,
-    borrowRate,
-    lastUpdate,
-  });
+  const borrow = useDynamicBorrow({ market });
 
   const { formatted: formattedLoanBalance } = useFormatTokenAmount({
     amount: loanBalance,
@@ -148,12 +126,12 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   const ltvBefore =
     borrowUsd && collateralUsd
       ? formatNumber(borrowUsd / collateralUsd, 2, "percent")
-      : "";
+      : "0.0%";
 
   const ltvAfter =
     borrowAfterUsd && collateralAfterUsd
       ? formatNumber(borrowAfterUsd / collateralAfterUsd, 2, "percent")
-      : "";
+      : "0.0%";
 
   const lltv = formatNumber(
     Number(market.lltv.toString().slice(0, 3)) / 1000,
@@ -221,15 +199,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
           {formatNumber(market.state.monthlyNetBorrowApy, 2, "percent")}
         </span>
         <br />
-        <span>
-          Total supply assets: ${formatNumber(market.state.supplyAssetsUsd, 1)}
-        </span>
-        <span>
-          Total borrow assets: ${formatNumber(market.state.borrowAssetsUsd, 1)}
-        </span>
-        <span>
-          Total assets: ${formatNumber(market.state.collateralAssetsUsd, 1)}
-        </span>
+        <span>Total liquidity : ${formatNumber(market.liquidityUsd, 1)}</span>
         <br />
         <span>Your Balances:</span>
         <div className="flex gap-2">
