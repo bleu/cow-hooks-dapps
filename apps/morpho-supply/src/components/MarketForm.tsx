@@ -16,6 +16,7 @@ import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { useMaxBorrowableAmount } from "#/hooks/useMaxBorrowableAmount";
 import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
 import { AmountInput } from "./AmoutIntput";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 
 export function MarketForm({ market }: { market: MorphoMarket }) {
   const { context } = useIFrameContext();
@@ -122,27 +123,27 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   const lltv = formatNumber(
     Number(market.lltv.toString().slice(0, 3)) / 1000,
     1,
-    "percent",
+    "percent"
   );
 
   const supplyAmountBigInt = decimalsToBigInt(
     supplyAmount,
-    market.collateralAsset.decimals,
+    market.collateralAsset.decimals
   );
   const isInsufficientBalance = Boolean(
     collateralBalance !== undefined &&
       supplyAmountBigInt !== undefined &&
-      supplyAmountBigInt > collateralBalance,
+      supplyAmountBigInt > collateralBalance
   );
 
   const borrowAmountBigInt = decimalsToBigInt(
     borrowAmount,
-    market.loanAsset.decimals,
+    market.loanAsset.decimals
   );
   const isInsufficientPosition = Boolean(
     maxBorrowableAmount !== undefined &&
       borrowAmountBigInt !== undefined &&
-      borrowAmountBigInt > maxBorrowableAmount,
+      borrowAmountBigInt > maxBorrowableAmount
   );
 
   const buttonMessage = useMemo(() => {
@@ -183,7 +184,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
       />
       <AmountInput
         name="borrowAmount"
-        label={`Borrow ${market.loanAsset.symbol}`}
+        label="Borrow"
         maxName="isMaxBorrow"
         asset={market.loanAsset}
         chainId={market.oracle.chain.id}
@@ -191,18 +192,30 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
         floatBalance={maxBorrowableFull ?? 0.0}
         fiatBalance={fiatBorrowAmount}
       />
-      <div className="flex flex-col gap-2">
-        <span className="opacity-60 text-sm mb-[-8px]">Collateral</span>
+      <div className="flex flex-col gap-2 w-full min-h-24 pt-4 pb-1 px-6 bg-color-paper-darker rounded-xl items-start">
+        <span className="opacity-60 text-sm mb-[-8px] font-medium">
+          Your collateral position ({market.collateralAsset.symbol})
+        </span>
         <div className="flex gap-2">
           <span>{`${formattedCollateral} -> ${collateralAfterFormatted}`}</span>
         </div>
-        <span className="opacity-60 text-sm mb-[-8px]">Borrow</span>
-        <div className="flex gap-2">
-          <span>{`${formattedBorrow} -> ${borrowAfterFormatted}`}</span>
+        <span className="opacity-60 text-sm mb-[-8px] font-medium">
+          Your loan position ({market.loanAsset.symbol})
+        </span>
+        <div className="flex items-center gap-2">
+          <span className="opacity-70 font-semibold">{formattedBorrow}</span>
+          <ArrowRightIcon className="w-5 h-5 opacity-70" />
+          <span className="font-semibold">{borrowAfterFormatted}</span>
         </div>
-        <span className="opacity-60 text-sm mb-[-8px]">LTV</span>
-        <div className="flex gap-2">
-          <span>{`${ltvBefore} -> ${ltvAfter} / ${lltv}`}</span>
+        <span className="opacity-60 text-sm mb-[-8px] font-medium">
+          LTV / Liquidation LTV
+        </span>
+        <div className="flex items-center gap-2">
+          <span className="opacity-70 font-semibold">{ltvBefore}</span>
+          <ArrowRightIcon className="w-5 h-5 opacity-70" />
+          <span className="font-semibold">
+            {ltvAfter} / {lltv}
+          </span>
         </div>
       </div>
       <Info content={<InfoContent />} />

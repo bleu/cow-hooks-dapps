@@ -108,7 +108,7 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
         )}
       </div>
       <Link
-        href={`https://app.morpho.org/${market.oracle.chain.network}/${market.uniqueKey}`}
+        href={`https://app.morpho.org/${market.oracle.chain.network}/market/${market.uniqueKey}`}
         target="_blank"
         title="Market details"
       >
