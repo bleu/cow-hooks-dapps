@@ -1,9 +1,10 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
-import { UpdateIcon } from "@radix-ui/react-icons";
+import { MagnifyingGlassIcon, UpdateIcon } from "@radix-ui/react-icons";
 import { useEffect, useMemo, useState } from "react";
 
+import { cn } from "@bleu.builders/ui";
 import { MorphoMarketCard } from "./morpho/MorphoMarketCard";
 import type { MorphoMarket } from "./types";
 import {
@@ -29,6 +30,9 @@ export function MarketsDropdownMenu({
 }: MarketsDropdownMenuProps) {
   const [open, setOpen] = useState(true);
   const [search, setSearch] = useState("");
+  const [searchRule, setSearchRule] = useState<"all" | "collateral" | "loan">(
+    "all",
+  );
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
@@ -47,26 +51,41 @@ export function MarketsDropdownMenu({
   }, [open]);
 
   // Filter markets based on search
-  const filteredVaults = useMemo(() => {
+  const filteredMarkets = useMemo(() => {
     if (!search) return markets;
     const searchLower = search.toLowerCase();
-    return markets.filter((market) =>
-      (market.collateralAsset.symbol + market.loanAsset.symbol)
-        .toLowerCase()
-        .includes(searchLower),
+
+    if (searchRule === "collateral")
+      return markets.filter((market) =>
+        market.collateralAsset.symbol.toLowerCase().includes(searchLower),
+      );
+
+    if (searchRule === "loan")
+      return markets.filter((market) =>
+        market.loanAsset.symbol.toLowerCase().includes(searchLower),
+      );
+
+    return markets.filter(
+      (market) =>
+        (market.collateralAsset.symbol + market.loanAsset.symbol)
+          .toLowerCase()
+          .includes(searchLower) ||
+        (market.loanAsset.symbol + market.collateralAsset.symbol)
+          .toLowerCase()
+          .includes(searchLower),
     );
-  }, [markets, search]);
+  }, [markets, search, searchRule]);
 
   const displayedVaults = useMemo(
-    () => filteredVaults.slice(0, displayCount),
-    [filteredVaults, displayCount],
+    () => filteredMarkets.slice(0, displayCount),
+    [filteredMarkets, displayCount],
   );
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const element = e.currentTarget;
     if (
       element.scrollHeight - element.scrollTop <= element.clientHeight + 100 &&
-      displayCount < filteredVaults.length &&
+      displayCount < filteredMarkets.length &&
       !isLoadingMore
     ) {
       setIsLoadingMore(true);
@@ -107,7 +126,7 @@ export function MarketsDropdownMenu({
           </Dialog.Trigger>
         </div>
         <Dialog.Portal>
-          <Dialog.Content className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] border w-screen h-screen bg-background border-none flex flex-col gap-2">
+          <Dialog.Content className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] border w-screen h-screen bg-background border-none flex flex-col gap-4">
             <div className="flex items-center gap-2 mx-4 mt-4">
               <Dialog.Title>Select market</Dialog.Title>
             </div>
@@ -118,14 +137,70 @@ export function MarketsDropdownMenu({
                 return Number(regex.test(value));
               }}
               value={search}
+              className="px-4"
             >
               <CommandInput
-                className="bg-muted rounded-xl placeholder:text-muted-foreground/50 text-md mx-4 px-2 py-2 mb-4"
-                placeholder="Search token symbols"
-                onValueChange={handleInputChange}
-                value={search}
-              />
-              <div className="w-full h-[1px] bg-muted my-1" />
+                className="flex items-center bg-muted rounded-xl placeholder:text-muted-foreground/50 text-md px-2 py-2 mb-2"
+                asChild={true}
+              >
+                <div className="flex gap-1 items-center justify-start bg-muted rounded-xl placeholder:text-muted-foreground/50 text-md px-2 py-2 mb-2">
+                  <MagnifyingGlassIcon className="w-5 h-5 opacity-60" />
+                  <input
+                    className="w-full text-sm bg-inherit focus:ring-0 focus:outline-none"
+                    placeholder="Search token symbols"
+                    onChange={(e) => handleInputChange(e.target.value)}
+                    value={search}
+                  />
+                </div>
+              </CommandInput>
+              <div className="flex justify-start items-center gap-2 mb-2">
+                <button
+                  type="button"
+                  className={cn(
+                    "bg-color-paper-darker px-3 py-1 rounded-full text-xs hover:bg-primary hover:text-primary-foreground transition-all",
+                    {
+                      "bg-primary text-primary-foreground":
+                        searchRule === "all",
+                    },
+                  )}
+                  onClick={() => setSearchRule("all")}
+                >
+                  All
+                </button>
+                <button
+                  type="button"
+                  className={cn(
+                    "bg-color-paper-darker px-3 py-1 rounded-full text-xs hover:bg-primary hover:text-primary-foreground transition-all",
+                    {
+                      "bg-primary text-primary-foreground":
+                        searchRule === "collateral",
+                    },
+                  )}
+                  onClick={() => setSearchRule("collateral")}
+                >
+                  Collateral
+                </button>
+                <button
+                  type="button"
+                  className={cn(
+                    "bg-color-paper-darker px-3 py-1 rounded-full text-xs hover:bg-primary hover:text-primary-foreground transition-all",
+                    {
+                      "bg-primary text-primary-foreground":
+                        searchRule === "loan",
+                    },
+                  )}
+                  onClick={() => setSearchRule("loan")}
+                >
+                  Loan
+                </button>
+              </div>
+              {search && (
+                <span className="mb-2 opacity-80 text-xs">
+                  {filteredMarkets.length} results found for "{search}".
+                </span>
+              )}
+              <div className="w-full h-[1px] bg-muted mt-3 mb-1" />
+
               <CommandList
                 className="overflow-y-auto max-h-[60vh]"
                 onScroll={handleScroll}
@@ -151,7 +226,7 @@ export function MarketsDropdownMenu({
                     </CommandItem>
                   ))}
                   {!search &&
-                    displayedVaults.length < filteredVaults.length && (
+                    displayedVaults.length < filteredMarkets.length && (
                       <CommandItem
                         value=""
                         className="justify-center"
