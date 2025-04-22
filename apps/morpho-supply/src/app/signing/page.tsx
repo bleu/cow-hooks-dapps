@@ -14,11 +14,14 @@ import {
 import { BigNumber, type BigNumberish } from "ethers";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
+import type { MorphoSupplyFormData } from "#/contexts/form";
 import {
   useAuthorizeCowShedOnMorpho,
   useIsCowShedAuthorizedOnMorpho,
 } from "#/hooks/useAllowCowShedOnMorpho";
+import { encodeFormData } from "#/utils/hookEncoding";
 
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -36,6 +39,9 @@ export default function Page() {
   const handleTokenAllowance = useHandleTokenAllowance({
     spender: cowShedProxy,
   });
+
+  const { control } = useFormContext<MorphoSupplyFormData>();
+  const formData = useWatch({ control });
 
   const isCoWShedAuthorizedOnMorpho = useIsCowShedAuthorizedOnMorpho();
   const allowCowShedMorpho = useAuthorizeCowShedOnMorpho(
@@ -63,11 +69,13 @@ export default function Page() {
     const cowShedCall = await cowShedSignature(txs);
     if (!cowShedCall) throw new Error("Error signing hooks");
 
+    const encodedFormData = encodeFormData(formData as MorphoSupplyFormData);
+
     await submitHook({
       target: cowShed.getFactoryAddress(),
-      callData: cowShedCall,
+      callData: cowShedCall + encodedFormData,
     });
-  }, [cowShedSignature, submitHook, hookInfo, permitTxs, cowShed]);
+  }, [cowShedSignature, submitHook, hookInfo, permitTxs, cowShed, formData]);
 
   const permitCallback = useCallback(
     async (permit: {
