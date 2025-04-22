@@ -1,14 +1,11 @@
 "use client";
 
-import { formatNumber } from "@bleu.builders/ui";
 import * as Dialog from "@radix-ui/react-dialog";
-import { ArrowLeftIcon, ChevronDownIcon } from "@radix-ui/react-icons";
-import { Token } from "@uniswap/sdk-core";
+import { MagnifyingGlassIcon, UpdateIcon } from "@radix-ui/react-icons";
 import { useEffect, useMemo, useState } from "react";
-import { formatUnits } from "viem";
-import { TokenLogo } from "./TokenLogo";
-import { useIFrameContext } from "./context/iframe";
-import { hasPosition } from "./hooks/useMorphoMarkets";
+
+import { cn } from "@bleu.builders/ui";
+import { MorphoMarketCard } from "./morpho/MorphoMarketCard";
 import type { MorphoMarket } from "./types";
 import {
   Command,
@@ -25,16 +22,17 @@ const ITEMS_PER_PAGE = 20;
 interface MarketsDropdownMenuProps {
   onSelect: (market: MorphoMarket) => void;
   markets: MorphoMarket[];
-  selectedMarket?: MorphoMarket;
 }
 
 export function MarketsDropdownMenu({
   onSelect,
   markets,
-  selectedMarket,
 }: MarketsDropdownMenuProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [search, setSearch] = useState("");
+  const [searchRule, setSearchRule] = useState<"all" | "collateral" | "loan">(
+    "all",
+  );
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
@@ -53,26 +51,41 @@ export function MarketsDropdownMenu({
   }, [open]);
 
   // Filter markets based on search
-  const filteredVaults = useMemo(() => {
+  const filteredMarkets = useMemo(() => {
     if (!search) return markets;
     const searchLower = search.toLowerCase();
-    return markets.filter((market) =>
-      (market.collateralAsset.symbol + market.loanAsset.symbol)
-        .toLowerCase()
-        .includes(searchLower),
+
+    if (searchRule === "collateral")
+      return markets.filter((market) =>
+        market.collateralAsset.symbol.toLowerCase().includes(searchLower),
+      );
+
+    if (searchRule === "loan")
+      return markets.filter((market) =>
+        market.loanAsset.symbol.toLowerCase().includes(searchLower),
+      );
+
+    return markets.filter(
+      (market) =>
+        (market.collateralAsset.symbol + market.loanAsset.symbol)
+          .toLowerCase()
+          .includes(searchLower) ||
+        (market.loanAsset.symbol + market.collateralAsset.symbol)
+          .toLowerCase()
+          .includes(searchLower),
     );
-  }, [markets, search]);
+  }, [markets, search, searchRule]);
 
   const displayedVaults = useMemo(
-    () => filteredVaults.slice(0, displayCount),
-    [filteredVaults, displayCount],
+    () => filteredMarkets.slice(0, displayCount),
+    [filteredMarkets, displayCount],
   );
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const element = e.currentTarget;
     if (
       element.scrollHeight - element.scrollTop <= element.clientHeight + 100 &&
-      displayCount < filteredVaults.length &&
+      displayCount < filteredMarkets.length &&
       !isLoadingMore
     ) {
       setIsLoadingMore(true);
@@ -104,46 +117,18 @@ export function MarketsDropdownMenu({
     <div className="flex w-full flex-col items-center gap-2">
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <div className="flex flex-row gap-1 w-full justify-between">
-          <Dialog.Trigger
-            className="w-full flex p-2 justify-between rounded-xl space-x-1 items-center text-sm bg-muted shadow-sm text-foreground group hover:bg-primary hover:text-primary-foreground transition-all"
-            onClick={() => setOpen(true)}
-          >
-            {selectedMarket ? (
-              <div className="group rounded-md px-2 cursor-pointer flex flex-row gap-2 items-center justify-between">
-                <div className="flex gap-2">
-                  <span>Collateral:</span>
-                  <AssetLogo asset={selectedMarket.collateralAsset} />
-                  <span>{selectedMarket.collateralAsset.symbol}</span>
-                </div>
-                <div className="flex gap-2">
-                  <span>Loan:</span>
-                  <AssetLogo asset={selectedMarket.loanAsset} />
-                  <span>{selectedMarket.loanAsset.symbol}</span>
-                </div>
-                <div className="flex gap-2">
-                  <span>LLTV:</span>
-                  <span>
-                    {formatNumber(
-                      Number(selectedMarket.lltv.toString().slice(0, 3)) / 1000,
-                      1,
-                      "percent",
-                    )}
-                  </span>
-                </div>
-              </div>
-            ) : (
-              "Select a market"
-            )}
-            <ChevronDownIcon className="size-4" />
+          <Dialog.Trigger className="w-full flex justify-between items-center cursor-default">
+            <span className="font-bold text-lg">Choose Amounts</span>
+            <div className="flex gap-1 justify-center items-center cursor-pointer opacity-70 hover:opacity-90 transition-all">
+              <span className="text-sm underline">Change market</span>
+              <UpdateIcon className="w-3 h-3" />
+            </div>
           </Dialog.Trigger>
         </div>
         <Dialog.Portal>
-          <Dialog.Content className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] border p-[15px] w-screen h-screen bg-background border-none flex flex-col gap-2">
-            <div className="flex items-center gap-2">
-              <Dialog.Close className="cursor-pointer hover:opacity-50 transition-all">
-                <ArrowLeftIcon className="size-5" />
-              </Dialog.Close>
-              <Dialog.Title>Select a market</Dialog.Title>
+          <Dialog.Content className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] border w-screen h-screen bg-background border-none flex flex-col gap-4">
+            <div className="flex items-center gap-2 mx-4 mt-4">
+              <Dialog.Title>Select market</Dialog.Title>
             </div>
             <Command
               filter={(value: string, search: string) => {
@@ -152,14 +137,70 @@ export function MarketsDropdownMenu({
                 return Number(regex.test(value));
               }}
               value={search}
+              className="px-4"
             >
               <CommandInput
-                className="bg-muted rounded-xl placeholder:text-muted-foreground/50 text-md px-2 py-2 mb-5"
-                placeholder="Search token symbols"
-                onValueChange={handleInputChange}
-                value={search}
-              />
-              <div className="w-full h-[1px] bg-muted my-1" />
+                className="flex items-center bg-muted rounded-xl placeholder:text-muted-foreground/50 text-md px-2 py-2 mb-2"
+                asChild={true}
+              >
+                <div className="flex gap-1 items-center justify-start bg-muted rounded-xl placeholder:text-muted-foreground/50 text-md px-2 py-2 mb-2">
+                  <MagnifyingGlassIcon className="w-5 h-5 opacity-60" />
+                  <input
+                    className="w-full text-sm bg-inherit focus:ring-0 focus:outline-none"
+                    placeholder="Search token symbols"
+                    onChange={(e) => handleInputChange(e.target.value)}
+                    value={search}
+                  />
+                </div>
+              </CommandInput>
+              <div className="flex justify-start items-center gap-2 mb-2">
+                <button
+                  type="button"
+                  className={cn(
+                    "bg-color-paper-darker px-3 py-1 rounded-full text-xs hover:bg-primary hover:text-primary-foreground transition-all",
+                    {
+                      "bg-primary text-primary-foreground":
+                        searchRule === "all",
+                    },
+                  )}
+                  onClick={() => setSearchRule("all")}
+                >
+                  All
+                </button>
+                <button
+                  type="button"
+                  className={cn(
+                    "bg-color-paper-darker px-3 py-1 rounded-full text-xs hover:bg-primary hover:text-primary-foreground transition-all",
+                    {
+                      "bg-primary text-primary-foreground":
+                        searchRule === "collateral",
+                    },
+                  )}
+                  onClick={() => setSearchRule("collateral")}
+                >
+                  Collateral
+                </button>
+                <button
+                  type="button"
+                  className={cn(
+                    "bg-color-paper-darker px-3 py-1 rounded-full text-xs hover:bg-primary hover:text-primary-foreground transition-all",
+                    {
+                      "bg-primary text-primary-foreground":
+                        searchRule === "loan",
+                    },
+                  )}
+                  onClick={() => setSearchRule("loan")}
+                >
+                  Loan
+                </button>
+              </div>
+              {search && (
+                <span className="mb-2 opacity-80 text-xs">
+                  {filteredMarkets.length} results found for "{search}".
+                </span>
+              )}
+              <div className="w-full h-[1px] bg-muted mt-3 mb-1" />
+
               <CommandList
                 className="overflow-y-auto max-h-[60vh]"
                 onScroll={handleScroll}
@@ -179,61 +220,13 @@ export function MarketsDropdownMenu({
                         setOpen(false);
                         onSelect(market);
                       }}
-                      className="w-full hover:bg-color-paper-darkest hover:text-muted-foreground rounded-md px-2 cursor-pointer grid grid-cols-3"
+                      className="w-full"
                     >
-                      <div className="flex flex-col gap-1">
-                        <div className="flex gap-2">
-                          <AssetLogo asset={market.collateralAsset} />
-                          <span>{market.collateralAsset.symbol}</span>
-                        </div>
-                        {hasPosition(market.position) && (
-                          <span>
-                            {formatNumber(
-                              formatUnits(
-                                market.position.collateral,
-                                market.collateralAsset.decimals,
-                              ),
-                              4,
-                              "decimal",
-                              "standard",
-                              0.0001,
-                            )}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        <div className="flex gap-2">
-                          <AssetLogo asset={market.loanAsset} />
-                          <span>{market.loanAsset.symbol}</span>
-                        </div>
-                        {hasPosition(market.position) && (
-                          <span>
-                            {formatNumber(
-                              formatUnits(
-                                market.position.borrow,
-                                market.loanAsset.decimals,
-                              ),
-                              4,
-                              "decimal",
-                              "standard",
-                              0.0001,
-                            )}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex gap-2">
-                        <span>
-                          {formatNumber(
-                            Number(market.lltv.toString().slice(0, 3)) / 1000,
-                            1,
-                            "percent",
-                          )}
-                        </span>
-                      </div>
+                      <MorphoMarketCard market={market} />
                     </CommandItem>
                   ))}
                   {!search &&
-                    displayedVaults.length < filteredVaults.length && (
+                    displayedVaults.length < filteredMarkets.length && (
                       <CommandItem
                         value=""
                         className="justify-center"
@@ -248,36 +241,6 @@ export function MarketsDropdownMenu({
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-    </div>
-  );
-}
-
-interface AssetProps {
-  address: string;
-  decimals: number;
-  symbol: string;
-}
-
-export function AssetLogo({ asset }: { asset: AssetProps }) {
-  const { context } = useIFrameContext();
-
-  if (!context) return null;
-
-  return (
-    <div className="flex flex-row gap-1">
-      <TokenLogo
-        className="group-hover:bg-primary group-hover:text-primary-foreground"
-        width={20}
-        height={20}
-        token={
-          new Token(
-            context.chainId,
-            asset.address,
-            asset.decimals,
-            asset.symbol,
-          )
-        }
-      />
     </div>
   );
 }
