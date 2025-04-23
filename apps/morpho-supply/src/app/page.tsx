@@ -6,6 +6,7 @@ import {
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
+import Image from "next/image";
 import { useCallback, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { MarketForm } from "#/components/MarketForm";
@@ -68,6 +69,21 @@ export default function Page() {
       </div>
     );
   }
+
+  if (!context?.account)
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 max-w-72">
+        <Image
+          src="/assets/wallet.svg"
+          alt="Wallet icon"
+          width={45}
+          height={43}
+        />
+        <p className="font-medium text-center">
+          Please connect your wallet to start using Morpho Supply.
+        </p>
+      </div>
+    );
 
   if (!markets)
     return (

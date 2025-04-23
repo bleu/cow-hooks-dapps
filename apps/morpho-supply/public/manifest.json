@@ -11,8 +11,8 @@
   "theme_color": "#ffffff",
   "cow_hook_dapp": {
     "id": "8691670bc668abc4e0172cc8573dde013c4dc813c3ba253cfaa06613cd0a3eb9",
-    "name": "Morpho Supply",
-    "descriptionShort": "Add liquidity to any of the Morpho markets",
+    "name": "Morpho Lending",
+    "descriptionShort": "Supply, borrow, repay and withdraw on Morpho Protocol.",
     "description": "Easily increase your position in a Morpho market.",
     "version": "0.0.1",
     "website": "https://app.morpho.org/",
