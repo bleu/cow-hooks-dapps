@@ -80,6 +80,19 @@ export default function Page() {
       </div>
     );
 
+  if (
+    !context?.orderParams?.buyTokenAddress ||
+    !context?.orderParams?.sellTokenAddress ||
+    !context?.orderParams?.sellAmount ||
+    !context?.orderParams?.buyAmount
+  ) {
+    return (
+      <div className="w-full text-center mt-10 p-2">
+        <span>Please specify your swap order first</span>
+      </div>
+    );
+  }
+
   if (!markets)
     return (
       <div className="text-center mt-10 p-2">
