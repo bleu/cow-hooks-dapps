@@ -61,7 +61,7 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
   const liquidity = `$${formatNumber(market.liquidityUsd, 1)}`;
 
   return (
-    <div className="w-full flex justify-between rounded-2xl p-4 cursor-pointer bg-color-paper-darker hover:bg-color-paper-darkest hover:text-muted-foreground transition-all">
+    <div className="w-full flex justify-between rounded-2xl p-4 cursor-pointer bg-color-paper-darker hover:bg-color-paper-darker-hover  hover:text-muted-foreground transition-all">
       <div className="flex justify-between min-w-44">
         <div className="flex flex-col gap-1">
           <Label>Collateral</Label>
