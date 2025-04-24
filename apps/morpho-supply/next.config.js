@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 const moduleExports = {
   transpilePackages: ["@bleu/cow-hooks-ui"],
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
+      use: ["@svgr/webpack"],
+    });
+    return config;
+  },
   async headers() {
     return [
       {
