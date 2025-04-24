@@ -1,12 +1,12 @@
 "use client";
 
+import type { HookDappContextAdjusted, MorphoMarket } from "@bleu/cow-hooks-ui";
 import {
   MarketsDropdownMenu,
-  type MorphoMarket,
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import WalletIcon from "#/assets/wallet.svg";
 import { MarketForm } from "#/components/MarketForm";
@@ -21,7 +21,20 @@ export default function Page() {
   const { markets } = useMorphoContext();
 
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
-  const { context } = useIFrameContext();
+  const { context: iFrameContext } = useIFrameContext();
+  const [context, setContext] = useState<HookDappContextAdjusted | undefined>();
+
+  // Avoid reloading the page when orderParams becomes null (waiting for new quote)
+  useEffect(() => {
+    const newContext = iFrameContext?.orderParams
+      ? iFrameContext
+      : {
+          ...(iFrameContext as HookDappContextAdjusted),
+          orderParams: context?.orderParams ?? null,
+        };
+    if (JSON.stringify(newContext) !== JSON.stringify(context))
+      setContext(newContext);
+  }, [iFrameContext, context]);
 
   const loadHookInfo = useCallback(async () => {
     if (
@@ -80,19 +93,6 @@ export default function Page() {
       </div>
     );
 
-  if (
-    !context?.orderParams?.buyTokenAddress ||
-    !context?.orderParams?.sellTokenAddress ||
-    !context?.orderParams?.sellAmount ||
-    !context?.orderParams?.buyAmount
-  ) {
-    return (
-      <div className="w-full text-center mt-10 p-2">
-        <span>Please specify your swap order first</span>
-      </div>
-    );
-  }
-
   if (!markets)
     return (
       <div className="text-center mt-10 p-2">
@@ -107,6 +107,19 @@ export default function Page() {
         />
       </div>
     );
+
+  if (
+    !context?.orderParams?.buyTokenAddress ||
+    !context?.orderParams?.sellTokenAddress ||
+    !context?.orderParams?.sellAmount ||
+    !context?.orderParams?.buyAmount
+  ) {
+    return (
+      <div className="w-full text-center mt-10 p-2">
+        <span>Please specify your swap order first</span>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex flex-col py-1 px-4">
