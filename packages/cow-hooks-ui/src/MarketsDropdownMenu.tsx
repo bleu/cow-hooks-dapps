@@ -140,14 +140,14 @@ export function MarketsDropdownMenu({
               className="px-4"
             >
               <CommandInput
-                className="flex items-center bg-muted rounded-xl placeholder:text-muted-foreground/50 text-md px-2 py-2 mb-2"
+                className="flex items-center rounded-2xl mb-2 bg-color-paper-darker"
                 asChild={true}
               >
-                <div className="flex gap-1 items-center justify-start bg-muted rounded-xl placeholder:text-muted-foreground/50 text-md px-2 py-2 mb-2">
+                <div className="flex gap-2 items-center justify-start px-3 py-2.5 border border-transparent focus-within:border-solid focus-within:border-2 focus-within:border-color-primary">
                   <MagnifyingGlassIcon className="w-5 h-5 opacity-60" />
                   <input
-                    className="w-full text-sm bg-inherit focus:ring-0 focus:outline-none"
-                    placeholder="Search token symbols"
+                    className="w-full text-sm bg-transparent focus:ring-0 focus:outline-none placeholder:text-muted-foreground/50"
+                    placeholder="Search by asset or symbol"
                     onChange={(e) => handleInputChange(e.target.value)}
                     value={search}
                   />
