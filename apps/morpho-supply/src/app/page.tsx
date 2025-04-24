@@ -100,6 +100,7 @@ export default function Page() {
       <MarketsDropdownMenu
         onSelect={(market: MorphoMarket) => setValue("market", market)}
         markets={markets}
+        market={market}
       />
       {market && <MarketForm market={market} />}
     </div>

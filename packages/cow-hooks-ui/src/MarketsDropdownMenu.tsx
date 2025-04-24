@@ -22,13 +22,15 @@ const ITEMS_PER_PAGE = 20;
 interface MarketsDropdownMenuProps {
   onSelect: (market: MorphoMarket) => void;
   markets: MorphoMarket[];
+  market?: MorphoMarket;
 }
 
 export function MarketsDropdownMenu({
   onSelect,
+  market,
   markets,
 }: MarketsDropdownMenuProps) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(!market);
   const [search, setSearch] = useState("");
   const [searchRule, setSearchRule] = useState<"all" | "collateral" | "loan">(
     "all",
