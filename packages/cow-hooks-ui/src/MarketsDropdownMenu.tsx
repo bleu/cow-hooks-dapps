@@ -33,7 +33,7 @@ export function MarketsDropdownMenu({
   const [open, setOpen] = useState(!market);
   const [search, setSearch] = useState("");
   const [searchRule, setSearchRule] = useState<"all" | "collateral" | "loan">(
-    "all"
+    "all",
   );
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -62,12 +62,12 @@ export function MarketsDropdownMenu({
 
       if (searchRule === "collateral")
         return Number(
-          market.collateralAsset.symbol.toLowerCase().includes(searchLower)
+          market.collateralAsset.symbol.toLowerCase().includes(searchLower),
         );
 
       if (searchRule === "loan")
         return Number(
-          market.loanAsset.symbol.toLowerCase().includes(searchLower)
+          market.loanAsset.symbol.toLowerCase().includes(searchLower),
         );
 
       return Number(
@@ -76,10 +76,10 @@ export function MarketsDropdownMenu({
           .includes(searchLower) ||
           (market.loanAsset.symbol + market.collateralAsset.symbol)
             .toLowerCase()
-            .includes(searchLower)
+            .includes(searchLower),
       );
     },
-    [markets, searchRule]
+    [markets, searchRule],
   );
 
   // Filter markets based on search
@@ -89,7 +89,7 @@ export function MarketsDropdownMenu({
 
   const displayedVaults = useMemo(
     () => filteredMarkets.slice(0, displayCount),
-    [filteredMarkets, displayCount]
+    [filteredMarkets, displayCount],
   );
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -168,7 +168,7 @@ export function MarketsDropdownMenu({
                         {
                           "bg-primary text-primary-foreground":
                             searchRule === "all",
-                        }
+                        },
                       )}
                       onClick={() => setSearchRule("all")}
                     >
@@ -181,7 +181,7 @@ export function MarketsDropdownMenu({
                         {
                           "bg-primary text-primary-foreground":
                             searchRule === "collateral",
-                        }
+                        },
                       )}
                       onClick={() => setSearchRule("collateral")}
                     >
@@ -194,7 +194,7 @@ export function MarketsDropdownMenu({
                         {
                           "bg-primary text-primary-foreground":
                             searchRule === "loan",
-                        }
+                        },
                       )}
                       onClick={() => setSearchRule("loan")}
                     >
