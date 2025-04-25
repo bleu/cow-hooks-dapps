@@ -87,9 +87,10 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   }, [isMaxSupply, collateralBalanceFull, setValue]);
 
   const borrowAfter =
-    borrow &&
-    borrow +
-      (decimalsToBigInt(borrowAmount, market.loanAsset.decimals) ?? BigInt(0));
+    borrow !== undefined && borrowAmount
+      ? borrow +
+        (decimalsToBigInt(borrowAmount, market.loanAsset.decimals) ?? BigInt(0))
+      : undefined;
 
   const { formatted: borrowAfterFormatted, usd: borrowAfterUsd } =
     useFormatTokenAmount({
@@ -99,10 +100,11 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     });
 
   const collateralAfter =
-    collateral &&
-    collateral +
-      (decimalsToBigInt(supplyAmount, market.collateralAsset.decimals) ??
-        BigInt(0));
+    collateral !== undefined && supplyAmount
+      ? collateral +
+        (decimalsToBigInt(supplyAmount, market.collateralAsset.decimals) ??
+          BigInt(0))
+      : undefined;
   const { formatted: collateralAfterFormatted, usd: collateralAfterUsd } =
     useFormatTokenAmount({
       amount: collateralAfter,
