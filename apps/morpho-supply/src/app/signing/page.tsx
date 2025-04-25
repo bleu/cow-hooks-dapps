@@ -17,10 +17,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
-import {
-  useAuthorizeCowShedOnMorpho,
-  useIsCowShedAuthorizedOnMorpho,
-} from "#/hooks/useAllowCowShedOnMorpho";
+import { useMorphoContext } from "#/contexts/morpho";
+import { useAuthorizeCowShedOnMorpho } from "#/hooks/useAllowCowShedOnMorpho";
 import { encodeFormData } from "#/utils/hookEncoding";
 
 export default function Page() {
@@ -43,9 +41,9 @@ export default function Page() {
   const { control } = useFormContext<MorphoSupplyFormData>();
   const formData = useWatch({ control });
 
-  const isCoWShedAuthorizedOnMorpho = useIsCowShedAuthorizedOnMorpho();
+  const { isCowShedAuthorizedOnMorpho } = useMorphoContext();
   const allowCowShedMorpho = useAuthorizeCowShedOnMorpho(
-    isCoWShedAuthorizedOnMorpho,
+    isCowShedAuthorizedOnMorpho,
   );
 
   useEffect(() => {
@@ -117,7 +115,7 @@ export default function Page() {
         };
       }) || [];
 
-    const morphoAuthorization = isCoWShedAuthorizedOnMorpho
+    const morphoAuthorization = isCowShedAuthorizedOnMorpho
       ? []
       : [
           {
@@ -143,7 +141,7 @@ export default function Page() {
     permitCallback,
     cowShedCallback,
     allowCowShedMorpho,
-    isCoWShedAuthorizedOnMorpho,
+    isCowShedAuthorizedOnMorpho,
   ]);
 
   return (
