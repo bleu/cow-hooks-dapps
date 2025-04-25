@@ -54,7 +54,7 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
         market.collateralAsset.priceUsd)
     : undefined;
   const userLtv =
-    userHasPosition && userLtvFloat
+    userHasPosition && userLtvFloat !== undefined
       ? formatNumber(userLtvFloat, 1, "percent")
       : undefined;
 
@@ -64,19 +64,19 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
     <div className="w-full flex flex-col xsm:flex-row justify-between rounded-2xl p-4 cursor-pointer bg-color-paper-darker hover:bg-color-paper-darker-hover hover:text-muted-foreground transition-all">
       <div className="flex justify-between items-start w-full xsm:w-auto xsm:min-w-44">
         <div className="flex flex-col gap-1">
-          <Label>Collateral</Label>
+          <Label>Your Collateral</Label>
           {userCollateral && <span>{userCollateral}</span>}
           <TokenCard
             asset={market.collateralAsset}
-            className={cn({ "bg-inherit p-0": userHasPosition })}
+            className={cn({ "bg-inherit p-0 shadow-none": userHasPosition })}
           />
         </div>
         <div className="flex flex-col gap-1">
-          <Label>Loan</Label>
+          <Label>Your Loan</Label>
           {userBorrow && <span>{userBorrow}</span>}
           <TokenCard
             asset={market.loanAsset}
-            className={cn({ "bg-inherit p-0": userHasPosition })}
+            className={cn({ "bg-inherit p-0 shadow-none": userHasPosition })}
           />
         </div>
         {/* External link shown on mobile */}
@@ -99,7 +99,7 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
           <Label>Rate</Label>
           <span className="font-semibold text-sm">{rate}</span>
         </div>
-        {userLtv && userLtvFloat ? (
+        {userLtv !== undefined && userLtvFloat !== undefined ? (
           <div className="col-span-2 flex flex-col gap-1">
             <Label>Health</Label>
             <span className="font-semibold text-sm">

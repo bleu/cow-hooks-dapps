@@ -122,7 +122,7 @@ export default function Page() {
   }
 
   return (
-    <div className="w-full flex flex-col py-1 px-4">
+    <div className="w-full flex flex-col py-1">
       <MarketsDropdownMenu
         onSelect={(market: MorphoMarket) => setValue("market", market)}
         markets={markets}

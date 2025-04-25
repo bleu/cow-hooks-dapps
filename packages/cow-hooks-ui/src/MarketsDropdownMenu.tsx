@@ -120,7 +120,9 @@ export function MarketsDropdownMenu({
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <div className="flex flex-row gap-1 w-full justify-between">
           <Dialog.Trigger className="w-full flex justify-between items-center cursor-default">
-            <span className="font-bold text-lg">Choose Amounts</span>
+            <span className="font-bold text-sm xsm:text-lg">
+              Choose Amounts
+            </span>
             <div className="flex gap-1 justify-center items-center cursor-pointer opacity-70 hover:opacity-90 transition-all">
               <span className="text-sm underline">Change market</span>
               <UpdateIcon className="w-3 h-3" />
