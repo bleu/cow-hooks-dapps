@@ -95,8 +95,12 @@ export const AmountInput = ({
             autoComplete="off"
             className="outline-none font-semibold text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-left p-0 m-0 h-min border-none rounded-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none truncate"
             onKeyDown={(e) =>
-              ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
+              ["e", "E", "+", "-", "ArrowUp", "ArrowDown"].includes(e.key) &&
+              e.preventDefault()
             }
+            onWheel={(e: React.WheelEvent<HTMLInputElement>) => {
+              (e.target as HTMLInputElement).blur();
+            }}
             {...register(name, {
               setValueAs: handleSetValue,
               onChange: handleDisableMaxOnUserInput,
