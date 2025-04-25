@@ -61,8 +61,8 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
   const liquidity = `$${formatNumber(market.liquidityUsd, 1)}`;
 
   return (
-    <div className="w-full flex justify-between rounded-2xl p-4 cursor-pointer bg-color-paper-darker hover:bg-color-paper-darker-hover  hover:text-muted-foreground transition-all">
-      <div className="flex justify-between min-w-44">
+    <div className="w-full flex flex-col xsm:flex-row justify-between rounded-2xl p-4 cursor-pointer bg-color-paper-darker hover:bg-color-paper-darker-hover hover:text-muted-foreground transition-all">
+      <div className="flex justify-between items-start w-full xsm:w-auto xsm:min-w-44">
         <div className="flex flex-col gap-1">
           <Label>Collateral</Label>
           {userCollateral && <span>{userCollateral}</span>}
@@ -79,9 +79,22 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
             className={cn({ "bg-inherit p-0": userHasPosition })}
           />
         </div>
+        {/* External link shown on mobile */}
+        <div className="block xsm:hidden">
+          <Link
+            href={`https://app.morpho.org/${market.oracle.chain.network}/market/${market.uniqueKey}`}
+            target="_blank"
+            title="Market details"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="h-full flex items-center justify-center ml-2">
+              <ExternalLinkIcon className="size-4 shrink-0 bg-inherit opacity-70 hover:opacity-100 transition-all" />
+            </div>
+          </Link>
+        </div>
       </div>
-      <div className="col-span-1 w-[1px] h-inherit bg-color-text-paper opacity-20 mx-3" />
-      <div className="w-full grid grid-cols-3">
+      <div className="hidden xsm:block col-span-1 w-[1px] h-inherit bg-color-text-paper opacity-20 mx-3" />
+      <div className="w-full grid grid-cols-3 gap-4 mt-4 xsm:mt-0">
         <div className="flex flex-col gap-1">
           <Label>Rate</Label>
           <span className="font-semibold text-sm">{rate}</span>
@@ -107,16 +120,18 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
           </>
         )}
       </div>
-      <Link
-        href={`https://app.morpho.org/${market.oracle.chain.network}/market/${market.uniqueKey}`}
-        target="_blank"
-        title="Market details"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="h-full flex items-center justify-center ml-2">
-          <ExternalLinkIcon className="size-4 shrink-0 bg-inherit opacity-70 hover:opacity-100 transition-all" />
-        </div>
-      </Link>
+      <div className="hidden xsm:block">
+        <Link
+          href={`https://app.morpho.org/${market.oracle.chain.network}/market/${market.uniqueKey}`}
+          target="_blank"
+          title="Market details"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="h-full flex items-center justify-center ml-2">
+            <ExternalLinkIcon className="size-4 shrink-0 bg-inherit opacity-70 hover:opacity-100 transition-all" />
+          </div>
+        </Link>
+      </div>
     </div>
   );
 }
