@@ -76,6 +76,7 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
   //@ts-ignore
   const stateDiff = context?.stateDiff;
 
+  // convert tenderly stateDiff format to viem stateOverride
   const stateOverride = useMemo(() => {
     const addressGroups: Record<
       string,
