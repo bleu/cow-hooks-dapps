@@ -1,5 +1,6 @@
 import { BigNumber } from "ethers";
 import { parseUnits } from "viem";
+import { formatTokenAmount } from "./formatTokenAmout";
 
 export function decimalsToBigInt(
   amount: string | undefined,
@@ -7,5 +8,10 @@ export function decimalsToBigInt(
 ) {
   if (amount === undefined || decimals === undefined) return;
 
-  return BigNumber.from(parseUnits(amount.toString(), decimals)).toBigInt();
+  return BigNumber.from(
+    parseUnits(
+      formatTokenAmount(amount.toString(), { compact: true }),
+      decimals,
+    ),
+  ).toBigInt();
 }

@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { parseUnits } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
+import { formatTokenAmount } from "#/utils/formatTokenAmout";
 import { useBorrowReallocation } from "./useBorrowReallocation";
 
 export const useMaxBorrowableAmount = () => {
@@ -20,7 +21,10 @@ export const useMaxBorrowableAmount = () => {
   const supplyBigInt =
     market && supplyAmount
       ? BigNumber.from(
-          parseUnits(supplyAmount.toString(), market.collateralAsset.decimals),
+          parseUnits(
+            formatTokenAmount(supplyAmount, { compact: true }),
+            market.collateralAsset.decimals,
+          ),
         ).toBigInt()
       : BigInt(0);
 

@@ -27,12 +27,16 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   });
 
   const fiatSupplyAmount = supplyAmount
-    ? `~${formatNumber(Number(supplyAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
-    : "~$0.0";
+    ? Number(supplyAmount) * market.collateralAsset.priceUsd < 0.01
+      ? "≈ $< 0.01"
+      : `≈ ${formatNumber(Number(supplyAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
+    : "";
 
   const fiatBorrowAmount = borrowAmount
-    ? `~${formatNumber(Number(borrowAmount) * market.loanAsset.priceUsd, 2, "currency", "standard")}`
-    : "~$0.0";
+    ? Number(borrowAmount) * market.loanAsset.priceUsd < 0.01
+      ? "≈ $< 0.01"
+      : `≈ ${formatNumber(Number(borrowAmount) * market.loanAsset.priceUsd, 2, "currency", "standard")}`
+    : "";
 
   const { userBalance: collateralBalance, tokenDecimals: collateralDecimals } =
     useReadTokenContract({
