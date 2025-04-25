@@ -3,8 +3,13 @@ import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { gql } from "graphql-request";
 import useSWR from "swr";
 import type { Address, PublicClient } from "viem";
-import type { MarketPosition, MorphoMarket } from "../types";
+import type {
+  MarketPosition,
+  MorphoMarket,
+  //  StateDiff
+} from "../types";
 import { readOnchainMorphoMarkets } from "../utils/readOnchainMorphoMarkets";
+// import { useMemo } from "react";
 
 interface IQuery {
   markets: {
@@ -84,10 +89,43 @@ interface IGetPoolsWhere {
 export function useMorphoMarkets(
   userAddress: Address | undefined,
   publicClient: PublicClient | undefined,
+  // stateDiff?: StateDiff[],
   chainId?: SupportedChainId,
   where?: IGetPoolsWhere,
   orderBy?: string,
 ) {
+  // const stateOverride = useMemo(() => {
+  //   // Create an object to group by address
+  //   const addressGroups: Record<
+  //     string,
+  //     { slot: `0x${string}`; value: `0x${string}` }[]
+  //   > = {};
+
+  //   // Populate the groups
+  //   for (const diff of stateDiff ?? []) {
+  //     const address = diff.address as Address;
+
+  //     // Initialize the array if it doesn't exist yet
+  //     if (!addressGroups[address]) {
+  //       addressGroups[address] = [];
+  //     }
+
+  //     // Add all raw diffs to this address's array
+  //     for (const rawDiff of diff.raw) {
+  //       addressGroups[address].push({
+  //         slot: rawDiff.key as `0x${string}`,
+  //         value: rawDiff.dirty as `0x${string}`,
+  //       });
+  //     }
+  //   }
+
+  //   // Convert the grouped object back to an array
+  //   return Object.entries(addressGroups).map(([address, stateDiff]) => ({
+  //     address: address as Address,
+  //     stateDiff,
+  //   }));
+  // }, [stateDiff]);
+
   return useSWR<MorphoMarket[]>(
     [where, chainId, userAddress],
     async ([where, chainId, userAddress]): Promise<MorphoMarket[]> => {
@@ -106,12 +144,18 @@ export function useMorphoMarkets(
           OrderDirection: "Desc",
         })
       ).markets.items.filter((market) => market.collateralAsset !== null);
-
-      const marketsOnchainInfo = await readOnchainMorphoMarkets(
+      // console.log("here1");
+      // console.log({ stateOverride });
+      let marketsOnchainInfo = [];
+      marketsOnchainInfo = await readOnchainMorphoMarkets(
         userAddress as Address,
         gqlMarkets as MorphoMarket[],
         publicClient,
+        // stateOverride
       );
+
+      // console.log("here2");
+      // console.log({ marketsOnchainInfo });
 
       // merge onchain info into markets
       const markets = gqlMarkets

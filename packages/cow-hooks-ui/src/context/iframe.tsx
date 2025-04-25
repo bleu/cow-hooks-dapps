@@ -21,6 +21,7 @@ import type { Signer } from "ethers";
 import type { Address, PublicClient } from "viem";
 import type { HookDappContextAdjusted, IHooksInfo } from "../types";
 import { publicClientMapping } from "../utils/clients";
+import { getPublicClientWithStateOverride } from "../utils/getPublicClientWithStateOverride";
 
 type IFrameContextType = {
   context?: HookDappContextAdjusted;
@@ -72,10 +73,43 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
     return cowShed.proxyOf(context.account);
   }, [context?.account, cowShed]) as Address | undefined;
 
+  //@ts-ignore
+  const stateDiff = context?.stateDiff;
+
+  const stateOverride = useMemo(() => {
+    const addressGroups: Record<
+      string,
+      { slot: `0x${string}`; value: `0x${string}` }[]
+    > = {};
+
+    for (const diff of stateDiff ?? []) {
+      const address = diff.address as Address;
+
+      if (!addressGroups[address]) {
+        addressGroups[address] = [];
+      }
+
+      for (const rawDiff of diff.raw) {
+        addressGroups[address].push({
+          slot: rawDiff.key as `0x${string}`,
+          value: rawDiff.dirty as `0x${string}`,
+        });
+      }
+    }
+
+    return Object.entries(addressGroups).map(([address, stateDiff]) => ({
+      address: address as Address,
+      stateDiff,
+    }));
+  }, [stateDiff]);
+
   const publicClient = useMemo(() => {
     if (!context?.chainId) return;
-    return publicClientMapping[context.chainId];
-  }, [context?.chainId]);
+    return getPublicClientWithStateOverride(
+      publicClientMapping[context.chainId],
+      stateOverride,
+    );
+  }, [context?.chainId, stateOverride]);
 
   useEffect(() => {
     const newTheme = context?.isDarkMode ? "dark" : "light";
