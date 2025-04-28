@@ -45,7 +45,7 @@ export const AmountInput = ({
   const values = useWatch({ control });
 
   const isMaxValue = values[maxName] as boolean;
-  const value = values[name] as string;
+  const value = values[name];
 
   const error = errors[name] as FieldError | undefined;
   const errorMessage = error?.message;

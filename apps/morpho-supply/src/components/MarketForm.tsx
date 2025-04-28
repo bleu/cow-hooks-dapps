@@ -79,14 +79,14 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   useEffect(() => {
     if (isMaxBorrow && maxBorrowableFull) {
       const newBorrow = maxBorrowableFull;
-      setValue("borrowAmount", newBorrow);
+      setValue("borrowAmount", Number(newBorrow));
     }
   }, [isMaxBorrow, maxBorrowableFull, setValue]);
 
   useEffect(() => {
     if (isMaxSupply && collateralBalanceFull) {
       const newSupply = collateralBalanceFull;
-      setValue("supplyAmount", newSupply);
+      setValue("supplyAmount", Number(newSupply));
     }
   }, [isMaxSupply, collateralBalanceFull, setValue]);
 
