@@ -45,16 +45,17 @@ export function decodeFormData(
 
   if (!market) return;
 
-  const supplyAmount = formatUnits(
-    supplyBigInt,
-    market.collateralAsset.decimals,
+  const supplyAmount = Number(
+    formatUnits(supplyBigInt, market.collateralAsset.decimals),
   );
-  const borrowAmount = formatUnits(borrowBigInt, market.loanAsset.decimals);
+  const borrowAmount = Number(
+    formatUnits(borrowBigInt, market.loanAsset.decimals),
+  );
 
   return {
     market,
-    supplyAmount,
-    borrowAmount,
+    supplyAmount: supplyAmount ?? undefined,
+    borrowAmount: borrowAmount ?? undefined,
     isMaxSupply,
     isMaxBorrow,
   } as MorphoSupplyFormData;
