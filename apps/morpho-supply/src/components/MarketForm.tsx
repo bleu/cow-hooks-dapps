@@ -27,12 +27,16 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   });
 
   const fiatSupplyAmount = supplyAmount
-    ? `~${formatNumber(Number(supplyAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
-    : "~$0.0";
+    ? Number(supplyAmount) * market.collateralAsset.priceUsd < 0.01
+      ? "≈ $< 0.01"
+      : `≈ ${formatNumber(Number(supplyAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
+    : "";
 
   const fiatBorrowAmount = borrowAmount
-    ? `~${formatNumber(Number(borrowAmount) * market.loanAsset.priceUsd, 2, "currency", "standard")}`
-    : "~$0.0";
+    ? Number(borrowAmount) * market.loanAsset.priceUsd < 0.01
+      ? "≈ $< 0.01"
+      : `≈ ${formatNumber(Number(borrowAmount) * market.loanAsset.priceUsd, 2, "currency", "standard")}`
+    : "";
 
   const { userBalance: collateralBalance, tokenDecimals: collateralDecimals } =
     useReadTokenContract({
@@ -75,21 +79,22 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   useEffect(() => {
     if (isMaxBorrow && maxBorrowableFull) {
       const newBorrow = maxBorrowableFull;
-      setValue("borrowAmount", newBorrow);
+      setValue("borrowAmount", Number(newBorrow));
     }
   }, [isMaxBorrow, maxBorrowableFull, setValue]);
 
   useEffect(() => {
     if (isMaxSupply && collateralBalanceFull) {
       const newSupply = collateralBalanceFull;
-      setValue("supplyAmount", newSupply);
+      setValue("supplyAmount", Number(newSupply));
     }
   }, [isMaxSupply, collateralBalanceFull, setValue]);
 
   const borrowAfter =
-    borrow &&
-    borrow +
-      (decimalsToBigInt(borrowAmount, market.loanAsset.decimals) ?? BigInt(0));
+    borrow !== undefined && borrowAmount
+      ? borrow +
+        (decimalsToBigInt(borrowAmount, market.loanAsset.decimals) ?? BigInt(0))
+      : undefined;
 
   const { formatted: borrowAfterFormatted, usd: borrowAfterUsd } =
     useFormatTokenAmount({
@@ -99,10 +104,11 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     });
 
   const collateralAfter =
-    collateral &&
-    collateral +
-      (decimalsToBigInt(supplyAmount, market.collateralAsset.decimals) ??
-        BigInt(0));
+    collateral !== undefined && supplyAmount
+      ? collateral +
+        (decimalsToBigInt(supplyAmount, market.collateralAsset.decimals) ??
+          BigInt(0))
+      : undefined;
   const { formatted: collateralAfterFormatted, usd: collateralAfterUsd } =
     useFormatTokenAmount({
       amount: collateralAfter,

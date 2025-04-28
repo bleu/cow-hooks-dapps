@@ -27,7 +27,8 @@ div[data-rk] {
     --cow-color-secondary: 0 66 147; /* #004293 */
     --cow-color-background: 236 241 248; /* #ecf1f8 */
     --cow-color-paper: 255 255 255; /* #ffffff */
-    --cow-color-paper-darker: 242 242 242; /* hsla(0, 0%, 95%, 1) */
+    --cow-color-paper-darker: rgba(242, 242, 242, 1); /* hsla(0, 0%, 95%, 1) */
+    --cow-color-paper-darker-hover: 231 236 244; /* hsla(213, 100%, 95%, 1) */
     --cow-color-paper-darkest: 217 217 217; /* hsla(0, 0%, 85%, 1) */
     --cow-color-text: 0 35 78; /* #00234e */
     --cow-color-text-paper: 0 35 78; /* #00234e */
@@ -105,7 +106,8 @@ div[data-rk] {
     --cow-color-secondary: 101 217 255; /* #65d9ff */
     --cow-color-background: 7 22 45; /* #07162d */
     --cow-color-paper: 24 25 59; /* #18193b */
-    --cow-color-paper-darker: 15 16 38; /* hsla(238, 42%, 9%, 1) */
+    --cow-color-paper-darker: rgba(15, 16, 38, 0.6); /* hsla(238, 42%, 9%, 0.6) */
+    --cow-color-paper-darker-hover: 15 16 38; /* hsla(238, 42%, 9%, 1) */
     --cow-color-paper-darkest: 10 10 25; /* hsla(238, 42%, 6%, 1) */
     --cow-color-text: 222 227 230; /* #dee3e6 */
     --cow-color-text-paper: 222 227 230; /* #dee3e6 */

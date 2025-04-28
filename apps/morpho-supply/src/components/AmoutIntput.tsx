@@ -45,7 +45,7 @@ export const AmountInput = ({
   const values = useWatch({ control });
 
   const isMaxValue = values[maxName] as boolean;
-  const value = values[name] as string;
+  const value = values[name];
 
   const error = errors[name] as FieldError | undefined;
   const errorMessage = error?.message;
@@ -77,7 +77,7 @@ export const AmountInput = ({
       <div
         className={cn(
           "flex flex-col gap-1 w-full min-h-24 pt-4 pb-1 px-6 bg-color-paper-darker rounded-xl items-start",
-          { "bg-color-paper-darkest": value },
+          { "bg-color-paper-darker-hover": value },
         )}
       >
         {label && (
@@ -95,20 +95,26 @@ export const AmountInput = ({
             autoComplete="off"
             className="outline-none font-semibold text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-left p-0 m-0 h-min border-none rounded-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none truncate"
             onKeyDown={(e) =>
-              ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
+              ["e", "E", "+", "-", "ArrowUp", "ArrowDown"].includes(e.key) &&
+              e.preventDefault()
             }
+            onWheel={(e: React.WheelEvent<HTMLInputElement>) => {
+              (e.target as HTMLInputElement).blur();
+            }}
             {...register(name, {
               setValueAs: handleSetValue,
               onChange: handleDisableMaxOnUserInput,
             })}
           />
-          <div className="rounded-xl text-color-text-paper bg-color-paper cursor-default">
+          <div className="rounded-full text-color-text-paper bg-color-paper cursor-default">
             {token && (
-              <div className="w-fit py-2 px-4 flex items-center justify-center gap-2">
+              <div className="w-fit py-1 px-2 flex items-center justify-center gap-2">
                 <div className="w-6 h-6">
                   <TokenLogo token={token} height={24} width={24} alt="" />
                 </div>
-                <span className="m-0 p-0 min-h-fit">{token?.symbol}</span>
+                <span className="m-0 p-0 min-h-fit text-lg">
+                  {token?.symbol}
+                </span>
               </div>
             )}
           </div>

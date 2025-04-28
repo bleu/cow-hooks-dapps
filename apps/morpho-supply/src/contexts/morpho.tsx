@@ -7,9 +7,11 @@ import {
   useIFrameContext,
   useMorphoMarkets,
 } from "@bleu/cow-hooks-ui";
+import { useIsCowShedAuthorizedOnMorpho } from "#/hooks/useAllowCowShedOnMorpho";
 
 export interface MorphoContextData {
   markets: MorphoMarket[] | undefined;
+  isCowShedAuthorizedOnMorpho: boolean | undefined;
 }
 
 // Create the context with a default empty value
@@ -28,9 +30,12 @@ export function MorphoContextProvider({ children }: PropsWithChildren) {
     context?.chainId,
   );
 
+  const isCowShedAuthorizedOnMorpho = useIsCowShedAuthorizedOnMorpho();
+
   // Create the value object to be provided by the context
   const contextValue: MorphoContextData = {
     markets,
+    isCowShedAuthorizedOnMorpho,
   };
 
   return (

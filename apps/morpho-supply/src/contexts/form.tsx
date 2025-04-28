@@ -10,8 +10,8 @@ import { useGetHookInfo } from "#/hooks/useGetHookInfo";
 
 export interface MorphoSupplyFormData {
   market: MorphoMarket;
-  supplyAmount: string;
-  borrowAmount: string;
+  supplyAmount: number;
+  borrowAmount: number;
   isMaxSupply: boolean;
   isMaxBorrow: boolean;
 }

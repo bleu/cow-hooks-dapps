@@ -16,11 +16,13 @@ export const useMaxBorrowableAmount = () => {
 
   const marketBorrowLimit =
     market && maxBorrowReallocation && market.liquidity + maxBorrowReallocation;
-
   const supplyBigInt =
     market && supplyAmount
       ? BigNumber.from(
-          parseUnits(supplyAmount.toString(), market.collateralAsset.decimals),
+          parseUnits(
+            supplyAmount.toFixed(market.collateralAsset.decimals),
+            market.collateralAsset.decimals,
+          ),
         ).toBigInt()
       : BigInt(0);
 
