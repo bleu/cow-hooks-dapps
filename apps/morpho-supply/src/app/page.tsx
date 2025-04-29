@@ -1,11 +1,5 @@
 "use client";
 
-import {
-  TabsContent,
-  TabsList,
-  TabsRoot,
-  TabsTrigger,
-} from "@bleu.builders/ui";
 import type { HookDappContextAdjusted, MorphoMarket } from "@bleu/cow-hooks-ui";
 import {
   MarketsDropdownMenu,
@@ -15,26 +9,10 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import WalletIcon from "#/assets/wallet.svg";
-import { MarketForm } from "#/components/MarketForm";
+import { MarketFormContainer } from "#/components/MarketFormContainer";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useMorphoContext } from "#/contexts/morpho";
 import { decodeFormData } from "#/utils/hookEncoding";
-
-enum FormTabs {
-  AddBorrow = "add-borrow",
-  RepayWithdraw = "repay-withdraw",
-}
-
-const FORM_TABS = [
-  {
-    value: FormTabs.AddBorrow,
-    label: "Add/Borrow",
-  },
-  {
-    value: FormTabs.RepayWithdraw,
-    label: "Repay/Withdraw",
-  },
-];
 
 export default function Page() {
   const { control, setValue } = useFormContext<MorphoSupplyFormData>();
@@ -150,29 +128,7 @@ export default function Page() {
         markets={markets}
         market={market}
       />
-      <TabsRoot defaultValue={FormTabs.AddBorrow}>
-        <TabsList className="w-full mt-6 px-3">
-          {FORM_TABS.map((tab) => (
-            <TabsTrigger
-              key={tab.value}
-              className="flex-1 data-[state=active]:bg-color-primary data-[state=active]:text-color-paper data-[state=active]:opacity-100 opacity-60 font-semibold rounded-2xl h-10"
-              value={tab.value}
-            >
-              {tab.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-        {market && (
-          <>
-            <TabsContent value={FormTabs.AddBorrow}>
-              <MarketForm market={market} />
-            </TabsContent>
-            <TabsContent value={FormTabs.RepayWithdraw}>
-              <MarketForm market={market} />
-            </TabsContent>
-          </>
-        )}
-      </TabsRoot>
+      {market && <MarketFormContainer market={market} />}
     </div>
   );
 }

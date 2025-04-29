@@ -11,31 +11,36 @@ import {
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { useEffect, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
+import { InputFieldName, MaxFieldName } from "#/constants/forms";
 import type { MorphoSupplyFormData } from "#/contexts/form";
-import { useDynamicBorrow } from "#/hooks/useDynamicBorrow";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { useMaxBorrowableAmount } from "#/hooks/useMaxBorrowableAmount";
 import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
 import { AmountInput } from "./AmoutIntput";
 
-export function MarketForm({ market }: { market: MorphoMarket }) {
+export function RepayWithdrawMarketForm({
+  market,
+  dynamicBorrow,
+}: { market: MorphoMarket; dynamicBorrow?: bigint }) {
   const { context } = useIFrameContext();
 
   const { control, setValue } = useFormContext<MorphoSupplyFormData>();
-  const { supplyAmount, borrowAmount, isMaxBorrow, isMaxSupply } = useWatch({
+  const { repayAmount, withdrawAmount, isMaxRepay, isMaxWithdraw } = useWatch({
     control,
   });
 
-  const fiatSupplyAmount = supplyAmount
-    ? Number(supplyAmount) * market.collateralAsset.priceUsd < 0.01
+  // TODO: MORPHO-6, MORPHO-35 Handle fields logics and integrate
+
+  const fiatRepayAmount = repayAmount
+    ? Number(repayAmount) * market.collateralAsset.priceUsd < 0.01
       ? "≈ $< 0.01"
-      : `≈ ${formatNumber(Number(supplyAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
+      : `≈ ${formatNumber(Number(repayAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
     : "";
 
-  const fiatBorrowAmount = borrowAmount
-    ? Number(borrowAmount) * market.loanAsset.priceUsd < 0.01
+  const fiatWithdrawAmount = withdrawAmount
+    ? Number(withdrawAmount) * market.loanAsset.priceUsd < 0.01
       ? "≈ $< 0.01"
-      : `≈ ${formatNumber(Number(borrowAmount) * market.loanAsset.priceUsd, 2, "currency", "standard")}`
+      : `≈ ${formatNumber(Number(withdrawAmount) * market.loanAsset.priceUsd, 2, "currency", "standard")}`
     : "";
 
   const { userBalance: collateralBalance, tokenDecimals: collateralDecimals } =
@@ -44,8 +49,6 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     });
 
   const { collateral } = market.position;
-
-  const borrow = useDynamicBorrow({ market });
 
   const {
     fullDecimals: collateralBalanceFull,
@@ -63,7 +66,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     });
 
   const { formatted: formattedBorrow, usd: borrowUsd } = useFormatTokenAmount({
-    amount: borrow,
+    amount: dynamicBorrow,
     decimals: market.loanAsset.decimals,
     priceUsd: market.loanAsset.priceUsd,
   });
@@ -77,23 +80,24 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     });
 
   useEffect(() => {
-    if (isMaxBorrow && maxBorrowableFull) {
+    if (isMaxWithdraw && maxBorrowableFull) {
       const newBorrow = maxBorrowableFull;
-      setValue("borrowAmount", Number(newBorrow));
+      setValue("withdrawAmount", Number(newBorrow));
     }
-  }, [isMaxBorrow, maxBorrowableFull, setValue]);
+  }, [isMaxWithdraw, maxBorrowableFull, setValue]);
 
   useEffect(() => {
-    if (isMaxSupply && collateralBalanceFull) {
+    if (isMaxRepay && collateralBalanceFull) {
       const newSupply = collateralBalanceFull;
-      setValue("supplyAmount", Number(newSupply));
+      setValue("repayAmount", Number(newSupply));
     }
-  }, [isMaxSupply, collateralBalanceFull, setValue]);
+  }, [isMaxRepay, collateralBalanceFull, setValue]);
 
   const borrowAfter =
-    borrow !== undefined && borrowAmount
-      ? borrow +
-        (decimalsToBigInt(borrowAmount, market.loanAsset.decimals) ?? BigInt(0))
+    dynamicBorrow !== undefined && withdrawAmount
+      ? dynamicBorrow +
+        (decimalsToBigInt(withdrawAmount, market.loanAsset.decimals) ??
+          BigInt(0))
       : undefined;
 
   const { formatted: borrowAfterFormatted, usd: borrowAfterUsd } =
@@ -104,9 +108,9 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     });
 
   const collateralAfter =
-    collateral !== undefined && supplyAmount
+    collateral !== undefined && repayAmount
       ? collateral +
-        (decimalsToBigInt(supplyAmount, market.collateralAsset.decimals) ??
+        (decimalsToBigInt(repayAmount, market.collateralAsset.decimals) ??
           BigInt(0))
       : undefined;
   const { formatted: collateralAfterFormatted, usd: collateralAfterUsd } =
@@ -133,7 +137,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   );
 
   const supplyAmountBigInt = decimalsToBigInt(
-    supplyAmount,
+    repayAmount,
     market.collateralAsset.decimals,
   );
   const isInsufficientBalance = Boolean(
@@ -143,7 +147,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   );
 
   const borrowAmountBigInt = decimalsToBigInt(
-    borrowAmount,
+    withdrawAmount,
     market.loanAsset.decimals,
   );
   const isInsufficientPosition = Boolean(
@@ -158,8 +162,8 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
 
     if (isInsufficientPosition) return <span>Insufficient Collateral</span>;
 
-    if (!supplyAmount && !borrowAmount)
-      return <span>Enter supply or borrow</span>;
+    if (!repayAmount && !withdrawAmount)
+      return <span>Enter repay or withdraw</span>;
 
     if (context?.hookToEdit && context?.isPreHook)
       return <span>Update Pre-hook</span>;
@@ -175,8 +179,8 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
     isInsufficientBalance,
     isInsufficientPosition,
     market.collateralAsset.symbol,
-    supplyAmount,
-    borrowAmount,
+    repayAmount,
+    withdrawAmount,
   ]);
 
   if (!context) return null;
@@ -184,31 +188,31 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
   return (
     <div className="flex flex-col w-full gap-4 mt-4">
       <AmountInput
-        name="supplyAmount"
-        label="Supply Collateral"
-        maxName="isMaxSupply"
+        name={InputFieldName.RepayAmount}
+        label="Repay"
+        maxName={MaxFieldName.IsMaxRepay}
         asset={market.collateralAsset}
         chainId={market.oracle.chain.id}
         formattedBalance={formattedCollateralBalance}
         floatBalance={collateralBalanceFull}
-        fiatBalance={fiatSupplyAmount}
+        fiatBalance={fiatRepayAmount}
       />
       <AmountInput
-        name="borrowAmount"
-        label="Borrow"
-        maxName="isMaxBorrow"
+        name={InputFieldName.WithdrawAmount}
+        label="Withdraw Collateral"
+        maxName={MaxFieldName.IsMaxWithdraw}
         asset={market.loanAsset}
         chainId={market.oracle.chain.id}
         formattedBalance={maxBorrowableFormatted}
         floatBalance={maxBorrowableFull ?? 0.0}
-        fiatBalance={fiatBorrowAmount}
+        fiatBalance={fiatWithdrawAmount}
       />
       <div className="flex flex-col gap-2 w-full min-h-24 pt-4 pb-1 px-6 bg-color-paper-darker rounded-xl items-start">
         <span className="opacity-60 text-sm mb-[-8px] font-medium">
           Your collateral position ({market.collateralAsset.symbol})
         </span>
         <div className="flex items-center gap-2">
-          {(supplyAmount || borrowAmount) && (
+          {(repayAmount || withdrawAmount) && (
             <>
               <span className="opacity-70 font-semibold">
                 {formattedCollateral}
@@ -222,7 +226,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
           Your loan position ({market.loanAsset.symbol})
         </span>
         <div className="flex items-center gap-2">
-          {(supplyAmount || borrowAmount) && (
+          {(repayAmount || withdrawAmount) && (
             <>
               <span className="opacity-70 font-semibold">
                 {formattedBorrow}
@@ -236,7 +240,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
           LTV / Liquidation LTV
         </span>
         <div className="flex items-center gap-2">
-          {(supplyAmount || borrowAmount) && (
+          {(repayAmount || withdrawAmount) && (
             <>
               <span className="opacity-70 font-semibold">{ltvBefore}</span>
               <ArrowRightIcon className="w-5 h-5 opacity-70" />
@@ -254,7 +258,7 @@ export function MarketForm({ market }: { market: MorphoMarket }) {
         disabled={
           isInsufficientBalance ||
           isInsufficientPosition ||
-          (!supplyAmount && !borrowAmount)
+          (!repayAmount && !withdrawAmount)
         }
       >
         {buttonMessage}

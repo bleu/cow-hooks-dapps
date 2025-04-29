@@ -1,0 +1,67 @@
+import {
+  TabsContent,
+  TabsList,
+  TabsRoot,
+  TabsTrigger,
+} from "@bleu.builders/ui";
+import { type MorphoMarket, hasPosition } from "@bleu/cow-hooks-ui";
+import { useFormContext } from "react-hook-form";
+import { FORM_TABS, FormTabs, type OperationType } from "#/constants/forms";
+import type { MorphoSupplyFormData } from "#/contexts/form";
+import { useDynamicBorrow } from "#/hooks/useDynamicBorrow";
+import { RepayWithdrawMarketForm } from "./RepayWithdrawMarketForm";
+import { SupplyBorrowMarketForm } from "./SupplyBorrowMarketForm";
+
+interface MarketFormContainerProps {
+  market: MorphoMarket;
+}
+
+export function MarketFormContainer({ market }: MarketFormContainerProps) {
+  const { setValue } = useFormContext<MorphoSupplyFormData>();
+
+  const dynamicBorrow = useDynamicBorrow({ market });
+
+  const handleTabChange = (value: string) => {
+    setValue("operationType", value as OperationType);
+  };
+  const userHasPosition = hasPosition(market.position);
+
+  if (!userHasPosition) {
+    return (
+      <SupplyBorrowMarketForm market={market} dynamicBorrow={dynamicBorrow} />
+    );
+  }
+
+  return (
+    <TabsRoot defaultValue={FormTabs.AddBorrow} onValueChange={handleTabChange}>
+      <TabsList className="w-full mt-6 px-3">
+        {FORM_TABS.map((tab) => (
+          <TabsTrigger
+            key={tab.value}
+            className="flex-1 h-10 opacity-60 font-semibold rounded-2xl data-[state=active]:bg-color-primary data-[state=active]:text-color-paper data-[state=active]:opacity-100"
+            value={tab.value}
+          >
+            {tab.label}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+
+      {market && (
+        <>
+          <TabsContent value={FormTabs.AddBorrow}>
+            <SupplyBorrowMarketForm
+              market={market}
+              dynamicBorrow={dynamicBorrow}
+            />
+          </TabsContent>
+          <TabsContent value={FormTabs.RepayWithdraw}>
+            <RepayWithdrawMarketForm
+              market={market}
+              dynamicBorrow={dynamicBorrow}
+            />
+          </TabsContent>
+        </>
+      )}
+    </TabsRoot>
+  );
+}

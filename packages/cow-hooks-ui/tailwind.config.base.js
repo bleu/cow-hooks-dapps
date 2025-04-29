@@ -28,6 +28,9 @@ module.exports = {
       screens: {
         xsm: "420px",
       },
+      fontSize: {
+        xxs: "10px"
+      },
       colors: {
         // V3
         "color-primary": "rgb(var(--cow-color-primary) / <alpha-value>)",
