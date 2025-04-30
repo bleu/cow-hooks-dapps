@@ -15,22 +15,26 @@ import { InputFieldName, MaxFieldName } from "#/constants/forms";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { useMaxBorrowableAmount } from "#/hooks/useMaxBorrowableAmount";
+import { useMaxWithdrawbleAmount } from "#/hooks/useMaxWithdrawbleAmount";
 import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
 import { AmountInput } from "./AmoutIntput";
+
+interface RepayWithdrawMarketFormProps {
+  market: MorphoMarket;
+  dynamicBorrow?: bigint;
+}
 
 export function RepayWithdrawMarketForm({
   market,
   dynamicBorrow,
-}: { market: MorphoMarket; dynamicBorrow?: bigint }) {
+}: RepayWithdrawMarketFormProps) {
   const { context } = useIFrameContext();
-
   const { control, setValue } = useFormContext<MorphoSupplyFormData>();
   const { repayAmount, withdrawAmount, isMaxRepay, isMaxWithdraw } = useWatch({
     control,
   });
 
   // TODO: MORPHO-6, MORPHO-35 Handle fields logics and integrate
-
   const fiatRepayAmount = repayAmount
     ? Number(repayAmount) * market.collateralAsset.priceUsd < 0.01
       ? "≈ $< 0.01"
@@ -50,6 +54,9 @@ export function RepayWithdrawMarketForm({
 
   const { collateral } = market.position;
 
+  const { maxWithdrawableFormatted, maxWithdrawableFull } =
+    useMaxWithdrawbleAmount();
+
   const {
     fullDecimals: collateralBalanceFull,
     formatted: formattedCollateralBalance,
@@ -64,7 +71,6 @@ export function RepayWithdrawMarketForm({
       decimals: collateralDecimals,
       priceUsd: market.collateralAsset.priceUsd,
     });
-
   const { formatted: formattedBorrow, usd: borrowUsd } = useFormatTokenAmount({
     amount: dynamicBorrow,
     decimals: market.loanAsset.decimals,
@@ -73,18 +79,12 @@ export function RepayWithdrawMarketForm({
 
   const maxBorrowableAmount = useMaxBorrowableAmount();
 
-  const { formatted: maxBorrowableFormatted, fullDecimals: maxBorrowableFull } =
-    useFormatTokenAmount({
-      amount: maxBorrowableAmount,
-      decimals: market.loanAsset.decimals,
-    });
-
   useEffect(() => {
-    if (isMaxWithdraw && maxBorrowableFull) {
-      const newBorrow = maxBorrowableFull;
-      setValue("withdrawAmount", Number(newBorrow));
+    if (isMaxWithdraw && maxWithdrawableFull) {
+      const newWithdraw = maxWithdrawableFull;
+      setValue("withdrawAmount", Number(newWithdraw));
     }
-  }, [isMaxWithdraw, maxBorrowableFull, setValue]);
+  }, [isMaxWithdraw, maxWithdrawableFull, setValue]);
 
   useEffect(() => {
     if (isMaxRepay && collateralBalanceFull) {
@@ -191,7 +191,7 @@ export function RepayWithdrawMarketForm({
         name={InputFieldName.RepayAmount}
         label="Repay"
         maxName={MaxFieldName.IsMaxRepay}
-        asset={market.collateralAsset}
+        asset={market.loanAsset}
         chainId={market.oracle.chain.id}
         formattedBalance={formattedCollateralBalance}
         floatBalance={collateralBalanceFull}
@@ -201,10 +201,10 @@ export function RepayWithdrawMarketForm({
         name={InputFieldName.WithdrawAmount}
         label="Withdraw Collateral"
         maxName={MaxFieldName.IsMaxWithdraw}
-        asset={market.loanAsset}
+        asset={market.collateralAsset}
         chainId={market.oracle.chain.id}
-        formattedBalance={maxBorrowableFormatted}
-        floatBalance={maxBorrowableFull ?? 0.0}
+        formattedBalance={maxWithdrawableFormatted}
+        floatBalance={maxWithdrawableFull ?? 0.0}
         fiatBalance={fiatWithdrawAmount}
       />
       <div className="flex flex-col gap-2 w-full min-h-24 pt-4 pb-1 px-6 bg-color-paper-darker rounded-xl items-start">
