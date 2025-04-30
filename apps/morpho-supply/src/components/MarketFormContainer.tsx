@@ -5,8 +5,9 @@ import {
   TabsTrigger,
 } from "@bleu.builders/ui";
 import { type MorphoMarket, hasPosition } from "@bleu/cow-hooks-ui";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { FORM_TABS, FormTabs, type OperationType } from "#/constants/forms";
+import { FORM_TABS, FormTabs, OperationType } from "#/constants/forms";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useDynamicBorrow } from "#/hooks/useDynamicBorrow";
 import { RepayWithdrawMarketForm } from "./RepayWithdrawMarketForm";
@@ -17,7 +18,7 @@ interface MarketFormContainerProps {
 }
 
 export function MarketFormContainer({ market }: MarketFormContainerProps) {
-  const { setValue } = useFormContext<MorphoSupplyFormData>();
+  const { setValue, getValues } = useFormContext<MorphoSupplyFormData>();
 
   const dynamicBorrow = useDynamicBorrow({ market });
 
@@ -25,6 +26,16 @@ export function MarketFormContainer({ market }: MarketFormContainerProps) {
     setValue("operationType", value as OperationType);
   };
   const userHasPosition = hasPosition(market.position);
+
+  useEffect(() => {
+    const currentOperationType = getValues("operationType");
+    if (
+      !userHasPosition &&
+      currentOperationType === OperationType.RepayWithdraw
+    ) {
+      setValue("operationType", OperationType.SupplyBorrow);
+    }
+  }, [userHasPosition, setValue, getValues]);
 
   if (!userHasPosition) {
     return (
