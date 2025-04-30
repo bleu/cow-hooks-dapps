@@ -1,4 +1,4 @@
-import { formatNumber } from "@bleu.builders/ui";
+import { cn, formatNumber } from "@bleu.builders/ui";
 
 import {
   ButtonPrimary,
@@ -34,17 +34,22 @@ export function RepayWithdrawMarketForm({
     control,
   });
 
-  // TODO: MORPHO-6, MORPHO-35 Handle fields logics and integrate
+  const { formatted: formattedDynamicBorrow, fullDecimals: fullDynamicBorrow } =
+    useFormatTokenAmount({
+      amount: dynamicBorrow,
+      decimals: market.loanAsset.decimals,
+    });
+
   const fiatRepayAmount = repayAmount
-    ? Number(repayAmount) * market.collateralAsset.priceUsd < 0.01
+    ? Number(repayAmount) * market.loanAsset.priceUsd < 0.01
       ? "≈ $< 0.01"
-      : `≈ ${formatNumber(Number(repayAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
+      : `≈ ${formatNumber(Number(repayAmount) * market.loanAsset.priceUsd, 2, "currency", "standard")}`
     : "";
 
   const fiatWithdrawAmount = withdrawAmount
-    ? Number(withdrawAmount) * market.loanAsset.priceUsd < 0.01
+    ? Number(withdrawAmount) * market.collateralAsset.priceUsd < 0.01
       ? "≈ $< 0.01"
-      : `≈ ${formatNumber(Number(withdrawAmount) * market.loanAsset.priceUsd, 2, "currency", "standard")}`
+      : `≈ ${formatNumber(Number(withdrawAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
     : "";
 
   const { userBalance: collateralBalance, tokenDecimals: collateralDecimals } =
@@ -57,20 +62,13 @@ export function RepayWithdrawMarketForm({
   const { maxWithdrawableFormatted, maxWithdrawableFull } =
     useMaxWithdrawbleAmount();
 
-  const {
-    fullDecimals: collateralBalanceFull,
-    formatted: formattedCollateralBalance,
-  } = useFormatTokenAmount({
-    amount: collateralBalance,
-    decimals: collateralDecimals,
-  });
-
   const { formatted: formattedCollateral, usd: collateralUsd } =
     useFormatTokenAmount({
       amount: collateral,
       decimals: collateralDecimals,
       priceUsd: market.collateralAsset.priceUsd,
     });
+
   const { formatted: formattedBorrow, usd: borrowUsd } = useFormatTokenAmount({
     amount: dynamicBorrow,
     decimals: market.loanAsset.decimals,
@@ -87,18 +85,15 @@ export function RepayWithdrawMarketForm({
   }, [isMaxWithdraw, maxWithdrawableFull, setValue]);
 
   useEffect(() => {
-    if (isMaxRepay && collateralBalanceFull) {
-      const newSupply = collateralBalanceFull;
-      setValue("repayAmount", Number(newSupply));
+    if (isMaxRepay && fullDynamicBorrow) {
+      const newRepay = fullDynamicBorrow;
+      setValue("repayAmount", Number(newRepay));
     }
-  }, [isMaxRepay, collateralBalanceFull, setValue]);
+  }, [isMaxRepay, fullDynamicBorrow, setValue]);
 
+  const repay = decimalsToBigInt(repayAmount || 0, market.loanAsset.decimals);
   const borrowAfter =
-    dynamicBorrow !== undefined && withdrawAmount
-      ? dynamicBorrow +
-        (decimalsToBigInt(withdrawAmount, market.loanAsset.decimals) ??
-          BigInt(0))
-      : undefined;
+    repay && dynamicBorrow ? dynamicBorrow - repay : dynamicBorrow;
 
   const { formatted: borrowAfterFormatted, usd: borrowAfterUsd } =
     useFormatTokenAmount({
@@ -108,11 +103,12 @@ export function RepayWithdrawMarketForm({
     });
 
   const collateralAfter =
-    collateral !== undefined && repayAmount
-      ? collateral +
-        (decimalsToBigInt(repayAmount, market.collateralAsset.decimals) ??
+    collateral !== undefined && withdrawAmount
+      ? collateral -
+        (decimalsToBigInt(withdrawAmount, market.collateralAsset.decimals) ??
           BigInt(0))
       : undefined;
+
   const { formatted: collateralAfterFormatted, usd: collateralAfterUsd } =
     useFormatTokenAmount({
       amount: collateralAfter,
@@ -156,6 +152,8 @@ export function RepayWithdrawMarketForm({
       borrowAmountBigInt > maxBorrowableAmount,
   );
 
+  const shouldRenderAfter = Boolean(repayAmount || withdrawAmount);
+
   const buttonMessage = useMemo(() => {
     if (isInsufficientBalance)
       return `Insufficient ${market.collateralAsset.symbol} Balance`;
@@ -193,8 +191,8 @@ export function RepayWithdrawMarketForm({
         maxName={MaxFieldName.IsMaxRepay}
         asset={market.loanAsset}
         chainId={market.oracle.chain.id}
-        formattedBalance={formattedCollateralBalance}
-        floatBalance={collateralBalanceFull}
+        formattedBalance={formattedDynamicBorrow}
+        floatBalance={fullDynamicBorrow}
         fiatBalance={fiatRepayAmount}
       />
       <AmountInput
@@ -212,43 +210,57 @@ export function RepayWithdrawMarketForm({
           Your collateral position ({market.collateralAsset.symbol})
         </span>
         <div className="flex items-center gap-2">
-          {(repayAmount || withdrawAmount) && (
+          <span
+            className={cn("font-semibold", {
+              "opacity-70": repayAmount || withdrawAmount,
+            })}
+          >
+            {formattedCollateral}
+          </span>
+          {shouldRenderAfter && (
             <>
-              <span className="opacity-70 font-semibold">
-                {formattedCollateral}
-              </span>
               <ArrowRightIcon className="w-5 h-5 opacity-70" />
+              <span className="font-semibold">{collateralAfterFormatted}</span>
             </>
           )}
-          <span className="font-semibold">{collateralAfterFormatted}</span>
         </div>
         <span className="opacity-60 text-sm mb-[-8px] font-medium">
           Your loan position ({market.loanAsset.symbol})
         </span>
         <div className="flex items-center gap-2">
-          {(repayAmount || withdrawAmount) && (
+          <span
+            className={cn("font-semibold", {
+              "opacity-70": repayAmount || withdrawAmount,
+            })}
+          >
+            {formattedBorrow}
+          </span>
+          {shouldRenderAfter && (
             <>
-              <span className="opacity-70 font-semibold">
-                {formattedBorrow}
-              </span>
               <ArrowRightIcon className="w-5 h-5 opacity-70" />
+              <span className="font-semibold">{borrowAfterFormatted}</span>
             </>
           )}
-          <span className="font-semibold">{borrowAfterFormatted}</span>
         </div>
         <span className="opacity-60 text-sm mb-[-8px] font-medium">
           LTV / Liquidation LTV
         </span>
         <div className="flex items-center gap-2">
-          {(repayAmount || withdrawAmount) && (
+          <span
+            className={cn("font-semibold", {
+              "opacity-70": repayAmount || withdrawAmount,
+            })}
+          >
+            {ltvBefore}
+          </span>
+          {shouldRenderAfter && (
             <>
-              <span className="opacity-70 font-semibold">{ltvBefore}</span>
               <ArrowRightIcon className="w-5 h-5 opacity-70" />
+              <span className="font-semibold">
+                {ltvAfter} / {lltv}
+              </span>
             </>
           )}
-          <span className="font-semibold">
-            {ltvAfter} / {lltv}
-          </span>
         </div>
       </div>
       <Info content={<InfoContent />} />
