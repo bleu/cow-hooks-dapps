@@ -16,7 +16,7 @@
     "description": "Seamlessly add and remove liquidity on the Morpho Lending Protocol. Whether you're optimizing your yield or efficiently deploying assets, this hook streamlines the process, ensuring your liquidity transactions happen in a smooth, efficient flow.",
     "version": "0.0.1",
     "website": "https://app.morpho.org/",
-    "image": "https://cow-hooks-dapps-morpho-supply.vercel.app/icon.png",
+    "image": "https://cow-hooks-dapps-morpho-lending.vercel.app/icon.png",
     "conditions": {
       "walletCompatibility": ["EOA"],
       "supportedNetworks": [1, 8453]
