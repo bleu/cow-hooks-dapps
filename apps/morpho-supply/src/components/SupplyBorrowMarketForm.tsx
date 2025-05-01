@@ -1,4 +1,4 @@
-import { formatNumber } from "@bleu.builders/ui";
+import { cn, formatNumber } from "@bleu.builders/ui";
 
 import {
   ButtonPrimary,
@@ -180,6 +180,8 @@ export function SupplyBorrowMarketForm({
     borrowAmount,
   ]);
 
+  const shouldRenderAfter = Boolean(supplyAmount || borrowAmount);
+
   if (!context) return null;
 
   return (
@@ -209,43 +211,57 @@ export function SupplyBorrowMarketForm({
           Your collateral position ({market.collateralAsset.symbol})
         </span>
         <div className="flex items-center gap-2">
-          {(supplyAmount || borrowAmount) && (
+          <span
+            className={cn("font-semibold", {
+              "opacity-70": supplyAmount || borrowAmount,
+            })}
+          >
+            {formattedCollateral}
+          </span>
+          {shouldRenderAfter && (
             <>
-              <span className="opacity-70 font-semibold">
-                {formattedCollateral}
-              </span>
               <ArrowRightIcon className="w-5 h-5 opacity-70" />
+              <span className="font-semibold">{collateralAfterFormatted}</span>
             </>
           )}
-          <span className="font-semibold">{collateralAfterFormatted}</span>
         </div>
         <span className="opacity-60 text-sm mb-[-8px] font-medium">
           Your loan position ({market.loanAsset.symbol})
         </span>
         <div className="flex items-center gap-2">
-          {(supplyAmount || borrowAmount) && (
+          <span
+            className={cn("font-semibold", {
+              "opacity-70": supplyAmount || borrowAmount,
+            })}
+          >
+            {formattedBorrow}
+          </span>
+          {shouldRenderAfter && (
             <>
-              <span className="opacity-70 font-semibold">
-                {formattedBorrow}
-              </span>
               <ArrowRightIcon className="w-5 h-5 opacity-70" />
+              <span className="font-semibold">{borrowAfterFormatted}</span>
             </>
           )}
-          <span className="font-semibold">{borrowAfterFormatted}</span>
         </div>
         <span className="opacity-60 text-sm mb-[-8px] font-medium">
           LTV / Liquidation LTV
         </span>
         <div className="flex items-center gap-2">
-          {(supplyAmount || borrowAmount) && (
+          <span
+            className={cn("font-semibold", {
+              "opacity-70": supplyAmount || borrowAmount,
+            })}
+          >
+            {ltvBefore}
+          </span>
+          {shouldRenderAfter && (
             <>
-              <span className="opacity-70 font-semibold">{ltvBefore}</span>
               <ArrowRightIcon className="w-5 h-5 opacity-70" />
+              <span className="font-semibold">
+                {ltvAfter} / {lltv}
+              </span>
             </>
           )}
-          <span className="font-semibold">
-            {ltvAfter} / {lltv}
-          </span>
         </div>
       </div>
       <Info content={<InfoContent />} />

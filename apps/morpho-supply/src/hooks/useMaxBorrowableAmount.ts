@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { parseUnits } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
+import { calculateLLTVWithSafetyMargin } from "#/utils/morpho";
 import { useBorrowReallocation } from "./useBorrowReallocation";
 
 export const useMaxBorrowableAmount = () => {
@@ -26,7 +27,7 @@ export const useMaxBorrowableAmount = () => {
         ).toBigInt()
       : BigInt(0);
 
-  const lltv = market && (market.lltv * BigInt(9500)) / BigInt(10000);
+  const lltv = market && calculateLLTVWithSafetyMargin(market.lltv);
 
   const maxBorrowableAmount = useMemo(() => {
     if (!lltv) return;
