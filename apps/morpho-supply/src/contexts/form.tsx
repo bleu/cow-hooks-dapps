@@ -33,6 +33,8 @@ export function FormContextProvider({ children }: PropsWithChildren) {
     defaultValues: {
       isMaxBorrow: false,
       isMaxSupply: false,
+      isMaxRepay: false,
+      isMaxWithdraw: false,
       operationType: OperationType.SupplyBorrow,
     },
   });
@@ -47,29 +49,12 @@ export function FormContextProvider({ children }: PropsWithChildren) {
 
   const onSubmitCallback = useCallback(
     async (data: MorphoSupplyFormData) => {
-      const formData = { ...data };
-
-      // Process data based on operation type
-      if (data.operationType === "supply-borrow") {
-        // Use supplyAmount and borrowAmount fields
-        // Ignore repay and withdraw fields
-      } else {
-        // Use repayAmount and withdrawAmount fields
-        // Ignore supply and borrow fields
-
-        // Map to the expected structure if needed
-        formData.supplyAmount = data.repayAmount;
-        formData.borrowAmount = data.withdrawAmount;
-        formData.isMaxSupply = data.isMaxRepay;
-        formData.isMaxBorrow = data.isMaxWithdraw;
-      }
-
-      const hookInfo = await getHookInfo(formData);
+      const hookInfo = await getHookInfo(data);
       if (!hookInfo) return;
       setHookInfo(hookInfo);
       router.push("/signing");
     },
-    [getHookInfo, setHookInfo, router],
+    [getHookInfo, setHookInfo, router]
   );
 
   return (
