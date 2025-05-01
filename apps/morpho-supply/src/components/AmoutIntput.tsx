@@ -8,12 +8,13 @@ import {
   useWatch,
 } from "react-hook-form";
 import type { Address } from "viem";
+import type { InputFieldName, MaxFieldName } from "#/constants/forms";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 
 interface AmountInputProps {
-  name: "supplyAmount" | "borrowAmount";
+  name: InputFieldName;
   label: string;
-  maxName: "isMaxSupply" | "isMaxBorrow";
+  maxName: MaxFieldName;
   asset: {
     address: Address;
     decimals: number;

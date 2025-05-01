@@ -9,7 +9,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import WalletIcon from "#/assets/wallet.svg";
-import { MarketForm } from "#/components/MarketForm";
+import { MarketFormContainer } from "#/components/MarketFormContainer";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useMorphoContext } from "#/contexts/morpho";
 import { decodeFormData } from "#/utils/hookEncoding";
@@ -128,7 +128,7 @@ export default function Page() {
         markets={markets}
         market={market}
       />
-      {market && <MarketForm market={market} />}
+      {market && <MarketFormContainer market={market} />}
     </div>
   );
 }

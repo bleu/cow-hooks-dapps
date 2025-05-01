@@ -133,7 +133,7 @@ export function MarketsDropdownMenu({
               Choose Amounts
             </span>
             <div className="flex gap-1 justify-center items-center cursor-pointer opacity-70 hover:opacity-90 transition-all">
-              <span className="text-sm underline">Change market</span>
+              <span className="text-xxs underline">Change market</span>
               <UpdateIcon className="w-3 h-3" />
             </div>
           </Dialog.Trigger>
