@@ -20,7 +20,10 @@ export function useDynamicBorrow({ market }: { market: MorphoMarket }) {
         return;
       }
 
-      const period = BigInt(Math.floor(Date.now() / 1000)) - lastUpdate;
+      // 1 hour buffer for hook execution, dust will be sent back to user
+      const TIME_BUFFER = 3600;
+      const period =
+        BigInt(Math.floor(Date.now() / 1000 + TIME_BUFFER)) - lastUpdate;
 
       const compoundRate = MarketUtils.compoundRate(borrowRate, period);
 
