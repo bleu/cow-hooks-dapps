@@ -50,19 +50,26 @@ export const useGetRepayHookInfo = () => {
             recipient: context.account,
           };
 
-      const transferDustTx = isMaxRepay
-        ? [
-            await TransactionFactory.createRawTx(
+      const transferDustTxs = isMaxRepay
+        ? await Promise.all([
+            TransactionFactory.createRawTx(
               TRANSACTION_TYPES.ERC20_TRANSFER_FROM_ALL_WEIROLL,
               {
                 type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM_ALL_WEIROLL,
+                chainId: context.chainId,
                 token: tokenAddress,
                 from: cowShedProxy,
                 to: context.account,
                 symbol: tokenSymbol,
               },
             ),
-          ]
+            TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
+              type: TRANSACTION_TYPES.ERC20_APPROVE,
+              token: tokenAddress,
+              spender: MORPHO_ADDRESS,
+              amount: BigInt(0),
+            }),
+          ])
         : [];
 
       const txs = await Promise.all([
@@ -88,7 +95,7 @@ export const useGetRepayHookInfo = () => {
           repayArgs,
         ),
         // Send dust back to user
-        ...transferDustTx,
+        ...transferDustTxs,
       ]);
 
       const permitData = [

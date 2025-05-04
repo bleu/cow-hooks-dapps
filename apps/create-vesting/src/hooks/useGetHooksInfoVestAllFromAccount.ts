@@ -71,6 +71,7 @@ export const useGetHooksInfoVestAllFromAccount = () => {
           TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_USER,
           {
             type: TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_USER,
+            chainId: context.chainId,
             token: tokenAddress,
             recipient: recipient as Address,
             cowShedProxy,
@@ -98,6 +99,6 @@ export const useGetHooksInfoVestAllFromAccount = () => {
 
       return { txs, permitData };
     },
-    [context?.account, cowShedProxy, publicClient],
+    [context?.account, context?.chainId, cowShedProxy, publicClient],
   );
 };

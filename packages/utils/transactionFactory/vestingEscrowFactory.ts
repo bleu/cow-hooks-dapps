@@ -7,10 +7,11 @@ import type {
   TRANSACTION_TYPES,
 } from "./types";
 
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import { Contract } from "ethers";
 import { vestingEscrowFactoryAbi } from "./abis/vestingEscrowFactoryAbi";
 import { weirollAbi } from "./abis/weirollAbi";
-import { CommandFlags, WEIROLL_ADDRESS } from "./weiroll";
+import { CommandFlags, WEIROLL_ADDRESS_MAP } from "./weiroll";
 
 export interface CreateVestingArgs extends BaseArgs {
   type: TRANSACTION_TYPES.CREATE_VESTING;
@@ -36,6 +37,7 @@ export class CreateVestingCreator implements ITransaction<CreateVestingArgs> {
 }
 
 export interface CreateVestingWeirollProxyArgs extends BaseArgs {
+  chainId: SupportedChainId;
   type: TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_PROXY;
   token: Address;
   cowShedProxy: Address;
@@ -78,7 +80,7 @@ export class CreateVestingWeirollProxyCreator
     const { commands, state } = planner.plan();
 
     return {
-      to: WEIROLL_ADDRESS,
+      to: WEIROLL_ADDRESS_MAP[args.chainId],
       value: BigInt(0),
       callData: encodeFunctionData({
         abi: weirollAbi,
@@ -91,6 +93,7 @@ export class CreateVestingWeirollProxyCreator
 }
 
 export interface CreateVestingWeirollUserArgs extends BaseArgs {
+  chainId: SupportedChainId;
   type: TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_USER;
   token: Address;
   cowShedProxy: Address;
@@ -145,7 +148,7 @@ export class CreateVestingWeirollUserCreator
     const { commands, state } = planner.plan();
 
     return {
-      to: WEIROLL_ADDRESS,
+      to: WEIROLL_ADDRESS_MAP[args.chainId],
       value: BigInt(0),
       callData: encodeFunctionData({
         abi: weirollAbi,
