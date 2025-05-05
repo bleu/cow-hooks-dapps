@@ -24,16 +24,16 @@ export function MarketFormContainer({ market }: MarketFormContainerProps) {
     setValue("operationType", value as OperationType);
   };
   const userHasPosition = hasPosition(market.position);
+  const currentOperationType = getValues("operationType");
 
   useEffect(() => {
-    const currentOperationType = getValues("operationType");
     if (
       !userHasPosition &&
       currentOperationType === OperationType.RepayWithdraw
     ) {
       setValue("operationType", OperationType.SupplyBorrow);
     }
-  }, [userHasPosition, setValue, getValues]);
+  }, [userHasPosition, setValue, currentOperationType]);
 
   if (!userHasPosition) {
     return (
@@ -43,7 +43,7 @@ export function MarketFormContainer({ market }: MarketFormContainerProps) {
 
   return (
     <TabsRoot
-      defaultValue={OperationType.SupplyBorrow}
+      defaultValue={currentOperationType}
       onValueChange={handleTabChange}
     >
       <TabsList className="w-full mt-6 px-3">
