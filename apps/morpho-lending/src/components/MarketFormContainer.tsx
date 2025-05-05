@@ -7,7 +7,7 @@ import {
 import { type MorphoMarket, hasPosition } from "@bleu/cow-hooks-ui";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { FORM_TABS, FormTabs, OperationType } from "#/constants/forms";
+import { FORM_TABS, OperationType } from "#/constants/forms";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useDynamicBorrow } from "#/hooks/useDynamicBorrow";
 import { RepayWithdrawMarketForm } from "./RepayWithdrawMarketForm";
@@ -19,9 +19,7 @@ interface MarketFormContainerProps {
 
 export function MarketFormContainer({ market }: MarketFormContainerProps) {
   const { setValue, getValues } = useFormContext<MorphoSupplyFormData>();
-
   const dynamicBorrow = useDynamicBorrow({ market });
-
   const handleTabChange = (value: string) => {
     setValue("operationType", value as OperationType);
   };
@@ -44,7 +42,10 @@ export function MarketFormContainer({ market }: MarketFormContainerProps) {
   }
 
   return (
-    <TabsRoot defaultValue={FormTabs.AddBorrow} onValueChange={handleTabChange}>
+    <TabsRoot
+      defaultValue={OperationType.SupplyBorrow}
+      onValueChange={handleTabChange}
+    >
       <TabsList className="w-full mt-6 px-3">
         {FORM_TABS.map((tab) => (
           <TabsTrigger
@@ -59,13 +60,13 @@ export function MarketFormContainer({ market }: MarketFormContainerProps) {
 
       {market && (
         <>
-          <TabsContent value={FormTabs.AddBorrow}>
+          <TabsContent value={OperationType.SupplyBorrow}>
             <SupplyBorrowMarketForm
               market={market}
               dynamicBorrow={dynamicBorrow}
             />
           </TabsContent>
-          <TabsContent value={FormTabs.RepayWithdraw}>
+          <TabsContent value={OperationType.RepayWithdraw}>
             <RepayWithdrawMarketForm
               market={market}
               dynamicBorrow={dynamicBorrow}

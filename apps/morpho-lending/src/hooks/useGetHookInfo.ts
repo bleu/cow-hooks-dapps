@@ -6,6 +6,7 @@ import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useGetBorrowHookInfo } from "./useGetBorrowHookInfo";
 import { useGetRepayHookInfo } from "./useGetRepayHookInfo";
 import { useGetSupplyHookInfo } from "./useGetSupplyHookInfo";
+import { useGetWithdrawHookInfo } from "./useGetWithdrawHookInfo";
 
 export interface DepositMorphoHookParams {
   assetAddress: Address;
@@ -19,6 +20,7 @@ export const useGetHookInfo = (market: MorphoMarket | undefined) => {
   const getSupplyHookInfo = useGetSupplyHookInfo();
   const getBorrowHookInfo = useGetBorrowHookInfo(market);
   const getRepayHookInfo = useGetRepayHookInfo();
+  const getWithdrawHookInfo = useGetWithdrawHookInfo();
 
   return useCallback(
     async (formData: MorphoSupplyFormData): Promise<IHooksInfo | undefined> => {
@@ -36,18 +38,29 @@ export const useGetHookInfo = (market: MorphoMarket | undefined) => {
           ...(supplyHookInfo?.permitData ?? []),
           ...(borrowHookInfo?.permitData ?? []),
         ];
-
         return { txs, permitData };
       }
 
       const repayHookInfo = await getRepayHookInfo(formData);
+      const withdrawHookInfo = await getWithdrawHookInfo(formData);
 
-      if (!repayHookInfo) return;
+      if (!repayHookInfo && !withdrawHookInfo) return;
 
-      const txs = [...(repayHookInfo?.txs ?? [])];
-      const permitData = [...(repayHookInfo?.permitData ?? [])];
+      const txs = [
+        ...(repayHookInfo?.txs ?? []),
+        ...(withdrawHookInfo?.txs ?? []),
+      ];
+      const permitData = [
+        ...(repayHookInfo?.permitData ?? []),
+        ...(withdrawHookInfo?.permitData ?? []),
+      ];
       return { txs, permitData };
     },
-    [getSupplyHookInfo, getBorrowHookInfo, getRepayHookInfo],
+    [
+      getSupplyHookInfo,
+      getBorrowHookInfo,
+      getRepayHookInfo,
+      getWithdrawHookInfo,
+    ],
   );
 };

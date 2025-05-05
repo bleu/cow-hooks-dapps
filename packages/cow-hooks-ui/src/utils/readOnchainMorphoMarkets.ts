@@ -22,6 +22,7 @@ type OnchainMorphoMarketInfo = {
     borrowShares: bigint;
     collateral: bigint;
     collateralUsd: number;
+    supplyShares: bigint;
   };
 } | null;
 
@@ -127,6 +128,7 @@ export async function readOnchainMorphoMarkets(
           borrow,
           collateralUsd,
           borrowUsd,
+          supplyShares: _supplyShares,
         },
       });
     }

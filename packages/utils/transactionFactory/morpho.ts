@@ -155,3 +155,24 @@ export class MorphoRepayCreator implements ITransaction<MorphoRepayArgs> {
     };
   }
 }
+
+export interface MorphoWithdrawArgs extends BaseArgs {
+  type: TRANSACTION_TYPES.MORPHO_WITHDRAW;
+  marketParams: MorphoMarketParams;
+  assets: bigint;
+  recipient: Address;
+}
+
+export class MorphoWithdrawCreator implements ITransaction<MorphoWithdrawArgs> {
+  async createRawTx(args: MorphoWithdrawArgs): Promise<BaseTransaction> {
+    return {
+      to: MORPHO_ADDRESS,
+      value: BigInt(0),
+      callData: encodeFunctionData({
+        abi: morphoAbi,
+        functionName: "withdrawCollateral",
+        args: [args.marketParams, args.assets, args.recipient, args.recipient],
+      }),
+    };
+  }
+}
