@@ -96,9 +96,23 @@ export function RepayWithdrawMarketForm({
     }
   }, [isMaxRepay, maxRepayableFull, setValue]);
 
-  const repay = decimalsToBigInt(repayAmount || 0, market.loanAsset.decimals);
-  const borrowAfter =
-    repay && dynamicBorrow ? dynamicBorrow - repay : dynamicBorrow;
+  const borrowAfter = useMemo(() => {
+    // If isMaxRepay is true, borrowAfter should be 0
+    if (isMaxRepay && repayableLimit !== borrowedBalance) {
+      return BigInt(0);
+    }
+
+    // Calculate normally only if not using max repay
+    const repay = decimalsToBigInt(repayAmount || 0, market.loanAsset.decimals);
+    return repay && dynamicBorrow ? dynamicBorrow - repay : dynamicBorrow;
+  }, [
+    dynamicBorrow,
+    market.loanAsset.decimals,
+    repayAmount,
+    isMaxRepay,
+    borrowedBalance,
+    repayableLimit,
+  ]);
 
   const { formatted: borrowAfterFormatted, usd: borrowAfterUsd } =
     useFormatTokenAmount({
