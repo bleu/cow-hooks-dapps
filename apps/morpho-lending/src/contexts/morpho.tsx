@@ -12,6 +12,7 @@ import { useIsCowShedAuthorizedOnMorpho } from "#/hooks/useAllowCowShedOnMorpho"
 export interface MorphoContextData {
   markets: MorphoMarket[] | undefined;
   isCowShedAuthorizedOnMorpho: boolean | undefined;
+  userNonce: bigint | undefined;
 }
 
 // Create the context with a default empty value
@@ -30,12 +31,15 @@ export function MorphoContextProvider({ children }: PropsWithChildren) {
     context?.chainId,
   );
 
-  const isCowShedAuthorizedOnMorpho = useIsCowShedAuthorizedOnMorpho();
+  const { data } = useIsCowShedAuthorizedOnMorpho();
+  const { isProxyAuthorized: isCowShedAuthorizedOnMorpho, userNonce } =
+    data ?? {};
 
   // Create the value object to be provided by the context
   const contextValue: MorphoContextData = {
     markets,
     isCowShedAuthorizedOnMorpho,
+    userNonce,
   };
 
   return (
