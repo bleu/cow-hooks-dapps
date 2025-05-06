@@ -142,7 +142,6 @@ export interface MarketPosition {
   borrowShares: bigint;
   collateral: bigint;
   collateralUsd: number;
-  supplyShares: bigint;
 }
 
 export interface MorphoMarket {

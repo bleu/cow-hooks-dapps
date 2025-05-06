@@ -51,10 +51,6 @@ export function RepayWithdrawMarketForm({
       : `≈ ${formatNumber(Number(withdrawAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
     : "";
 
-  const { tokenDecimals: collateralDecimals } = useReadTokenContract({
-    tokenAddress: market.collateralAsset.address,
-  });
-
   const { userBalance: borrowedBalance } = useReadTokenContract({
     tokenAddress: market.loanAsset.address,
   });
@@ -67,7 +63,7 @@ export function RepayWithdrawMarketForm({
   const { formatted: formattedCollateral, usd: collateralUsd } =
     useFormatTokenAmount({
       amount: collateral,
-      decimals: collateralDecimals,
+      decimals: market.collateralAsset.decimals,
       priceUsd: market.collateralAsset.priceUsd,
     });
 
