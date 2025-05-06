@@ -33,12 +33,6 @@ export function RepayWithdrawMarketForm({
     control,
   });
 
-  const { formatted: formattedDynamicBorrow, fullDecimals: fullDynamicBorrow } =
-    useFormatTokenAmount({
-      amount: dynamicBorrow,
-      decimals: market.loanAsset.decimals,
-    });
-
   const fiatRepayAmount = repayAmount
     ? Number(repayAmount) * market.loanAsset.priceUsd < 0.01
       ? "≈ $< 0.01"
@@ -51,10 +45,6 @@ export function RepayWithdrawMarketForm({
       : `≈ ${formatNumber(Number(withdrawAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
     : "";
 
-  const { tokenDecimals: collateralDecimals } = useReadTokenContract({
-    tokenAddress: market.collateralAsset.address,
-  });
-
   const { userBalance: borrowedBalance } = useReadTokenContract({
     tokenAddress: market.loanAsset.address,
   });
@@ -63,11 +53,26 @@ export function RepayWithdrawMarketForm({
 
   const { maxWithdrawableFormatted, maxWithdrawableFull, withdrawableLimit } =
     useMaxWithdrawbleAmount();
+  const repayableLimit = useMemo(
+    () =>
+      dynamicBorrow !== undefined && borrowedBalance !== undefined
+        ? dynamicBorrow < borrowedBalance
+          ? dynamicBorrow
+          : borrowedBalance
+        : undefined,
+    [dynamicBorrow, borrowedBalance],
+  );
+
+  const { formatted: maxRepayableFormatted, fullDecimals: maxRepayableFull } =
+    useFormatTokenAmount({
+      amount: repayableLimit,
+      decimals: market.loanAsset.decimals,
+    });
 
   const { formatted: formattedCollateral, usd: collateralUsd } =
     useFormatTokenAmount({
       amount: collateral,
-      decimals: collateralDecimals,
+      decimals: market.collateralAsset.decimals,
       priceUsd: market.collateralAsset.priceUsd,
     });
 
@@ -85,11 +90,11 @@ export function RepayWithdrawMarketForm({
   }, [isMaxWithdraw, maxWithdrawableFull, setValue]);
 
   useEffect(() => {
-    if (isMaxRepay && fullDynamicBorrow) {
-      const newRepay = fullDynamicBorrow;
+    if (isMaxRepay && maxRepayableFull) {
+      const newRepay = maxRepayableFull;
       setValue("repayAmount", Number(newRepay));
     }
-  }, [isMaxRepay, fullDynamicBorrow, setValue]);
+  }, [isMaxRepay, maxRepayableFull, setValue]);
 
   const repay = decimalsToBigInt(repayAmount || 0, market.loanAsset.decimals);
   const borrowAfter =
@@ -143,6 +148,12 @@ export function RepayWithdrawMarketForm({
       repayAmountBigInt > borrowedBalance,
   );
 
+  const isOverRepay = Boolean(
+    dynamicBorrow !== undefined &&
+      repayAmountBigInt !== undefined &&
+      repayAmountBigInt > dynamicBorrow,
+  );
+
   const withdrawAmountBigInt = decimalsToBigInt(
     withdrawAmount,
     market.collateralAsset.decimals,
@@ -162,6 +173,8 @@ export function RepayWithdrawMarketForm({
     if (isInsufficientPosition)
       return `Insufficient ${market.collateralAsset.symbol} Balance`;
 
+    if (isOverRepay) return "Repay exceeds borrow";
+
     if (!repayAmount && !withdrawAmount)
       return <span>Enter repay or withdraw</span>;
 
@@ -178,6 +191,7 @@ export function RepayWithdrawMarketForm({
     context?.isPreHook,
     isInsufficientBalance,
     isInsufficientPosition,
+    isOverRepay,
     market.collateralAsset.symbol,
     market.loanAsset.symbol,
     repayAmount,
@@ -194,8 +208,8 @@ export function RepayWithdrawMarketForm({
         maxName={MaxFieldName.IsMaxRepay}
         asset={market.loanAsset}
         chainId={market.oracle.chain.id}
-        formattedBalance={formattedDynamicBorrow}
-        floatBalance={fullDynamicBorrow}
+        formattedBalance={maxRepayableFormatted}
+        floatBalance={maxRepayableFull}
         fiatBalance={fiatRepayAmount}
       />
       <AmountInput
@@ -273,6 +287,7 @@ export function RepayWithdrawMarketForm({
         disabled={
           isInsufficientBalance ||
           isInsufficientPosition ||
+          isOverRepay ||
           (!repayAmount && !withdrawAmount)
         }
       >
