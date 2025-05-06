@@ -108,7 +108,7 @@ export function RepayWithdrawMarketForm({
     });
 
   const collateralAfter =
-    collateral !== undefined && withdrawAmount
+    collateral !== undefined
       ? collateral -
         (decimalsToBigInt(withdrawAmount, market.collateralAsset.decimals) ??
           BigInt(0))
