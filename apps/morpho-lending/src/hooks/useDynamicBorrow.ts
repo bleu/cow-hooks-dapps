@@ -12,12 +12,16 @@ export function useDynamicBorrow({ market }: { market: MorphoMarket }) {
   const borrowWithoutRate = market.position.borrow;
   const lastUpdate = market.onchainState.lastUpdate;
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: reset borrow state when market changes
+  useEffect(() => {
+    setBorrow(undefined);
+  }, [market.uniqueKey]);
+
   useEffect(() => {
     if (!borrowRate) {
       setBorrow(undefined);
       return;
     }
-
     // 3s loop update
     const interval = setInterval(() => {
       // 1 hour buffer for hook execution, dust will be sent back to user
