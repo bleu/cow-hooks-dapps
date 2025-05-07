@@ -203,7 +203,6 @@ export function SupplyBorrowMarketForm({
         formattedBalance={formattedCollateralBalance}
         floatBalance={collateralBalanceFull}
         fiatBalance={fiatSupplyAmount}
-        isLoading={dynamicBorrow === undefined}
       />
       <AmountInput
         name={InputFieldName.BorrowAmount}
@@ -214,7 +213,6 @@ export function SupplyBorrowMarketForm({
         formattedBalance={maxBorrowableFormatted}
         floatBalance={maxBorrowableFull ?? 0.0}
         fiatBalance={fiatBorrowAmount}
-        isLoading={dynamicBorrow === undefined}
       />
       <PositionSummary
         market={market}
@@ -227,7 +225,6 @@ export function SupplyBorrowMarketForm({
         lltv={lltv}
         shouldRenderAfter={shouldRenderAfter}
         isChanging={Boolean(supplyAmount || borrowAmount)}
-        isLoading={dynamicBorrow === undefined}
       />
       <Info content={<InfoContent />} />
       <ButtonPrimary

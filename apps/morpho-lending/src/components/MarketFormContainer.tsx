@@ -4,7 +4,7 @@ import {
   TabsRoot,
   TabsTrigger,
 } from "@bleu.builders/ui";
-import { type MorphoMarket, hasPosition } from "@bleu/cow-hooks-ui";
+import { type MorphoMarket, Spinner, hasPosition } from "@bleu/cow-hooks-ui";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { FORM_TABS, OperationType } from "#/constants/forms";
@@ -34,6 +34,22 @@ export function MarketFormContainer({ market }: MarketFormContainerProps) {
       setValue("operationType", OperationType.SupplyBorrow);
     }
   }, [userHasPosition, setValue, currentOperationType]);
+
+  if (dynamicBorrow === undefined) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Spinner
+          size="lg"
+          style={{
+            width: "25px",
+            height: "25px",
+            color: "gray",
+            animation: "spin 2s linear infinite",
+          }}
+        />
+      </div>
+    );
+  }
 
   if (!userHasPosition) {
     return (

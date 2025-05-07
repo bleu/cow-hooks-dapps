@@ -225,7 +225,6 @@ export function RepayWithdrawMarketForm({
         formattedBalance={maxRepayableFormatted}
         floatBalance={maxRepayableFull}
         fiatBalance={fiatRepayAmount}
-        isLoading={dynamicBorrow === undefined}
       />
       <AmountInput
         name={InputFieldName.WithdrawAmount}
@@ -236,7 +235,6 @@ export function RepayWithdrawMarketForm({
         formattedBalance={maxWithdrawableFormatted}
         floatBalance={maxWithdrawableFull ?? 0.0}
         fiatBalance={fiatWithdrawAmount}
-        isLoading={dynamicBorrow === undefined}
       />
       <PositionSummary
         market={market}
@@ -249,7 +247,6 @@ export function RepayWithdrawMarketForm({
         lltv={lltv}
         shouldRenderAfter={shouldRenderAfter}
         isChanging={Boolean(repayAmount || withdrawAmount)}
-        isLoading={dynamicBorrow === undefined}
       />
       <Info content={<InfoContent />} />
       <ButtonPrimary

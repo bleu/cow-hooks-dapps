@@ -1,4 +1,4 @@
-import { Input, Label, Skeleton, cn } from "@bleu.builders/ui";
+import { Input, Label, cn } from "@bleu.builders/ui";
 import { TokenLogo } from "@bleu/cow-hooks-ui";
 import { Token } from "@uniswap/sdk-core";
 import {
@@ -27,7 +27,6 @@ interface AmountInputProps {
   formattedBalance: string;
   floatBalance: string;
   fiatBalance: string;
-  isLoading?: boolean;
 }
 
 export const AmountInput = ({
@@ -39,7 +38,6 @@ export const AmountInput = ({
   formattedBalance,
   floatBalance,
   fiatBalance,
-  isLoading,
 }: AmountInputProps) => {
   const { register, control, setValue } =
     useFormContext<MorphoSupplyFormData>();
@@ -122,36 +120,30 @@ export const AmountInput = ({
             )}
           </div>
         </div>
-        {isLoading ? (
-          <div className="flex justify-end items-center w-full mt-2">
-            <Skeleton className="h-4 w-28 bg-color-paper" />
-          </div>
-        ) : (
-          <div className="flex w-full justify-between items-center">
-            <span title={floatBalance} className="opacity-40 text-xs">
-              {fiatBalance}
-            </span>
-            {formattedBalance && token?.symbol && (
-              <span className="font-normal pl-1">
-                <span title={floatBalance} className="opacity-40 text-xs">
-                  {formattedBalance} {token?.symbol}
-                </span>
-                <button
-                  type="button"
-                  className={cn(
-                    "inline text-color-text-paper bg-color-paper px-1 ml-1 opacity-100 rounded-md text-xs hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]",
-                    {
-                      "bg-color-primary text-color-button-text": isMaxValue,
-                    },
-                  )}
-                  onClick={() => setValue(maxName, !isMaxValue)}
-                >
-                  MAX
-                </button>
+        <div className="flex w-full justify-between items-center">
+          <span title={floatBalance} className="opacity-40 text-xs">
+            {fiatBalance}
+          </span>
+          {formattedBalance && token?.symbol && (
+            <span className="font-normal pl-1">
+              <span title={floatBalance} className="opacity-40 text-xs">
+                {formattedBalance} {token?.symbol}
               </span>
-            )}
-          </div>
-        )}
+              <button
+                type="button"
+                className={cn(
+                  "inline text-color-text-paper bg-color-paper px-1 ml-1 opacity-100 rounded-md text-xs hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]",
+                  {
+                    "bg-color-primary text-color-button-text": isMaxValue,
+                  },
+                )}
+                onClick={() => setValue(maxName, !isMaxValue)}
+              >
+                MAX
+              </button>
+            </span>
+          )}
+        </div>
       </div>
       {errorMessage && (
         <div className="mt-1 ml-2 text-start text-sm text-destructive">
