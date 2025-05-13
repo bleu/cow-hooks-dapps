@@ -106,8 +106,7 @@ export function useMorphoMarkets(
           OrderDirection: "Desc",
         })
       ).markets.items.filter((market) => market.collateralAsset !== null);
-      let marketsOnchainInfo = [];
-      marketsOnchainInfo = await readOnchainMorphoMarkets(
+      const marketsOnchainInfo = await readOnchainMorphoMarkets(
         userAddress as Address,
         gqlMarkets as MorphoMarket[],
         publicClient,
