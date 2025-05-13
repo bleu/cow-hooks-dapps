@@ -29,7 +29,6 @@ export async function readOnchainMorphoMarkets(
   userAddress: Address,
   markets: MorphoMarket[],
   client: PublicClient,
-  //stateDiff // TODO: add state diff
 ): Promise<OnchainMorphoMarketInfo[]> {
   try {
     const calls = markets.flatMap((market) => [
