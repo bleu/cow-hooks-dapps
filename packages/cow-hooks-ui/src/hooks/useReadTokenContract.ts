@@ -61,7 +61,7 @@ export const readTokenContract = async (
 ) => {
   const tokenAddressLowerCase = address.toLowerCase() as Address;
   const tokenBalanceDiff =
-    balancesDiff?.account?.[tokenAddressLowerCase] || "0";
+    balancesDiff?.[account.toLowerCase()]?.[tokenAddressLowerCase] || "0";
 
   const tokenContract = {
     address: address,
