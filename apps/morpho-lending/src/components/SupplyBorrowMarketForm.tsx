@@ -1,4 +1,4 @@
-import { cn, formatNumber } from "@bleu.builders/ui";
+import { formatNumber } from "@bleu.builders/ui";
 
 import {
   ButtonPrimary,
@@ -8,7 +8,6 @@ import {
   useIFrameContext,
   useReadTokenContract,
 } from "@bleu/cow-hooks-ui";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { useEffect, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { InputFieldName, MaxFieldName } from "#/constants/forms";
@@ -17,11 +16,17 @@ import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { useMaxBorrowableAmount } from "#/hooks/useMaxBorrowableAmount";
 import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
 import { AmountInput } from "./AmoutIntput";
+import { PositionSummary } from "./PositionSummary";
+
+interface SupplyBorrowMarketFormProps {
+  market: MorphoMarket;
+  dynamicBorrow?: bigint;
+}
 
 export function SupplyBorrowMarketForm({
   market,
   dynamicBorrow,
-}: { market: MorphoMarket; dynamicBorrow?: bigint }) {
+}: SupplyBorrowMarketFormProps) {
   const { context } = useIFrameContext();
 
   const { control, setValue } = useFormContext<MorphoSupplyFormData>();
@@ -154,6 +159,8 @@ export function SupplyBorrowMarketForm({
   );
 
   const buttonMessage = useMemo(() => {
+    if (dynamicBorrow === undefined) return "Loading...";
+
     if (isInsufficientBalance)
       return `Insufficient ${market.collateralAsset.symbol} Balance`;
 
@@ -178,6 +185,7 @@ export function SupplyBorrowMarketForm({
     market.collateralAsset.symbol,
     supplyAmount,
     borrowAmount,
+    dynamicBorrow,
   ]);
 
   const shouldRenderAfter = Boolean(supplyAmount || borrowAmount);
@@ -206,64 +214,18 @@ export function SupplyBorrowMarketForm({
         floatBalance={maxBorrowableFull ?? 0.0}
         fiatBalance={fiatBorrowAmount}
       />
-      <div className="flex flex-col gap-2 w-full min-h-24 pt-4 pb-1 px-6 bg-color-paper-darker rounded-xl items-start">
-        <span className="opacity-60 text-sm mb-[-8px] font-medium">
-          Your collateral position ({market.collateralAsset.symbol})
-        </span>
-        <div className="flex items-center gap-2">
-          <span
-            className={cn("font-semibold", {
-              "opacity-70": supplyAmount || borrowAmount,
-            })}
-          >
-            {formattedCollateral}
-          </span>
-          {shouldRenderAfter && (
-            <>
-              <ArrowRightIcon className="w-5 h-5 opacity-70" />
-              <span className="font-semibold">{collateralAfterFormatted}</span>
-            </>
-          )}
-        </div>
-        <span className="opacity-60 text-sm mb-[-8px] font-medium">
-          Your loan position ({market.loanAsset.symbol})
-        </span>
-        <div className="flex items-center gap-2">
-          <span
-            className={cn("font-semibold", {
-              "opacity-70": supplyAmount || borrowAmount,
-            })}
-          >
-            {formattedBorrow}
-          </span>
-          {shouldRenderAfter && (
-            <>
-              <ArrowRightIcon className="w-5 h-5 opacity-70" />
-              <span className="font-semibold">{borrowAfterFormatted}</span>
-            </>
-          )}
-        </div>
-        <span className="opacity-60 text-sm mb-[-8px] font-medium">
-          LTV / Liquidation LTV
-        </span>
-        <div className="flex items-center gap-2">
-          <span
-            className={cn("font-semibold", {
-              "opacity-70": supplyAmount || borrowAmount,
-            })}
-          >
-            {ltvBefore}
-          </span>
-          {shouldRenderAfter && (
-            <>
-              <ArrowRightIcon className="w-5 h-5 opacity-70" />
-              <span className="font-semibold">
-                {ltvAfter} / {lltv}
-              </span>
-            </>
-          )}
-        </div>
-      </div>
+      <PositionSummary
+        market={market}
+        formattedCollateral={formattedCollateral}
+        formattedBorrow={formattedBorrow}
+        collateralAfterFormatted={collateralAfterFormatted}
+        borrowAfterFormatted={borrowAfterFormatted}
+        ltvBefore={ltvBefore}
+        ltvAfter={ltvAfter}
+        lltv={lltv}
+        shouldRenderAfter={shouldRenderAfter}
+        isChanging={Boolean(supplyAmount || borrowAmount)}
+      />
       <Info content={<InfoContent />} />
       <ButtonPrimary
         type="submit"

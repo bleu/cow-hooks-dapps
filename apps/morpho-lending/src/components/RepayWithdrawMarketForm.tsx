@@ -1,4 +1,4 @@
-import { cn, formatNumber } from "@bleu.builders/ui";
+import { formatNumber } from "@bleu.builders/ui";
 
 import {
   ButtonPrimary,
@@ -8,7 +8,6 @@ import {
   useIFrameContext,
   useReadTokenContract,
 } from "@bleu/cow-hooks-ui";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { useEffect, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { InputFieldName, MaxFieldName } from "#/constants/forms";
@@ -17,6 +16,7 @@ import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { useMaxWithdrawbleAmount } from "#/hooks/useMaxWithdrawbleAmount";
 import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
 import { AmountInput } from "./AmoutIntput";
+import { PositionSummary } from "./PositionSummary";
 
 interface RepayWithdrawMarketFormProps {
   market: MorphoMarket;
@@ -48,7 +48,6 @@ export function RepayWithdrawMarketForm({
   const { userBalance: borrowedBalance } = useReadTokenContract({
     tokenAddress: market.loanAsset.address,
   });
-
   const { collateral } = market.position;
 
   const { maxWithdrawableFormatted, maxWithdrawableFull, withdrawableLimit } =
@@ -181,6 +180,8 @@ export function RepayWithdrawMarketForm({
   const shouldRenderAfter = Boolean(repayAmount || withdrawAmount);
 
   const buttonMessage = useMemo(() => {
+    if (dynamicBorrow === undefined) return "Loading...";
+
     if (isInsufficientBalance)
       return `Insufficient ${market.loanAsset.symbol} Balance`;
 
@@ -210,10 +211,9 @@ export function RepayWithdrawMarketForm({
     market.loanAsset.symbol,
     repayAmount,
     withdrawAmount,
+    dynamicBorrow,
   ]);
-
   if (!context) return null;
-
   return (
     <div className="flex flex-col w-full gap-4 mt-4">
       <AmountInput
@@ -236,69 +236,24 @@ export function RepayWithdrawMarketForm({
         floatBalance={maxWithdrawableFull ?? 0.0}
         fiatBalance={fiatWithdrawAmount}
       />
-      <div className="flex flex-col gap-2 w-full min-h-24 pt-4 pb-1 px-6 bg-color-paper-darker rounded-xl items-start">
-        <span className="opacity-60 text-sm mb-[-8px] font-medium">
-          Your collateral position ({market.collateralAsset.symbol})
-        </span>
-        <div className="flex items-center gap-2">
-          <span
-            className={cn("font-semibold", {
-              "opacity-70": repayAmount || withdrawAmount,
-            })}
-          >
-            {formattedCollateral}
-          </span>
-          {shouldRenderAfter && (
-            <>
-              <ArrowRightIcon className="w-5 h-5 opacity-70" />
-              <span className="font-semibold">{collateralAfterFormatted}</span>
-            </>
-          )}
-        </div>
-        <span className="opacity-60 text-sm mb-[-8px] font-medium">
-          Your loan position ({market.loanAsset.symbol})
-        </span>
-        <div className="flex items-center gap-2">
-          <span
-            className={cn("font-semibold", {
-              "opacity-70": repayAmount || withdrawAmount,
-            })}
-          >
-            {formattedBorrow}
-          </span>
-          {shouldRenderAfter && (
-            <>
-              <ArrowRightIcon className="w-5 h-5 opacity-70" />
-              <span className="font-semibold">{borrowAfterFormatted}</span>
-            </>
-          )}
-        </div>
-        <span className="opacity-60 text-sm mb-[-8px] font-medium">
-          LTV / Liquidation LTV
-        </span>
-        <div className="flex items-center gap-2">
-          <span
-            className={cn("font-semibold", {
-              "opacity-70": repayAmount || withdrawAmount,
-            })}
-          >
-            {ltvBefore}
-          </span>
-          {shouldRenderAfter && (
-            <>
-              <ArrowRightIcon className="w-5 h-5 opacity-70" />
-              <span className="font-semibold">
-                {ltvAfter} / {lltv}
-              </span>
-            </>
-          )}
-        </div>
-      </div>
+      <PositionSummary
+        market={market}
+        formattedCollateral={formattedCollateral}
+        formattedBorrow={formattedBorrow}
+        collateralAfterFormatted={collateralAfterFormatted}
+        borrowAfterFormatted={borrowAfterFormatted}
+        ltvBefore={ltvBefore}
+        ltvAfter={ltvAfter}
+        lltv={lltv}
+        shouldRenderAfter={shouldRenderAfter}
+        isChanging={Boolean(repayAmount || withdrawAmount)}
+      />
       <Info content={<InfoContent />} />
       <ButtonPrimary
         type="submit"
         className="mb-4"
         disabled={
+          dynamicBorrow === undefined ||
           isInsufficientBalance ||
           isInsufficientPosition ||
           isOverRepay ||
