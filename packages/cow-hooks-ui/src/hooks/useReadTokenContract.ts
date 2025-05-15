@@ -135,9 +135,12 @@ export const readTokenContract = async (
         tokenResults?.[2]?.status === "success"
           ? {
               status: "success",
-              result: BigNumber.from(tokenResults?.[2].result)
-                .sub(sellAmount)
-                .toBigInt(),
+              result:
+                sellAmount > tokenResults?.[2].result
+                  ? BigInt(0)
+                  : BigNumber.from(tokenResults?.[2].result)
+                      .sub(sellAmount)
+                      .toBigInt(),
             }
           : tokenResults?.[2],
     };
