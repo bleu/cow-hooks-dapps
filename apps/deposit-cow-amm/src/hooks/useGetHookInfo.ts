@@ -212,6 +212,7 @@ export function useGetHookInfo(pool?: IPool) {
 
     const weirollTransferFromProxyArgs = {
       type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM_ALL_WEIROLL,
+      chainId: context.chainId,
       token: pool.address as Address,
       from: cowShedProxy,
       to: context.account,
@@ -221,7 +222,7 @@ export function useGetHookInfo(pool?: IPool) {
       weirollTransferFromProxyArgs.type,
       weirollTransferFromProxyArgs,
     );
-  }, [context?.account, cowShedProxy, pool]);
+  }, [context?.account, context?.chainId, cowShedProxy, pool]);
 
   return useCallback(
     async (args: DepositFormType): Promise<IHooksInfo> => {

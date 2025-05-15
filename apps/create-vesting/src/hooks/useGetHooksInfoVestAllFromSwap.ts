@@ -70,6 +70,7 @@ export const useGetHooksInfoVestAllFromSwap = () => {
           TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_PROXY,
           {
             type: TRANSACTION_TYPES.CREATE_VESTING_WEIROLL_PROXY,
+            chainId: context.chainId,
             token: tokenAddress,
             recipient: recipient as Address,
             cowShedProxy,
@@ -88,6 +89,6 @@ export const useGetHooksInfoVestAllFromSwap = () => {
 
       return { txs, recipientOverride: cowShedProxy };
     },
-    [context?.account, cowShedProxy, publicClient],
+    [context?.account, context?.chainId, cowShedProxy, publicClient],
   );
 };

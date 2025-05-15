@@ -118,3 +118,40 @@ export class MorphoBorrowCreator implements ITransaction<MorphoBorrowArgs> {
     };
   }
 }
+
+export interface MorphoRepayArgs extends BaseArgs {
+  type: TRANSACTION_TYPES.MORPHO_REPAY;
+  marketParams: MorphoMarketParams;
+  assets: bigint;
+  shares: bigint;
+  recipient: Address;
+}
+
+export class MorphoRepayCreator implements ITransaction<MorphoRepayArgs> {
+  async createRawTx(args: MorphoRepayArgs): Promise<BaseTransaction> {
+    return {
+      to: MORPHO_ADDRESS,
+      value: BigInt(0),
+      callData: encodeFunctionData({
+        abi: morphoAbi,
+        functionName: "repay",
+        args:
+          args.assets > BigInt(0)
+            ? [
+                args.marketParams,
+                args.assets,
+                BigInt(0), // shares = 0
+                args.recipient,
+                "0x", // additional data
+              ]
+            : [
+                args.marketParams,
+                BigInt(0), // assets = 0
+                args.shares,
+                args.recipient,
+                "0x", // additional data
+              ],
+      }),
+    };
+  }
+}

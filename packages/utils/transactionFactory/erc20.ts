@@ -1,3 +1,4 @@
+import type { SupportedChainId } from "@cowprotocol/cow-sdk";
 import * as weiroll from "@weiroll/weiroll.js";
 import { Contract } from "ethers";
 import { type Address, encodeFunctionData, erc20Abi } from "viem";
@@ -8,7 +9,7 @@ import type {
   ITransaction,
   TRANSACTION_TYPES,
 } from "./types";
-import { CommandFlags, WEIROLL_ADDRESS } from "./weiroll";
+import { CommandFlags, WEIROLL_ADDRESS_MAP } from "./weiroll";
 
 interface ERC20TransferFromExtraArgs {
   token: Address;
@@ -26,6 +27,7 @@ export interface ERC20TransferFromArgs
 export interface ERC20TransferFromAllWeirollArgs
   extends BaseArgs,
     ERC20TransferFromExtraArgs {
+  chainId: SupportedChainId;
   type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM_ALL_WEIROLL;
 }
 export interface ERC20ApproveArgs extends BaseArgs {
@@ -59,6 +61,7 @@ export class ERC20TransferFromAllWeirollCreator
   implements ITransaction<ERC20TransferFromAllWeirollArgs>
 {
   async createRawTx({
+    chainId,
     token,
     from,
     to,
@@ -82,7 +85,7 @@ export class ERC20TransferFromAllWeirollCreator
     const { commands, state } = planner.plan();
 
     return {
-      to: WEIROLL_ADDRESS,
+      to: WEIROLL_ADDRESS_MAP[chainId],
       value: BigInt(0),
       callData: encodeFunctionData({
         abi: weirollAbi,

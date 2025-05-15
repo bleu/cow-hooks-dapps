@@ -51,6 +51,7 @@ export function useGetPoolWithdrawArgs(): (
 
         return {
           type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM_ALL_WEIROLL,
+          chainId: context.chainId,
           token: tokenAddress,
           from: cowShedProxy,
           to: context.account,
