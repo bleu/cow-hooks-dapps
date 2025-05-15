@@ -119,7 +119,9 @@ export const readTokenContract = async (
         tokenResults?.[2]?.status === "success"
           ? {
               status: "success",
-              result: BigNumber.from(tokenResults?.[2].result).add(buyAmount),
+              result: BigNumber.from(tokenResults?.[2].result)
+                .add(buyAmount)
+                .toBigInt(),
             }
           : tokenResults?.[2],
     };
@@ -133,7 +135,9 @@ export const readTokenContract = async (
         tokenResults?.[2]?.status === "success"
           ? {
               status: "success",
-              result: BigNumber.from(tokenResults?.[2].result).sub(sellAmount),
+              result: BigNumber.from(tokenResults?.[2].result)
+                .sub(sellAmount)
+                .toBigInt(),
             }
           : tokenResults?.[2],
     };

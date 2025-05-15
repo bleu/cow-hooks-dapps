@@ -97,7 +97,7 @@ export function SupplyBorrowMarketForm({
   }, [isMaxSupply, collateralBalanceFull, setValue]);
 
   const borrowAfter =
-    dynamicBorrow !== undefined && borrowAmount
+    dynamicBorrow !== undefined
       ? dynamicBorrow +
         (decimalsToBigInt(borrowAmount, market.loanAsset.decimals) ?? BigInt(0))
       : undefined;
@@ -110,7 +110,7 @@ export function SupplyBorrowMarketForm({
     });
 
   const collateralAfter =
-    collateral !== undefined && supplyAmount
+    collateral !== undefined
       ? collateral +
         (decimalsToBigInt(supplyAmount, market.collateralAsset.decimals) ??
           BigInt(0))
