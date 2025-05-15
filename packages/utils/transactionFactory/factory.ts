@@ -27,6 +27,8 @@ import {
   MorphoRepayCreator,
   type MorphoSupplyArgs,
   MorphoSupplyCreator,
+  type MorphoWithdrawArgs,
+  MorphoWithdrawCreator,
 } from "./morpho";
 import {
   type BaseTransaction,
@@ -67,6 +69,7 @@ export interface TransactionBindings {
   [TRANSACTION_TYPES.MORPHO_SUPPLY]: MorphoSupplyArgs;
   [TRANSACTION_TYPES.MORPHO_BORROW]: MorphoBorrowArgs;
   [TRANSACTION_TYPES.MORPHO_REPAY]: MorphoRepayArgs;
+  [TRANSACTION_TYPES.MORPHO_WITHDRAW]: MorphoWithdrawArgs;
 }
 
 const TRANSACTION_CREATORS: {
@@ -93,6 +96,7 @@ const TRANSACTION_CREATORS: {
   [TRANSACTION_TYPES.MORPHO_SUPPLY]: MorphoSupplyCreator,
   [TRANSACTION_TYPES.MORPHO_BORROW]: MorphoBorrowCreator,
   [TRANSACTION_TYPES.MORPHO_REPAY]: MorphoRepayCreator,
+  [TRANSACTION_TYPES.MORPHO_WITHDRAW]: MorphoWithdrawCreator,
 };
 
 // This class is intentionally designed with only static members

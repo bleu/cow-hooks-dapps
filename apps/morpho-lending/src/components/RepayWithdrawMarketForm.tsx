@@ -14,7 +14,6 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { InputFieldName, MaxFieldName } from "#/constants/forms";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
-import { useMaxBorrowableAmount } from "#/hooks/useMaxBorrowableAmount";
 import { useMaxWithdrawbleAmount } from "#/hooks/useMaxWithdrawbleAmount";
 import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
 import { AmountInput } from "./AmoutIntput";
@@ -52,20 +51,19 @@ export function RepayWithdrawMarketForm({
       : `≈ ${formatNumber(Number(withdrawAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
     : "";
 
-  const { userBalance: collateralBalance, tokenDecimals: collateralDecimals } =
-    useReadTokenContract({
-      tokenAddress: market.collateralAsset.address,
-    });
+  const { userBalance: borrowedBalance } = useReadTokenContract({
+    tokenAddress: market.loanAsset.address,
+  });
 
   const { collateral } = market.position;
 
-  const { maxWithdrawableFormatted, maxWithdrawableFull } =
+  const { maxWithdrawableFormatted, maxWithdrawableFull, withdrawableLimit } =
     useMaxWithdrawbleAmount();
 
   const { formatted: formattedCollateral, usd: collateralUsd } =
     useFormatTokenAmount({
       amount: collateral,
-      decimals: collateralDecimals,
+      decimals: market.collateralAsset.decimals,
       priceUsd: market.collateralAsset.priceUsd,
     });
 
@@ -74,8 +72,6 @@ export function RepayWithdrawMarketForm({
     decimals: market.loanAsset.decimals,
     priceUsd: market.loanAsset.priceUsd,
   });
-
-  const maxBorrowableAmount = useMaxBorrowableAmount();
 
   useEffect(() => {
     if (isMaxWithdraw && maxWithdrawableFull) {
@@ -132,33 +128,35 @@ export function RepayWithdrawMarketForm({
     "percent",
   );
 
-  const supplyAmountBigInt = decimalsToBigInt(
+  const repayAmountBigInt = decimalsToBigInt(
     repayAmount,
-    market.collateralAsset.decimals,
-  );
-  const isInsufficientBalance = Boolean(
-    collateralBalance !== undefined &&
-      supplyAmountBigInt !== undefined &&
-      supplyAmountBigInt > collateralBalance,
-  );
-
-  const borrowAmountBigInt = decimalsToBigInt(
-    withdrawAmount,
     market.loanAsset.decimals,
   );
+
+  const isInsufficientBalance = Boolean(
+    borrowedBalance !== undefined &&
+      repayAmountBigInt !== undefined &&
+      repayAmountBigInt > borrowedBalance,
+  );
+
+  const withdrawAmountBigInt = decimalsToBigInt(
+    withdrawAmount,
+    market.collateralAsset.decimals,
+  );
   const isInsufficientPosition = Boolean(
-    maxBorrowableAmount !== undefined &&
-      borrowAmountBigInt !== undefined &&
-      borrowAmountBigInt > maxBorrowableAmount,
+    withdrawableLimit !== undefined &&
+      withdrawAmountBigInt !== undefined &&
+      withdrawAmountBigInt > withdrawableLimit,
   );
 
   const shouldRenderAfter = Boolean(repayAmount || withdrawAmount);
 
   const buttonMessage = useMemo(() => {
     if (isInsufficientBalance)
-      return `Insufficient ${market.collateralAsset.symbol} Balance`;
+      return `Insufficient ${market.loanAsset.symbol} Balance`;
 
-    if (isInsufficientPosition) return <span>Insufficient Collateral</span>;
+    if (isInsufficientPosition)
+      return `Insufficient ${market.collateralAsset.symbol} Balance`;
 
     if (!repayAmount && !withdrawAmount)
       return <span>Enter repay or withdraw</span>;
@@ -177,6 +175,7 @@ export function RepayWithdrawMarketForm({
     isInsufficientBalance,
     isInsufficientPosition,
     market.collateralAsset.symbol,
+    market.loanAsset.symbol,
     repayAmount,
     withdrawAmount,
   ]);

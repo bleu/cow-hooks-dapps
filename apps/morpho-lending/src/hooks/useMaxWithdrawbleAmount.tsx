@@ -51,5 +51,6 @@ export const useMaxWithdrawbleAmount = () => {
   return {
     maxWithdrawableFormatted,
     maxWithdrawableFull,
+    withdrawableLimit,
   };
 };

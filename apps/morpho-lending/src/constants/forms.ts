@@ -17,18 +17,13 @@ export enum OperationType {
   RepayWithdraw = "repay-withdraw",
 }
 
-export enum FormTabs {
-  AddBorrow = "add-borrow",
-  RepayWithdraw = "repay-withdraw",
-}
-
 export const FORM_TABS = [
   {
-    value: FormTabs.AddBorrow,
+    value: OperationType.SupplyBorrow,
     label: "Add/Borrow",
   },
   {
-    value: FormTabs.RepayWithdraw,
+    value: OperationType.RepayWithdraw,
     label: "Repay/Withdraw",
   },
 ];
