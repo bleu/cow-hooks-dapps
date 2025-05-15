@@ -20,10 +20,11 @@ export const useReadTokenContract = ({
         address,
         publicClient,
         context?.account,
-        context?.balancesDiff,
+        context.orderParams,
+        context.isPreHook,
       );
     },
-    [publicClient, context?.account, context?.balancesDiff],
+    [publicClient, context?.account, context?.orderParams, context?.isPreHook],
   );
 
   const {
@@ -57,12 +58,9 @@ export const readTokenContract = async (
   address: Address,
   publicClient: PublicClient,
   account: Address,
-  balancesDiff?: HookDappContextAdjusted["balancesDiff"],
+  orderParams: HookDappContextAdjusted["orderParams"],
+  isPreHook: boolean,
 ) => {
-  const tokenAddressLowerCase = address.toLowerCase() as Address;
-  const tokenBalanceDiff =
-    balancesDiff?.[account.toLowerCase()]?.[tokenAddressLowerCase] || "0";
-
   const tokenContract = {
     address: address,
     abi: erc20Abi,
@@ -100,20 +98,50 @@ export const readTokenContract = async (
       balance: undefined,
     };
   }
-  const contractBalance = tokenResults?.[2]?.result;
 
-  const balanceWithContextDiff = BigNumber.from(contractBalance)
-    .add(BigNumber.from(tokenBalanceDiff ?? 0))
-    .toBigInt();
+  if (isPreHook || !orderParams)
+    return {
+      symbol: tokenResults?.[0],
+      decimals: tokenResults?.[1],
+      balance: tokenResults?.[2],
+    };
 
-  const balanceResultWithContextDiff = {
-    ...tokenResults?.[2],
-    result: balanceWithContextDiff,
-  };
+  const buyToken = orderParams.buyTokenAddress.toLowerCase();
+  const sellToken = orderParams.sellTokenAddress.toLowerCase();
+  const buyAmount = BigInt(orderParams.buyAmount);
+  const sellAmount = BigInt(orderParams.sellAmount);
+
+  if (buyToken === address.toLowerCase()) {
+    return {
+      symbol: tokenResults?.[0],
+      decimals: tokenResults?.[1],
+      balance:
+        tokenResults?.[2]?.status === "success"
+          ? {
+              status: "success",
+              result: BigNumber.from(tokenResults?.[2].result).add(buyAmount),
+            }
+          : tokenResults?.[2],
+    };
+  }
+
+  if (sellToken === address.toLowerCase()) {
+    return {
+      symbol: tokenResults?.[0],
+      decimals: tokenResults?.[1],
+      balance:
+        tokenResults?.[2]?.status === "success"
+          ? {
+              status: "success",
+              result: BigNumber.from(tokenResults?.[2].result).sub(sellAmount),
+            }
+          : tokenResults?.[2],
+    };
+  }
 
   return {
     symbol: tokenResults?.[0],
     decimals: tokenResults?.[1],
-    balance: balanceResultWithContextDiff,
+    balance: tokenResults?.[2],
   };
 };
