@@ -53,12 +53,9 @@ export default function Page() {
         setValue("market", data.market);
         setValue("supplyAmount", data.supplyAmount);
         setValue("borrowAmount", data.borrowAmount);
-        setValue("isMaxSupply", data.isMaxSupply);
-        setValue("isMaxBorrow", data.isMaxBorrow);
         setValue("repayAmount", data.repayAmount);
         setValue("withdrawAmount", data.withdrawAmount);
         setValue("isMaxRepay", data.isMaxRepay);
-        setValue("isMaxWithdraw", data.isMaxWithdraw);
         setValue("operationType", data.operationType);
         setIsEditHookLoading(false);
       }
