@@ -1,53 +1,150 @@
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { morphoAbi } from "@bleu/utils/transactionFactory";
 import { MORPHO_ADDRESS } from "@bleu/utils/transactionFactory/morpho";
+import { splitSignature } from "ethers/lib/utils";
 import { useCallback } from "react";
 import useSWR from "swr";
-import { encodeFunctionData } from "viem";
+import { type Address, encodeFunctionData } from "viem";
+
+interface MorphoAuthorizationData {
+  authorizer: Address;
+  authorized: Address;
+  isAuthorized: boolean;
+  nonce: bigint;
+  deadline: bigint;
+}
 
 export const useIsCowShedAuthorizedOnMorpho = () => {
   const { cowShedProxy, context, publicClient } = useIFrameContext();
 
-  const { data: isProxyAuthorized } = useSWR(
-    [publicClient, context?.account, cowShedProxy],
-    async () => {
-      if (!publicClient || !context?.account || !cowShedProxy) return;
-      return await publicClient.readContract({
-        address: MORPHO_ADDRESS,
-        abi: morphoAbi,
-        functionName: "isAuthorized",
-        args: [context.account, cowShedProxy],
-      });
-    },
-  );
+  return useSWR([publicClient, context?.account, cowShedProxy], async () => {
+    if (!publicClient || !context?.account || !cowShedProxy)
+      return { isProxyAuthorized: undefined, userNonce: undefined };
 
-  return isProxyAuthorized;
+    const [isAuthorizedResult, nonceResult] = await publicClient.multicall({
+      contracts: [
+        {
+          address: MORPHO_ADDRESS,
+          abi: morphoAbi,
+          functionName: "isAuthorized",
+          args: [context.account, cowShedProxy],
+        },
+        {
+          address: MORPHO_ADDRESS,
+          abi: morphoAbi,
+          functionName: "nonce",
+          args: [context.account],
+        },
+      ],
+    });
+
+    return {
+      isProxyAuthorized:
+        isAuthorizedResult.status === "success"
+          ? isAuthorizedResult.result
+          : undefined,
+      userNonce:
+        nonceResult.status === "success" ? nonceResult.result : undefined,
+    };
+  });
 };
 
-export const useAuthorizeCowShedOnMorpho = (
-  isProxyAuthorized: boolean | undefined,
-) => {
-  const { cowShedProxy, signer } = useIFrameContext();
+function getAuthorizationData(
+  authorizer: Address,
+  nonce: bigint,
+): MorphoAuthorizationData {
+  const authorized = MORPHO_ADDRESS;
+  const isAuthorized = true;
+  const deadline = BigInt(Math.floor(Date.now() / 1000 + 60 * 60 * 24 * 30));
+
+  return {
+    authorizer,
+    authorized,
+    isAuthorized,
+    nonce,
+    deadline,
+  };
+}
+
+export function useAllowCowShedOnMorpho({
+  isCowShedAuthorizedOnMorpho,
+  userNonce,
+}: {
+  isCowShedAuthorizedOnMorpho: boolean | undefined;
+  userNonce: bigint | undefined;
+}) {
+  const { web3Provider, publicClient, jsonRpcProvider, context } =
+    useIFrameContext();
+  MORPHO_ADDRESS;
 
   return useCallback(async () => {
-    if (!signer || !cowShedProxy) throw new Error("missing context");
+    if (
+      !publicClient ||
+      !jsonRpcProvider ||
+      !context?.account ||
+      !web3Provider ||
+      userNonce === undefined
+    )
+      throw new Error("Missing context");
 
-    if (isProxyAuthorized) return;
+    if (isCowShedAuthorizedOnMorpho) return;
 
-    const transaction = await signer
-      .sendTransaction({
-        to: MORPHO_ADDRESS,
-        value: BigInt(0),
-        data: encodeFunctionData({
-          abi: morphoAbi,
-          functionName: "setAuthorization",
-          args: [cowShedProxy, true],
-        }),
-      })
-      .catch(() => {
-        throw new Error("User rejected transaction");
-      });
+    const { chainId, account } = context;
 
-    await transaction.wait();
-  }, [cowShedProxy, signer, isProxyAuthorized]);
-};
+    const authorizationData = getAuthorizationData(account, userNonce);
+
+    const domain = {
+      chainId: chainId,
+      verifyingContract: MORPHO_ADDRESS,
+    };
+
+    // Define the types
+    const types = {
+      Authorization: [
+        { name: "authorizer", type: "address" },
+        { name: "authorized", type: "address" },
+        { name: "isAuthorized", type: "bool" },
+        { name: "nonce", type: "uint256" },
+        { name: "deadline", type: "uint256" },
+      ],
+    };
+
+    const signer = web3Provider.getSigner();
+
+    // Request the signature using EIP-712 (typed data signing)
+    const signature = await signer._signTypedData(
+      domain,
+      types,
+      authorizationData,
+    );
+
+    if (!signature) return;
+
+    const splittedSignature = splitSignature(signature) as {
+      v: number;
+      r: `0x${string}`;
+      s: `0x${string}`;
+    };
+
+    const hook = {
+      target: MORPHO_ADDRESS,
+      callData: encodeFunctionData({
+        abi: morphoAbi,
+        functionName: "setAuthorizationWithSig",
+        args: [authorizationData, splittedSignature],
+      }),
+      gasLimit: "500000",
+    };
+
+    if (!hook) throw new Error("User rejected permit");
+
+    return hook;
+  }, [
+    jsonRpcProvider,
+    context,
+    publicClient,
+    web3Provider,
+    isCowShedAuthorizedOnMorpho,
+    userNonce,
+  ]);
+}

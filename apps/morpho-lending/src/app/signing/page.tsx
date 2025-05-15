@@ -18,7 +18,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useMorphoContext } from "#/contexts/morpho";
-import { useAuthorizeCowShedOnMorpho } from "#/hooks/useAllowCowShedOnMorpho";
+import { useAllowCowShedOnMorpho } from "#/hooks/useAllowCowShedOnMorpho";
 import { encodeFormData } from "#/utils/hookEncoding";
 
 export default function Page() {
@@ -41,10 +41,11 @@ export default function Page() {
   const { control } = useFormContext<MorphoSupplyFormData>();
   const formData = useWatch({ control });
 
-  const { isCowShedAuthorizedOnMorpho } = useMorphoContext();
-  const allowCowShedMorpho = useAuthorizeCowShedOnMorpho(
+  const { isCowShedAuthorizedOnMorpho, userNonce } = useMorphoContext();
+  const getAllowCowShedOnMoprhoHook = useAllowCowShedOnMorpho({
     isCowShedAuthorizedOnMorpho,
-  );
+    userNonce,
+  });
 
   useEffect(() => {
     if (!account && context?.account) {
@@ -101,6 +102,22 @@ export default function Page() {
     [handleTokenAllowance],
   );
 
+  const allowMorphoCallback = useCallback(async () => {
+    const allowMorphoHook = await getAllowCowShedOnMoprhoHook();
+
+    if (allowMorphoHook) {
+      setPermitTxs((prev) => [
+        ...prev,
+        {
+          to: allowMorphoHook.target,
+          value: BigInt(0),
+          callData: allowMorphoHook.callData,
+        },
+      ]);
+    }
+    setCurrentStepIndex((prev) => prev + 1);
+  }, [getAllowCowShedOnMoprhoHook]);
+
   const steps = useMemo(() => {
     const permitSteps =
       hookInfo?.permitData?.map((permit) => {
@@ -122,7 +139,7 @@ export default function Page() {
             label: "Allow Morpho operations",
             description: "Authorize proxy to operate Morpho on your behalf",
             id: "allow-morpho-operations",
-            callback: allowCowShedMorpho,
+            callback: allowMorphoCallback,
           },
         ];
 
@@ -140,7 +157,7 @@ export default function Page() {
     hookInfo,
     permitCallback,
     cowShedCallback,
-    allowCowShedMorpho,
+    allowMorphoCallback,
     isCowShedAuthorizedOnMorpho,
   ]);
 
