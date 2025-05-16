@@ -62,7 +62,7 @@ export function MarketFormContainer({ market }: MarketFormContainerProps) {
       defaultValue={currentOperationType}
       onValueChange={handleTabChange}
     >
-      <TabsList className="w-full mt-6 px-3">
+      <TabsList className="w-full mt-6 px-3 bg-cow-color-paper">
         {FORM_TABS.map((tab) => (
           <TabsTrigger
             key={tab.value}

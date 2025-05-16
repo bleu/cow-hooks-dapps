@@ -28,7 +28,7 @@ export function PositionSummary({
   isChanging,
 }: PositionSummaryProps) {
   return (
-    <div className="flex flex-col gap-2 w-full min-h-24 pt-4 pb-1 px-6 bg-color-paper-darker rounded-xl items-start">
+    <div className="flex flex-col gap-2 w-full min-h-24 pt-4 pb-1 px-6 bg-color-paper-darker/60 rounded-xl items-start">
       <span className="opacity-60 text-sm mb-[-8px] font-medium">
         Your collateral position ({market.collateralAsset.symbol})
       </span>
