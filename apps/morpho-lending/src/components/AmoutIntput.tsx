@@ -77,8 +77,8 @@ export const AmountInput = ({
     <div className="w-full">
       <div
         className={cn(
-          "flex flex-col gap-1 w-full min-h-24 pt-4 pb-1 px-6 bg-color-paper-darker rounded-xl items-start",
-          { "bg-color-paper-darker-hover": value },
+          "flex flex-col gap-1 w-full min-h-24 pt-4 pb-1 px-6 bg-color-paper-darker/60 rounded-xl items-start",
+          { "bg-color-paper-darker": value },
         )}
       >
         {label && (

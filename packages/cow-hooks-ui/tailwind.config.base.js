@@ -49,7 +49,7 @@ module.exports = {
 
         "color-paper": "rgb(var(--cow-color-paper) / <alpha-value>)",
         "color-paper-darker":
-          "var(--cow-color-paper-darker)",
+        "rgb(var(--cow-color-paper-darker) / <alpha-value>)",
         "color-paper-darker-hover":
           "rgb(var(--cow-color-paper-darker-hover) / <alpha-value>)",
         "color-paper-darkest":
