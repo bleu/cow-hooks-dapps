@@ -11,6 +11,9 @@ import { useIsCowShedAuthorizedOnMorpho } from "#/hooks/useAllowCowShedOnMorpho"
 
 export interface MorphoContextData {
   markets: MorphoMarket[] | undefined;
+  isLoadingMarkets: boolean;
+  isLoadingIsCowShedAuthorizedOnMorpho: boolean;
+  errorMarkets: Error | undefined;
   isCowShedAuthorizedOnMorpho: boolean | undefined;
   userNonce: bigint | undefined;
 }
@@ -25,19 +28,23 @@ export function MorphoContextProvider({ children }: PropsWithChildren) {
   const { context, publicClient } = useIFrameContext();
 
   // Get markets data from useMorphoMarkets
-  const { data: markets } = useMorphoMarkets(
-    context?.account,
-    publicClient,
-    context?.chainId,
-  );
+  const {
+    data: markets,
+    isLoading: isLoadingMarkets,
+    error: errorMarkets,
+  } = useMorphoMarkets(context?.account, publicClient, context?.chainId);
 
-  const { data } = useIsCowShedAuthorizedOnMorpho();
+  const { data, isLoading: isLoadingIsCowShedAuthorizedOnMorpho } =
+    useIsCowShedAuthorizedOnMorpho();
   const { isProxyAuthorized: isCowShedAuthorizedOnMorpho, userNonce } =
     data ?? {};
 
   // Create the value object to be provided by the context
   const contextValue: MorphoContextData = {
     markets,
+    isLoadingMarkets,
+    isLoadingIsCowShedAuthorizedOnMorpho,
+    errorMarkets,
     isCowShedAuthorizedOnMorpho,
     userNonce,
   };
