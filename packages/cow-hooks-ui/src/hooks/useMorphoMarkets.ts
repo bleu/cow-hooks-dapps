@@ -94,27 +94,49 @@ export function useMorphoMarkets(
       if (!chainId || !userAddress) return [] as MorphoMarket[];
       if (!publicClient) throw new Error("missing public client");
 
-      // TODO: handle pages
-      const gqlMarkets = (
-        await MORPHO_GQL_CLIENT.request<IQuery>(MORPHO_MARKETS_QUERY, {
-          where: {
-            ...where,
-            chainId_in: [chainId],
-            whitelisted: true,
+      let allMarkets: Omit<
+        MorphoMarket,
+        "position" | "liquidity" | "liquidityUsd" | "price" | "onchainState"
+      >[] = [];
+      let skip = 0;
+      const pageSize = 100; // Use a reasonable page size
+      let hasMore = true;
+
+      while (hasMore) {
+        const response = await MORPHO_GQL_CLIENT.request<IQuery>(
+          MORPHO_MARKETS_QUERY,
+          {
+            first: pageSize,
+            skip,
+            where: {
+              ...where,
+              chainId_in: [chainId],
+              whitelisted: true,
+            },
+            orderBy: orderBy ?? "SupplyAssetsUsd",
+            OrderDirection: "Desc",
           },
-          orderBy: orderBy ?? "SupplyAssetsUsd",
-          OrderDirection: "Desc",
-        })
-      ).markets.items.filter((market) => market.collateralAsset !== null);
+        );
+
+        const markets = response.markets.items;
+        allMarkets = [...allMarkets, ...markets];
+
+        hasMore = markets.length === pageSize;
+        skip += pageSize;
+      }
+
+      const filteredMarkets = allMarkets.filter(
+        (market) => market.collateralAsset !== null,
+      );
 
       const marketsOnchainInfo = await readOnchainMorphoMarkets(
         userAddress as Address,
-        gqlMarkets as MorphoMarket[],
+        filteredMarkets as MorphoMarket[],
         publicClient,
       );
 
       // merge onchain info into markets
-      const markets = gqlMarkets
+      const markets = filteredMarkets
         .map((market, index) => {
           const marketOnchainInfo = marketsOnchainInfo[index];
           return marketOnchainInfo

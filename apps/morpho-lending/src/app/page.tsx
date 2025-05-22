@@ -18,7 +18,12 @@ export default function Page() {
   const { control, setValue } = useFormContext<MorphoSupplyFormData>();
   const { market: selectedMarket } = useWatch({ control });
   const market = selectedMarket as MorphoMarket | undefined;
-  const { markets } = useMorphoContext();
+  const {
+    markets,
+    isLoadingMarkets,
+    isLoadingIsCowShedAuthorizedOnMorpho,
+    errorMarkets,
+  } = useMorphoContext();
 
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
   const { context: iFrameContext } = useIFrameContext();
@@ -95,7 +100,7 @@ export default function Page() {
       </div>
     );
 
-  if (!markets)
+  if (isLoadingMarkets || isLoadingIsCowShedAuthorizedOnMorpho)
     return (
       <div className="text-center mt-10 p-2">
         <Spinner
@@ -121,6 +126,14 @@ export default function Page() {
         <span>Please specify your swap order first</span>
       </div>
     );
+  }
+
+  if (errorMarkets?.message.includes("403")) {
+    return <span className="mt-10 text-center">Forbidden access</span>;
+  }
+
+  if (!markets || markets.length === 0) {
+    return <span className="mt-10 text-center">No markets found</span>;
   }
 
   return (
