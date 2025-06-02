@@ -64,7 +64,7 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
     <div className="w-full flex flex-col xsm:flex-row justify-between rounded-2xl p-4 cursor-pointer bg-color-paper-darker/60 hover:bg-color-paper-darker hover:text-muted-foreground transition-all">
       <div className="flex justify-between items-start w-full xsm:w-auto xsm:min-w-44">
         <div className="flex flex-col gap-1">
-          <Label>Your Collateral</Label>
+          <Label>{userCollateral && "Your"} Collateral</Label>
           {userCollateral && <span>{userCollateral}</span>}
           <TokenCard
             asset={market.collateralAsset}
@@ -72,7 +72,7 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
           />
         </div>
         <div className="flex flex-col gap-1">
-          <Label>Your Loan</Label>
+          <Label>{userBorrow && "Your"} Loan</Label>
           {userBorrow && <span>{userBorrow}</span>}
           <TokenCard
             asset={market.loanAsset}
