@@ -128,16 +128,20 @@ export const AmountInput = ({
             {fiatBalance}
           </span>
           {formattedBalance && token?.symbol && (
-            <span className="font-normal pl-1">
-              <span title={floatBalance} className="opacity-40 text-xs">
+            <span className="flex items-center gap-1">
+              <span
+                title={floatBalance}
+                className="opacity-60 text-xs text-color-text-paper"
+              >
                 {formattedBalance} {token?.symbol}
               </span>
               <button
                 type="button"
                 className={cn(
-                  "inline text-color-text-paper bg-color-paper px-1 ml-1 opacity-100 rounded-md text-xs hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]",
+                  "inline font-semibold text-opacity-60  text-color-text-paper bg-color-paper py-[3px] px-[4px] ml-1  rounded-md text-xs hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]",
                   {
-                    "bg-color-primary text-color-button-text": isMaxValue,
+                    "bg-color-primary text-color-button-text text-opacity-100":
+                      isMaxValue,
                   },
                 )}
                 onClick={() => setValue(maxName, !isMaxValue)}
