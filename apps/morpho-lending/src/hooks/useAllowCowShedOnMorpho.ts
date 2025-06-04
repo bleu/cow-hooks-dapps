@@ -17,7 +17,7 @@ interface MorphoAuthorizationData {
 export const useIsCowShedAuthorizedOnMorpho = () => {
   const { cowShedProxy, context, publicClient } = useIFrameContext();
 
-  return useSWR([publicClient, context?.account, cowShedProxy], async () => {
+  return useSWR([context?.account, cowShedProxy], async () => {
     if (!publicClient || !context?.account || !cowShedProxy)
       return { isProxyAuthorized: undefined, userNonce: undefined };
 
