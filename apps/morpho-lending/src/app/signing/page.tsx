@@ -20,6 +20,7 @@ import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useMorphoContext } from "#/contexts/morpho";
 import { useAllowCowShedOnMorpho } from "#/hooks/useAllowCowShedOnMorpho";
 import { encodeFormData } from "#/utils/hookEncoding";
+import { OperationType } from "#/constants/forms";
 
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -28,6 +29,16 @@ export default function Page() {
     useIFrameContext();
   const [account, setAccount] = useState<string>();
   const router = useRouter();
+
+  const { getValues } = useFormContext<MorphoSupplyFormData>();
+  const {
+    borrowAmount,
+    supplyAmount,
+    operationType,
+    repayAmount,
+    withdrawAmount,
+  } = getValues();
+
   const submitHook = useSubmitHook({ defaultGasLimit: BigInt(700000) });
   const cowShedSignature = useCowShedSignature({
     cowShed,
@@ -160,9 +171,22 @@ export default function Page() {
     allowMorphoCallback,
     isCowShedAuthorizedOnMorpho,
   ]);
+  const getOperationText = () => {
+    if (operationType === OperationType.SupplyBorrow) {
+      if (supplyAmount && borrowAmount) return "Supply/Borrow Morpho position";
+      if (supplyAmount) return "Supply Morpho position";
+      if (borrowAmount) return "Borrow Morpho position";
+    } else {
+      if (repayAmount && withdrawAmount)
+        return "Repay/Withdraw Morpho position";
+      if (repayAmount) return "Repay Morpho position";
+      if (withdrawAmount) return "Withdraw Morpho position";
+    }
+  };
 
   return (
-    <div className="flex flex-col gap-2 p-2 text-center h-full justify-between items-center">
+    <div className="flex flex-col gap-1 p-2 text-center h-full justify-between items-center">
+      <p className="text-lg font-semibold mb-4">{getOperationText()}</p>
       <WaitingSignature {...steps[currentStepIndex]} />
       <SignatureSteps steps={steps} currentStepIndex={currentStepIndex} />
     </div>
