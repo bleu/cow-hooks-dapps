@@ -58,7 +58,7 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
       ? formatNumber(userLtvFloat, 1, "percent")
       : undefined;
 
-  const liquidity = `$${formatNumber(market.liquidityUsd, 1)}`;
+  const liquidity = `$${formatNumber(market.state.totalLiquidityUsd, 1)}`;
 
   return (
     <div className="w-full flex flex-col xsm:flex-row justify-between rounded-2xl p-4 cursor-pointer bg-color-paper-darker/60 hover:bg-color-paper-darker hover:text-muted-foreground transition-all">
