@@ -86,7 +86,7 @@ export const AmountInput = ({
             <Label className="block font-semibold opacity-70">{label}</Label>
           </div>
         )}
-        <div className="flex w-full items-center justify-between gap-2">
+        <div className="flex items-center gap-4 w-full justify-between">
           <Input
             type="number"
             inputMode="decimal"
@@ -94,7 +94,7 @@ export const AmountInput = ({
             max="1000000000000"
             placeholder="0.0"
             autoComplete="off"
-            className="outline-none font-semibold text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-left p-0 m-0 h-min border-none rounded-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none truncate"
+            className="max-w-36 outline-none font-semibold text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-left p-0 m-0 h-min border-none rounded-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none truncate"
             onKeyDown={(e) =>
               ["e", "E", "+", "-", "ArrowUp", "ArrowDown"].includes(e.key) &&
               e.preventDefault()
@@ -107,15 +107,18 @@ export const AmountInput = ({
               onChange: handleDisableMaxOnUserInput,
             })}
           />
-          <div className="rounded-full text-color-text-paper bg-color-paper cursor-default">
+          <div className="rounded-3xl p-1.5 text-color-text-paper bg-color-paper cursor-default flex ">
             {token && (
-              <div className="w-fit py-1 px-2 flex items-center justify-center gap-2">
-                <div className="w-6 h-6">
-                  <TokenLogo token={token} height={24} width={24} alt="" />
-                </div>
-                <span className="m-0 p-0 min-h-fit text-lg">
-                  {token?.symbol}
+              <div className="flex flex-1 items-center gap-1.5">
+                <span className="flex-shrink-0 flex-grow-0 w-6 h-6">
+                  <TokenLogo
+                    token={token}
+                    width={24}
+                    height={24}
+                    className="w-6 h-6"
+                  />
                 </span>
+                <p className="text-lg line-clamp-3">{token.symbol}</p>
               </div>
             )}
           </div>
@@ -125,16 +128,20 @@ export const AmountInput = ({
             {fiatBalance}
           </span>
           {formattedBalance && token?.symbol && (
-            <span className="font-normal pl-1">
-              <span title={floatBalance} className="opacity-40 text-xs">
+            <span className="flex items-center gap-1">
+              <span
+                title={floatBalance}
+                className="opacity-60 text-xs text-color-text-paper"
+              >
                 {formattedBalance} {token?.symbol}
               </span>
               <button
                 type="button"
                 className={cn(
-                  "inline text-color-text-paper bg-color-paper px-1 ml-1 opacity-100 rounded-md text-xs hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]",
+                  "inline font-semibold text-opacity-60  text-color-text-paper bg-color-paper py-[3px] px-[4px] ml-1  rounded-md text-xs hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]",
                   {
-                    "bg-color-primary text-color-button-text": isMaxValue,
+                    "bg-color-primary text-color-button-text text-opacity-100":
+                      isMaxValue,
                   },
                 )}
                 onClick={() => setValue(maxName, !isMaxValue)}

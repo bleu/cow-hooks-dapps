@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
+import { OperationType } from "#/constants/forms";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useMorphoContext } from "#/contexts/morpho";
 import { useAllowCowShedOnMorpho } from "#/hooks/useAllowCowShedOnMorpho";
@@ -24,10 +25,24 @@ import { encodeFormData } from "#/utils/hookEncoding";
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [permitTxs, setPermitTxs] = useState<BaseTransaction[]>([]);
+  const [account, setAccount] = useState<string>();
+
+  const router = useRouter();
   const { hookInfo, cowShed, signer, context, cowShedProxy } =
     useIFrameContext();
-  const [account, setAccount] = useState<string>();
-  const router = useRouter();
+
+  const { getValues } = useFormContext<MorphoSupplyFormData>();
+  const {
+    borrowAmount,
+    supplyAmount,
+    operationType,
+    repayAmount,
+    withdrawAmount,
+  } = getValues();
+  const { control } = useFormContext<MorphoSupplyFormData>();
+  const formData = useWatch({ control });
+  const { isCowShedAuthorizedOnMorpho, userNonce } = useMorphoContext();
+
   const submitHook = useSubmitHook({ defaultGasLimit: BigInt(700000) });
   const cowShedSignature = useCowShedSignature({
     cowShed,
@@ -37,11 +52,6 @@ export default function Page() {
   const handleTokenAllowance = useHandleTokenAllowance({
     spender: cowShedProxy,
   });
-
-  const { control } = useFormContext<MorphoSupplyFormData>();
-  const formData = useWatch({ control });
-
-  const { isCowShedAuthorizedOnMorpho, userNonce } = useMorphoContext();
   const getAllowCowShedOnMoprhoHook = useAllowCowShedOnMorpho({
     isCowShedAuthorizedOnMorpho,
     userNonce,
@@ -161,8 +171,22 @@ export default function Page() {
     isCowShedAuthorizedOnMorpho,
   ]);
 
+  const getOperationText = () => {
+    if (operationType === OperationType.SupplyBorrow) {
+      if (supplyAmount && borrowAmount) return "Supply/Borrow Morpho position";
+      if (supplyAmount) return "Supply Morpho position";
+      if (borrowAmount) return "Borrow Morpho position";
+    } else {
+      if (repayAmount && withdrawAmount)
+        return "Repay/Withdraw Morpho position";
+      if (repayAmount) return "Repay Morpho position";
+      if (withdrawAmount) return "Withdraw Morpho position";
+    }
+  };
+
   return (
-    <div className="flex flex-col gap-2 p-2 text-center h-full justify-between items-center">
+    <div className="flex flex-col gap-1 p-2 text-center h-full justify-between items-center">
+      <p className="text-lg font-semibold mb-4">{getOperationText()}</p>
       <WaitingSignature {...steps[currentStepIndex]} />
       <SignatureSteps steps={steps} currentStepIndex={currentStepIndex} />
     </div>

@@ -149,6 +149,7 @@ export interface MorphoMarket {
     dailyNetBorrowApy: number;
     weeklyNetBorrowApy: number;
     monthlyNetBorrowApy: number;
+    totalLiquidityUsd: number;
   };
   onchainState: {
     totalSupplyAssets: bigint;

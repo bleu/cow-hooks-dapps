@@ -35,6 +35,7 @@ const MORPHO_MARKETS_QUERY = gql`
           dailyNetBorrowApy
           weeklyNetBorrowApy
           monthlyNetBorrowApy
+          totalLiquidityUsd
         }
         collateralAsset {
           address
@@ -113,7 +114,7 @@ export function useMorphoMarkets(
               chainId_in: [chainId],
               whitelisted: true,
             },
-            orderBy: orderBy ?? "SupplyAssetsUsd",
+            orderBy: orderBy ?? "TotalLiquidityUsd",
             OrderDirection: "Desc",
           },
         );
