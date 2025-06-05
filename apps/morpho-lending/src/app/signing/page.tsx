@@ -11,31 +11,21 @@ import {
   useHandleTokenAllowance,
   useSubmitHook,
 } from "@bleu/cow-hooks-ui";
-import { BigNumber } from "ethers";
+import { BigNumber, type BigNumberish } from "ethers";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import type { Address } from "viem";
-
 import { OperationType } from "#/constants/forms";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useMorphoContext } from "#/contexts/morpho";
 import { useAllowCowShedOnMorpho } from "#/hooks/useAllowCowShedOnMorpho";
 import { encodeFormData } from "#/utils/hookEncoding";
 
-type Step = {
-  label: string;
-  description: string;
-  id: string;
-  callback: () => Promise<void>;
-  tooltipText?: string;
-};
-
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [permitTxs, setPermitTxs] = useState<BaseTransaction[]>([]);
   const [account, setAccount] = useState<string>();
-  const [steps, setSteps] = useState<Step[]>([]);
 
   const router = useRouter();
   const { hookInfo, cowShed, signer, context, cowShedProxy } =
@@ -96,6 +86,32 @@ export default function Page() {
     });
   }, [cowShedSignature, submitHook, hookInfo, permitTxs, cowShed, formData]);
 
+  const permitCallback = useCallback(
+    async (permit: {
+      tokenAddress: string;
+      amount: BigNumberish;
+      tokenSymbol: string;
+    }) => {
+      const permitData = await handleTokenAllowance(
+        BigNumber.from(permit.amount),
+        permit.tokenAddress as Address,
+      );
+
+      if (permitData) {
+        setPermitTxs((prev) => [
+          ...prev,
+          {
+            to: permitData.target,
+            value: BigInt(0),
+            callData: permitData.callData,
+          },
+        ]);
+      }
+      setCurrentStepIndex((prev) => prev + 1);
+    },
+    [handleTokenAllowance],
+  );
+
   const allowMorphoCallback = useCallback(async () => {
     const allowMorphoHook = await getAllowCowShedOnMoprhoHook();
 
@@ -112,71 +128,49 @@ export default function Page() {
     setCurrentStepIndex((prev) => prev + 1);
   }, [getAllowCowShedOnMoprhoHook]);
 
-  useEffect(() => {
-    const initializeSteps = async () => {
-      const permitStepsPromises =
-        hookInfo?.permitData?.map(async (permit) => {
-          const permitData = await handleTokenAllowance(
-            BigNumber.from(permit.amount),
-            permit.tokenAddress as Address,
-          );
+  const steps = useMemo(() => {
+    const permitSteps =
+      hookInfo?.permitData?.map((permit) => {
+        return {
+          label: `Approve ${permit.tokenSymbol}`,
+          description: `Approve proxy to spend the ${permit.tokenSymbol} token`,
+          id: `approve-${permit.tokenAddress}`,
+          callback: async () => {
+            await permitCallback(permit);
+          },
+          tooltipText: permit.tokenAddress,
+        };
+      }) || [];
 
-          if (!permitData) return null;
+    const morphoAuthorization = isCowShedAuthorizedOnMorpho
+      ? []
+      : [
+          {
+            label: "Allow Morpho operations",
+            description: "Authorize proxy to operate Morpho on your behalf",
+            id: "allow-morpho-operations",
+            callback: allowMorphoCallback,
+          },
+        ];
 
-          return {
-            label: `Approve ${permit.tokenSymbol}`,
-            description: `Approve proxy to spend the ${permit.tokenSymbol} token`,
-            id: `approve-${permit.tokenAddress}`,
-            callback: async () => {
-              setPermitTxs((prev) => [
-                ...prev,
-                {
-                  to: permitData.target,
-                  value: BigInt(0),
-                  callData: permitData.callData,
-                },
-              ]);
-              setCurrentStepIndex((prev) => prev + 1);
-            },
-            tooltipText: permit.tokenAddress,
-          };
-        }) || [];
-
-      const permitSteps = (await Promise.all(permitStepsPromises)).filter(
-        (step): step is NonNullable<typeof step> => step !== null,
-      );
-
-      const morphoAuthorization = isCowShedAuthorizedOnMorpho
-        ? []
-        : [
-            {
-              label: "Allow Morpho operations",
-              description: "Authorize proxy to operate Morpho on your behalf",
-              id: "allow-morpho-operations",
-              callback: allowMorphoCallback,
-            },
-          ];
-
-      setSteps([
-        ...morphoAuthorization,
-        ...permitSteps,
-        {
-          label: "Approve and add pre-hook",
-          description: "Approve proxy to execute the hook on your behalf",
-          id: "approve-hooks",
-          callback: cowShedCallback,
-        },
-      ]);
-    };
-
-    initializeSteps();
+    return [
+      ...morphoAuthorization,
+      ...permitSteps,
+      {
+        label: "Approve and add pre-hook",
+        description: "Approve proxy to execute the hook on your behalf",
+        id: "approve-hooks",
+        callback: cowShedCallback,
+      },
+    ];
   }, [
     hookInfo,
+    permitCallback,
     cowShedCallback,
     allowMorphoCallback,
-    handleTokenAllowance,
     isCowShedAuthorizedOnMorpho,
   ]);
+
   const getOperationText = () => {
     if (operationType === OperationType.SupplyBorrow) {
       if (supplyAmount && borrowAmount) return "Supply/Borrow Morpho position";
