@@ -94,10 +94,12 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
         </div>
       </div>
       <div className="hidden xsm:block col-span-1 w-[1px] h-inherit bg-color-text-paper opacity-20 mx-3" />
-      <div className="w-full grid grid-cols-3 gap-4 mt-4 xsm:mt-0">
+      <div className="w-full grid grid-cols-3 gap-3 mt-4 xsm:mt-0">
         <div className="flex flex-col gap-1">
           <Label>Rate</Label>
-          <span className="font-semibold text-sm">{rate}</span>
+          <span className="font-semibold text-sm">
+            {Number(market.state.monthlyNetBorrowApy) < 0.01 ? "< 0.01%" : rate}
+          </span>
         </div>
         {userLtv !== undefined && userLtvFloat !== undefined ? (
           <div className="col-span-2 flex flex-col gap-1">

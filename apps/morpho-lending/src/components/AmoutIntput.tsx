@@ -135,19 +135,22 @@ export const AmountInput = ({
               >
                 {formattedBalance} {token?.symbol}
               </span>
-              <button
-                type="button"
-                className={cn(
-                  "inline font-semibold text-opacity-60  text-color-text-paper bg-color-paper py-[3px] px-[4px] ml-1  rounded-md text-xs hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]",
-                  {
-                    "bg-color-primary text-color-button-text text-opacity-100":
-                      isMaxValue,
-                  },
-                )}
-                onClick={() => setValue(maxName, !isMaxValue)}
-              >
-                MAX
-              </button>
+              {Number(floatBalance) > 0 && (
+                <button
+                  type="button"
+                  disabled={Number(floatBalance) === 0}
+                  className={cn(
+                    "inline font-semibold text-opacity-60  text-color-text-paper bg-color-paper py-[3px] px-[4px] ml-1  rounded-md text-xs hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]",
+                    {
+                      "bg-color-primary text-color-button-text text-opacity-100":
+                        isMaxValue,
+                    },
+                  )}
+                  onClick={() => setValue(maxName, !isMaxValue)}
+                >
+                  MAX
+                </button>
+              )}
             </span>
           )}
         </div>
