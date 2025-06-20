@@ -12,13 +12,21 @@ interface PositionSummaryProps {
   ltvAfter: string;
   lltv: string;
   shouldRenderAfter: boolean;
+  collateralFloat: string;
+  borrowFloat: string;
+  collateralAfterFloat: string;
+  borrowAfterFloat: string;
   isChanging: boolean;
 }
 
 export function PositionSummary({
   market,
+  collateralFloat,
+  borrowFloat,
   formattedCollateral,
   formattedBorrow,
+  collateralAfterFloat,
+  borrowAfterFloat,
   collateralAfterFormatted,
   borrowAfterFormatted,
   ltvBefore,
@@ -34,6 +42,7 @@ export function PositionSummary({
       </span>
       <div className="flex items-center gap-2">
         <span
+          title={collateralFloat}
           className={cn("font-semibold", {
             "opacity-70": isChanging,
           })}
@@ -43,7 +52,9 @@ export function PositionSummary({
         {shouldRenderAfter && (
           <>
             <ArrowRightIcon className="w-5 h-5 opacity-70" />
-            <span className="font-semibold">{collateralAfterFormatted}</span>
+            <span title={collateralAfterFloat} className="font-semibold">
+              {collateralAfterFormatted}
+            </span>
           </>
         )}
       </div>
@@ -52,6 +63,7 @@ export function PositionSummary({
       </span>
       <div className="flex items-center gap-2">
         <span
+          title={borrowFloat}
           className={cn("font-semibold", {
             "opacity-70": isChanging,
           })}
@@ -61,7 +73,9 @@ export function PositionSummary({
         {shouldRenderAfter && (
           <>
             <ArrowRightIcon className="w-5 h-5 opacity-70" />
-            <span className="font-semibold">{borrowAfterFormatted}</span>
+            <span title={borrowAfterFloat} className="font-semibold">
+              {borrowAfterFormatted}
+            </span>
           </>
         )}
       </div>

@@ -2,7 +2,6 @@
 
 import {
   type BaseTransaction,
-  SignatureSteps,
   WaitingSignature,
   useCowShedSignature,
   useHandleTokenAllowance,
@@ -97,8 +96,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col gap-2 p-2 text-center h-full justify-between items-center">
-      <WaitingSignature {...steps[currentStepIndex]} />
-      <SignatureSteps steps={steps} currentStepIndex={currentStepIndex} />
+      <WaitingSignature steps={steps} currentStepIndex={currentStepIndex} />
     </div>
   );
 }

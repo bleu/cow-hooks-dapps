@@ -1,4 +1,4 @@
-import { formatNumber } from "@bleu.builders/ui";
+import { cn, formatNumber } from "@bleu.builders/ui";
 
 import {
   ButtonPrimary,
@@ -33,17 +33,19 @@ export function RepayWithdrawMarketForm({
     control,
   });
 
-  const fiatRepayAmount = repayAmount
-    ? Number(repayAmount) * market.loanAsset.priceUsd < 0.01
-      ? "≈ $< 0.01"
-      : `≈ ${formatNumber(Number(repayAmount) * market.loanAsset.priceUsd, 2, "currency", "standard")}`
-    : "";
+  const fiatRepayAmount =
+    repayAmount && market.loanAsset.priceUsd
+      ? Number(repayAmount) * market.loanAsset.priceUsd < 0.01
+        ? "≈ $< 0.01"
+        : `≈ ${formatNumber(Number(repayAmount) * market.loanAsset.priceUsd, 2, "currency", "standard")}`
+      : "";
 
-  const fiatWithdrawAmount = withdrawAmount
-    ? Number(withdrawAmount) * market.collateralAsset.priceUsd < 0.01
-      ? "≈ $< 0.01"
-      : `≈ ${formatNumber(Number(withdrawAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
-    : "";
+  const fiatWithdrawAmount =
+    withdrawAmount && market.collateralAsset.priceUsd
+      ? Number(withdrawAmount) * market.collateralAsset.priceUsd < 0.01
+        ? "≈ $< 0.01"
+        : `≈ ${formatNumber(Number(withdrawAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
+      : "";
 
   const { userBalance: borrowedBalance } = useReadTokenContract({
     tokenAddress: market.loanAsset.address,
@@ -68,14 +70,21 @@ export function RepayWithdrawMarketForm({
       decimals: market.loanAsset.decimals,
     });
 
-  const { formatted: formattedCollateral, usd: collateralUsd } =
-    useFormatTokenAmount({
-      amount: collateral,
-      decimals: market.collateralAsset.decimals,
-      priceUsd: market.collateralAsset.priceUsd,
-    });
+  const {
+    formatted: formattedCollateral,
+    usd: collateralUsd,
+    fullDecimals: collateralFloat,
+  } = useFormatTokenAmount({
+    amount: collateral,
+    decimals: market.collateralAsset.decimals,
+    priceUsd: market.collateralAsset.priceUsd,
+  });
 
-  const { formatted: formattedBorrow, usd: borrowUsd } = useFormatTokenAmount({
+  const {
+    formatted: formattedBorrow,
+    usd: borrowUsd,
+    fullDecimals: borrowFloat,
+  } = useFormatTokenAmount({
     amount: dynamicBorrow,
     decimals: market.loanAsset.decimals,
     priceUsd: market.loanAsset.priceUsd,
@@ -113,12 +122,15 @@ export function RepayWithdrawMarketForm({
     repayableLimit,
   ]);
 
-  const { formatted: borrowAfterFormatted, usd: borrowAfterUsd } =
-    useFormatTokenAmount({
-      amount: borrowAfter,
-      decimals: market.loanAsset.decimals,
-      priceUsd: market.loanAsset.priceUsd,
-    });
+  const {
+    formatted: borrowAfterFormatted,
+    usd: borrowAfterUsd,
+    fullDecimals: borrowAfterFloat,
+  } = useFormatTokenAmount({
+    amount: borrowAfter,
+    decimals: market.loanAsset.decimals,
+    priceUsd: market.loanAsset.priceUsd,
+  });
 
   const collateralAfter =
     collateral !== undefined
@@ -127,12 +139,15 @@ export function RepayWithdrawMarketForm({
           BigInt(0))
       : undefined;
 
-  const { formatted: collateralAfterFormatted, usd: collateralAfterUsd } =
-    useFormatTokenAmount({
-      amount: collateralAfter,
-      decimals: market.collateralAsset.decimals,
-      priceUsd: market.collateralAsset.priceUsd,
-    });
+  const {
+    formatted: collateralAfterFormatted,
+    usd: collateralAfterUsd,
+    fullDecimals: collateralAfterFloat,
+  } = useFormatTokenAmount({
+    amount: collateralAfter,
+    decimals: market.collateralAsset.decimals,
+    priceUsd: market.collateralAsset.priceUsd,
+  });
 
   const ltvBefore =
     borrowUsd && collateralUsd
@@ -238,8 +253,12 @@ export function RepayWithdrawMarketForm({
       />
       <PositionSummary
         market={market}
+        collateralFloat={collateralFloat}
         formattedCollateral={formattedCollateral}
+        borrowFloat={borrowFloat}
         formattedBorrow={formattedBorrow}
+        collateralAfterFloat={collateralAfterFloat}
+        borrowAfterFloat={borrowAfterFloat}
         collateralAfterFormatted={collateralAfterFormatted}
         borrowAfterFormatted={borrowAfterFormatted}
         ltvBefore={ltvBefore}
@@ -251,7 +270,10 @@ export function RepayWithdrawMarketForm({
       <Info content={<InfoContent />} />
       <ButtonPrimary
         type="submit"
-        className="mb-4"
+        className={cn(
+          "mb-4",
+          String(buttonMessage).length > 32 ? " xsm:text-sm" : "",
+        )}
         disabled={
           dynamicBorrow === undefined ||
           isInsufficientBalance ||

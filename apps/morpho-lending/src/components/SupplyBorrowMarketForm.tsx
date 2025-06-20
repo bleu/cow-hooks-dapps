@@ -1,4 +1,4 @@
-import { formatNumber } from "@bleu.builders/ui";
+import { cn, formatNumber } from "@bleu.builders/ui";
 
 import {
   ButtonPrimary,
@@ -34,17 +34,19 @@ export function SupplyBorrowMarketForm({
     control,
   });
 
-  const fiatSupplyAmount = supplyAmount
-    ? Number(supplyAmount) * market.collateralAsset.priceUsd < 0.01
-      ? "≈ $< 0.01"
-      : `≈ ${formatNumber(Number(supplyAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
-    : "";
+  const fiatSupplyAmount =
+    supplyAmount && market.collateralAsset.priceUsd
+      ? Number(supplyAmount) * market.collateralAsset.priceUsd < 0.01
+        ? "≈ $< 0.01"
+        : `≈ ${formatNumber(Number(supplyAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
+      : "";
 
-  const fiatBorrowAmount = borrowAmount
-    ? Number(borrowAmount) * market.loanAsset.priceUsd < 0.01
-      ? "≈ $< 0.01"
-      : `≈ ${formatNumber(Number(borrowAmount) * market.loanAsset.priceUsd, 2, "currency", "standard")}`
-    : "";
+  const fiatBorrowAmount =
+    borrowAmount && market.loanAsset.priceUsd
+      ? Number(borrowAmount) * market.loanAsset.priceUsd < 0.01
+        ? "≈ $< 0.01"
+        : `≈ ${formatNumber(Number(borrowAmount) * market.loanAsset.priceUsd, 2, "currency", "standard")}`
+      : "";
 
   const { userBalance: collateralBalance, tokenDecimals: collateralDecimals } =
     useReadTokenContract({
@@ -61,14 +63,21 @@ export function SupplyBorrowMarketForm({
     decimals: collateralDecimals,
   });
 
-  const { formatted: formattedCollateral, usd: collateralUsd } =
-    useFormatTokenAmount({
-      amount: collateral,
-      decimals: collateralDecimals,
-      priceUsd: market.collateralAsset.priceUsd,
-    });
+  const {
+    formatted: formattedCollateral,
+    usd: collateralUsd,
+    fullDecimals: collateralFloat,
+  } = useFormatTokenAmount({
+    amount: collateral,
+    decimals: collateralDecimals,
+    priceUsd: market.collateralAsset.priceUsd,
+  });
 
-  const { formatted: formattedBorrow, usd: borrowUsd } = useFormatTokenAmount({
+  const {
+    formatted: formattedBorrow,
+    usd: borrowUsd,
+    fullDecimals: borrowFloat,
+  } = useFormatTokenAmount({
     amount: dynamicBorrow,
     decimals: market.loanAsset.decimals,
     priceUsd: market.loanAsset.priceUsd,
@@ -102,12 +111,15 @@ export function SupplyBorrowMarketForm({
         (decimalsToBigInt(borrowAmount, market.loanAsset.decimals) ?? BigInt(0))
       : undefined;
 
-  const { formatted: borrowAfterFormatted, usd: borrowAfterUsd } =
-    useFormatTokenAmount({
-      amount: borrowAfter,
-      decimals: market.loanAsset.decimals,
-      priceUsd: market.loanAsset.priceUsd,
-    });
+  const {
+    formatted: borrowAfterFormatted,
+    usd: borrowAfterUsd,
+    fullDecimals: borrowAfterFloat,
+  } = useFormatTokenAmount({
+    amount: borrowAfter,
+    decimals: market.loanAsset.decimals,
+    priceUsd: market.loanAsset.priceUsd,
+  });
 
   const collateralAfter =
     collateral !== undefined
@@ -115,12 +127,15 @@ export function SupplyBorrowMarketForm({
         (decimalsToBigInt(supplyAmount, market.collateralAsset.decimals) ??
           BigInt(0))
       : undefined;
-  const { formatted: collateralAfterFormatted, usd: collateralAfterUsd } =
-    useFormatTokenAmount({
-      amount: collateralAfter,
-      decimals: market.collateralAsset.decimals,
-      priceUsd: market.collateralAsset.priceUsd,
-    });
+  const {
+    formatted: collateralAfterFormatted,
+    usd: collateralAfterUsd,
+    fullDecimals: collateralAfterFloat,
+  } = useFormatTokenAmount({
+    amount: collateralAfter,
+    decimals: market.collateralAsset.decimals,
+    priceUsd: market.collateralAsset.priceUsd,
+  });
 
   const ltvBefore =
     borrowUsd && collateralUsd
@@ -164,7 +179,7 @@ export function SupplyBorrowMarketForm({
     if (isInsufficientBalance)
       return `Insufficient ${market.collateralAsset.symbol} Balance`;
 
-    if (isInsufficientPosition) return <span>Insufficient Collateral</span>;
+    if (isInsufficientPosition) return <span>Borrow Exceeds Limit</span>;
 
     if (!supplyAmount && !borrowAmount)
       return <span>Enter supply or borrow</span>;
@@ -217,7 +232,11 @@ export function SupplyBorrowMarketForm({
       <PositionSummary
         market={market}
         formattedCollateral={formattedCollateral}
+        collateralFloat={collateralFloat}
         formattedBorrow={formattedBorrow}
+        borrowFloat={borrowFloat}
+        collateralAfterFloat={collateralAfterFloat}
+        borrowAfterFloat={borrowAfterFloat}
         collateralAfterFormatted={collateralAfterFormatted}
         borrowAfterFormatted={borrowAfterFormatted}
         ltvBefore={ltvBefore}
@@ -229,7 +248,10 @@ export function SupplyBorrowMarketForm({
       <Info content={<InfoContent />} />
       <ButtonPrimary
         type="submit"
-        className="mb-4"
+        className={cn(
+          "mb-4",
+          String(buttonMessage).length > 32 ? " xsm:text-sm" : "",
+        )}
         disabled={
           isInsufficientBalance ||
           isInsufficientPosition ||

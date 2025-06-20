@@ -190,6 +190,16 @@ export interface MorphoMarket {
   };
   supplyingVaults: { address: Address }[];
   position: MarketPosition;
+  publicAllocatorSharedLiquidity: {
+    assets: bigint;
+    vault: {
+      address: string;
+    };
+    allocationMarket: {
+      uniqueKey: string;
+    };
+  }[];
+  reallocatableLiquidityAssets: bigint;
 }
 
 export interface MorphoMarketParams {

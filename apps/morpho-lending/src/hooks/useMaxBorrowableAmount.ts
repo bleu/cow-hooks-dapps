@@ -16,7 +16,9 @@ export const useMaxBorrowableAmount = () => {
   const { maxBorrowReallocation } = useBorrowReallocation(market);
 
   const marketBorrowLimit =
-    market && maxBorrowReallocation && market.liquidity + maxBorrowReallocation;
+    market &&
+    (market.liquidity * BigInt(95)) / BigInt(100) +
+      (maxBorrowReallocation ?? BigInt(0));
   const supplyBigInt =
     market && supplyAmount
       ? BigNumber.from(

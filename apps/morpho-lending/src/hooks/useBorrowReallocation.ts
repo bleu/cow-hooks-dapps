@@ -15,12 +15,7 @@ export const useBorrowReallocation = (market: MorphoMarket | undefined) => {
     [market, markets, publicClient, context?.chainId],
     async () => {
       if (!market || !markets || !publicClient || !context?.chainId) return;
-      return await getPossibleReallocations(
-        market,
-        markets,
-        publicClient,
-        context.chainId,
-      );
+      return getPossibleReallocations(market, markets);
     },
   );
 

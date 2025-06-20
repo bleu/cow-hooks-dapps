@@ -5,15 +5,19 @@ import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import useSWR from "swr";
 import type { SignatureStepsProps } from "../types";
+import { SignatureSteps } from "./SignaturesSteps";
 import { Spinner } from "./Spinner";
 import { InfoTooltip } from "./TooltipBase";
 
 export function WaitingSignature({
-  callback,
-  description,
-  tooltipText,
-  id,
-}: SignatureStepsProps) {
+  steps,
+  currentStepIndex,
+}: {
+  steps: SignatureStepsProps[];
+  currentStepIndex: number;
+}) {
+  const { id, tooltipText, callback, description } = steps[currentStepIndex];
+
   const { error, mutate, isValidating } = useSWR([id], callback, {
     revalidateIfStale: false,
     revalidateOnFocus: false,
@@ -26,6 +30,8 @@ export function WaitingSignature({
   const { reset } = useFormContext();
   const router = useRouter();
 
+  const isError = error && !isValidating;
+
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="flex flex-row gap-2 items-center mb-10">
@@ -34,7 +40,7 @@ export function WaitingSignature({
         </span>
       </div>
       {isValidating && <Spinner />}
-      {error && !isValidating && (
+      {isError && (
         <div className="flex flex-col gap-2 items-center">
           <span className="font-semibold text-md text-destructive">
             {error?.message
@@ -57,6 +63,9 @@ export function WaitingSignature({
             </Button>
           </div>
         </div>
+      )}
+      {!isError && (
+        <SignatureSteps steps={steps} currentStepIndex={currentStepIndex} />
       )}
     </div>
   );
