@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import useSWR from "swr";
 import type { SignatureStepsProps } from "../types";
+import { SignatureSteps } from "./SignaturesSteps";
 import { Spinner } from "./Spinner";
 import { InfoTooltip } from "./TooltipBase";
-import { SignatureSteps } from "./SignaturesSteps";
 
 export function WaitingSignature({
   steps,
