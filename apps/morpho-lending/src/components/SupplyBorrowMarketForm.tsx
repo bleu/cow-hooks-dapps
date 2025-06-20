@@ -179,7 +179,7 @@ export function SupplyBorrowMarketForm({
     if (isInsufficientBalance)
       return `Insufficient ${market.collateralAsset.symbol} Balance`;
 
-    if (isInsufficientPosition) return <span>Insufficient Collateral</span>;
+    if (isInsufficientPosition) return <span>Borrow Exceeds Limit</span>;
 
     if (!supplyAmount && !borrowAmount)
       return <span>Enter supply or borrow</span>;

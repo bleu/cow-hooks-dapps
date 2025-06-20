@@ -1,9 +1,7 @@
 import type { MorphoMarket, MorphoMarketParams } from "@bleu/cow-hooks-ui";
 
-import { morphoPublicAllocatorAbi } from "@bleu/utils/transactionFactory";
-import type { Address, PublicClient } from "viem";
+import type { Address } from "viem";
 import { getMarketParams } from "#/utils/getMarketParams";
-import { publicAllocatorMap } from "#/utils/publicAllocatorMap";
 
 export interface BorrowReallocation {
   vault: Address;
@@ -14,100 +12,36 @@ export interface BorrowReallocation {
   amount: bigint;
 }
 
-function mapPossibleReallocations(
+export function getPossibleReallocations(
   market: MorphoMarket,
   markets: MorphoMarket[],
-): Omit<BorrowReallocation, "amount">[] {
-  const possibleReallocations = [] as Omit<BorrowReallocation, "amount">[];
+): BorrowReallocation[] {
+  const sharedLiquidity = market.publicAllocatorSharedLiquidity;
 
-  const possibleVaults = getVaults(market);
+  const reallocations: BorrowReallocation[] = sharedLiquidity
+    .map((liq) => {
+      const fromMarket = markets.find(
+        (m) => m.uniqueKey === liq.allocationMarket.uniqueKey,
+      );
+      if (!fromMarket) return;
 
-  for (const vault of possibleVaults) {
-    for (const mkt of markets) {
-      if (mkt.uniqueKey === market.uniqueKey) continue;
-      const mktVaults = getVaults(mkt);
-      if (
-        mktVaults.includes(vault) &&
-        mkt.loanAsset.address === market.loanAsset.address
-      )
-        possibleReallocations.push({
-          vault,
-          from: getMarketParams(mkt),
-          to: getMarketParams(market),
-          fromKey: mkt.uniqueKey,
-          toKey: market.uniqueKey,
-        });
-    }
-  }
+      return {
+        vault: liq.vault.address as Address,
+        from: getMarketParams(fromMarket),
+        to: getMarketParams(market),
+        fromKey: fromMarket.uniqueKey,
+        toKey: market.uniqueKey,
+        amount: (liq.assets * BigInt(95)) / BigInt(100),
+      };
+    })
+    .filter((liq) => liq !== undefined);
 
-  return possibleReallocations;
-}
-
-function getVaults(market: MorphoMarket) {
-  return market.supplyingVaults.map((vault) => vault.address);
-}
-
-export async function getPossibleReallocations(
-  market: MorphoMarket,
-  markets: MorphoMarket[],
-  publicClient: PublicClient,
-  chainId: number,
-): Promise<BorrowReallocation[]> {
-  const reallocations = mapPossibleReallocations(market, markets);
-  const publicAllocatorAddress = publicAllocatorMap[chainId];
-
-  if (reallocations.length === 0) return [];
-
-  const multicallRequests = reallocations.map((reallocation) => ({
-    address: publicAllocatorAddress,
-    abi: morphoPublicAllocatorAbi,
-    functionName: "flowCaps",
-    args: [reallocation.vault, reallocation.fromKey],
-  }));
-
-  try {
-    const flowCapsResults = (await publicClient.multicall({
-      contracts: multicallRequests,
-    })) as (
-      | {
-          error?: undefined;
-          result: [bigint, bigint];
-          status: "success";
-        }
-      | {
-          error: Error;
-          result?: undefined;
-          status: "failure";
-        }
-    )[];
-
-    const borrowReallocations: BorrowReallocation[] = [];
-
-    for (let i = 0; i < flowCapsResults.length; i++) {
-      const result = flowCapsResults[i];
-
-      if (result.status !== "success") continue;
-
-      const [_maxIn, maxOut] = result.result as [bigint, bigint];
-
-      if (maxOut > BigInt(0)) {
-        borrowReallocations.push({
-          ...reallocations[i],
-          amount: maxOut,
-        });
-      }
-    }
-
-    return borrowReallocations.sort((a, b) => {
-      // For descending order
-      if (a.amount > b.amount) return -1;
-      if (a.amount < b.amount) return 1;
-      return 0;
-    });
-  } catch (error) {
-    console.error("Error in multicall for flow caps:", error);
-    return [];
-  }
+  return reallocations.sort((a, b) => {
+    // For descending order
+    if (a.amount > b.amount) return -1;
+    if (a.amount < b.amount) return 1;
+    return 0;
+  });
 }
 
 export function getMaxBorrowReallocation(

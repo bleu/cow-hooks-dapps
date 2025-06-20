@@ -35,6 +35,9 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
         0.0001,
       )
     : undefined;
+  const userCollateralFloat = userHasPosition
+    ? formatUnits(market.position.collateral, market.collateralAsset.decimals)
+    : undefined;
 
   const userBorrow = userHasPosition
     ? formatNumber(
@@ -44,6 +47,9 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
         "standard",
         0.0001,
       )
+    : undefined;
+  const userBorrowFloat = userHasPosition
+    ? formatUnits(market.position.borrow, market.loanAsset.decimals)
     : undefined;
 
   const userLtvFloat = userHasPosition
@@ -65,7 +71,9 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
       <div className="flex justify-between items-start w-full xsm:w-auto xsm:min-w-44">
         <div className="flex flex-col gap-1">
           <Label>{userCollateral && "Your"} Collateral</Label>
-          {userCollateral && <span>{userCollateral}</span>}
+          {userCollateral && (
+            <span title={userCollateralFloat}>{userCollateral}</span>
+          )}
           <TokenCard
             asset={market.collateralAsset}
             className={cn({ "bg-inherit p-0 shadow-none": userHasPosition })}
@@ -73,7 +81,7 @@ export function MorphoMarketCard({ market }: { market: MorphoMarket }) {
         </div>
         <div className="flex flex-col gap-1">
           <Label>{userBorrow && "Your"} Loan</Label>
-          {userBorrow && <span>{userBorrow}</span>}
+          {userBorrow && <span title={userBorrowFloat}>{userBorrow}</span>}
           <TokenCard
             asset={market.loanAsset}
             className={cn({ "bg-inherit p-0 shadow-none": userHasPosition })}

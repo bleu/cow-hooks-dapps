@@ -66,6 +66,16 @@ const MORPHO_MARKETS_QUERY = gql`
         supplyingVaults {
           address
         }
+        publicAllocatorSharedLiquidity {
+          assets
+          vault {
+            address
+          }
+          allocationMarket {
+            uniqueKey
+          }
+        }
+        reallocatableLiquidityAssets
       }
 
       pageInfo {
@@ -144,7 +154,16 @@ export function useMorphoMarkets(
             ? {
                 ...market,
                 ...marketOnchainInfo,
+                // Ensure bigint values are bigint
                 lltv: BigInt(market.lltv),
+                publicAllocatorSharedLiquidity:
+                  market.publicAllocatorSharedLiquidity.map((liq) => ({
+                    ...liq,
+                    assets: BigInt(liq.assets),
+                  })),
+                reallocatableLiquidityAssets: BigInt(
+                  market.reallocatableLiquidityAssets,
+                ),
               }
             : undefined;
         })
