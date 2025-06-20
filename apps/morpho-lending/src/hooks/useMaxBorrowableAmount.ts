@@ -50,8 +50,8 @@ export const useMaxBorrowableAmount = () => {
   }, [market, lltv, supplyBigInt]);
 
   const canUserBorrowMaxMarket =
-    maxBorrowableAmount &&
-    marketBorrowLimit &&
+    maxBorrowableAmount !== undefined &&
+    marketBorrowLimit !== undefined &&
     maxBorrowableAmount > marketBorrowLimit;
 
   return canUserBorrowMaxMarket ? marketBorrowLimit : maxBorrowableAmount;
