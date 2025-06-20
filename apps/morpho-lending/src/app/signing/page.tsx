@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  SignatureSteps,
-  WaitingSignature,
-  useIFrameContext,
-} from "@bleu/cow-hooks-ui";
+import { WaitingSignature, useIFrameContext } from "@bleu/cow-hooks-ui";
 import {
   type BaseTransaction,
   useCowShedSignature,
@@ -187,8 +183,7 @@ export default function Page() {
   return (
     <div className="flex flex-col gap-1 p-2 text-center h-full justify-between items-center">
       <p className="text-lg font-semibold mb-4">{getOperationText()}</p>
-      <WaitingSignature {...steps[currentStepIndex]} />
-      <SignatureSteps steps={steps} currentStepIndex={currentStepIndex} />
+      <WaitingSignature steps={steps} currentStepIndex={currentStepIndex} />
     </div>
   );
 }
