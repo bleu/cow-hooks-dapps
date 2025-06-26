@@ -136,6 +136,10 @@ export function useMorphoMarkets(
         skip += pageSize;
       }
 
+      const nullCollateralMarkets = allMarkets.filter(
+        (market) => market.collateralAsset === null,
+      );
+
       const filteredMarkets = allMarkets.filter(
         (market) => market.collateralAsset !== null,
       );
@@ -172,6 +176,7 @@ export function useMorphoMarkets(
       return [
         ...markets.filter((m) => hasPosition(m.position)),
         ...markets.filter((m) => !hasPosition(m.position)),
+        ...(nullCollateralMarkets as MorphoMarket[]),
       ];
     },
     {

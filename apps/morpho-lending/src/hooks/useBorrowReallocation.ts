@@ -1,6 +1,5 @@
-import { type MorphoMarket, useIFrameContext } from "@bleu/cow-hooks-ui";
+import type { MorphoMarket } from "@bleu/cow-hooks-ui";
 import { useMemo } from "react";
-import useSWR from "swr";
 import { useMorphoContext } from "#/contexts/morpho";
 import {
   getMaxBorrowReallocation,
@@ -8,16 +7,10 @@ import {
 } from "#/utils/borrowReallocation";
 
 export const useBorrowReallocation = (market: MorphoMarket | undefined) => {
-  const { context, publicClient } = useIFrameContext();
-  const { markets } = useMorphoContext();
+  const { allMarkets } = useMorphoContext();
 
-  const { data: possibleReallocations } = useSWR(
-    [market, markets, publicClient, context?.chainId],
-    async () => {
-      if (!market || !markets || !publicClient || !context?.chainId) return;
-      return getPossibleReallocations(market, markets);
-    },
-  );
+  const possibleReallocations =
+    market && allMarkets && getPossibleReallocations(market, allMarkets);
 
   const maxBorrowReallocation = useMemo(
     () =>

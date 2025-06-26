@@ -10,6 +10,7 @@ import {
 import { useIsCowShedAuthorizedOnMorpho } from "#/hooks/useAllowCowShedOnMorpho";
 
 export interface MorphoContextData {
+  allMarkets: MorphoMarket[] | undefined;
   markets: MorphoMarket[] | undefined;
   isLoadingMarkets: boolean;
   isLoadingIsCowShedAuthorizedOnMorpho: boolean;
@@ -29,10 +30,12 @@ export function MorphoContextProvider({ children }: PropsWithChildren) {
 
   // Get markets data from useMorphoMarkets
   const {
-    data: markets,
+    data: allMarkets,
     isLoading: isLoadingMarkets,
     error: errorMarkets,
   } = useMorphoMarkets(context?.account, publicClient, context?.chainId);
+
+  const markets = allMarkets?.filter((m) => m.collateralAsset !== null);
 
   const { data, isLoading: isLoadingIsCowShedAuthorizedOnMorpho } =
     useIsCowShedAuthorizedOnMorpho();
@@ -41,6 +44,7 @@ export function MorphoContextProvider({ children }: PropsWithChildren) {
 
   // Create the value object to be provided by the context
   const contextValue: MorphoContextData = {
+    allMarkets,
     markets,
     isLoadingMarkets,
     isLoadingIsCowShedAuthorizedOnMorpho,
