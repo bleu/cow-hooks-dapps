@@ -10,6 +10,7 @@ import {
 import type { Address } from "viem";
 import type { InputFieldName, MaxFieldName } from "#/constants/forms";
 import type { MorphoSupplyFormData } from "#/contexts/form";
+import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 
 interface AmountInputProps {
   name: InputFieldName;
@@ -29,6 +30,37 @@ interface AmountInputProps {
   fiatBalance: string;
 }
 
+// Helper function to validate and format decimal string
+const validateDecimalString = (value: string, maxDecimals: number): string => {
+  // Remove any non-numeric characters except decimal point
+  let cleaned = value.replace(/[^0-9.]/g, ""); // Removed comma from here since you handle it separately
+
+  // Handle multiple decimal points - keep only the first one
+  const parts = cleaned.split(".");
+  if (parts.length > 2) {
+    cleaned = `${parts[0]}.${parts.slice(1).join("")}`;
+  }
+
+  // Limit decimal places but preserve trailing decimal point
+  if (cleaned.includes(".")) {
+    const [integer, decimal] = cleaned.split(".");
+    if (decimal.length > maxDecimals) {
+      const limitedDecimal = decimal.slice(0, maxDecimals);
+      cleaned = `${integer}.${limitedDecimal}`;
+    } else {
+      // Keep the decimal point even if nothing follows it yet
+      cleaned = `${integer}.${decimal}`;
+    }
+  }
+
+  // Remove leading zeros but preserve "0." for decimals
+  if (cleaned.length > 1 && cleaned[0] === "0" && cleaned[1] !== ".") {
+    cleaned = cleaned.replace(/^0+/, "") || "0";
+  }
+
+  return cleaned;
+};
+
 export const AmountInput = ({
   name,
   label,
@@ -46,21 +78,19 @@ export const AmountInput = ({
   const values = useWatch({ control });
 
   const isMaxValue = values[maxName] as boolean;
-  const value = values[name];
+  const value = values[name] as string;
 
   const error = errors[name] as FieldError | undefined;
   const errorMessage = error?.message;
 
-  const handleSetValue = (value: string) => {
-    if (value === "") return undefined;
-    if (typeof value === "number") return value;
+  const handleSetValue = (value: string): string => {
+    if (value === "") return "";
 
-    let v = value;
-    v = v.replace(",", ".");
-    const inputedDecimals = v.includes(".") && v.split(".").at(-1);
-    if (inputedDecimals && inputedDecimals.length > asset.decimals)
-      return Number(v.slice(0, -(inputedDecimals.length - asset.decimals)));
-    return Number(v);
+    // Replace comma with period for international number formats
+    const v = value.replace(",", ".");
+
+    const validatedString = validateDecimalString(v, asset.decimals);
+    return validatedString;
   };
 
   const handleDisableMaxOnUserInput = (
@@ -78,7 +108,7 @@ export const AmountInput = ({
       <div
         className={cn(
           "flex flex-col gap-1 w-full min-h-24 pt-4 pb-1 px-6 bg-color-paper-darker/60 rounded-xl items-start",
-          { "bg-color-paper-darker": value },
+          { "bg-color-paper-darker": value && !isZeroOrEmpty(value) },
         )}
       >
         {label && (
@@ -88,17 +118,12 @@ export const AmountInput = ({
         )}
         <div className="flex items-center gap-4 w-full justify-between">
           <Input
-            type="number"
+            type="text"
             inputMode="decimal"
-            step={`0.${"0".repeat(asset.decimals - 1)}1`}
-            max="1000000000000"
+            value={values[name]}
             placeholder="0.0"
             autoComplete="off"
-            className="max-w-36 outline-none font-semibold text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-left p-0 m-0 h-min border-none rounded-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none truncate"
-            onKeyDown={(e) =>
-              ["e", "E", "+", "-", "ArrowUp", "ArrowDown"].includes(e.key) &&
-              e.preventDefault()
-            }
+            className="max-w-36 outline-none font-semibold text-xl text-color-text-paper bg-inherit placeholder:opacity-70 text-left p-0 m-0 h-min border-none rounded-none truncate"
             onWheel={(e: React.WheelEvent<HTMLInputElement>) => {
               (e.target as HTMLInputElement).blur();
             }}
@@ -135,10 +160,10 @@ export const AmountInput = ({
               >
                 {formattedBalance} {token?.symbol}
               </span>
-              {Number(floatBalance) > 0 && (
+              {!isZeroOrEmpty(floatBalance) && (
                 <button
                   type="button"
-                  disabled={Number(floatBalance) === 0}
+                  disabled={isZeroOrEmpty(floatBalance)}
                   className={cn(
                     "inline font-semibold text-opacity-60  text-color-text-paper bg-color-paper py-[3px] px-[4px] ml-1  rounded-md text-xs hover:bg-color-primary hover:text-color-button-text transition-all duration-[200ms] ease-in-out [outline:none]",
                     {

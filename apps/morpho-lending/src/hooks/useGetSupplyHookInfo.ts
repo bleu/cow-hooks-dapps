@@ -9,6 +9,7 @@ import { useCallback } from "react";
 import { parseUnits } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { getMarketParams } from "#/utils/getMarketParams";
+import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 
 export const useGetSupplyHookInfo = () => {
   const { context, cowShedProxy } = useIFrameContext();
@@ -22,12 +23,12 @@ export const useGetSupplyHookInfo = () => {
         !context?.account ||
         !context?.chainId ||
         !cowShedProxy ||
-        !supplyAmount
+        isZeroOrEmpty(supplyAmount)
       )
         return;
 
       const amountBigNumber = BigNumber.from(
-        parseUnits(supplyAmount.toString(), market.collateralAsset.decimals),
+        parseUnits(supplyAmount, market.collateralAsset.decimals),
       ).toBigInt();
 
       const tokenAddress = market.collateralAsset.address;

@@ -17,6 +17,7 @@ import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useMorphoContext } from "#/contexts/morpho";
 import { useAllowCowShedOnMorpho } from "#/hooks/useAllowCowShedOnMorpho";
 import { encodeFormData } from "#/utils/hookEncoding";
+import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 
 export default function Page() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -169,14 +170,15 @@ export default function Page() {
 
   const getOperationText = () => {
     if (operationType === OperationType.SupplyBorrow) {
-      if (supplyAmount && borrowAmount) return "Supply/Borrow Morpho position";
-      if (supplyAmount) return "Supply Morpho position";
-      if (borrowAmount) return "Borrow Morpho position";
+      if (!isZeroOrEmpty(supplyAmount) && !isZeroOrEmpty(borrowAmount))
+        return "Supply/Borrow Morpho position";
+      if (!isZeroOrEmpty(supplyAmount)) return "Supply Morpho position";
+      if (!isZeroOrEmpty(borrowAmount)) return "Borrow Morpho position";
     } else {
-      if (repayAmount && withdrawAmount)
+      if (!isZeroOrEmpty(repayAmount) && !isZeroOrEmpty(withdrawAmount))
         return "Repay/Withdraw Morpho position";
-      if (repayAmount) return "Repay Morpho position";
-      if (withdrawAmount) return "Withdraw Morpho position";
+      if (!isZeroOrEmpty(repayAmount)) return "Repay Morpho position";
+      if (!isZeroOrEmpty(withdrawAmount)) return "Withdraw Morpho position";
     }
   };
 

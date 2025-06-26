@@ -12,7 +12,7 @@ export const RPC_URL_MAPPING =
         [SupportedChainId.ARBITRUM_ONE]: arbitrum.rpcUrls.default.http[0],
         [SupportedChainId.SEPOLIA]:
           "https://ethereum-sepolia-rpc.publicnode.com",
-        [SupportedChainId.BASE]: "https://base.llamarpc.com",
+        [SupportedChainId.BASE]: "https://base.drpc.org",
       }
     : {
         [SupportedChainId.MAINNET]:

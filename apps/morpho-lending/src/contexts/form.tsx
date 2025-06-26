@@ -13,14 +13,14 @@ export interface MorphoSupplyFormData {
   market: MorphoMarket;
 
   // Supply/Borrow fields
-  supplyAmount: number;
-  borrowAmount: number;
+  supplyAmount: string;
+  borrowAmount: string;
   isMaxSupply: boolean;
   isMaxBorrow: boolean;
 
   // Repay/Withdraw fields
-  repayAmount: number;
-  withdrawAmount: number;
+  repayAmount: string;
+  withdrawAmount: string;
   isMaxRepay: boolean;
   isMaxWithdraw: boolean;
 

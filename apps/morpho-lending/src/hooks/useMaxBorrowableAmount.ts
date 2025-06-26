@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { parseUnits } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
+import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 import { calculateLLTVWithSafetyMargin } from "#/utils/morpho";
 import { useBorrowReallocation } from "./useBorrowReallocation";
 
@@ -20,12 +21,9 @@ export const useMaxBorrowableAmount = () => {
     (market.liquidity * BigInt(95)) / BigInt(100) +
       (maxBorrowReallocation ?? BigInt(0));
   const supplyBigInt =
-    market && supplyAmount
+    market && !isZeroOrEmpty(supplyAmount) && supplyAmount !== undefined
       ? BigNumber.from(
-          parseUnits(
-            supplyAmount.toFixed(market.collateralAsset.decimals),
-            market.collateralAsset.decimals,
-          ),
+          parseUnits(supplyAmount, market.collateralAsset.decimals),
         ).toBigInt()
       : BigInt(0);
 

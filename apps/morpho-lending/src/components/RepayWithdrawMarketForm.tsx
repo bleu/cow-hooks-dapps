@@ -15,6 +15,7 @@ import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { useMaxWithdrawbleAmount } from "#/hooks/useMaxWithdrawbleAmount";
 import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
+import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 import { AmountInput } from "./AmoutIntput";
 import { PositionSummary } from "./PositionSummary";
 
@@ -34,14 +35,16 @@ export function RepayWithdrawMarketForm({
   });
 
   const fiatRepayAmount =
-    repayAmount && market.loanAsset.priceUsd
+    repayAmount && market.loanAsset.priceUsd && !isZeroOrEmpty(repayAmount)
       ? Number(repayAmount) * market.loanAsset.priceUsd < 0.01
         ? "≈ $< 0.01"
         : `≈ ${formatNumber(Number(repayAmount) * market.loanAsset.priceUsd, 2, "currency", "standard")}`
       : "";
 
   const fiatWithdrawAmount =
-    withdrawAmount && market.collateralAsset.priceUsd
+    withdrawAmount &&
+    market.collateralAsset.priceUsd &&
+    !isZeroOrEmpty(withdrawAmount)
       ? Number(withdrawAmount) * market.collateralAsset.priceUsd < 0.01
         ? "≈ $< 0.01"
         : `≈ ${formatNumber(Number(withdrawAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
@@ -93,14 +96,14 @@ export function RepayWithdrawMarketForm({
   useEffect(() => {
     if (isMaxWithdraw && maxWithdrawableFull) {
       const newWithdraw = maxWithdrawableFull;
-      setValue("withdrawAmount", Number(newWithdraw));
+      setValue("withdrawAmount", newWithdraw);
     }
   }, [isMaxWithdraw, maxWithdrawableFull, setValue]);
 
   useEffect(() => {
     if (isMaxRepay && maxRepayableFull) {
       const newRepay = maxRepayableFull;
-      setValue("repayAmount", Number(newRepay));
+      setValue("repayAmount", newRepay);
     }
   }, [isMaxRepay, maxRepayableFull, setValue]);
 
@@ -111,7 +114,10 @@ export function RepayWithdrawMarketForm({
     }
 
     // Calculate normally only if not using max repay
-    const repay = decimalsToBigInt(repayAmount || 0, market.loanAsset.decimals);
+    const repay = decimalsToBigInt(
+      repayAmount || "0",
+      market.loanAsset.decimals,
+    );
     return repay && dynamicBorrow ? dynamicBorrow - repay : dynamicBorrow;
   }, [
     dynamicBorrow,
@@ -192,7 +198,8 @@ export function RepayWithdrawMarketForm({
       withdrawAmountBigInt > withdrawableLimit,
   );
 
-  const shouldRenderAfter = Boolean(repayAmount || withdrawAmount);
+  const shouldRenderAfter =
+    !isZeroOrEmpty(repayAmount) || !isZeroOrEmpty(withdrawAmount);
 
   const buttonMessage = useMemo(() => {
     if (dynamicBorrow === undefined) return "Loading...";
@@ -205,7 +212,7 @@ export function RepayWithdrawMarketForm({
 
     if (isOverRepay) return "Repay exceeds borrow";
 
-    if (!repayAmount && !withdrawAmount)
+    if (isZeroOrEmpty(repayAmount) && isZeroOrEmpty(withdrawAmount))
       return <span>Enter repay or withdraw</span>;
 
     if (context?.hookToEdit && context?.isPreHook)
@@ -265,7 +272,9 @@ export function RepayWithdrawMarketForm({
         ltvAfter={ltvAfter}
         lltv={lltv}
         shouldRenderAfter={shouldRenderAfter}
-        isChanging={Boolean(repayAmount || withdrawAmount)}
+        isChanging={Boolean(
+          !isZeroOrEmpty(repayAmount) || !isZeroOrEmpty(withdrawAmount),
+        )}
       />
       <Info content={<InfoContent />} />
       <ButtonPrimary
@@ -279,7 +288,7 @@ export function RepayWithdrawMarketForm({
           isInsufficientBalance ||
           isInsufficientPosition ||
           isOverRepay ||
-          (!repayAmount && !withdrawAmount)
+          (isZeroOrEmpty(repayAmount) && isZeroOrEmpty(withdrawAmount))
         }
       >
         {buttonMessage}

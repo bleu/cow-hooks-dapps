@@ -8,6 +8,7 @@ import { useCallback } from "react";
 import { parseUnits } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { getMarketParams } from "#/utils/getMarketParams";
+import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 
 export const useGetWithdrawHookInfo = () => {
   const { context, cowShedProxy } = useIFrameContext();
@@ -21,12 +22,12 @@ export const useGetWithdrawHookInfo = () => {
         !context?.account ||
         !context?.chainId ||
         !cowShedProxy ||
-        !withdrawAmount
+        isZeroOrEmpty(withdrawAmount)
       )
         return;
 
       const amountBigNumber = BigNumber.from(
-        parseUnits(withdrawAmount.toString(), market.collateralAsset.decimals),
+        parseUnits(withdrawAmount, market.collateralAsset.decimals),
       ).toBigInt();
 
       const tx = [

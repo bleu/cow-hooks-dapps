@@ -9,6 +9,7 @@ import { useCallback } from "react";
 import { parseUnits } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { getMarketParams } from "#/utils/getMarketParams";
+import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 
 export const useGetRepayHookInfo = () => {
   const { context, cowShedProxy } = useIFrameContext();
@@ -23,12 +24,12 @@ export const useGetRepayHookInfo = () => {
         !context?.account ||
         !context?.chainId ||
         !cowShedProxy ||
-        !repayAmount
+        isZeroOrEmpty(repayAmount)
       )
         return;
 
       const amountBigNumber = BigNumber.from(
-        parseUnits(repayAmount.toString(), market.loanAsset.decimals),
+        parseUnits(repayAmount, market.loanAsset.decimals),
       ).toBigInt();
 
       const tokenAddress = market.loanAsset.address;

@@ -12,6 +12,7 @@ import { useCallback } from "react";
 import { parseUnits } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { getMarketParams } from "#/utils/getMarketParams";
+import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 import { useGetBorrowReallocationTxs } from "./useGetBorrowReallocationTxs";
 
 export const useGetBorrowHookInfo = (market: MorphoMarket | undefined) => {
@@ -26,12 +27,12 @@ export const useGetBorrowHookInfo = (market: MorphoMarket | undefined) => {
         !context?.account ||
         !context?.chainId ||
         !cowShedProxy ||
-        !borrowAmount
+        isZeroOrEmpty(borrowAmount)
       )
         return;
 
       const amountBigNumber = BigNumber.from(
-        parseUnits(borrowAmount.toString(), market.loanAsset.decimals),
+        parseUnits(borrowAmount, market.loanAsset.decimals),
       ).toBigInt();
 
       // When market doesn't have enough supply

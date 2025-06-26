@@ -82,18 +82,18 @@ export function decodeFormData(
 
   if (!market) return;
 
-  const supplyAmount = Number(
-    formatUnits(supplyBigInt, market.collateralAsset.decimals),
-  );
-  const borrowAmount = Number(
-    formatUnits(borrowBigInt, market.loanAsset.decimals),
-  );
-  const repayAmount = Number(
-    formatUnits(repayBigInt, market.loanAsset.decimals),
-  );
-  const withdrawAmount = Number(
-    formatUnits(withdrawBigInt, market.collateralAsset.decimals),
-  );
+  const supplyAmount = supplyBigInt
+    ? formatUnits(supplyBigInt, market.collateralAsset.decimals)
+    : "";
+  const borrowAmount = borrowBigInt
+    ? formatUnits(borrowBigInt, market.loanAsset.decimals)
+    : "";
+  const repayAmount = repayBigInt
+    ? formatUnits(repayBigInt, market.loanAsset.decimals)
+    : "";
+  const withdrawAmount = withdrawBigInt
+    ? formatUnits(withdrawBigInt, market.collateralAsset.decimals)
+    : "";
 
   const operationType = isSupplyBorrow
     ? OperationType.SupplyBorrow
@@ -101,10 +101,10 @@ export function decodeFormData(
 
   return {
     market,
-    supplyAmount: supplyAmount ?? undefined,
-    borrowAmount: borrowAmount ?? undefined,
-    repayAmount: repayAmount ?? undefined,
-    withdrawAmount: withdrawAmount ?? undefined,
+    supplyAmount,
+    borrowAmount,
+    repayAmount,
+    withdrawAmount,
     isMaxSupply,
     isMaxBorrow,
     isMaxRepay,

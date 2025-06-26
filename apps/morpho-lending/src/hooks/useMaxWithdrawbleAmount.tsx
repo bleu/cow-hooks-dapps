@@ -14,7 +14,7 @@ export const useMaxWithdrawbleAmount = () => {
 
   const { collateral, borrowShares } = market.position;
 
-  const repay = decimalsToBigInt(repayAmount || 0, market.loanAsset.decimals);
+  const repay = decimalsToBigInt(repayAmount || "0", market.loanAsset.decimals);
 
   const borrowSharesAfterRepay =
     repay !== undefined

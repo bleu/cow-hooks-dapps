@@ -10,6 +10,7 @@ import { type Address, encodeFunctionData, parseUnits } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useMorphoContext } from "#/contexts/morpho";
 import { buildReallocations } from "#/utils/borrowReallocation";
+import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 import { publicAllocatorMap } from "#/utils/publicAllocatorMap";
 import { useBorrowReallocation } from "./useBorrowReallocation";
 
@@ -32,12 +33,12 @@ export const useGetBorrowReallocationTxs = (
         !context?.chainId ||
         !cowShedProxy ||
         !possibleReallocations ||
-        !borrowAmount
+        isZeroOrEmpty(borrowAmount)
       )
         return;
 
       const amountBigNumber = BigNumber.from(
-        parseUnits(borrowAmount.toString(), market.loanAsset.decimals),
+        parseUnits(borrowAmount, market.loanAsset.decimals),
       ).toBigInt();
 
       const reallocations = buildReallocations(

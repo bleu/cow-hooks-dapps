@@ -15,6 +15,7 @@ import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { useMaxBorrowableAmount } from "#/hooks/useMaxBorrowableAmount";
 import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
+import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 import { AmountInput } from "./AmoutIntput";
 import { PositionSummary } from "./PositionSummary";
 
@@ -35,14 +36,16 @@ export function SupplyBorrowMarketForm({
   });
 
   const fiatSupplyAmount =
-    supplyAmount && market.collateralAsset.priceUsd
+    supplyAmount &&
+    market.collateralAsset.priceUsd &&
+    !isZeroOrEmpty(supplyAmount)
       ? Number(supplyAmount) * market.collateralAsset.priceUsd < 0.01
         ? "≈ $< 0.01"
         : `≈ ${formatNumber(Number(supplyAmount) * market.collateralAsset.priceUsd, 2, "currency", "standard")}`
       : "";
 
   const fiatBorrowAmount =
-    borrowAmount && market.loanAsset.priceUsd
+    borrowAmount && market.loanAsset.priceUsd && !isZeroOrEmpty(borrowAmount)
       ? Number(borrowAmount) * market.loanAsset.priceUsd < 0.01
         ? "≈ $< 0.01"
         : `≈ ${formatNumber(Number(borrowAmount) * market.loanAsset.priceUsd, 2, "currency", "standard")}`
@@ -94,14 +97,14 @@ export function SupplyBorrowMarketForm({
   useEffect(() => {
     if (isMaxBorrow && maxBorrowableFull) {
       const newBorrow = maxBorrowableFull;
-      setValue("borrowAmount", Number(newBorrow));
+      setValue("borrowAmount", newBorrow);
     }
   }, [isMaxBorrow, maxBorrowableFull, setValue]);
 
   useEffect(() => {
     if (isMaxSupply && collateralBalanceFull) {
       const newSupply = collateralBalanceFull;
-      setValue("supplyAmount", Number(newSupply));
+      setValue("supplyAmount", newSupply);
     }
   }, [isMaxSupply, collateralBalanceFull, setValue]);
 
@@ -181,7 +184,7 @@ export function SupplyBorrowMarketForm({
 
     if (isInsufficientPosition) return <span>Borrow Exceeds Limit</span>;
 
-    if (!supplyAmount && !borrowAmount)
+    if (isZeroOrEmpty(supplyAmount) && isZeroOrEmpty(borrowAmount))
       return <span>Enter supply or borrow</span>;
 
     if (context?.hookToEdit && context?.isPreHook)
@@ -203,7 +206,8 @@ export function SupplyBorrowMarketForm({
     dynamicBorrow,
   ]);
 
-  const shouldRenderAfter = Boolean(supplyAmount || borrowAmount);
+  const shouldRenderAfter =
+    !isZeroOrEmpty(supplyAmount) || !isZeroOrEmpty(borrowAmount);
 
   if (!context) return null;
 
@@ -243,7 +247,9 @@ export function SupplyBorrowMarketForm({
         ltvAfter={ltvAfter}
         lltv={lltv}
         shouldRenderAfter={shouldRenderAfter}
-        isChanging={Boolean(supplyAmount || borrowAmount)}
+        isChanging={Boolean(
+          !isZeroOrEmpty(supplyAmount) || !isZeroOrEmpty(borrowAmount),
+        )}
       />
       <Info content={<InfoContent />} />
       <ButtonPrimary
@@ -255,7 +261,7 @@ export function SupplyBorrowMarketForm({
         disabled={
           isInsufficientBalance ||
           isInsufficientPosition ||
-          (!supplyAmount && !borrowAmount)
+          (isZeroOrEmpty(supplyAmount) && isZeroOrEmpty(borrowAmount))
         }
       >
         {buttonMessage}
