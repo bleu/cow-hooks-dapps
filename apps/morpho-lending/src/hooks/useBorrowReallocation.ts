@@ -9,8 +9,10 @@ import {
 export const useBorrowReallocation = (market: MorphoMarket | undefined) => {
   const { allMarkets } = useMorphoContext();
 
-  const possibleReallocations =
-    market && allMarkets && getPossibleReallocations(market, allMarkets);
+  const possibleReallocations = useMemo(
+    () => market && allMarkets && getPossibleReallocations(market, allMarkets),
+    [market, allMarkets],
+  );
 
   const maxBorrowReallocation = useMemo(
     () =>

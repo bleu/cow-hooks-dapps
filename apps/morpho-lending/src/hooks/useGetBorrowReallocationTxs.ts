@@ -5,22 +5,27 @@ import {
 } from "@bleu/cow-hooks-ui";
 import { morphoPublicAllocatorAbi } from "@bleu/utils/transactionFactory";
 import { BigNumber } from "ethers";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { type Address, encodeFunctionData, parseUnits } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useMorphoContext } from "#/contexts/morpho";
-import { buildReallocations } from "#/utils/borrowReallocation";
+import {
+  buildReallocations,
+  getPossibleReallocations,
+} from "#/utils/borrowReallocation";
 import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 import { publicAllocatorMap } from "#/utils/publicAllocatorMap";
-import { useBorrowReallocation } from "./useBorrowReallocation";
 
 export const useGetBorrowReallocationTxs = (
   market: MorphoMarket | undefined,
 ) => {
   const { context, cowShedProxy } = useIFrameContext();
-  const { markets } = useMorphoContext();
+  const { markets, allMarkets } = useMorphoContext();
 
-  const { possibleReallocations } = useBorrowReallocation(market);
+  const possibleReallocations = useMemo(
+    () => market && allMarkets && getPossibleReallocations(market, allMarkets),
+    [market, allMarkets],
+  );
 
   return useCallback(
     async ({
