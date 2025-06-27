@@ -1,4 +1,4 @@
-import type { IHooksInfo, MorphoMarket } from "@bleu/cow-hooks-ui";
+import type { IHooksInfo } from "@bleu/cow-hooks-ui";
 import { useCallback } from "react";
 import type { Address } from "viem";
 import { OperationType } from "#/constants/forms";
@@ -16,9 +16,9 @@ export interface DepositMorphoHookParams {
   minShares: bigint;
 }
 
-export const useGetHookInfo = (market: MorphoMarket | undefined) => {
+export const useGetHookInfo = () => {
   const getSupplyHookInfo = useGetSupplyHookInfo();
-  const getBorrowHookInfo = useGetBorrowHookInfo(market);
+  const getBorrowHookInfo = useGetBorrowHookInfo();
   const getRepayHookInfo = useGetRepayHookInfo();
   const getWithdrawHookInfo = useGetWithdrawHookInfo();
 

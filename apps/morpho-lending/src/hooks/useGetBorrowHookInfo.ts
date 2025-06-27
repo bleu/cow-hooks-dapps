@@ -1,8 +1,4 @@
-import {
-  type IHooksInfo,
-  type MorphoMarket,
-  useIFrameContext,
-} from "@bleu/cow-hooks-ui";
+import { type IHooksInfo, useIFrameContext } from "@bleu/cow-hooks-ui";
 import {
   TRANSACTION_TYPES,
   TransactionFactory,
@@ -15,9 +11,9 @@ import { getMarketParams } from "#/utils/getMarketParams";
 import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 import { useGetBorrowReallocationTxs } from "./useGetBorrowReallocationTxs";
 
-export const useGetBorrowHookInfo = (market: MorphoMarket | undefined) => {
+export const useGetBorrowHookInfo = () => {
   const { context, cowShedProxy } = useIFrameContext();
-  const getBorrowReallocationTxs = useGetBorrowReallocationTxs(market);
+  const getBorrowReallocationTxs = useGetBorrowReallocationTxs();
 
   return useCallback(
     async (data: MorphoSupplyFormData): Promise<IHooksInfo | undefined> => {

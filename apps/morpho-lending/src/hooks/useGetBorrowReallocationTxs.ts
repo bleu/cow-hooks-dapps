@@ -1,11 +1,7 @@
-import {
-  type BaseTransaction,
-  type MorphoMarket,
-  useIFrameContext,
-} from "@bleu/cow-hooks-ui";
+import { type BaseTransaction, useIFrameContext } from "@bleu/cow-hooks-ui";
 import { morphoPublicAllocatorAbi } from "@bleu/utils/transactionFactory";
 import { BigNumber } from "ethers";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { type Address, encodeFunctionData, parseUnits } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useMorphoContext } from "#/contexts/morpho";
@@ -16,16 +12,9 @@ import {
 import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 import { publicAllocatorMap } from "#/utils/publicAllocatorMap";
 
-export const useGetBorrowReallocationTxs = (
-  market: MorphoMarket | undefined,
-) => {
+export const useGetBorrowReallocationTxs = () => {
   const { context, cowShedProxy } = useIFrameContext();
   const { markets, allMarkets } = useMorphoContext();
-
-  const possibleReallocations = useMemo(
-    () => market && allMarkets && getPossibleReallocations(market, allMarkets),
-    [market, allMarkets],
-  );
 
   return useCallback(
     async ({
@@ -33,14 +22,19 @@ export const useGetBorrowReallocationTxs = (
       borrowAmount,
     }: MorphoSupplyFormData): Promise<BaseTransaction[] | undefined> => {
       if (
+        !allMarkets ||
         !markets ||
         !context?.account ||
         !context?.chainId ||
         !cowShedProxy ||
-        !possibleReallocations ||
         isZeroOrEmpty(borrowAmount)
       )
         return;
+
+      const possibleReallocations = getPossibleReallocations(
+        market,
+        allMarkets,
+      );
 
       const amountBigNumber = BigNumber.from(
         parseUnits(borrowAmount, market.loanAsset.decimals),
@@ -75,12 +69,6 @@ export const useGetBorrowReallocationTxs = (
 
       return txs;
     },
-    [
-      context?.account,
-      context?.chainId,
-      cowShedProxy,
-      markets,
-      possibleReallocations,
-    ],
+    [context?.account, context?.chainId, cowShedProxy, markets, allMarkets],
   );
 };
