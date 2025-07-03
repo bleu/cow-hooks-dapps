@@ -24,7 +24,7 @@ export const useMaxWithdrawbleAmount = () => {
         })
       : undefined;
 
-  const withdrawableLimit =
+  const withdrawableLimitFromRepay =
     borrowSharesAfterRepay !== undefined
       ? MarketUtils.getWithdrawableCollateral(
           {
@@ -38,6 +38,13 @@ export const useMaxWithdrawbleAmount = () => {
           },
           { lltv: calculateLLTVWithSafetyMargin(market.lltv) },
         )
+      : undefined;
+
+  const withdrawableLimit =
+    withdrawableLimitFromRepay !== undefined
+      ? withdrawableLimitFromRepay > collateral
+        ? collateral
+        : withdrawableLimitFromRepay
       : undefined;
 
   const {
