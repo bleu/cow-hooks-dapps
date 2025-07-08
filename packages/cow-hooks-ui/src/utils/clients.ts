@@ -1,13 +1,13 @@
 import { RPC_URL_MAPPING } from "@bleu/utils/transactionFactory";
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { http, createPublicClient } from "viem";
+import { http, type PublicClient, createPublicClient } from "viem";
 import { arbitrum, gnosis, mainnet, sepolia } from "viem/chains";
 
 /**
  * #CHAIN-INTEGRATION
  * This needs to be changed if you want to support a new chain
  */
-export const publicClientMapping = {
+export const publicClientMapping: Record<SupportedChainId | number, PublicClient> = {
   [SupportedChainId.MAINNET]: createPublicClient({
     chain: mainnet,
     transport: http(RPC_URL_MAPPING[SupportedChainId.MAINNET]),
@@ -27,5 +27,13 @@ export const publicClientMapping = {
   [SupportedChainId.BASE]: createPublicClient({
     chain: mainnet,
     transport: http(RPC_URL_MAPPING[SupportedChainId.BASE]),
+  }),
+  [43114]: createPublicClient({
+    chain: mainnet,
+    transport: http(RPC_URL_MAPPING[43114]),
+  }),
+  [137]: createPublicClient({
+    chain: mainnet,
+    transport: http(RPC_URL_MAPPING[137]),
   }),
 };

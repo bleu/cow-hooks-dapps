@@ -1,5 +1,5 @@
 import { morphoAbi, morphoOracleAbi } from "@bleu/utils/transactionFactory";
-import { MORPHO_ADDRESS } from "@bleu/utils/transactionFactory/morpho";
+import { MORPHO_ADDRESS_MAP } from "@bleu/utils/transactionFactory/morpho";
 import { MarketUtils } from "@morpho-org/blue-sdk";
 import { type Address, type PublicClient, formatUnits } from "viem";
 import type { MorphoMarket } from "../types";
@@ -29,17 +29,18 @@ export async function readOnchainMorphoMarkets(
   userAddress: Address,
   markets: MorphoMarket[],
   client: PublicClient,
+  chainId: number,
 ): Promise<OnchainMorphoMarketInfo[]> {
   try {
     const calls = markets.flatMap((market) => [
       {
-        address: MORPHO_ADDRESS as Address,
+        address: MORPHO_ADDRESS_MAP[chainId] as Address,
         abi: morphoAbi,
         functionName: "market",
         args: [market.uniqueKey],
       },
       {
-        address: MORPHO_ADDRESS as Address,
+        address: MORPHO_ADDRESS_MAP[chainId] as Address,
         abi: morphoAbi,
         functionName: "position",
         args: [market.uniqueKey, userAddress],
