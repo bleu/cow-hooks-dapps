@@ -12,7 +12,7 @@
   "cow_hook_dapp": {
     "id": "cba4ec25057b783ae3e4565e4856107d2175503285400c8e2f508e879e86f263",
     "name": "Morpho Borrow",
-    "descriptionShort": "Supply, borrow, repay and withdraw on Morpho Protocol.",
+    "descriptionShort": "Supply collateral, borrow, repay and withdraw collateral on Morpho Protocol.",
     "description": "Seamlessly add and remove liquidity on the Morpho Lending Protocol. Whether you're optimizing your yield or efficiently deploying assets, this hook streamlines the process, ensuring your liquidity transactions happen in a smooth, efficient flow.",
     "version": "0.0.1",
     "website": "https://app.morpho.org/",
