@@ -3,7 +3,7 @@ import {
   TRANSACTION_TYPES,
   TransactionFactory,
 } from "@bleu/utils/transactionFactory";
-import { MORPHO_ADDRESS } from "@bleu/utils/transactionFactory/morpho";
+import { MORPHO_ADDRESS_MAP } from "@bleu/utils/transactionFactory/morpho";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import { parseUnits } from "viem";
@@ -48,7 +48,7 @@ export const useGetSupplyHookInfo = () => {
         TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
           type: TRANSACTION_TYPES.ERC20_APPROVE,
           token: tokenAddress,
-          spender: MORPHO_ADDRESS,
+          spender: MORPHO_ADDRESS_MAP[context.chainId],
           amount: amountBigNumber,
         }),
         // Deposit
@@ -57,6 +57,7 @@ export const useGetSupplyHookInfo = () => {
           marketParams: getMarketParams(market),
           amount: amountBigNumber,
           recipient: context.account,
+          chainId: context.chainId,
         }),
       ]);
 

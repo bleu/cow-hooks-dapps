@@ -1,6 +1,6 @@
 import { useIFrameContext } from "@bleu/cow-hooks-ui";
 import { morphoAbi } from "@bleu/utils/transactionFactory";
-import { MORPHO_ADDRESS } from "@bleu/utils/transactionFactory/morpho";
+import { MORPHO_ADDRESS_MAP } from "@bleu/utils/transactionFactory/morpho";
 import { splitSignature } from "ethers/lib/utils";
 import { useCallback } from "react";
 import useSWR from "swr";
@@ -24,13 +24,13 @@ export const useIsCowShedAuthorizedOnMorpho = () => {
     const [isAuthorizedResult, nonceResult] = await publicClient.multicall({
       contracts: [
         {
-          address: MORPHO_ADDRESS,
+          address: MORPHO_ADDRESS_MAP[context.chainId],
           abi: morphoAbi,
           functionName: "isAuthorized",
           args: [context.account, cowShedProxy],
         },
         {
-          address: MORPHO_ADDRESS,
+          address: MORPHO_ADDRESS_MAP[context.chainId],
           abi: morphoAbi,
           functionName: "nonce",
           args: [context.account],
@@ -51,9 +51,9 @@ export const useIsCowShedAuthorizedOnMorpho = () => {
 
 function getAuthorizationData(
   authorizer: Address,
+  authorized: Address,
   nonce: bigint,
 ): MorphoAuthorizationData {
-  const authorized = MORPHO_ADDRESS;
   const isAuthorized = true;
   const deadline = BigInt(Math.floor(Date.now() / 1000 + 60 * 60 * 24 * 30));
 
@@ -73,9 +73,8 @@ export function useAllowCowShedOnMorpho({
   isCowShedAuthorizedOnMorpho: boolean | undefined;
   userNonce: bigint | undefined;
 }) {
-  const { web3Provider, publicClient, jsonRpcProvider, context } =
+  const { web3Provider, publicClient, jsonRpcProvider, context, cowShedProxy } =
     useIFrameContext();
-  MORPHO_ADDRESS;
 
   return useCallback(async () => {
     if (
@@ -83,6 +82,7 @@ export function useAllowCowShedOnMorpho({
       !jsonRpcProvider ||
       !context?.account ||
       !web3Provider ||
+      !cowShedProxy ||
       userNonce === undefined
     )
       throw new Error("Missing context");
@@ -91,11 +91,15 @@ export function useAllowCowShedOnMorpho({
 
     const { chainId, account } = context;
 
-    const authorizationData = getAuthorizationData(account, userNonce);
+    const authorizationData = getAuthorizationData(
+      account,
+      cowShedProxy,
+      userNonce,
+    );
 
     const domain = {
       chainId: chainId,
-      verifyingContract: MORPHO_ADDRESS,
+      verifyingContract: MORPHO_ADDRESS_MAP[chainId],
     };
 
     // Define the types
@@ -127,7 +131,7 @@ export function useAllowCowShedOnMorpho({
     };
 
     const hook = {
-      target: MORPHO_ADDRESS,
+      target: MORPHO_ADDRESS_MAP[chainId],
       callData: encodeFunctionData({
         abi: morphoAbi,
         functionName: "setAuthorizationWithSig",
@@ -146,5 +150,6 @@ export function useAllowCowShedOnMorpho({
     web3Provider,
     isCowShedAuthorizedOnMorpho,
     userNonce,
+    cowShedProxy,
   ]);
 }

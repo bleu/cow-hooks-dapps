@@ -8,7 +8,11 @@ import type {
   TRANSACTION_TYPES,
 } from "./types";
 
-export const MORPHO_ADDRESS = "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb";
+export const MORPHO_ADDRESS_MAP: Record<number, Address> = {
+  [1]: "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb",
+  [137]: "0x1bF0c2541F820E775182832f06c0B7Fc27A25f67",
+  [8453]: "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb",
+};
 
 export interface MorphoDepositArgs extends BaseArgs {
   type: TRANSACTION_TYPES.MORPHO_DEPOSIT;
@@ -66,12 +70,13 @@ export interface MorphoSupplyArgs extends BaseArgs {
   marketParams: MorphoMarketParams;
   amount: bigint;
   recipient: Address;
+  chainId: number;
 }
 
 export class MorphoSupplyCreator implements ITransaction<MorphoSupplyArgs> {
   async createRawTx(args: MorphoSupplyArgs): Promise<BaseTransaction> {
     return {
-      to: MORPHO_ADDRESS,
+      to: MORPHO_ADDRESS_MAP[args.chainId],
       value: BigInt(0),
       callData: encodeFunctionData({
         abi: morphoAbi,
@@ -88,12 +93,13 @@ export interface MorphoBorrowArgs extends BaseArgs {
   assets: bigint;
   shares: bigint;
   recipient: Address;
+  chainId: number;
 }
 
 export class MorphoBorrowCreator implements ITransaction<MorphoBorrowArgs> {
   async createRawTx(args: MorphoBorrowArgs): Promise<BaseTransaction> {
     return {
-      to: MORPHO_ADDRESS,
+      to: MORPHO_ADDRESS_MAP[args.chainId],
       value: BigInt(0),
       callData: encodeFunctionData({
         abi: morphoAbi,
@@ -125,12 +131,13 @@ export interface MorphoRepayArgs extends BaseArgs {
   assets: bigint;
   shares: bigint;
   recipient: Address;
+  chainId: number;
 }
 
 export class MorphoRepayCreator implements ITransaction<MorphoRepayArgs> {
   async createRawTx(args: MorphoRepayArgs): Promise<BaseTransaction> {
     return {
-      to: MORPHO_ADDRESS,
+      to: MORPHO_ADDRESS_MAP[args.chainId],
       value: BigInt(0),
       callData: encodeFunctionData({
         abi: morphoAbi,
@@ -161,12 +168,13 @@ export interface MorphoWithdrawArgs extends BaseArgs {
   marketParams: MorphoMarketParams;
   assets: bigint;
   recipient: Address;
+  chainId: number;
 }
 
 export class MorphoWithdrawCreator implements ITransaction<MorphoWithdrawArgs> {
   async createRawTx(args: MorphoWithdrawArgs): Promise<BaseTransaction> {
     return {
-      to: MORPHO_ADDRESS,
+      to: MORPHO_ADDRESS_MAP[args.chainId],
       value: BigInt(0),
       callData: encodeFunctionData({
         abi: morphoAbi,

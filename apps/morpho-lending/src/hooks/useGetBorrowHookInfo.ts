@@ -42,6 +42,7 @@ export const useGetBorrowHookInfo = () => {
           assets: amountBigNumber,
           shares: BigInt(0),
           recipient: context.account,
+          chainId: context.chainId,
         },
       );
       const txs = [...(reallocationTxs ?? []), borrowTx];

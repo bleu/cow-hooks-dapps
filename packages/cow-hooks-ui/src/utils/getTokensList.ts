@@ -29,6 +29,14 @@ const tokenListUrlMap = {
     "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/CowSwap.json",
     "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/CoinGecko.8453.json",
   ],
+  [43114]: [
+    "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/CowSwap.json",
+    "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/CoinGecko.43114.json",
+  ],
+  [137]: [
+    "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/CowSwap.json",
+    "https://raw.githubusercontent.com/cowprotocol/token-lists/refs/heads/main/src/public/CoinGecko.137.json",
+  ],
 };
 
 export async function getTokensList(

@@ -3,7 +3,7 @@ import {
   TRANSACTION_TYPES,
   TransactionFactory,
 } from "@bleu/utils/transactionFactory";
-import { MORPHO_ADDRESS } from "@bleu/utils/transactionFactory/morpho";
+import { MORPHO_ADDRESS_MAP } from "@bleu/utils/transactionFactory/morpho";
 import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import { parseUnits } from "viem";
@@ -42,6 +42,7 @@ export const useGetRepayHookInfo = () => {
             assets: BigInt(0),
             shares: market.position.borrowShares,
             recipient: context.account,
+            chainId: context.chainId,
           }
         : {
             type: TRANSACTION_TYPES.MORPHO_REPAY as const,
@@ -49,6 +50,7 @@ export const useGetRepayHookInfo = () => {
             assets: amountBigNumber,
             shares: BigInt(0),
             recipient: context.account,
+            chainId: context.chainId,
           };
 
       const transferDustTxs = isMaxRepay
@@ -67,7 +69,7 @@ export const useGetRepayHookInfo = () => {
             TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
               type: TRANSACTION_TYPES.ERC20_APPROVE,
               token: tokenAddress,
-              spender: MORPHO_ADDRESS,
+              spender: MORPHO_ADDRESS_MAP[context.chainId],
               amount: BigInt(0),
             }),
           ])
@@ -87,7 +89,7 @@ export const useGetRepayHookInfo = () => {
         TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
           type: TRANSACTION_TYPES.ERC20_APPROVE,
           token: tokenAddress,
-          spender: MORPHO_ADDRESS,
+          spender: MORPHO_ADDRESS_MAP[context.chainId],
           amount: amountBigNumber,
         }),
         // Repay (has buffer)

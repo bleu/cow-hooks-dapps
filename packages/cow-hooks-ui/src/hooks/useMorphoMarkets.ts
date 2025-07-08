@@ -148,6 +148,7 @@ export function useMorphoMarkets(
         userAddress as Address,
         filteredMarkets as MorphoMarket[],
         publicClient,
+        chainId as number,
       );
 
       // merge onchain info into markets

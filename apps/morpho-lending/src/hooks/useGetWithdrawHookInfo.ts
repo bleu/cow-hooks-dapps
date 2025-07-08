@@ -38,6 +38,7 @@ export const useGetWithdrawHookInfo = () => {
             marketParams: getMarketParams(market),
             assets: amountBigNumber,
             recipient: context.account,
+            chainId: context.chainId,
           },
         ),
       ];
