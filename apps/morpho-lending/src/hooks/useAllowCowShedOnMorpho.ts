@@ -51,9 +51,9 @@ export const useIsCowShedAuthorizedOnMorpho = () => {
 
 function getAuthorizationData(
   authorizer: Address,
+  authorized: Address,
   nonce: bigint,
 ): MorphoAuthorizationData {
-  const authorized = MORPHO_ADDRESS;
   const isAuthorized = true;
   const deadline = BigInt(Math.floor(Date.now() / 1000 + 60 * 60 * 24 * 30));
 
@@ -73,9 +73,8 @@ export function useAllowCowShedOnMorpho({
   isCowShedAuthorizedOnMorpho: boolean | undefined;
   userNonce: bigint | undefined;
 }) {
-  const { web3Provider, publicClient, jsonRpcProvider, context } =
+  const { web3Provider, publicClient, jsonRpcProvider, context, cowShedProxy } =
     useIFrameContext();
-  MORPHO_ADDRESS;
 
   return useCallback(async () => {
     if (
@@ -83,6 +82,7 @@ export function useAllowCowShedOnMorpho({
       !jsonRpcProvider ||
       !context?.account ||
       !web3Provider ||
+      !cowShedProxy ||
       userNonce === undefined
     )
       throw new Error("Missing context");
@@ -91,7 +91,7 @@ export function useAllowCowShedOnMorpho({
 
     const { chainId, account } = context;
 
-    const authorizationData = getAuthorizationData(account, userNonce);
+    const authorizationData = getAuthorizationData(account, cowShedProxy, userNonce);
 
     const domain = {
       chainId: chainId,
@@ -146,5 +146,6 @@ export function useAllowCowShedOnMorpho({
     web3Provider,
     isCowShedAuthorizedOnMorpho,
     userNonce,
+    cowShedProxy
   ]);
 }
