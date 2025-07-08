@@ -91,7 +91,11 @@ export function useAllowCowShedOnMorpho({
 
     const { chainId, account } = context;
 
-    const authorizationData = getAuthorizationData(account, cowShedProxy, userNonce);
+    const authorizationData = getAuthorizationData(
+      account,
+      cowShedProxy,
+      userNonce,
+    );
 
     const domain = {
       chainId: chainId,
@@ -146,6 +150,6 @@ export function useAllowCowShedOnMorpho({
     web3Provider,
     isCowShedAuthorizedOnMorpho,
     userNonce,
-    cowShedProxy
+    cowShedProxy,
   ]);
 }

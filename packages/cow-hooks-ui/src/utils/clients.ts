@@ -7,7 +7,10 @@ import { arbitrum, gnosis, mainnet, sepolia } from "viem/chains";
  * #CHAIN-INTEGRATION
  * This needs to be changed if you want to support a new chain
  */
-export const publicClientMapping: Record<SupportedChainId | number, PublicClient> = {
+export const publicClientMapping: Record<
+  SupportedChainId | number,
+  PublicClient
+> = {
   [SupportedChainId.MAINNET]: createPublicClient({
     chain: mainnet,
     transport: http(RPC_URL_MAPPING[SupportedChainId.MAINNET]),
