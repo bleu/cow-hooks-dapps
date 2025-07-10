@@ -19,14 +19,19 @@ export const useMaxWithdrawbleAmount = () => {
 
   const TIME_BUFFER = 3600;
   const period =
-    BigInt(Math.floor(Date.now() / 1000) + TIME_BUFFER) - market.onchainState.lastUpdate;
+    BigInt(Math.floor(Date.now() / 1000) + TIME_BUFFER) -
+    market.onchainState.lastUpdate;
 
-  const compoundRate = borrowRate !== undefined ? MarketUtils.compoundRate(borrowRate, period) : undefined;
+  const compoundRate =
+    borrowRate !== undefined
+      ? MarketUtils.compoundRate(borrowRate, period)
+      : undefined;
 
   const borrowSharesWithCoumpoundRate =
     compoundRate !== undefined
-    ? borrowShares + (borrowShares * compoundRate) / BigInt("1000000000000000000")
-    : undefined;
+      ? borrowShares +
+        (borrowShares * compoundRate) / BigInt("1000000000000000000")
+      : undefined;
 
   const repay = decimalsToBigInt(repayAmount || "0", market.loanAsset.decimals);
 
@@ -39,7 +44,8 @@ export const useMaxWithdrawbleAmount = () => {
       : undefined;
 
   const withdrawableLimitFromRepay =
-    repayBorrowShares !== undefined && borrowSharesWithCoumpoundRate !== undefined
+    repayBorrowShares !== undefined &&
+    borrowSharesWithCoumpoundRate !== undefined
       ? MarketUtils.getWithdrawableCollateral(
           {
             collateral,

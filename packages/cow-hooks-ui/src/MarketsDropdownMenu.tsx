@@ -74,7 +74,7 @@ export function MarketsDropdownMenu({
         (market.collateralAsset.symbol + market.loanAsset.symbol)
           .toLowerCase()
           .includes(searchLower) ||
-          (`${market.collateralAsset.symbol} ${market.loanAsset.symbol} `)
+          `${market.collateralAsset.symbol} ${market.loanAsset.symbol} `
             .toLowerCase()
             .includes(searchLower),
       );

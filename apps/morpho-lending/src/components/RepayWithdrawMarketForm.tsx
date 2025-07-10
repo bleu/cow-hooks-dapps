@@ -13,12 +13,12 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { InputFieldName, MaxFieldName } from "#/constants/forms";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
+import { useMaxRepayableAmount } from "#/hooks/useMaxRepayableAmount";
 import { useMaxWithdrawbleAmount } from "#/hooks/useMaxWithdrawbleAmount";
 import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
 import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 import { AmountInput } from "./AmoutIntput";
 import { PositionSummary } from "./PositionSummary";
-import { useMaxRepayableAmount } from "#/hooks/useMaxRepayableAmount";
 
 interface RepayWithdrawMarketFormProps {
   market: MorphoMarket;
@@ -59,8 +59,11 @@ export function RepayWithdrawMarketForm({
   const { maxWithdrawableFormatted, maxWithdrawableFull, withdrawableLimit } =
     useMaxWithdrawbleAmount();
 
-  const { maxRepayable, formatted: maxRepayableFormatted, fullDecimals: maxRepayableFull } =
-    useMaxRepayableAmount(borrowedBalance)
+  const {
+    maxRepayable,
+    formatted: maxRepayableFormatted,
+    fullDecimals: maxRepayableFull,
+  } = useMaxRepayableAmount(borrowedBalance);
 
   const {
     formatted: formattedCollateral,
