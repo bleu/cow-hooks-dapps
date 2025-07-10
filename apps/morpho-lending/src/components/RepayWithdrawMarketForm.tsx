@@ -18,6 +18,7 @@ import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
 import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 import { AmountInput } from "./AmoutIntput";
 import { PositionSummary } from "./PositionSummary";
+import { useMaxRepayableAmount } from "#/hooks/useMaxRepayableAmount";
 
 interface RepayWithdrawMarketFormProps {
   market: MorphoMarket;
@@ -57,21 +58,9 @@ export function RepayWithdrawMarketForm({
 
   const { maxWithdrawableFormatted, maxWithdrawableFull, withdrawableLimit } =
     useMaxWithdrawbleAmount();
-  const repayableLimit = useMemo(
-    () =>
-      dynamicBorrow !== undefined && borrowedBalance !== undefined
-        ? dynamicBorrow < borrowedBalance
-          ? dynamicBorrow
-          : borrowedBalance
-        : undefined,
-    [dynamicBorrow, borrowedBalance],
-  );
 
-  const { formatted: maxRepayableFormatted, fullDecimals: maxRepayableFull } =
-    useFormatTokenAmount({
-      amount: repayableLimit,
-      decimals: market.loanAsset.decimals,
-    });
+  const { maxRepayable, formatted: maxRepayableFormatted, fullDecimals: maxRepayableFull } =
+    useMaxRepayableAmount(borrowedBalance)
 
   const {
     formatted: formattedCollateral,
@@ -109,7 +98,7 @@ export function RepayWithdrawMarketForm({
 
   const borrowAfter = useMemo(() => {
     // If isMaxRepay is true, borrowAfter should be 0
-    if (isMaxRepay && repayableLimit !== borrowedBalance) {
+    if (isMaxRepay && maxRepayable !== borrowedBalance) {
       return BigInt(0);
     }
 
@@ -125,7 +114,7 @@ export function RepayWithdrawMarketForm({
     repayAmount,
     isMaxRepay,
     borrowedBalance,
-    repayableLimit,
+    maxRepayable,
   ]);
 
   const {
@@ -183,9 +172,9 @@ export function RepayWithdrawMarketForm({
   );
 
   const isOverRepay = Boolean(
-    dynamicBorrow !== undefined &&
+    maxRepayable !== undefined &&
       repayAmountBigInt !== undefined &&
-      repayAmountBigInt > dynamicBorrow,
+      repayAmountBigInt > maxRepayable,
   );
 
   const withdrawAmountBigInt = decimalsToBigInt(

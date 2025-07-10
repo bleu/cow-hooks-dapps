@@ -5,6 +5,7 @@ import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
 import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
 import { calculateLLTVWithSafetyMargin } from "#/utils/morpho";
+import { useMarketBorrowRate } from "./useMarketBorrowRate";
 
 export const useMaxWithdrawbleAmount = () => {
   const { control } = useFormContext<MorphoSupplyFormData>();
@@ -14,9 +15,22 @@ export const useMaxWithdrawbleAmount = () => {
 
   const { collateral, borrowShares } = market.position;
 
+  const borrowRate = useMarketBorrowRate({ market });
+
+  const TIME_BUFFER = 3600;
+  const period =
+    BigInt(Math.floor(Date.now() / 1000) + TIME_BUFFER) - market.onchainState.lastUpdate;
+
+  const compoundRate = borrowRate !== undefined ? MarketUtils.compoundRate(borrowRate, period) : undefined;
+
+  const borrowSharesWithCoumpoundRate =
+    compoundRate !== undefined
+    ? borrowShares + (borrowShares * compoundRate) / BigInt("1000000000000000000")
+    : undefined;
+
   const repay = decimalsToBigInt(repayAmount || "0", market.loanAsset.decimals);
 
-  const borrowSharesAfterRepay =
+  const repayBorrowShares =
     repay !== undefined
       ? MarketUtils.toBorrowShares(repay, {
           totalBorrowAssets: market.onchainState.totalBorrowAssets,
@@ -25,11 +39,11 @@ export const useMaxWithdrawbleAmount = () => {
       : undefined;
 
   const withdrawableLimitFromRepay =
-    borrowSharesAfterRepay !== undefined
+    repayBorrowShares !== undefined && borrowSharesWithCoumpoundRate !== undefined
       ? MarketUtils.getWithdrawableCollateral(
           {
             collateral,
-            borrowShares: borrowShares - borrowSharesAfterRepay,
+            borrowShares: borrowSharesWithCoumpoundRate - repayBorrowShares,
           },
           {
             totalBorrowAssets: market.onchainState.totalBorrowAssets,
