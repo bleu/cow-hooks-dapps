@@ -17,6 +17,7 @@ export const useMaxWithdrawbleAmount = () => {
 
   const borrowRate = useMarketBorrowRate({ market });
 
+  const RATE_PRECISION = BigInt("1000000000000000000");
   const TIME_BUFFER = 3600;
   const period =
     BigInt(Math.floor(Date.now() / 1000) + TIME_BUFFER) -
@@ -29,8 +30,7 @@ export const useMaxWithdrawbleAmount = () => {
 
   const borrowSharesWithCoumpoundRate =
     compoundRate !== undefined
-      ? borrowShares +
-        (borrowShares * compoundRate) / BigInt("1000000000000000000")
+      ? borrowShares + (borrowShares * compoundRate) / RATE_PRECISION
       : undefined;
 
   const repay = decimalsToBigInt(repayAmount || "0", market.loanAsset.decimals);
