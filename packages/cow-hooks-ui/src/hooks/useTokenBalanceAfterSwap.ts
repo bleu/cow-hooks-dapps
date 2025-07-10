@@ -6,10 +6,10 @@ export function useTokenBalanceAfterSwap(address: string) {
   const { tokenDecimals, userBalance } = useReadTokenContract({
     tokenAddress: address as Address | undefined,
   });
-  const { formatted } = useFormatTokenAmount({
+  const { formatted, float } = useFormatTokenAmount({
     amount: userBalance,
     decimals: tokenDecimals,
   });
 
-  return formatted;
+  return { formatted, float };
 }

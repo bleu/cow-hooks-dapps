@@ -28,9 +28,10 @@ export function TokenAmountInputDeposit({
     name: `amounts.${poolBalance.token.address.toLowerCase()}`,
   });
 
-  const tokenBalanceAfterSwap = useTokenBalanceAfterSwap(
-    poolBalance.token.address,
-  );
+  const {
+    float: tokenBalanceAfterSwapFloat,
+    formatted: formattedTokenBalanceAfterSwap,
+  } = useTokenBalanceAfterSwap(poolBalance.token.address);
 
   const isTokenBuy = useMemo(() => {
     return (
@@ -61,9 +62,11 @@ export function TokenAmountInputDeposit({
 
   const maxButtonDisabled = useMemo(() => {
     return (
-      Number(tokenBalanceAfterSwap) <= 0 || amount === tokenBalanceAfterSwap
+      tokenBalanceAfterSwapFloat &&
+      (tokenBalanceAfterSwapFloat <= 0 ||
+        Number(amount) === tokenBalanceAfterSwapFloat)
     );
-  }, [tokenBalanceAfterSwap, amount]);
+  }, [tokenBalanceAfterSwapFloat, amount]);
 
   const buyAmountDisabled = useMemo(() => {
     return !isTokenBuy || Number(buyAmount) <= 0 || amount === buyAmount;
@@ -103,22 +106,16 @@ export function TokenAmountInputDeposit({
       </div>
       <div className="flex items-center justify-between col-span-2">
         <div className="flex items-center justify-start">
-          {tokenBalanceAfterSwap && (
+          {tokenBalanceAfterSwapFloat !== undefined && (
             <div className="flex flex-col xsm:flex-row gap-2">
               <div className="flex items-center">
                 <InfoTooltip
                   className="opacity-70"
                   text="Estimated balance, it might change depending of order and fee update."
                 />
+
                 <span className="ml-1 inline text-xs font-normal opacity-70 w-fit">
-                  Balance:{" "}
-                  {formatNumber(
-                    tokenBalanceAfterSwap,
-                    4,
-                    "decimal",
-                    "standard",
-                    0.0001,
-                  ).replace(/\.?0+$/, "") || "0"}
+                  Balance: {formattedTokenBalanceAfterSwap}
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -130,9 +127,9 @@ export function TokenAmountInputDeposit({
                     onClick={() => {
                       setValue(
                         `amounts.${poolBalance.token.address.toLowerCase()}`,
-                        tokenBalanceAfterSwap,
+                        tokenBalanceAfterSwapFloat.toString(),
                       );
-                      onChange(tokenBalanceAfterSwap);
+                      onChange(tokenBalanceAfterSwapFloat.toString());
                     }}
                   >
                     Max
