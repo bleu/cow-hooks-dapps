@@ -24,6 +24,7 @@ export function useDynamicBorrow({ market }: { market: MorphoMarket }) {
     }
     // 3s loop update
     const interval = setInterval(() => {
+      const RATE_PRECISION = BigInt("1000000000000000000");
       // 1 hour buffer for hook execution, dust will be sent back to user
       const TIME_BUFFER = 3600;
       const period =
@@ -32,8 +33,7 @@ export function useDynamicBorrow({ market }: { market: MorphoMarket }) {
       const compoundRate = MarketUtils.compoundRate(borrowRate, period);
 
       const newBorrow =
-        borrowWithoutRate +
-        (borrowWithoutRate * compoundRate) / BigInt("1000000000000000000");
+        borrowWithoutRate + (borrowWithoutRate * compoundRate) / RATE_PRECISION;
 
       setBorrow(newBorrow);
     }, 3000);

@@ -13,6 +13,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { InputFieldName, MaxFieldName } from "#/constants/forms";
 import type { MorphoSupplyFormData } from "#/contexts/form";
 import { useFormatTokenAmount } from "#/hooks/useFormatTokenAmount";
+import { useMaxRepayableAmount } from "#/hooks/useMaxRepayableAmount";
 import { useMaxWithdrawbleAmount } from "#/hooks/useMaxWithdrawbleAmount";
 import { decimalsToBigInt } from "#/utils/decimalsToBigInt";
 import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
@@ -57,21 +58,12 @@ export function RepayWithdrawMarketForm({
 
   const { maxWithdrawableFormatted, maxWithdrawableFull, withdrawableLimit } =
     useMaxWithdrawbleAmount();
-  const repayableLimit = useMemo(
-    () =>
-      dynamicBorrow !== undefined && borrowedBalance !== undefined
-        ? dynamicBorrow < borrowedBalance
-          ? dynamicBorrow
-          : borrowedBalance
-        : undefined,
-    [dynamicBorrow, borrowedBalance],
-  );
 
-  const { formatted: maxRepayableFormatted, fullDecimals: maxRepayableFull } =
-    useFormatTokenAmount({
-      amount: repayableLimit,
-      decimals: market.loanAsset.decimals,
-    });
+  const {
+    maxRepayable,
+    formatted: maxRepayableFormatted,
+    fullDecimals: maxRepayableFull,
+  } = useMaxRepayableAmount(borrowedBalance);
 
   const {
     formatted: formattedCollateral,
@@ -109,7 +101,7 @@ export function RepayWithdrawMarketForm({
 
   const borrowAfter = useMemo(() => {
     // If isMaxRepay is true, borrowAfter should be 0
-    if (isMaxRepay && repayableLimit !== borrowedBalance) {
+    if (isMaxRepay && maxRepayable !== borrowedBalance) {
       return BigInt(0);
     }
 
@@ -125,7 +117,7 @@ export function RepayWithdrawMarketForm({
     repayAmount,
     isMaxRepay,
     borrowedBalance,
-    repayableLimit,
+    maxRepayable,
   ]);
 
   const {
@@ -183,9 +175,9 @@ export function RepayWithdrawMarketForm({
   );
 
   const isOverRepay = Boolean(
-    dynamicBorrow !== undefined &&
+    maxRepayable !== undefined &&
       repayAmountBigInt !== undefined &&
-      repayAmountBigInt > dynamicBorrow,
+      repayAmountBigInt > maxRepayable,
   );
 
   const withdrawAmountBigInt = decimalsToBigInt(

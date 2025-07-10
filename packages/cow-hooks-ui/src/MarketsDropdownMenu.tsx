@@ -74,7 +74,7 @@ export function MarketsDropdownMenu({
         (market.collateralAsset.symbol + market.loanAsset.symbol)
           .toLowerCase()
           .includes(searchLower) ||
-          (market.loanAsset.symbol + market.collateralAsset.symbol)
+          `${market.collateralAsset.symbol} ${market.loanAsset.symbol} `
             .toLowerCase()
             .includes(searchLower),
       );
@@ -109,7 +109,7 @@ export function MarketsDropdownMenu({
   };
 
   const handleInputChange = (value: string) => {
-    setSearch(value.trim());
+    setSearch(value);
     // If the value is empty (like when selecting all and deleting), reset the search
     if (!value) {
       setSearch("");
@@ -153,7 +153,7 @@ export function MarketsDropdownMenu({
                     <MagnifyingGlassIcon className="w-5 h-5 opacity-60" />
                     <input
                       className="w-full text-sm bg-transparent focus:ring-0 focus:outline-none placeholder:text-muted-foreground/50"
-                      placeholder="Search by asset or symbol"
+                      placeholder="Search symbols (e.g. 'WETH USDC')"
                       onChange={(e) => handleInputChange(e.target.value)}
                       value={search}
                     />
