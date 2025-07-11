@@ -1,12 +1,12 @@
 "use client";
 
-import type { HookDappContextAdjusted, MorphoMarket } from "@bleu/cow-hooks-ui";
+import type { MorphoMarket } from "@bleu/cow-hooks-ui";
 import {
   MarketsDropdownMenu,
   Spinner,
   useIFrameContext,
 } from "@bleu/cow-hooks-ui";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import WalletIcon from "#/assets/wallet.svg";
 import { MarketFormContainer } from "#/components/MarketFormContainer";
@@ -26,20 +26,7 @@ export default function Page() {
   } = useMorphoContext();
 
   const [isEditHookLoading, setIsEditHookLoading] = useState(true);
-  const { context: iFrameContext } = useIFrameContext();
-  const [context, setContext] = useState<HookDappContextAdjusted | undefined>();
-
-  // Avoid reloading the page when orderParams becomes null (waiting for new quote)
-  useEffect(() => {
-    const newContext = iFrameContext?.orderParams
-      ? iFrameContext
-      : {
-          ...(iFrameContext as HookDappContextAdjusted),
-          orderParams: context?.orderParams ?? null,
-        };
-    if (JSON.stringify(newContext) !== JSON.stringify(context))
-      setContext(newContext);
-  }, [iFrameContext, context]);
+  const { context } = useIFrameContext();
 
   const loadHookInfo = useCallback(async () => {
     if (

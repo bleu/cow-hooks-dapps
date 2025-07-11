@@ -31,7 +31,7 @@ export default function Page() {
     control,
     name: "referenceTokenAddress",
   });
-  const sellTokenAmountAfterSwap = useTokenBalanceAfterSwap(
+  const { float: sellTokenAmountAfterSwap } = useTokenBalanceAfterSwap(
     context?.orderParams?.sellTokenAddress as Address,
   );
 

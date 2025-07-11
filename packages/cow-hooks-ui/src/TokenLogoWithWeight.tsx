@@ -14,7 +14,7 @@ export function TokenLogoWithWeight({
   return (
     <div
       className={cn(
-        "flex items-center rounded-xl text-md py-1 px-2 gap-1 bg-background text-foreground border border-1 border-muted w-fit",
+        "flex items-center rounded-xl text-md py-1 px-2 gap-1 bg-background text-foreground border  border-muted",
         className,
       )}
     >
@@ -22,7 +22,16 @@ export function TokenLogoWithWeight({
       <div>
         <TokenLogo token={token} width={20} height={20} />
       </div>
-      <span>{token.symbol}</span>
+
+      <span
+        className={cn(
+          token?.symbol?.length && token?.symbol?.length > 8
+            ? "text-xs"
+            : "text-md",
+        )}
+      >
+        {token.symbol}
+      </span>
     </div>
   );
 }

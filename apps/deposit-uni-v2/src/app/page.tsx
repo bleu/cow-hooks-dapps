@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  type HookDappContextAdjusted,
   type IPool,
   PoolsDropdownMenu,
   Spinner,
@@ -18,26 +17,13 @@ import {
   decodeDepositCalldata,
 } from "@bleu/utils";
 import { ALL_SUPPORTED_CHAIN_IDS } from "@cowprotocol/cow-sdk";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { PoolForm } from "#/components/PoolForm";
 import { PoolItemInfo } from "#/components/PoolItemInfo";
 
 export default function Page() {
-  const { context: iFrameContext, publicClient } = useIFrameContext();
-  const [context, setContext] = useState<HookDappContextAdjusted | undefined>();
-
-  // Avoid reloading the page when orderParams becomes null (waiting for new quote)
-  useEffect(() => {
-    const newContext = iFrameContext?.orderParams
-      ? iFrameContext
-      : {
-          ...(iFrameContext as HookDappContextAdjusted),
-          orderParams: context?.orderParams ?? null,
-        };
-    if (JSON.stringify(newContext) !== JSON.stringify(context))
-      setContext(newContext);
-  }, [iFrameContext, context]);
+  const { context, publicClient } = useIFrameContext();
 
   const {
     data: pools,

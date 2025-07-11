@@ -40,6 +40,7 @@ type IFrameContextType = {
 export const IFrameContext = createContext({} as IFrameContextType);
 
 export function IFrameContextProvider({ children }: PropsWithChildren) {
+  const [baseContext, setBaseContext] = useState<HookDappContextAdjusted>();
   const [context, setContext] = useState<HookDappContextAdjusted>();
   const [web3Provider, setWeb3Provider] = useState<Web3Provider>();
   const [actions, setActions] = useState<CoWHookDappActions>();
@@ -48,7 +49,7 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     const { actions, provider } = initCoWHookDapp({
-      onContext: setContext as (args: HookDappContext) => void,
+      onContext: setBaseContext as (args: HookDappContext) => void,
     });
 
     setActions(actions);
@@ -57,6 +58,17 @@ export function IFrameContextProvider({ children }: PropsWithChildren) {
     setWeb3Provider(web3Provider);
     setSigner(web3Provider.getSigner());
   }, []);
+
+  useEffect(() => {
+    const newContext = baseContext?.orderParams
+      ? baseContext
+      : {
+          ...(baseContext as HookDappContextAdjusted),
+          orderParams: context?.orderParams ?? null,
+        };
+    if (JSON.stringify(newContext) !== JSON.stringify(context))
+      setContext(newContext);
+  }, [baseContext, context]);
 
   const jsonRpcProvider = useMemo(() => {
     if (!context?.chainId) return;
