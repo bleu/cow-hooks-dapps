@@ -2,22 +2,25 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { MagnifyingGlassIcon, UpdateIcon } from "@radix-ui/react-icons";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { cn } from "@bleu.builders/ui";
+import { FilterButton, TokenFilterModal } from "./components";
+import {
+  FilterType,
+  mapFilterTypeToTokenType,
+  useInfiniteScroll,
+  useMarketFilters,
+} from "./hooks";
 import { MorphoMarketCard } from "./morpho/MorphoMarketCard";
 import type { MorphoMarket } from "./types";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from "./ui/Command";
 import { Spinner } from "./ui/Spinner";
-
-const ITEMS_PER_PAGE = 20;
 
 interface MarketsDropdownMenuProps {
   onSelect: (market: MorphoMarket) => void;
@@ -31,90 +34,42 @@ export function MarketsDropdownMenu({
   markets,
 }: MarketsDropdownMenuProps) {
   const [open, setOpen] = useState(!market);
-  const [search, setSearch] = useState("");
-  const [searchRule, setSearchRule] = useState<"all" | "collateral" | "loan">(
-    "all",
-  );
-  const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
 
-  // Reset display count when dialog opens/closes or search changes
-  // biome-ignore lint:
+  const {
+    filterType,
+    setFilterType,
+    selectedCollateralTokens,
+    selectedLoanTokens,
+    search,
+    setSearch,
+    collateralTokens,
+    loanTokens,
+    filteredMarkets,
+    handleTokenToggle,
+    clearFilters,
+    getFilterLabel,
+    resetSearch,
+  } = useMarketFilters(markets);
+
+  const {
+    displayedItems: displayedVaults,
+    isLoadingMore,
+    handleScroll,
+    resetPagination,
+  } = useInfiniteScroll(filteredMarkets);
+
   useEffect(() => {
     if (!open) {
-      setDisplayCount(ITEMS_PER_PAGE);
+      resetPagination();
     }
-  }, [open, search]);
+  }, [open, resetPagination]);
 
   useEffect(() => {
     if (!open) {
-      setSearch("");
+      resetSearch();
     }
-  }, [open]);
-
-  const filterMarket = useCallback(
-    (value: string, search: string): number => {
-      if (!search) return 1;
-      const searchLower = search.toLowerCase();
-
-      const market = markets.find((market) => market.uniqueKey === value);
-      if (!market) return 0;
-
-      if (searchRule === "collateral")
-        return Number(
-          market.collateralAsset.symbol.toLowerCase().includes(searchLower),
-        );
-
-      if (searchRule === "loan")
-        return Number(
-          market.loanAsset.symbol.toLowerCase().includes(searchLower),
-        );
-
-      return Number(
-        (market.collateralAsset.symbol + market.loanAsset.symbol)
-          .toLowerCase()
-          .includes(searchLower) ||
-          `${market.collateralAsset.symbol} ${market.loanAsset.symbol} `
-            .toLowerCase()
-            .includes(searchLower),
-      );
-    },
-    [markets, searchRule],
-  );
-
-  // Filter markets based on search
-  const filteredMarkets = useMemo(() => {
-    return markets.filter((market) => filterMarket(market.uniqueKey, search));
-  }, [search, markets, filterMarket]);
-
-  const displayedVaults = useMemo(
-    () => filteredMarkets.slice(0, displayCount),
-    [filteredMarkets, displayCount],
-  );
-
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const element = e.currentTarget;
-    if (
-      element.scrollHeight - element.scrollTop <= element.clientHeight + 100 &&
-      displayCount < filteredMarkets.length &&
-      !isLoadingMore
-    ) {
-      setIsLoadingMore(true);
-      // Use setTimeout to simulate loading and prevent multiple triggers
-      setTimeout(() => {
-        setDisplayCount((prev) => prev + ITEMS_PER_PAGE);
-        setIsLoadingMore(false);
-      }, 100);
-    }
-  };
-
-  const handleInputChange = (value: string) => {
-    setSearch(value);
-    // If the value is empty (like when selecting all and deleting), reset the search
-    if (!value) {
-      setSearch("");
-    }
-  };
+  }, [open, resetSearch]);
 
   const CommandEmptyContent = () => {
     return (
@@ -139,99 +94,70 @@ export function MarketsDropdownMenu({
           </Dialog.Trigger>
         </div>
         <Dialog.Portal>
-          <Dialog.Content className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] border w-screen h-screen bg-background border-none flex flex-col gap-3">
-            <div className="flex items-center gap-2 mx-4 mt-4">
+          <Dialog.Content className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] border w-screen h-screen bg-background border-none flex flex-col">
+            <div className="flex items-center justify-between m-4">
               <Dialog.Title>Select market</Dialog.Title>
-            </div>
-            <Command filter={filterMarket} value={search}>
-              <div className="px-4">
-                <CommandInput
-                  className="flex items-center rounded-2xl mb-2 bg-color-paper-darker"
-                  asChild={true}
-                >
-                  <div className="flex gap-2 items-center justify-start px-3 py-2.5 mt-1  focus-within:ring-2 focus-within:ring-color-primary">
-                    <MagnifyingGlassIcon className="w-5 h-5 opacity-60" />
-                    <input
-                      className="w-full text-sm bg-transparent focus:ring-0 focus:outline-none placeholder:text-muted-foreground/50"
-                      placeholder="Search symbols (e.g. 'WETH USDC')"
-                      onChange={(e) => handleInputChange(e.target.value)}
-                      value={search}
-                    />
-                  </div>
-                </CommandInput>
-                {search && (
-                  <div className="flex justify-start items-center gap-2 mb-2">
-                    <button
-                      type="button"
-                      className={cn(
-                        "bg-color-paper-darker px-3 py-1 rounded-full text-xs hover:bg-primary hover:text-primary-foreground transition-all",
-                        {
-                          "bg-primary text-primary-foreground":
-                            searchRule === "all",
-                        },
-                      )}
-                      onClick={() => setSearchRule("all")}
-                    >
-                      All
-                    </button>
-                    <button
-                      type="button"
-                      className={cn(
-                        "bg-color-paper-darker px-3 py-1 rounded-full text-xs hover:bg-primary hover:text-primary-foreground transition-all",
-                        {
-                          "bg-primary text-primary-foreground":
-                            searchRule === "collateral",
-                        },
-                      )}
-                      onClick={() => setSearchRule("collateral")}
-                    >
-                      Collateral
-                    </button>
-                    <button
-                      type="button"
-                      className={cn(
-                        "bg-color-paper-darker px-3 py-1 rounded-full text-xs hover:bg-primary hover:text-primary-foreground transition-all",
-                        {
-                          "bg-primary text-primary-foreground":
-                            searchRule === "loan",
-                        },
-                      )}
-                      onClick={() => setSearchRule("loan")}
-                    >
-                      Loan
-                    </button>
-                  </div>
-                )}
-                {search && (
-                  <span className="mb-2 opacity-80 text-xs">
-                    {filteredMarkets.length} results found for "{search}".
-                  </span>
-                )}
+              <div className="flex gap-3 mr-1">
+                <FilterButton
+                  type={FilterType.COLLATERAL}
+                  label="Collateral"
+                  selectedTokens={selectedCollateralTokens}
+                  onFilterClick={(type) => {
+                    setFilterType(type);
+                    setFilterModalOpen(true);
+                  }}
+                  getFilterLabel={getFilterLabel}
+                />
+                <FilterButton
+                  type={FilterType.LOAN}
+                  label="Loan"
+                  selectedTokens={selectedLoanTokens}
+                  onFilterClick={(type) => {
+                    setFilterType(type);
+                    setFilterModalOpen(true);
+                  }}
+                  getFilterLabel={getFilterLabel}
+                />
               </div>
-
-              <CommandList
-                className="overflow-y-auto max-h-[60vh] px-4 xsm:px-0"
-                onScroll={handleScroll}
-              >
-                <CommandEmpty>
-                  <CommandEmptyContent />
-                </CommandEmpty>
-                <CommandGroup className="px-0 xsm:px-1">
-                  {displayedVaults.map((market) => (
-                    <CommandItem
-                      key={market.uniqueKey}
-                      value={market.uniqueKey}
-                      onSelect={() => {
-                        setOpen(false);
-                        onSelect(market);
-                      }}
-                      className="w-full px-0 py-1 xsm:px-2"
-                    >
-                      <MorphoMarketCard market={market} />
-                    </CommandItem>
-                  ))}
-                  {!search &&
-                    displayedVaults.length < filteredMarkets.length && (
+            </div>
+            {/* Search Input */}
+            <div className="px-4 mb-2">
+              <div className="relative">
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="Search symbols (e.g. 'WETH USDC')"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 text-sm bg-color-paper-darker rounded-lg border-none focus:ring-2 focus:ring-primary focus:outline-none"
+                />
+              </div>
+            </div>
+            {/* Market List with Command */}
+            <div className="flex-1 min-h-0">
+              <Command>
+                <CommandList
+                  className="overflow-y-auto h-full px-4 xsm:px-0"
+                  onScroll={handleScroll}
+                >
+                  <CommandEmpty>
+                    <CommandEmptyContent />
+                  </CommandEmpty>
+                  <CommandGroup className="px-0 xsm:px-1">
+                    {displayedVaults.map((market) => (
+                      <CommandItem
+                        key={market.uniqueKey}
+                        value={market.uniqueKey}
+                        onSelect={() => {
+                          setOpen(false);
+                          onSelect(market);
+                        }}
+                        className="w-full px-0 py-1 xsm:px-2"
+                      >
+                        <MorphoMarketCard market={market} />
+                      </CommandItem>
+                    ))}
+                    {isLoadingMore && (
                       <CommandItem
                         value=""
                         className="justify-center"
@@ -240,12 +166,33 @@ export function MarketsDropdownMenu({
                         <Spinner size="sm" />
                       </CommandItem>
                     )}
-                </CommandGroup>
-              </CommandList>
-            </Command>
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </div>
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
+
+      <TokenFilterModal
+        open={filterModalOpen}
+        onOpenChange={setFilterModalOpen}
+        filterType={filterType}
+        search={search}
+        onSearchChange={setSearch}
+        tokens={
+          filterType === FilterType.COLLATERAL ? collateralTokens : loanTokens
+        }
+        selectedTokens={
+          filterType === FilterType.COLLATERAL
+            ? selectedCollateralTokens
+            : selectedLoanTokens
+        }
+        onTokenToggle={(tokenAddress) =>
+          handleTokenToggle(tokenAddress, mapFilterTypeToTokenType(filterType))
+        }
+        onClearFilters={clearFilters}
+      />
     </div>
   );
 }
