@@ -1,4 +1,5 @@
 import { type IHooksInfo, useIFrameContext } from "@bleu/cow-hooks-ui";
+import { useReadTokenContract } from "@bleu/cow-hooks-ui";
 import {
   TRANSACTION_TYPES,
   TransactionFactory,
@@ -8,6 +9,7 @@ import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import { parseUnits } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
+import { useMaxRepayableAmount } from "#/hooks/useMaxRepayableAmount";
 import { getMarketParams } from "#/utils/getMarketParams";
 import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 
@@ -35,45 +37,56 @@ export const useGetRepayHookInfo = () => {
       const tokenAddress = market.loanAsset.address;
       const tokenSymbol = market.loanAsset.symbol;
 
-      const repayArgs = isMaxRepay
-        ? {
-            type: TRANSACTION_TYPES.MORPHO_REPAY as const,
-            marketParams: getMarketParams(market),
-            assets: BigInt(0),
-            shares: market.position.borrowShares,
-            recipient: context.account,
-            chainId: context.chainId,
-          }
-        : {
-            type: TRANSACTION_TYPES.MORPHO_REPAY as const,
-            marketParams: getMarketParams(market),
-            assets: amountBigNumber,
-            shares: BigInt(0),
-            recipient: context.account,
-            chainId: context.chainId,
-          };
+      const { userBalance } = useReadTokenContract({
+        tokenAddress: market.loanAsset.address,
+      });
 
-      const transferDustTxs = isMaxRepay
-        ? await Promise.all([
-            TransactionFactory.createRawTx(
-              TRANSACTION_TYPES.ERC20_TRANSFER_FROM_ALL_WEIROLL,
-              {
-                type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM_ALL_WEIROLL,
-                chainId: context.chainId,
+      const { maxRepayable } = useMaxRepayableAmount(userBalance);
+
+      const canRepayAllShares =
+        maxRepayable && maxRepayable >= market.position.borrow;
+
+      const repayArgs =
+        isMaxRepay && canRepayAllShares
+          ? {
+              type: TRANSACTION_TYPES.MORPHO_REPAY as const,
+              marketParams: getMarketParams(market),
+              assets: BigInt(0),
+              shares: market.position.borrowShares,
+              recipient: context.account,
+              chainId: context.chainId,
+            }
+          : {
+              type: TRANSACTION_TYPES.MORPHO_REPAY as const,
+              marketParams: getMarketParams(market),
+              assets: amountBigNumber,
+              shares: BigInt(0),
+              recipient: context.account,
+              chainId: context.chainId,
+            };
+
+      const transferDustTxs =
+        isMaxRepay && canRepayAllShares
+          ? await Promise.all([
+              TransactionFactory.createRawTx(
+                TRANSACTION_TYPES.ERC20_TRANSFER_FROM_ALL_WEIROLL,
+                {
+                  type: TRANSACTION_TYPES.ERC20_TRANSFER_FROM_ALL_WEIROLL,
+                  chainId: context.chainId,
+                  token: tokenAddress,
+                  from: cowShedProxy,
+                  to: context.account,
+                  symbol: tokenSymbol,
+                },
+              ),
+              TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
+                type: TRANSACTION_TYPES.ERC20_APPROVE,
                 token: tokenAddress,
-                from: cowShedProxy,
-                to: context.account,
-                symbol: tokenSymbol,
-              },
-            ),
-            TransactionFactory.createRawTx(TRANSACTION_TYPES.ERC20_APPROVE, {
-              type: TRANSACTION_TYPES.ERC20_APPROVE,
-              token: tokenAddress,
-              spender: MORPHO_ADDRESS_MAP[context.chainId],
-              amount: BigInt(0),
-            }),
-          ])
-        : [];
+                spender: MORPHO_ADDRESS_MAP[context.chainId],
+                amount: BigInt(0),
+              }),
+            ])
+          : [];
 
       const txs = await Promise.all([
         // Transfer from user to proxy
