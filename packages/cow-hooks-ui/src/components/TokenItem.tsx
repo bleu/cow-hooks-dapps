@@ -1,4 +1,3 @@
-import { cn } from "@bleu.builders/ui";
 import Image from "next/image";
 import type { MarketTokenInfo } from "../hooks/useMarketFilters";
 
@@ -26,24 +25,23 @@ export function TokenItem({ token, isSelected, onToggle }: TokenItemProps) {
           alt={token.symbol}
           width={20}
           height={20}
-          className="w-5 h-5 rounded-full object-cover"
+          className="size-5 rounded-full object-cover"
           onError={(e) => {
-            // Fallback to symbol if image fails to load
+            // Fallback to generic token logo if image fails to load
             const target = e.target as HTMLImageElement;
-            target.style.display = "none";
-            target.nextElementSibling?.classList.remove("hidden");
+            target.src = "/assets/generic-token-logo.png";
           }}
         />
-      ) : null}
-      <span
-        className={cn(
-          "text-xs font-medium text-muted-foreground",
-          token.logoURI ? "hidden" : "",
-        )}
-      >
-        {token.symbol.slice(0, 2)}
-      </span>
-      <span className="text-sm">{token.symbol}</span>
+      ) : (
+        <Image
+          src="/assets/generic-token-logo.png"
+          alt={token?.symbol ?? "Generic Token Logo"}
+          width={20}
+          height={20}
+          className="size-5 rounded-full object-cover"
+        />
+      )}
+      <span className="text-sm">{token?.symbol}</span>
     </div>
   );
 }

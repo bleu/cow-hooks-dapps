@@ -21,7 +21,7 @@ export function FilterButton({
       <span className="text-xs text-muted-foreground">{label}:</span>
       <button
         type="button"
-        className="flex items-center gap-1.5 px-2 py-1 rounded text-xs bg-color-paper-darker/60 hover:bg-color-paper-darker transition-colors"
+        className="flex items-center gap-1.5 px-2 py-1 rounded text-xs bg-color-paper-darker/60 hover:bg-color-paper-darker transition-colors focus:outline-none focus:ring-0"
         onClick={() => onFilterClick(type)}
       >
         <HamburgerMenuIcon className="w-3 h-3" />
