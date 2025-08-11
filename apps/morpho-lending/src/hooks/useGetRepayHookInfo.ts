@@ -1,5 +1,4 @@
 import { type IHooksInfo, useIFrameContext } from "@bleu/cow-hooks-ui";
-import { useReadTokenContract } from "@bleu/cow-hooks-ui";
 import {
   TRANSACTION_TYPES,
   TransactionFactory,
@@ -9,7 +8,6 @@ import { BigNumber } from "ethers";
 import { useCallback } from "react";
 import { parseUnits } from "viem";
 import type { MorphoSupplyFormData } from "#/contexts/form";
-import { useMaxRepayableAmount } from "#/hooks/useMaxRepayableAmount";
 import { getMarketParams } from "#/utils/getMarketParams";
 import { isZeroOrEmpty } from "#/utils/isZeroOrEmpty";
 
@@ -37,14 +35,11 @@ export const useGetRepayHookInfo = () => {
       const tokenAddress = market.loanAsset.address;
       const tokenSymbol = market.loanAsset.symbol;
 
-      const { userBalance } = useReadTokenContract({
-        tokenAddress: market.loanAsset.address,
-      });
-
-      const { maxRepayable } = useMaxRepayableAmount(userBalance);
-
       const canRepayAllShares =
-        maxRepayable && maxRepayable >= market.position.borrow;
+        repayAmount &&
+        BigNumber.from(
+          parseUnits(repayAmount, market.loanAsset.decimals),
+        ).toBigInt() >= market.position.borrow;
 
       const repayArgs =
         isMaxRepay && canRepayAllShares
