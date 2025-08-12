@@ -3,6 +3,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import type { FilterType, MarketTokenInfo } from "../hooks/useMarketFilters";
+import { Scrollbar } from "../ui/Scrollbar";
 import { TokenItem } from "./TokenItem";
 
 interface TokenFilterModalProps {
@@ -72,29 +73,31 @@ export function TokenFilterModal({
               </div>
             </div>
             {/* Token List */}
-            <div className="flex-1 overflow-y-auto min-h-0">
-              {filteredTokens.length === 0 ? (
-                <div className="text-center text-muted-foreground py-6 px-3">
-                  <p className="text-sm">No tokens found</p>
-                </div>
-              ) : (
-                <div className="p-2">
-                  {filteredTokens.map((token) => {
-                    const isSelected = selectedTokens.has(
-                      token.address.toLowerCase(),
-                    );
-                    return (
-                      <TokenItem
-                        key={token.address}
-                        token={token}
-                        isSelected={isSelected}
-                        onToggle={onTokenToggle}
-                      />
-                    );
-                  })}
-                </div>
-              )}
-            </div>
+            <Scrollbar className="p-0">
+              <div className="flex-1 overflow-y-auto min-h-0">
+                {filteredTokens.length === 0 ? (
+                  <div className="text-center text-muted-foreground py-6 px-3">
+                    <p className="text-sm">No tokens found</p>
+                  </div>
+                ) : (
+                  <div className="p-2">
+                    {filteredTokens.map((token) => {
+                      const isSelected = selectedTokens.has(
+                        token.address.toLowerCase(),
+                      );
+                      return (
+                        <TokenItem
+                          key={token.address}
+                          token={token}
+                          isSelected={isSelected}
+                          onToggle={onTokenToggle}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </Scrollbar>
           </div>
         </Dialog.Content>
       </Dialog.Portal>
