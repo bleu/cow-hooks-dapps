@@ -17,18 +17,19 @@ export const RPC_URL_MAPPING =
         [137]: "https://polygon.drpc.org",
       }
     : {
+        // Free tier DRPC RPCs
         [SupportedChainId.MAINNET]:
-          "https://lb.drpc.org/ogrpc?network=ethereum&dkey=AnOfyGnZ_0nWpS-OOwQzqAnACrGNjLcR77k8TgFkVp5j",
+          "https://lb.drpc.org/ogrpc?network=ethereum&dkey=AnOfyGnZ_0nWpS-OOwQzqAkaLndsNOcR8YeisuMGSdYJ",
         [SupportedChainId.GNOSIS_CHAIN]:
-          "https://lb.drpc.org/ogrpc?network=gnosis&dkey=AnOfyGnZ_0nWpS-OOwQzqAnACrGNjLcR77k8TgFkVp5j",
+          "https://lb.drpc.org/ogrpc?network=gnosis&dkey=AnOfyGnZ_0nWpS-OOwQzqAkaLndsNOcR8YeisuMGSdYJ",
         [SupportedChainId.ARBITRUM_ONE]:
-          "https://lb.drpc.org/ogrpc?network=arbitrum&dkey=AnOfyGnZ_0nWpS-OOwQzqAnACrGNjLcR77k8TgFkVp5j",
+          "https://lb.drpc.org/ogrpc?network=arbitrum&dkey=AnOfyGnZ_0nWpS-OOwQzqAkaLndsNOcR8YeisuMGSdYJ",
         [SupportedChainId.SEPOLIA]:
-          "https://lb.drpc.org/ogrpc?network=sepolia&dkey=AnOfyGnZ_0nWpS-OOwQzqAnACrGNjLcR77k8TgFkVp5j",
+          "https://lb.drpc.org/ogrpc?network=sepolia&dkey=AnOfyGnZ_0nWpS-OOwQzqAkaLndsNOcR8YeisuMGSdYJ",
         [SupportedChainId.BASE]:
-          "https://lb.drpc.org/ogrpc?network=base&dkey=AnOfyGnZ_0nWpS-OOwQzqAnACrGNjLcR77k8TgFkVp5j",
+          "https://lb.drpc.org/ogrpc?network=base&dkey=AnOfyGnZ_0nWpS-OOwQzqAkaLndsNOcR8YeisuMGSdYJ",
         [43114]:
-          "https://lb.drpc.org/avalanche/AnOfyGnZ_0nWpS-OOwQzqAnACrGNjLcR77k8TgFkVp5j",
+          "https://lb.drpc.org/avalanche/AnOfyGnZ_0nWpS-OOwQzqAkaLndsNOcR8YeisuMGSdYJ",
         [137]:
-          "https://lb.drpc.org/polygon/AnOfyGnZ_0nWpS-OOwQzqAnACrGNjLcR77k8TgFkVp5j",
+          "https://lb.drpc.org/polygon/AnOfyGnZ_0nWpS-OOwQzqAkaLndsNOcR8YeisuMGSdYJ",
       };

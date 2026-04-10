@@ -1,7 +1,15 @@
 import { RPC_URL_MAPPING } from "@bleu/utils/transactionFactory";
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import { http, type PublicClient, createPublicClient } from "viem";
-import { arbitrum, gnosis, mainnet, sepolia } from "viem/chains";
+import { http, type PublicClient, createPublicClient, fallback } from "viem";
+import {
+  arbitrum,
+  avalanche,
+  base,
+  gnosis,
+  mainnet,
+  polygon,
+  sepolia,
+} from "viem/chains";
 
 /**
  * #CHAIN-INTEGRATION
@@ -13,30 +21,42 @@ export const publicClientMapping: Record<
 > = {
   [SupportedChainId.MAINNET]: createPublicClient({
     chain: mainnet,
-    transport: http(RPC_URL_MAPPING[SupportedChainId.MAINNET]),
+    transport: fallback([
+      http(RPC_URL_MAPPING[SupportedChainId.MAINNET]),
+      http(),
+    ]),
   }),
   [SupportedChainId.GNOSIS_CHAIN]: createPublicClient({
     chain: gnosis,
-    transport: http(RPC_URL_MAPPING[SupportedChainId.GNOSIS_CHAIN]),
+    transport: fallback([
+      http(RPC_URL_MAPPING[SupportedChainId.GNOSIS_CHAIN]),
+      http(),
+    ]),
   }),
   [SupportedChainId.ARBITRUM_ONE]: createPublicClient({
     chain: arbitrum,
-    transport: http(RPC_URL_MAPPING[SupportedChainId.ARBITRUM_ONE]),
+    transport: fallback([
+      http(RPC_URL_MAPPING[SupportedChainId.ARBITRUM_ONE]),
+      http(),
+    ]),
   }),
   [SupportedChainId.SEPOLIA]: createPublicClient({
     chain: sepolia,
-    transport: http(RPC_URL_MAPPING[SupportedChainId.SEPOLIA]),
+    transport: fallback([
+      http(RPC_URL_MAPPING[SupportedChainId.SEPOLIA]),
+      http(),
+    ]),
   }),
   [SupportedChainId.BASE]: createPublicClient({
-    chain: mainnet,
-    transport: http(RPC_URL_MAPPING[SupportedChainId.BASE]),
-  }),
+    chain: base,
+    transport: fallback([http(RPC_URL_MAPPING[SupportedChainId.BASE]), http()]),
+  }) as PublicClient,
   [43114]: createPublicClient({
-    chain: mainnet,
-    transport: http(RPC_URL_MAPPING[43114]),
-  }),
+    chain: avalanche,
+    transport: fallback([http(RPC_URL_MAPPING[43114]), http()]),
+  }) as PublicClient,
   [137]: createPublicClient({
-    chain: mainnet,
-    transport: http(RPC_URL_MAPPING[137]),
-  }),
+    chain: polygon,
+    transport: fallback([http(RPC_URL_MAPPING[137]), http()]),
+  }) as PublicClient,
 };
