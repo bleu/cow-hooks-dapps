@@ -1,11 +1,6 @@
 import { RPC_URL_MAPPING } from "@bleu/utils/transactionFactory";
 import { SupportedChainId } from "@cowprotocol/cow-sdk";
-import {
-  http,
-  type PublicClient,
-  createPublicClient,
-  fallback,
-} from "viem";
+import { http, type PublicClient, createPublicClient, fallback } from "viem";
 import {
   arbitrum,
   avalanche,
@@ -26,19 +21,31 @@ export const publicClientMapping: Record<
 > = {
   [SupportedChainId.MAINNET]: createPublicClient({
     chain: mainnet,
-    transport: fallback([http(RPC_URL_MAPPING[SupportedChainId.MAINNET]), http()]),
+    transport: fallback([
+      http(RPC_URL_MAPPING[SupportedChainId.MAINNET]),
+      http(),
+    ]),
   }),
   [SupportedChainId.GNOSIS_CHAIN]: createPublicClient({
     chain: gnosis,
-    transport: fallback([http(RPC_URL_MAPPING[SupportedChainId.GNOSIS_CHAIN]), http()]),
+    transport: fallback([
+      http(RPC_URL_MAPPING[SupportedChainId.GNOSIS_CHAIN]),
+      http(),
+    ]),
   }),
   [SupportedChainId.ARBITRUM_ONE]: createPublicClient({
     chain: arbitrum,
-    transport: fallback([http(RPC_URL_MAPPING[SupportedChainId.ARBITRUM_ONE]), http()]),
+    transport: fallback([
+      http(RPC_URL_MAPPING[SupportedChainId.ARBITRUM_ONE]),
+      http(),
+    ]),
   }),
   [SupportedChainId.SEPOLIA]: createPublicClient({
     chain: sepolia,
-    transport: fallback([http(RPC_URL_MAPPING[SupportedChainId.SEPOLIA]), http()]),
+    transport: fallback([
+      http(RPC_URL_MAPPING[SupportedChainId.SEPOLIA]),
+      http(),
+    ]),
   }),
   [SupportedChainId.BASE]: createPublicClient({
     chain: base,
