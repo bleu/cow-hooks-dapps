@@ -12,8 +12,8 @@ import { retryAsync } from "../utils/retry";
 // minimum gas budget that actually completes execution is materially higher
 // than the estimator's return value. To find it accurately, we binary-search
 // via eth_call.
-const BINARY_SEARCH_TOLERANCE = 5_000n;
-const UPPER_BOUND_MULTIPLIER = 5n;
+const BINARY_SEARCH_TOLERANCE = BigInt(5000);
+const UPPER_BOUND_MULTIPLIER = BigInt(5);
 
 export function useEstimateGas() {
   const { context, actions, publicClient } = useIFrameContext();
@@ -45,15 +45,15 @@ export function useEstimateGas() {
       };
 
       const searchMax = baseline * UPPER_BOUND_MULTIPLIER;
-      let hi = baseline * 2n;
+      let hi = baseline * BigInt(2);
       while (hi < searchMax && !(await canExecute(hi))) {
-        hi = (hi * 3n) / 2n;
+        hi = (hi * BigInt(3)) / BigInt(2);
       }
       if (hi >= searchMax || !(await canExecute(hi))) return searchMax;
 
       let lo = baseline;
       while (hi - lo > BINARY_SEARCH_TOLERANCE) {
-        const mid = (lo + hi) / 2n;
+        const mid = (lo + hi) / BigInt(2);
         if (await canExecute(mid)) hi = mid;
         else lo = mid;
       }
