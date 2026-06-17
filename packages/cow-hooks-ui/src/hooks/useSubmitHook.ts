@@ -31,7 +31,7 @@ export function useSubmitHook({
       });
 
       const gasLimit = BigNumber.from(estimatedGas)
-        .mul(115)
+        .mul(120)
         .div(100)
         .toString();
 
