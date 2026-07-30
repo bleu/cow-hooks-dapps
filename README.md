@@ -183,3 +183,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 Built with 🐮 by [Bleu](http://bleu.builders) & [CoW Protocol](https://cow.fi)
+
+---
+
+[![Built and maintained by Bleu](https://raw.githubusercontent.com/bleu/.github/main/brand/banner-built-by-bleu.png)](https://bleu.builders)
