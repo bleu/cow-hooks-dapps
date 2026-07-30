@@ -186,4 +186,4 @@ Built with 🐮 by [Bleu](http://bleu.builders) & [CoW Protocol](https://cow.fi)
 
 ---
 
-[![Built and maintained by Bleu](https://raw.githubusercontent.com/bleu/.github/main/brand/banner-built-by-bleu.png)](https://bleu.builders)
+[![Built and maintained by Bleu](https://raw.githubusercontent.com/bleu/.github/main/brand/banner-built-by-bleu.png)](https://bleu.builders/?utm_source=github&utm_medium=referral&utm_campaign=repo-readme&utm_content=cow-hooks-dapps)
